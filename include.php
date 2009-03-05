@@ -7,8 +7,10 @@ if (!isset($pageIsPublic)) $pageIsPublic = false;
 //joshlib & localize
 $_josh["styles"]			= array("field"=>"field", "checkbox"=>"checkbox", "select"=>"select", "button"=>"button", "textarea"=>"mceEditor");
 $_josh["basedblanguage"]	= "mssql";
+$locale = "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
+$_josh["config"] = $locale . "config.php";
+
 @extract(includeLibrary()) or die("Can't locate library! " . $_SERVER["DOCUMENT_ROOT"]);
-$locale = "/_" . $request["domainname"] . "/";
 //debug();
 
 //apply security
@@ -172,15 +174,15 @@ error_debug("done processing include!");
 			i.width,
 			i.height
 		FROM intranet_users u
-		JOIN intranet_departments d ON u.departmentID = d.departmentID
-		JOIN pages p				ON u.homePageID = p.id
+		LEFT JOIN intranet_departments d ON u.departmentID = d.departmentID
+		LEFT JOIN pages p				ON u.homePageID = p.id
 		LEFT JOIN intranet_images i ON u.imageID = i.imageID
 		WHERE u.email = '$username' AND u.isActive = 1" . $where)) {
 			//login was good
 			db_query("UPDATE intranet_users SET lastlogin = GETDATE() WHERE userID = " . $user["id"]);
 			$_SESSION["user_id"]		= $user["id"];
 			$_SESSION["email"]			= $user["email"];
-			$_SESSION["homepage"]		= $user["homepage"];
+			$_SESSION["homepage"]		= ($user["homepage"]) ? $user["homepage"] : "/bb/";
 			$_SESSION["departmentID"]	= $user["departmentID"];
 			$_SESSION["isHelpdesk"]		= $user["isHelpdesk"];
 			$_SESSION["update_days"]	= $user["update_days"];
@@ -941,8 +943,8 @@ function includeLibrary() {
 	$possibilities = array(
 		"D:\Sites\joshlib\\", //seedco-web-srv
 		"/home/hcfacc/www/joshlib/", //icd 2
-		"/Users/josh/Sites/joshlib/trunk/",  //dora mac mini
-		"/Users/joshreisner/Sites/joshlib/trunk/", //macbook
+		"/Users/josh/Sites/joshlib/",  //dora mac mini
+		"/Users/joshreisner/Sites/joshlib/", //macbook
 		"/home/joshreisner/www/joshlib/joshlib/" //icdsoft
 	);
 	if ($_SERVER["HTTP_HOST"] == "dev-intranet.seedco.org") array_unshift($possibilities, "D:\Sites\joshlib-dev\\");
