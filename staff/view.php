@@ -17,9 +17,7 @@ if (url_action("undelete")) { //undelete user
 	url_query_drop("action");
 }
 
-url_query_require();
-
-drawTop();
+//url_query_require();
 
 $r = db_grab("SELECT 
 		u.firstname,
@@ -62,17 +60,19 @@ $r = db_grab("SELECT
 		u.isActive,
 		r.description rank
 	FROM intranet_users u
-	JOIN intranet_ranks r ON u.rankID = r.id
-	LEFT  JOIN organizations			c ON u.corporationID = c.id
-	LEFT  JOIN intranet_departments		d ON d.departmentID	= u.departmentID 				
-	LEFT  JOIN intranet_offices    		f ON f.id			= u.officeID 				
-	LEFT  JOIN intranet_images     		m ON u.imageID		= m.imageID
-	LEFT  JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
+	LEFT JOIN intranet_ranks r ON u.rankID = r.id
+	LEFT JOIN organizations			c ON u.corporationID = c.id
+	LEFT JOIN intranet_departments		d ON d.departmentID	= u.departmentID 				
+	LEFT JOIN intranet_offices    		f ON f.id			= u.officeID 				
+	LEFT JOIN intranet_images     		m ON u.imageID		= m.imageID
+	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
 	WHERE u.userID = " . $_GET["id"]);
 				
 $r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations.php?id=0">Shared</a>' : '<a href="organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
 
 if (!isset($r["isActive"])) url_change("./");
+
+drawTop();
 
 //get image props
 if (isset($r["imageID"]) && $r["imageID"]) {

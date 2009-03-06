@@ -14,6 +14,7 @@ if ($posting) {
 	$_POST["emerCont2Phone"]	= format_phone($_POST["emerCont2Phone"]);
 	$_POST["emerCont2Cell"]		= format_phone($_POST["emerCont2Cell"]);
 	
+	format_post_nulls("departmentID,officeID,rankID");
 	if ($isAdmin) {
 		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
 		$id = db_enter("intranet_users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
@@ -45,6 +46,12 @@ if ($posting) {
 		$id = db_enter("intranet_users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
 	}
 	
+	if ($id == $_SESSION["user_id"]) {
+		$user = db_grab("SELECT u.updatedOn, " . db_datediff("u.updatedOn", "GETDATE()") . " update_days FROM intranet_users u WHERE u.userID = " . $_SESSION["user_id"]);
+		$_SESSION["updatedOn"]	 = $user["updatedOn"];
+		$_SESSION["update_days"] = $user["update_days"];
+	}
+
 	if ($uploading) { //upload new staff image
 		//debug();
 		//get file type id, size, read file

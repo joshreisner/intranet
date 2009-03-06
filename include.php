@@ -56,10 +56,10 @@ if (!$pageIsPublic) {
 	$isAdmin = (isset($modules[$page["moduleID"]])) ? $modules[$page["moduleID"]]["isAdmin"] : false;
 	
 	//check to see if user needs update
-	if (($_SESSION["update_days"] > 90 || empty($_SESSION["updatedOn"])) && $page["isSecure"] && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
+	if (($_SESSION["update_days"] > 90 || empty($_SESSION["updatedOn"])) && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
 		error_debug("user needs address update");
 		url_change("/staff/add_edit.php?id=" . $_SESSION["user_id"]);
-	} elseif ($_SESSION["password"] && $page["isSecure"]) {
+	} elseif ($_SESSION["password"] && ($_josh["request"]["path"] != "/login/password_update.php") && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
 		error_debug("user needs password update");
 		url_change("/login/password_update.php");
 	}		
@@ -87,7 +87,8 @@ if (!$pageIsPublic) {
 
 	//handle side menu pref updates
 	if (isset($_GET["toggleMenuPref"])) {
-		db_query("UPDATE intranet_users SET " . $_GET["toggleMenuPref"] . " = " . abs($_SESSION[$_GET["toggleMenuPref"]] - 1) . " WHERE userID = " . $_SESSION["user_id"]);
+		$_SESSION[$_GET["toggleMenuPref"]] = abs($_SESSION[$_GET["toggleMenuPref"]] - 1);
+		db_query("UPDATE intranet_users SET {$_GET["toggleMenuPref"]} = {$_SESSION[$_GET["toggleMenuPref"]]} WHERE userID = " . $_SESSION["user_id"]);
 		url_query_drop("toggleMenuPref");
 	}
 }
@@ -795,7 +796,7 @@ error_debug("done processing include!");
 				<table class="nospacing">
 					<tr>
 						<td width="16">' . draw_form_checkbox("isAdmin") . '</td>
-						<td width="99%">' . drawCheckboxText("isAdmin", "This followup is admin-only (invisible to most users)") . '</td>
+						<td>' . drawCheckboxText("isAdmin", "This followup is admin-only (invisible to most users)") . '</td>
 					</tr>
 				</table>';
 		}

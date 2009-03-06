@@ -4,6 +4,7 @@ include("include.php");
 $redirect = false;
 if (isset($_GET["logout"])) {
 	error_debug("<b>index.php</b> Logging Out");
+	unset($_SESSION["user_id"]);
 	cookie("last_login");
 	$redirect = "/";
 } elseif (login(@$_COOKIE["last_login"], "", true)) { //log in with last login

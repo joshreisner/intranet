@@ -2,10 +2,10 @@
 //this one is not public
 include("../include.php");
 
-if ($_POST) {
+if ($posting) {
 	db_query("UPDATE intranet_users SET password = PWDENCRYPT('{$_POST["password1"]}') WHERE userID = " . $_SESSION["user_id"]);
-	$r = db_grab("SELECT p.url homepage FROM intranet_users u JOIN pages p ON u.homePageID = p.id WHERE u.userID = " . $_SESSION["user_id"]);
-	url_change($r);
+	$_SESSION["password"] = false;
+	url_change($_SESSION["homepage"]);
 }
 ?>
 <html>

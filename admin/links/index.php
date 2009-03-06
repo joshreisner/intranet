@@ -30,7 +30,7 @@ if ($max = db_found($links)) {
 			<td><a href="<?=$l["url"]?>"><?=$l["url"]?></a></td>
 			<td><? if ($counter != 1) echo draw_img($locale . "images/icons/moveup.gif")?></td>
 			<td><? if ($counter != $max) echo draw_img($locale . "images/icons/movedown.gif")?></td>
-			<?=deleteColumn("lksdklds", $l["id"]);?>
+			<?=deleteColumn("are you sure?", $l["id"]);?>
 		</tr>
 	<? 
 	$counter++;
@@ -44,7 +44,7 @@ echo '<a name="bottom"></a>';
 $form = new intranet_form;
 $form->addRow("hidden", "", "precedence", ($max + 1));
 $form->addRow("itext",  "Link" , "text", "", "", true);
-$form->addRow("itext",  "Address" , "url", "http://", "", true);
+$form->addRow("itext",  "Address" , "url", "http://", "", true, 255);
 $form->addRow("submit"  , "add new link");
 $form->draw("Add a New Link");
 

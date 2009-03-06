@@ -121,7 +121,7 @@ while ($t = db_fetch($types)) {
 	<tr>
 		<td class="left">Category</td>
 		<td>
-			<table width="100%" cellpadding="0" cellspacing="0" border="0" class="nospacing">
+			<table class="nospacing">
 				<?
 				if (url_id()) {
 					$categories = db_query("SELECT c.id, c.description, (SELECT COUNT(*) FROM documents_to_categories d2c WHERE d2c.categoryID = c.id AND d2c.documentID = {$_GET["id"]}) checked FROM documents_categories c ORDER BY c.precedence");
@@ -130,8 +130,8 @@ while ($t = db_fetch($types)) {
 				}
 				while ($c = db_fetch($categories)) {?>
 				<tr>
-					<td width="16"><input type="checkbox" name="chk_doc_<?=$c["id"]?>"<? if (@$c["checked"]) {?> checked<? }?>></td>
-					<td><?=$c["description"]?></td>
+					<td width="1%"><?=draw_form_checkbox("chk_doc_" . $c["id"], @$c["checked"])?></td>
+					<td width="99%"><?=$c["description"]?></td>
 				</tr>
 				<? }?>
 			</table>
