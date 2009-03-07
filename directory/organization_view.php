@@ -15,7 +15,7 @@ if (isset($_GET["id"])) {
 			o.lastUpdatedOn,
 			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname lastUpdatedBy
 		FROM web_organizations o
-		INNER JOIN intranet_users u ON o.lastUpdatedBy = u.userID
+		INNER JOIN users u ON o.lastUpdatedBy = u.userID
 		WHERE o.id = " . $_GET["id"]);
 } else {
 	$_GET["id"] = 0;

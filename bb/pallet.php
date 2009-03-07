@@ -4,10 +4,10 @@ $result = db_query("SELECT
 		t.title,
 		t.isAdmin,
 		t.threadDate,
-		(SELECT COUNT(*) FROM bulletin_board_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
+		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
 		ISNULL(u.nickname, u.firstname) + ' ' + u.lastname name
-	FROM bulletin_board_topics t
-	JOIN intranet_users u ON u.userID = t.createdBy
+	FROM bb_topics t
+	JOIN users u ON u.userID = t.createdBy
 	WHERE t.isActive = 1 
 	ORDER BY t.threadDate DESC", 4);
 while ($r = db_fetch($result)) { 

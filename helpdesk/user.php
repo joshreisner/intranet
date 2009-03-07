@@ -17,12 +17,12 @@ $result = db_query("select
 				t.createdOn,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM administrators a WHERE a.moduleID = 3 AND a.userID = t.createdby) isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdby) isAdminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN intranet_users u ON u.userID = t.createdBy
+			JOIN users u ON u.userID = t.createdBy
 			LEFT JOIN intranet_images m ON u.imageID = m.imageID
 			WHERE t.createdBy = {$_GET["id"]} $where
 			ORDER BY t.createdOn DESC");
@@ -30,7 +30,7 @@ echo drawTicketFilter();
 ?>
 <table class="left" cellspacing="1">
 	<?
-	$u = db_grab("SELECT ISNULL(nickname, firstname) first, lastname last FROM intranet_users WHERE userID = " . $_GET["id"]);
+	$u = db_grab("SELECT ISNULL(nickname, firstname) first, lastname last FROM users WHERE userID = " . $_GET["id"]);
 	echo drawHeaderRow("<a href='users.php' class='white'>Users</a> &gt; " . $u["first"] . " " . $u["last"] . " (" . db_found($result) . ")", 5);
 	if (db_found($result)) {
 		echo drawTicketHeader();

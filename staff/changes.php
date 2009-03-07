@@ -21,9 +21,9 @@ echo drawJumpToStaff();
 		u.bio,
 		m.width,
 		m.height
-	FROM intranet_users u
+	FROM users u
 	JOIN intranet_offices o ON u.officeID = o.id
-	JOIN intranet_departments d ON u.departmentID = d.departmentID
+	JOIN departments d ON u.departmentID = d.departmentID
 	LEFT JOIN intranet_images m ON u.imageID = m.imageID
 	WHERE " . db_datediff("u.startdate", "GETDATE()") . " < 60 AND u.isActive = 1
 	ORDER BY u.startdate DESC");
@@ -62,8 +62,8 @@ $result = db_query("SELECT
 			u.userID, 
 			u.imageID,
 			u.endDate
-			FROM intranet_users u
-			JOIN intranet_departments d ON u.departmentID = d.departmentID
+			FROM users u
+			JOIN departments d ON u.departmentID = d.departmentID
 			LEFT JOIN intranet_images m ON u.imageID = m.imageID
 			WHERE " . db_datediff("u.endDate", "GETDATE()") . " < 32 ORDER BY endDate DESC");
 ?>

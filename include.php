@@ -5,8 +5,6 @@ if (!isset($_SESSION["user_id"])) $_SESSION["user_id"] = false;
 if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
 //joshlib & localize
-$_josh["styles"]			= array("field"=>"field", "checkbox"=>"checkbox", "select"=>"select", "button"=>"button", "textarea"=>"mceEditor");
-$_josh["basedblanguage"]	= "mssql";
 $locale = "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
 $_josh["config"] = $locale . "config.php";
 
@@ -29,7 +27,7 @@ if (!$pageIsPublic) {
 			m.name,
 			m.pallet,
 			m.isPublic,
-			(SELECT COUNT(*) FROM administrators a WHERE a.userID = {$_SESSION["user_id"]} AND a.moduleID = m.id) isAdmin
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.userID = {$_SESSION["user_id"]} AND a.moduleID = m.id) isAdmin
 		FROM modules m
 		JOIN pages p ON p.id = m.homePageID
 		WHERE m.isActive = 1
@@ -80,7 +78,7 @@ if (!$pageIsPublic) {
 			d.departmentID id, 
 			d.shortName name, 
 			(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.departmentID = d.departmentID AND t.statusID <> 9) num_open
-		FROM intranet_departments d
+		FROM departments d
 		WHERE isHelpdesk = 1
 		ORDER BY d.shortName");
 	$helpdeskStatus = db_grab("SELECT message FROM it_system_status");
@@ -88,7 +86,7 @@ if (!$pageIsPublic) {
 	//handle side menu pref updates
 	if (isset($_GET["toggleMenuPref"])) {
 		$_SESSION[$_GET["toggleMenuPref"]] = abs($_SESSION[$_GET["toggleMenuPref"]] - 1);
-		db_query("UPDATE intranet_users SET {$_GET["toggleMenuPref"]} = {$_SESSION[$_GET["toggleMenuPref"]]} WHERE userID = " . $_SESSION["user_id"]);
+		db_query("UPDATE users SET {$_GET["toggleMenuPref"]} = {$_SESSION[$_GET["toggleMenuPref"]]} WHERE userID = " . $_SESSION["user_id"]);
 		url_query_drop("toggleMenuPref");
 	}
 }
@@ -174,13 +172,13 @@ error_debug("done processing include!");
 			u.imageID,
 			i.width,
 			i.height
-		FROM intranet_users u
-		LEFT JOIN intranet_departments d ON u.departmentID = d.departmentID
+		FROM users u
+		LEFT JOIN departments d ON u.departmentID = d.departmentID
 		LEFT JOIN pages p				ON u.homePageID = p.id
 		LEFT JOIN intranet_images i ON u.imageID = i.imageID
 		WHERE u.email = '$username' AND u.isActive = 1" . $where)) {
 			//login was good
-			db_query("UPDATE intranet_users SET lastlogin = GETDATE() WHERE userID = " . $user["id"]);
+			db_query("UPDATE users SET lastlogin = GETDATE() WHERE userID = " . $user["id"]);
 			$_SESSION["user_id"]		= $user["id"];
 			$_SESSION["email"]			= $user["email"];
 			$_SESSION["homepage"]		= ($user["homepage"]) ? $user["homepage"] : "/bb/";
@@ -195,7 +193,7 @@ error_debug("done processing include!");
 			$_SESSION["full_name"]		= $user["firstname"] . " " . $user["lastname"];
 			$_SESSION["isAdmin"]		= false;
 			
-			//pretty sure these should be stored in the administrators table (renamed to users_to_modules, perhaps?)
+			//pretty sure these should be stored in the users_to_modules table (renamed to users_to_modules, perhaps?)
 			$_SESSION["isOpenHelp"]				= $user["isOpenHelp"];
 			$_SESSION["isOpenAreas"]			= $user["isOpenAreas"];
 			$_SESSION["isOpenCalendar"]			= $user["isOpenCalendar"];
@@ -224,7 +222,7 @@ error_debug("done processing include!");
 //post functions
 	function getDocTypeID($filename) {
 		$array = explode(".", $filename);
-		return db_grab("SELECT id FROM intranet_doctypes WHERE extension = '" . array_pop($array) . "'");
+		return db_grab("SELECT id FROM documents_types WHERE extension = '" . array_pop($array) . "'");
 	}
 
 	function updateInstanceWords($id, $text) {
@@ -272,12 +270,12 @@ error_debug("done processing include!");
 				t.description,
 				t.isAdmin,
 				t.threadDate,
-				(SELECT COUNT(*) FROM bulletin_board_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
+				(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
 				u.email
-			FROM bulletin_board_topics t
-			JOIN intranet_users u ON u.userID = t.createdBy
+			FROM bb_topics t
+			JOIN users u ON u.userID = t.createdBy
 			WHERE t.isActive = 1 
 			ORDER BY t.threadDate DESC", 15);
 		
@@ -448,7 +446,7 @@ error_debug("done processing include!");
 											userID, 
 											ISNULL(nickname, firstname) first,
 											lastname last 
-										FROM intranet_users
+										FROM users
 										WHERE isActive = 1
 										ORDER by lastname");
 					while ($r = db_fetch($result)) {
@@ -463,7 +461,7 @@ error_debug("done processing include!");
 											departmentID,
 											departmentName,
 											quoteLevel
-										FROM intranet_departments
+										FROM departments
 										WHERE isActive = 1
 										ORDER by precedence");
 					while ($r = db_fetch($result)) {
@@ -627,13 +625,7 @@ error_debug("done processing include!");
 			return $r;
 		}
 	}
-	
-	function arrayRemove($needle, $haystack) {
-		$return = array();
-		foreach ($haystack as $value) if ($value != $needle) $return[] = $value;
-		return $return;
-	}
-	
+		
 	function verifyImage($imageID) {
 		global $_josh, $locale;
 		if (!$imageID) return false;
@@ -747,7 +739,7 @@ error_debug("done processing include!");
 //custom functions - form functions
 
 	function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text="", $class=false) { 
-		$result = db_query("SELECT u.userID, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM intranet_users u WHERE u.isActive = 1 ORDER by last, first");
+		$result = db_query("SELECT u.userID, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.isActive = 1 ORDER by last, first");
 		if ($jumpy) $jumpy = "location.href='/staff/view.php?id=' + this.value";
 		$array = array();
 		while ($r = db_fetch($result)) {
@@ -814,7 +806,7 @@ error_debug("done processing include!");
 		global $_josh, $locale;
 		return '<html><head> 
 		<style type="text/css">
-		' . file_get($_josh["root"] . $locale . "style.css") . '
+		' . file_get("/styles/screen.css") . '
 		</style>
 		</head>
 		<body class="email">';
@@ -833,15 +825,15 @@ error_debug("done processing include!");
 	?><html>
 		<head>
 			<title><?=$title?></title>
-			<link rel="stylesheet" type="text/css" href="<?=$locale?>style.css" />
+			<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
 			<!--[if IE]>
-			<link rel="stylesheet" type="text/css" href="<?=$locale?>style-ie.css" />
+			<link rel="stylesheet" type="text/css" href="/styles/ie.css" />
 			<![endif]--> 
 			<?
 			echo draw_javascript_src("/javascript.js");
 			echo draw_javascript_src($locale . "tinymce/jscripts/tiny_mce/tiny_mce.js");
 			echo draw_javascript_src();
-			echo draw_javascript("form_tinymce_init('" . $locale . "style-textarea.css');");
+			echo draw_javascript("form_tinymce_init('" . $locale . "tinymce.css');");
 			?>
 		</head>
 		<body>

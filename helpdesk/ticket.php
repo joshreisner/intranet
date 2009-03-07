@@ -29,10 +29,10 @@ $r = db_grab("SELECT
 		MONTH(t.createdOn) createdMonth,
 		YEAR(t.createdOn) createdYear
 	FROM helpdesk_tickets t
-	JOIN intranet_users					u ON t.createdBy	= u.userID
+	JOIN users					u ON t.createdBy	= u.userID
 	JOIN helpdesk_tickets_priorities	p ON t.priorityID	= p.id
 	JOIN intranet_offices				o ON u.officeID		= o.id
-	LEFT JOIN intranet_users			s ON t.ownerID		= s.userID
+	LEFT JOIN users			s ON t.ownerID		= s.userID
 	LEFT JOIN helpdesk_tickets_types	y ON t.typeID		= y.id
 	LEFT JOIN intranet_images			m ON u.imageID		= m.imageID
 	WHERE t.id = " . $_GET["id"]);
@@ -125,7 +125,7 @@ if ($r["ownerID"] && !$r["isActiveOwner"]) {
 //load code for JS
 $extensions = array();
 $doctypes = array();
-$types = db_query("SELECT description, extension FROM intranet_doctypes ORDER BY description");
+$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
 while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t["extension"] . '")';
 	$doctypes[] = " - " . $t["description"] . " (." . $t["extension"] . ")";
@@ -225,7 +225,7 @@ while ($t = db_fetch($types)) {
 	<tr class="helpdesk-hilite" height="30">
 		<td class="left">Posted By</td>
 		<td><?
-		$sql = ($_josh["db"]["language"] == "mssql") ? "SELECT u.userID, u.lastname + ', ' + ISNULL(u.nickname, u.firstname) FROM intranet_users u WHERE u.isactive = 1 ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)" : "SELECT u.userID, CONCAT(u.lastname, ', ', IFNULL(u.nickname, u.firstname)) FROM intranet_users u WHERE u.isactive = 1 ORDER BY u.lastname, IFNULL(u.nickname, u.firstname)";
+		$sql = ($_josh["db"]["language"] == "mssql") ? "SELECT u.userID, u.lastname + ', ' + ISNULL(u.nickname, u.firstname) FROM users u WHERE u.isactive = 1 ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)" : "SELECT u.userID, CONCAT(u.lastname, ', ', IFNULL(u.nickname, u.firstname)) FROM users u WHERE u.isactive = 1 ORDER BY u.lastname, IFNULL(u.nickname, u.firstname)";
 		echo draw_form_select("postedBy", $sql, $r["createdBy"], true, "", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newUser=' + this.value");
 		?>
 		<a href="user.php?id=<?=$r["createdBy"]?>">view all</a> / <a href="user.php?id=<?=$r["createdBy"]?>&month=<?=$r["createdMonth"]?>&year=<?=$r["createdYear"]?>">this month</a>
@@ -279,7 +279,7 @@ while ($t = db_fetch($types)) {
 	</tr>
 	<tr height="30">
 		<td class="left">Department</td>
-		<td><?=draw_form_select("departmentID", "SELECT departmentID, shortName FROM intranet_departments WHERE isHelpdesk = 1", $r["departmentID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newDepartment=' + this.value", false);?></td>
+		<td><?=draw_form_select("departmentID", "SELECT departmentID, shortName FROM departments WHERE isHelpdesk = 1", $r["departmentID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newDepartment=' + this.value", false);?></td>
 	</tr>
 	<tr height="30">
 		<td class="left">Priority</td>
@@ -310,7 +310,7 @@ while ($t = db_fetch($types)) {
 				t.icon,
 				t.description type
 			FROM helpdesk_tickets_attachments a
-			JOIN intranet_doctypes t ON a.typeID = t.id
+			JOIN documents_types t ON a.typeID = t.id
 			WHERE a.ticketID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
@@ -338,7 +338,7 @@ $result = db_query("SELECT
 					m.height,
 					f.isAdmin
 				FROM helpdesk_tickets_followups	f
-				JOIN intranet_users			u ON f.createdBy	= u.userID
+				JOIN users			u ON f.createdBy	= u.userID
 				LEFT JOIN intranet_images	m ON u.imageID		= m.imageID
 				WHERE f.ticketID = " . $_GET['id'] . "
 				ORDER BY f.createdOn");

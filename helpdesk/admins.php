@@ -19,8 +19,8 @@ echo drawTicketFilter();
 		u.lastname last,
 		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE u.userID = t.ownerID $where) tickets,
 		(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE u.userID = t.ownerID $where) minutes		
-		FROM intranet_users u
-		JOIN administrators a ON u.userID = a.userID
+		FROM users u
+		JOIN users_to_modules a ON u.userID = a.userID
 		WHERE a.moduleID = 3 AND u.departmentID = $departmentID
 		ORDER BY last, first");
 	while ($u = db_fetch($users)) {

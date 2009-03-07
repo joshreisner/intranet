@@ -41,7 +41,7 @@ drawTop();
 //load code for JS
 $extensions = array();
 $doctypes = array();
-$types = db_query("SELECT description, extension FROM intranet_doctypes ORDER BY description");
+$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
 while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t["extension"] . '")';
 	$doctypes[] = " - " . $t["description"] . " (." . $t["extension"] . ")";
@@ -63,7 +63,7 @@ $t = db_grab("SELECT
 		m.height
 	FROM wiki_topics w
 	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN intranet_users u ON w.createdBy = u.userID
+	JOIN users u ON w.createdBy = u.userID
 	LEFT JOIN intranet_images m ON u.imageID = m.imageID
 	WHERE w.id = " . $_GET["id"]);
 ?>
@@ -137,7 +137,7 @@ $t = db_grab("SELECT
 				t.icon,
 				t.description type
 			FROM wiki_topics_attachments a
-			JOIN intranet_doctypes t ON a.typeID = t.id
+			JOIN documents_types t ON a.typeID = t.id
 			WHERE a.topicID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
@@ -161,7 +161,7 @@ $t = db_grab("SELECT
 				m.width,
 				m.height
 			FROM wiki_topics_comments c
-			JOIN intranet_users u ON c.createdBy = u.userID
+			JOIN users u ON c.createdBy = u.userID
 			LEFT JOIN intranet_images m ON u.imageID = m.imageID
 			WHERE c.topicID = {$_GET["id"]}
 			ORDER BY c.createdOn ASC");

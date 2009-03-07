@@ -35,7 +35,7 @@ echo drawJumpToStaff();
 							u.emerCont2Phone,
 							u.emerCont2Cell,
 							u.emerCont2Email
-						FROM intranet_users u
+						FROM users u
 						LEFT  JOIN intranet_us_states s ON s.stateID = u.homeStateID
 						WHERE u.isActive = 1
 						ORDER BY u.lastname, u.firstname");

@@ -24,7 +24,7 @@ $result = db_query("SELECT
 	FROM resources_awards a
 	JOIN resources_funders f ON a.funderID = f.funderID
 	JOIN resources_awards_statuses t ON a.awardStatusID = t.awardStatusID
-	JOIN intranet_users u ON a.staffID = u.userID
+	JOIN users u ON a.staffID = u.userID
 	WHERE ((a.awardStatusID = 1) OR (a.awardStatusID = 2) OR (a.awardStatusID = 5))
 	ORDER BY funder, award");
 while ($r = db_fetch($result)) {

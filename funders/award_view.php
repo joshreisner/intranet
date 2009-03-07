@@ -66,7 +66,7 @@ $r = db_grab("SELECT
 	INNER JOIN intranet_programs p  ON a.awardprogramID  = p.programID
 	LEFT  JOIN intranet_programs p2 ON a.awardprogramID2 = p2.programID
 	INNER JOIN resources_awards_types at ON at.awardTypeID = a. awardTypeID
-	INNER JOIN intranet_users u ON a.staffID = u.userID
+	INNER JOIN users u ON a.staffID = u.userID
 	WHERE awardID = " . $_GET["id"]);
 
 	?>
@@ -176,7 +176,7 @@ $r = db_grab("SELECT
 			a.isActionItem,
 			a.isInternalDeadline
 		FROM Resources_Activity a
-		INNER JOIN intranet_users u ON a.activityAssignedTo = u.userid
+		INNER JOIN users u ON a.activityAssignedTo = u.userid
 		WHERE a.awardID = {$_GET["id"]}
 		ORDER BY a.activityDate DESC");
 	if (db_found($activity)) {?>

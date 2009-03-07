@@ -3,16 +3,16 @@
 if ($posting) {
 	$_POST["description"] = format_html($_POST["message"]);
 	$_POST["topicID"] = $_GET["id"];
-	$id = db_enter("bulletin_board_followups", "topicID |description");
-	db_grab("SELECT topicID FROM bulletin_board_followups WHERE id = " . $id);
-	db_query("UPDATE bulletin_board_topics SET threadDate = GETDATE() WHERE id = " .  $_GET["id"]);
+	$id = db_enter("bb_followups", "topicID |description");
+	db_grab("SELECT topicID FROM bb_followups WHERE id = " . $id);
+	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " .  $_GET["id"]);
 	syndicateBulletinBoard();
 	url_change();
 }
 
 //set topic and followups to deleted
 if (isset($_GET["delete"])) {
-	db_query("UPDATE bulletin_board_topics SET 
+	db_query("UPDATE bb_topics SET 
 				isActive = 0,
 				deletedOn = GETDATE(),
 				deletedBy = {$_SESSION["user_id"]}
@@ -20,7 +20,7 @@ if (isset($_GET["delete"])) {
 	syndicateBulletinBoard();
 	url_change("/bb/");
 } elseif (isset($_GET["deleteFollowupID"])) {
-	db_query("UPDATE bulletin_board_followups SET 
+	db_query("UPDATE bb_followups SET 
 				isActive = 0,
 				deletedOn = GETDATE(),
 				deletedBy = {$_SESSION["user_id"]}
@@ -40,8 +40,8 @@ $r = db_grab("SELECT
 		u.lastname,
 		i.width,
 		i.height
-		FROM bulletin_board_topics t
-		JOIN intranet_users u ON t.createdBy = u.userID
+		FROM bb_topics t
+		JOIN users u ON t.createdBy = u.userID
 		LEFT JOIN intranet_images i ON u.imageID = i.imageID
 		WHERE t.id = " . $_GET["id"]);
 
@@ -102,8 +102,8 @@ if ($r["isAdmin"]) echo drawServerMessage("<b>Note</b>: This is an Administratio
 					i.imageID,
 					i.width,
 					i.height
-				FROM bulletin_board_followups f
-				JOIN intranet_users u ON u.userID = f.createdBy
+				FROM bb_followups f
+				JOIN users u ON u.userID = f.createdBy
 				LEFT JOIN intranet_images i ON u.imageID = i.imageID
 				WHERE f.isActive = 1 AND f.topicID = {$_GET["id"]}
 				ORDER BY f.createdOn");

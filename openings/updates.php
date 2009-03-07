@@ -14,8 +14,8 @@ $users = db_query("select
 		u.lastlogin, 
 		u.updatedOn, 
 		" . db_datediff("u.updatedOn", "GETDATE()") . " recent 
-	FROM intranet_users u
-	JOIN intranet_departments d on u.departmentID = d.departmentID
+	FROM users u
+	JOIN departments d on u.departmentID = d.departmentID
 	JOIN intranet_ranks r on u.rankID = r.id
 	WHERE u.isactive = 1 and (u.homeaddress1 = '' OR u.homeaddress1 IS NULL)
 	ORDER BY lastname");

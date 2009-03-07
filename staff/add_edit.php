@@ -17,7 +17,7 @@ if ($posting) {
 	format_post_nulls("departmentID,officeID,rankID");
 	if ($isAdmin) {
 		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
-		$id = db_enter("intranet_users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
+		$id = db_enter("users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
 		
 		//if new user, reset password, delete request, and send invite
 		if (!isset($_GET["id"])) {
@@ -26,28 +26,28 @@ if ($posting) {
 					"<a href='http://intranet.seedco.org/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet.", 
 					"Intranet: New Staff Added");
 			}
-			db_query("UPDATE intranet_users SET password = PWDENCRYPT('') WHERE userID = " . $id);
+			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE userID = " . $id);
 			if (isset($_GET["requestID"])) db_query("DELETE FROM users_requests WHERE id = " . $_GET["requestID"]);
 			//send invitation
 			$name = str_replace("'", "", ($_POST["nickname"] == "NULL") ? $_POST["firstname"] : $_POST["nickname"]);
 			email_invite($id, $email_address, $name);
 		}
 		//update permissions
-		db_checkboxes("permissions", "administrators", "userID", "moduleID", $id);
+		db_checkboxes("permissions", "users_to_modules", "userID", "moduleID", $id);
 
 		//check long distance code
 		if (($locale == "/_seedco/") && ($_POST["officeID"] == "1")) {
-			if (!db_grab("SELECT longdistancecode FROM intranet_users WHERE userID = " . $id)) {
-				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM intranet_users WHERE isActive = 1 AND longdistancecode IS NOT NULL)");
-				db_query("UPDATE intranet_users SET longDistanceCode = {$code} WHERE userID = " . $id);
+			if (!db_grab("SELECT longdistancecode FROM users WHERE userID = " . $id)) {
+				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM users WHERE isActive = 1 AND longdistancecode IS NOT NULL)");
+				db_query("UPDATE users SET longDistanceCode = {$code} WHERE userID = " . $id);
 			}
 		}
 	} else {
-		$id = db_enter("intranet_users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
+		$id = db_enter("users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
 	}
 	
 	if ($id == $_SESSION["user_id"]) {
-		$user = db_grab("SELECT u.updatedOn, " . db_datediff("u.updatedOn", "GETDATE()") . " update_days FROM intranet_users u WHERE u.userID = " . $_SESSION["user_id"]);
+		$user = db_grab("SELECT u.updatedOn, " . db_datediff("u.updatedOn", "GETDATE()") . " update_days FROM users u WHERE u.userID = " . $_SESSION["user_id"]);
 		$_SESSION["updatedOn"]	 = $user["updatedOn"];
 		$_SESSION["update_days"] = $user["update_days"];
 	}
@@ -74,7 +74,7 @@ if ($posting) {
 			)");
 	
 		//add imageID to user	
-		db_query("UPDATE intranet_users SET imageID = $imageID WHERE userID = " . $id);
+		db_query("UPDATE users SET imageID = $imageID WHERE userID = " . $id);
 	}
 
 	url_change("view.php?id=" . $id);
@@ -118,7 +118,7 @@ if (isset($_GET["id"])) {
 		u.updatedOn,
 		u.startDate,
 		u.endDate
-		FROM intranet_users u
+		FROM users u
 		WHERE u.userID = " . $_GET["id"]);
 		
 	if (($_GET["id"] == $_SESSION["user_id"]) && ($_SESSION["update_days"] > 90)) {
@@ -169,7 +169,7 @@ if ($isAdmin) { //some fields are admin-only (we don't want people editing the s
 	$form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);
-	$form->addCheckboxes("permissions", "Permissions", "modules", "administrators", "userID", "moduleID", @$_GET["id"]);
+	$form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "userID", "moduleID", @$_GET["id"]);
 	$form->addRow("file", "Image", "userfile");
 }
 

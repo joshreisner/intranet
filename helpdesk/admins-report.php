@@ -26,7 +26,7 @@ while (!$break) {
 }
 
 //execute query we just built
-$result = db_query("SELECT ISNULL(u.nickname, u.firstname) 'Helpdesk Admin', " . implode(", ", $columns) . " FROM intranet_users u WHERE u.departmentID = $departmentID AND (SELECT COUNT(*) FROM administrators a WHERE a.userID = u.userID AND a.moduleID = 3) > 0 ORDER BY ISNULL(u.nickname, u.firstname)");
+$result = db_query("SELECT ISNULL(u.nickname, u.firstname) 'Helpdesk Admin', " . implode(", ", $columns) . " FROM users u WHERE u.departmentID = $departmentID AND (SELECT COUNT(*) FROM users_to_modules a WHERE a.userID = u.userID AND a.moduleID = 3) > 0 ORDER BY ISNULL(u.nickname, u.firstname)");
 while ($r = db_fetch($result)) $report[] = $r;
 
 echo file_array($report, "Admins Report");

@@ -81,8 +81,8 @@ if (isset($_GET["ticketID"])) {
 	$result = db_query("SELECT 
 			u.userID, 
 			ISNULL(u.nickname, u.firstname) first 
-			FROM intranet_users u
-			LEFT JOIN administrators a ON a.userID = u.userID 
+			FROM users u
+			LEFT JOIN users_to_modules a ON a.userID = u.userID 
 			WHERE 
 				u.isActive = 1 AND
 				( a.moduleID = 3 OR u.isAdmin = 1 ) 
@@ -98,7 +98,7 @@ if (isset($_GET["ticketID"])) {
 	$result = db_query("SELECT id, description FROM helpdesk_tickets_priorities");
 	while ($r = db_fetch($result)) $priorityOptions[$r["id"]] = $r["description"];
 
-	$result = db_query("SELECT departmentID, shortName FROM intranet_departments WHERE isHelpdesk = 1");
+	$result = db_query("SELECT departmentID, shortName FROM departments WHERE isHelpdesk = 1");
 	while ($r = db_fetch($result)) $departmentOptions[$r["departmentID"]] = $r["shortName"];
 	
 	$result = db_query("SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = $departmentID ORDER BY description");
@@ -185,7 +185,7 @@ function emailITticket($id, $scenario, $admin=false) {
 	
 	$ticket = db_grab("SELECT
 			u.userID,
-			(SELECT COUNT(*) FROM administrators a WHERE a.userID = u.userID AND a.moduleID = 3) isUserAdmin,
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.userID = u.userID AND a.moduleID = 3) isUserAdmin,
 			t.title,
 			t.createdBy,
 			t.description,
@@ -207,10 +207,10 @@ function emailITticket($id, $scenario, $admin=false) {
 			ISNULL(u2.nickname, u2.firstname) as ownerName
 		FROM helpdesk_tickets t
 		LEFT  JOIN helpdesk_tickets_types y	ON t.typeID		= y.id
-		JOIN intranet_users  u	ON t.createdBy	= u.userID
-		JOIN intranet_departments d ON t.departmentID = d.departmentID
+		JOIN users  u	ON t.createdBy	= u.userID
+		JOIN departments d ON t.departmentID = d.departmentID
 		LEFT  JOIN intranet_images m	ON u.imageID	= m.imageID
-		LEFT  JOIN intranet_users  u2	ON t.ownerID	= u2.userID
+		LEFT  JOIN users  u2	ON t.ownerID	= u2.userID
 		WHERE t.id = " . $id);
 		
 	//yellow box
@@ -267,7 +267,7 @@ function emailITticket($id, $scenario, $admin=false) {
 	$followups = db_query("SELECT
 			u.userID,
 			f.message,
-			(SELECT COUNT(*) FROM administrators a WHERE a.userID = u.userID AND a.moduleID = 3) isUserAdmin,
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.userID = u.userID AND a.moduleID = 3) isUserAdmin,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
 			u.email,
@@ -277,7 +277,7 @@ function emailITticket($id, $scenario, $admin=false) {
 			m.height,
 			f.isAdmin
 		FROM helpdesk_tickets_followups f
-		INNER JOIN intranet_users  u  ON f.createdBy	= u.userID
+		INNER JOIN users  u  ON f.createdBy	= u.userID
 		LEFT  JOIN intranet_images m  ON u.imageID		= m.imageID
 		WHERE f.ticketID = {$id} ORDER BY f.createdOn");
 	while ($f = db_fetch($followups)) {
@@ -298,10 +298,10 @@ function emailITticket($id, $scenario, $admin=false) {
 	$headers .= "From: Intranet <donotreply@seedco.org>\r\n";
 
 	$admins = array_unique($admins);
-	$admins = arrayRemove($_SESSION["email"], $admins);
+	$admins = array_remove($_SESSION["email"], $admins);
 	
 	$users = array_unique($users);
-	$users = arrayRemove($_SESSION["email"], $users);
+	$users = array_remove($_SESSION["email"], $users);
 		
 	//special codes for email
 	if (($scenario == "new")			&& ($ticket["departmentID"] == 3)) $admins = array("czanoni@seedco.org","cpena@seedco.org");

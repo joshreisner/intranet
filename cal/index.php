@@ -3,7 +3,7 @@ include("include.php");
 
 if ($posting) {
 	$_POST["isActive"] = 1;
-	$id = db_enter("calendar_events", "title description *startDate typeID");
+	$id = db_enter("cal_events", "title description *startDate typeID");
 	url_query_add(array("month"=>$_POST["startDateMonth"], "year"=>$_POST["startDateYear"]));
 }
 
@@ -19,8 +19,8 @@ $result = db_query("SELECT
 			DAY(e.startDate) startDay,
 			e.title,
 			t.color
-		FROM calendar_events e
-		JOIN calendar_events_types t ON e.typeID = t.id
+		FROM cal_events e
+		JOIN cal_events_types t ON e.typeID = t.id
 		WHERE e.isActive = 1 AND 
 			MONTH(e.startDate) = {$_GET["month"]} AND
 			YEAR(e.startDate) = " . $_GET["year"]);
@@ -203,7 +203,7 @@ if (!isset($_GET["year"])) $_GET["year"]   = $year;
 $form = new intranet_form;
 if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Title" , "title", "", "", true);
-$form->addRow("select", "Type", "typeID", "SELECT id, description FROM calendar_events_types ORDER BY description", 1, true);
+$form->addRow("select", "Type", "typeID", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
 $form->addRow("datetime", "Date", "startDate");
 $form->addRow("textarea", "Notes" , "description", "", "", true);
 $form->addRow("submit"  , "add new event");

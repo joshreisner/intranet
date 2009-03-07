@@ -17,8 +17,8 @@ drawTop();
 							u.imageID,
 							m.height,
 							m.width
-						FROM intranet_users u
-						LEFT  JOIN intranet_departments d ON d.departmentID = u.departmentID 
+						FROM users u
+						LEFT  JOIN departments d ON d.departmentID = u.departmentID 
 						LEFT  JOIN intranet_offices f     ON f.id = u.officeID
 						LEFT  JOIN intranet_images m      ON u.imageID = m.imageID
 						WHERE u.isactive = 0

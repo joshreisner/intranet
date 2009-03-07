@@ -23,7 +23,7 @@ drawTop();
 								d.departmentName,
 								ISNULL(j.updatedOn, j.createdOn) updatedOn
 							FROM intranet_jobs j
-							LEFT JOIN intranet_departments d ON j.departmentID = d.departmentID
+							LEFT JOIN departments d ON j.departmentID = d.departmentID
 							WHERE j.isActive = 0
 							ORDER BY j.title, departmentName");
 		if (db_found($result)) {?>

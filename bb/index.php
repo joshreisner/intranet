@@ -3,8 +3,8 @@
 if ($posting) {
 	error_debug("handling bb post");
 	format_post_bits("isAdmin");
-	$id = db_enter("bulletin_board_topics", "title |description isAdmin");
-	db_query("UPDATE bulletin_board_topics SET threadDate = GETDATE() WHERE id = " . $id);
+	$id = db_enter("bb_topics", "title |description isAdmin");
+	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " . $id);
 	
 	if ($_POST["isAdmin"] == "'1'") { //send admin email
 		//get topic 
@@ -18,8 +18,8 @@ if ($posting) {
 				m.width,
 				m.height,
 				t.createdOn
-				FROM bulletin_board_topics t
-				JOIN intranet_users u ON t.createdBy = u.userID
+				FROM bb_topics t
+				JOIN users u ON t.createdBy = u.userID
 				LEFT JOIN intranet_images m ON u.imageID = m.imageID
 				WHERE t.id = " . $id);
 		
@@ -36,7 +36,7 @@ if ($posting) {
 		$headers .= "From: " . $_josh["email_default"] . "\r\n";
 		
 		//get addresses & send
-		$users = db_query("SELECT email FROM intranet_users WHERE isactive = 1");
+		$users = db_query("SELECT email FROM users WHERE isactive = 1");
 		while ($u = db_fetch($users)) {
 			mail($u["email"], $r["title"], $message, $headers);
 		}
@@ -65,11 +65,11 @@ $topics = db_query("SELECT
 		t.title,
 		t.isAdmin,
 		t.threadDate,
-		(SELECT COUNT(*) FROM bulletin_board_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
+		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
 		ISNULL(u.nickname, u.firstname) firstname,
 		u.lastname
-	FROM bulletin_board_topics t
-	JOIN intranet_users u ON u.userID = t.createdBy
+	FROM bb_topics t
+	JOIN users u ON u.userID = t.createdBy
 	WHERE t.isActive = 1 
 	ORDER BY t.threadDate DESC", 15);
 if (db_found($topics)) {

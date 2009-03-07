@@ -2,9 +2,9 @@
 
 if (url_action("delete")) {
 	db_query("UPDATE board_members SET 
-				deletedOn = GETDATE(),
-				deletedBy = {$_SESSION["user_id"]},
-				isActive = 0
+				deleted_date = GETDATE(),
+				deleted_user = {$_SESSION["user_id"]},
+				is_active = 0
 			WHERE id = " . $_GET["id"]);
 	url_drop();
 } elseif ($posting) {
@@ -12,19 +12,19 @@ if (url_action("delete")) {
 		firstname,
 		lastname,
 		bio,
-		positionOnBoard,
+		board_position,
 		employment,
-		corporationID,
-		createdOn,
-		createdBy,
-		isActive
+		organization_id,
+		created_date,
+		created_user,
+		is_active
 	) VALUES (
 		'" . $_POST["firstname"] . "',
 		'" . $_POST["lastname"] . "',
 		'" . $_POST["bio"] . "',
-		'" . $_POST["positionOnBoard"] . "',
+		'" . $_POST["board_position"] . "',
 		'" . $_POST["employment"] . "',
-		" . $_POST["corporationID"] . ",
+		" . $_POST["organization_id"] . ",
 		GETDATE(),
 		" . $_SESSION["user_id"] . ",
 		1
@@ -53,11 +53,11 @@ drawTop();
 					m.id,
 					m.firstname,
 					m.lastname,
-					m.positionOnBoard,
+					m.board_position,
 					o.description organization
 					FROM board_members m
-					JOIN organizations o ON m.corporationID = o.id
-					WHERE m.isActive = 1
+					JOIN organizations o ON m.organization_id = o.id
+					WHERE m.is_active = 1
 					ORDER BY o.description, m.lastname, m.firstname");
 	$lastCorporation = "";
 	while ($r = db_fetch($result)) {
@@ -68,7 +68,7 @@ drawTop();
 	 ?>
 	    <tr>
 	        <td><a href="member.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
-	        <td><nobr><?=$r["positionOnBoard"]?></nobr></td>
+	        <td><nobr><?=$r["board_position"]?></nobr></td>
 			<?=deleteColumn("Are you sure you want to delete this board member?", $r["id"])?>
 	    </tr>
 	<? }?>
@@ -80,8 +80,8 @@ drawTop();
 	$form = new intranet_form;
 	$form->addRow("itext",  "First Name" , "firstname", "", "", true, 255);
 	$form->addRow("itext",  "Last Name" , "lastname", "", "", true, 255);
-	$form->addRow("select", "Organization", "corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
-	$form->addRow("itext",  "Position on Board" , "positionOnBoard", "", "", false, 255);
+	$form->addRow("select", "Organization", "organization_id", "SELECT id, description FROM organizations ORDER BY description", "", true);
+	$form->addRow("itext",  "Position on Board" , "board_position", "", "", false, 255);
 	$form->addRow("itext",  "Employment" , "employment", "", "", false, 255);
 	$form->addRow("textarea", "Bio" , "bio", "", "", false);
 	$form->addRow("submit"  , "add board member");

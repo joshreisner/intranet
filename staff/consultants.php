@@ -2,11 +2,11 @@
 include("../include.php");
 
 if (isset($_GET["deleteID"])) {
-	$r = db_grab("SELECT endDate FROM intranet_users WHERE userID = " . $_GET["deleteID"]);
+	$r = db_grab("SELECT endDate FROM users WHERE userID = " . $_GET["deleteID"]);
 	if ($r["endDate"]) {
-		db_query("UPDATE intranet_users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["deleteID"]);
+		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["deleteID"]);
 	} else {
-		db_query("UPDATE intranet_users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["deleteID"]);
+		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["deleteID"]);
 	}
 	url_query_drop("deleteID");
 }
@@ -46,9 +46,9 @@ drawNavigation();
 							m.height,
 							m.width,
 							r.isPayroll
-						FROM intranet_users u
+						FROM users u
 						JOIN intranet_ranks r ON u.rankID = r.id
-						LEFT  JOIN intranet_departments d ON d.departmentID = u.departmentID 
+						LEFT  JOIN departments d ON d.departmentID = u.departmentID 
 						LEFT  JOIN intranet_offices f     ON f.id = u.officeID
 						LEFT  JOIN intranet_images m      ON u.imageID = m.imageID
 						WHERE u.isActive = 1 AND r.isPayroll = 0

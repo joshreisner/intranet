@@ -20,9 +20,9 @@ $r = db_grab("SELECT
 	FROM intranet_jobs j
 	LEFT JOIN organizations c ON j.corporationID = c.id
 	LEFT JOIN intranet_offices o ON j.officeID = o.id
-	LEFT JOIN intranet_users u1 ON j.createdBy = u1.userID
-	LEFT JOIN intranet_users u2 ON j.updatedBy = u2.userID
-	LEFT JOIN intranet_users u3 ON j.deletedBy = u3.userID
+	LEFT JOIN users u1 ON j.createdBy = u1.userID
+	LEFT JOIN users u2 ON j.updatedBy = u2.userID
+	LEFT JOIN users u3 ON j.deletedBy = u3.userID
 	
 	WHERE j.id = " . $_GET["id"]);
 	$r["createdBy"] = ($r["createdByFirst"]) ? $r["createdByFirst"] . " " . $r["createdByLast"] : false;

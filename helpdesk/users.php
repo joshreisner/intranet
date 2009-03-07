@@ -18,7 +18,7 @@ echo drawTicketFilter();
 							u.lastname last,
 							(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.createdBy = u.userID $where) tickets,
 							(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE t.createdBy = u.userID " . $where . ") minutes
-						FROM intranet_users u
+						FROM users u
 						WHERE u.isActive = 1
 						ORDER BY last, first");
 	$counter = 0;

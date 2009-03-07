@@ -3,11 +3,11 @@ include("../include.php");
 
 if (url_action("delete")) {
 	if (!isset($_GET["staffID"]) && isset($_GET["id"])) $_GET["staffID"] = $_GET["id"];
-	$r = db_grab("SELECT firstname, lastname, endDate FROM intranet_users WHERE userID = " . $_GET["staffID"]);
+	$r = db_grab("SELECT firstname, lastname, endDate FROM users WHERE userID = " . $_GET["staffID"]);
 	if ($r["endDate"]) {
-		db_query("UPDATE intranet_users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["staffID"]);
+		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["staffID"]);
 	} else {
-		db_query("UPDATE intranet_users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["staffID"]);
+		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["staffID"]);
 	}
 	if ($locale == "/_seedco/") {	
 		email("jreisner@seedco.org,pchoi@seedco.org", 
@@ -68,8 +68,8 @@ function drawStaffList($where, $searchterms=false) {
 							u.imageID,
 							m.height,
 							m.width
-						FROM intranet_users u
-						LEFT JOIN intranet_departments d	ON d.departmentID = u.departmentID 
+						FROM users u
+						LEFT JOIN departments d	ON d.departmentID = u.departmentID 
 						LEFT JOIN organizations c			ON u.corporationID = c.id
 						LEFT JOIN intranet_offices o		ON o.id = u.officeID
 						LEFT JOIN intranet_images m			ON u.imageID = m.imageID

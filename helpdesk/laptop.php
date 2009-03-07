@@ -108,7 +108,7 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 							m.width,
 							m.height
 						FROM IT_Laptops_Checkouts c
-						INNER JOIN intranet_users u ON c.checkoutUser = u.userID
+						INNER JOIN users u ON c.checkoutUser = u.userID
 						LEFT  JOIN intranet_images m ON u.imageID = m.imageID
 						WHERE checkoutLaptopID = " . $_GET["id"] . "
 						ORDER BY checkoutStart DESC");

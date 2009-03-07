@@ -4,7 +4,7 @@ $result = db_query("SELECT
 		ISNULL(d.updatedOn, d.createdOn) updatedOn,
 		i.icon, i.description, (SELECT COUNT(*) FROM documents_views v WHERE v.documentID = d.id) downloads
 		FROM documents d
-	JOIN intranet_doctypes i ON d.typeID = i.id
+	JOIN documents_types i ON d.typeID = i.id
 	WHERE isActive = 1
 	ORDER BY downloads DESC", 4);
 while ($r = db_fetch($result)) {?>

@@ -22,7 +22,7 @@ $result = db_query("SELECT
 						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND awardStatusID = 2) as proposals,
 						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND awardStatusID = 5) as strategies,
 						u.isActive
-					FROM intranet_users u
+					FROM users u
 					WHERE (SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND (awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5)) > 0
 					ORDER BY last, first
 					");

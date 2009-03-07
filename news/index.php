@@ -17,8 +17,8 @@ if (url_id()) {
 		n.url,
 		n.description
 		FROM news_stories n
-		LEFT JOIN intranet_doctypes d ON n.imageTypeID = d.id
-		LEFT JOIN intranet_doctypes d2 ON n.fileTypeID = d2.id
+		LEFT JOIN documents_types d ON n.imageTypeID = d.id
+		LEFT JOIN documents_types d2 ON n.fileTypeID = d2.id
 		WHERE n.id = " . $_GET["id"]);
 	if ($r["image"]) {
 		$filename = $locale . "news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"];

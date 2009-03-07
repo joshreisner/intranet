@@ -37,12 +37,12 @@ if ($_SESSION["departmentID"] != 8) {
 						t.createdOn,
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last,
-						(SELECT COUNT(*) FROM administrators a WHERE a.moduleID = 3 AND a.userID = t.createdBy) isAdminIT,
+						(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) isAdminIT,
 						u.imageID,
 						m.width,
 						m.height
 					FROM helpdesk_tickets t
-					JOIN intranet_users u ON u.userID    = t.createdBy
+					JOIN users u ON u.userID    = t.createdBy
 					LEFT  JOIN intranet_images m ON u.imageID   = m.imageID
 					WHERE t.statusID <> 9 AND t.typeID = 1
 					ORDER BY t.createdOn DESC");
@@ -106,7 +106,7 @@ if (db_found($result)) {?>
 		FROM IT_Laptops l
 		INNER JOIN IT_Laptops_Statuses s ON s.laptopStatusID = l.laptopStatusID
 		LEFT JOIN IT_Laptops_Checkouts lc ON l.checkoutID = lc.checkoutID
-		LEFT JOIN intranet_users u ON u.userID = lc.checkoutUser
+		LEFT JOIN users u ON u.userID = lc.checkoutUser
 		WHERE l.laptopHomeID = {$h["id"]} AND l.isActive = 1
 		ORDER BY laptopName");
 	while ($r = db_fetch($result)) {?>

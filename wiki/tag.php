@@ -19,7 +19,7 @@ $r = db_grab("SELECT description FROM wiki_tags WHERE id = " . $_GET["id"]);
 		w.createdOn
 	FROM wiki_topics w
 	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN intranet_users u ON w.createdBy = u.userID
+	JOIN users u ON w.createdBy = u.userID
 	WHERE w.isActive = 1 AND 
 		(SELECT COUNT(*) FROM wiki_topics_to_tags w2t WHERE w2t.topicID = w.id AND w2t.tagID = " . $_GET["id"] . ") > 0");
 	if (db_found($topics)) {?>

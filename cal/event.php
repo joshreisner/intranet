@@ -16,14 +16,14 @@ $e = db_grab("SELECT
 		u.imageID,
 		i.width imgwidth,
 		i.height imgheight
-	FROM calendar_events e
-	JOIN intranet_users u ON e.createdBy = u.userID
-	JOIN calendar_events_types t ON e.typeID = t.id
+	FROM cal_events e
+	JOIN users u ON e.createdBy = u.userID
+	JOIN cal_events_types t ON e.typeID = t.id
 	LEFT JOIN intranet_images i ON u.imageID = i.imageID
 	WHERE e.id = " . $_GET["id"]);
 	
 if (url_action("delete")) {
-	db_query("DELETE FROM calendar_events WHERE id = " . $_GET["id"]);
+	db_query("DELETE FROM cal_events WHERE id = " . $_GET["id"]);
 	url_change("/cal/?month="  . $e["month"] . "&year=" . $e["year"]);
 }
 

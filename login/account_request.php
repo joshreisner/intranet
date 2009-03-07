@@ -9,7 +9,7 @@ if ($posting) {
 
 	//create request
 	//todo ~ check whether staff already exists -- forward to password reset
-	if ($id = db_grab("SELECT userID FROM intranet_users WHERE email = '" . $_POST["email"] . "' AND isActive = 1")) {
+	if ($id = db_grab("SELECT userID FROM users WHERE email = '" . $_POST["email"] . "' AND isActive = 1")) {
 		url_change("account_exists.php");
 	} elseif ($id = db_grab("SELECT id FROM users_requests WHERE email = '" . $_POST["email"] . "'")) {
 		db_query("UPDATE users_requests SET
@@ -61,7 +61,7 @@ if ($posting) {
 			if ($key == "email") {
 				$message .= '<td><a href="mailto:' . $value . '">' . $value . '</a></td></tr>';
 			} elseif ($key == "departmentID") {
-				$r = db_grab("SELECT departmentName FROM intranet_departments WHERE departmentID = " . $value);
+				$r = db_grab("SELECT departmentName FROM departments WHERE departmentID = " . $value);
 				$message .= '<td>' . $r . '</td></tr>';
 			} elseif ($key == "officeID") {
 				$r = db_grab("SELECT name FROM intranet_offices WHERE id = " . $value);
@@ -91,7 +91,7 @@ if ($posting) {
 			<script language="javascript" type="text/javascript" src="<?=$locale?>tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 			<script language="javascript">
 				<!--
-				initTinyMCE("<?=$locale?>style-textarea.css");
+				initTinyMCE("<?=$locale?>tinymce.css");
 				//-->
 			</script>
 	</head>

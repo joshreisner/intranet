@@ -10,7 +10,7 @@ $result = db_query("select
 						u.title,
 						u.homephone, 
 						u.homecell 
-					FROM intranet_users u
+					FROM users u
 					WHERE (u.rankid < 8 OR u.departmentID = 7) AND u.isactive = 1
 					ORDER BY u.rankID, u.lastname, ISNULL(u.nickname, u.firstname)");
 ?>

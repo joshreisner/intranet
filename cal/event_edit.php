@@ -2,7 +2,7 @@
 include("include.php");
 
 if ($posting) {
-	$id = db_enter("calendar_events", "title description *startDate typeID");
+	$id = db_enter("cal_events", "title description *startDate typeID");
 	url_change("./event.php?id=" . $_GET["id"]);
 }
 
@@ -21,8 +21,8 @@ $e = db_grab("SELECT
 		u.imageID,
 		i.width imgwidth,
 		i.height imgheight
-	FROM calendar_events e
-	JOIN intranet_users u ON e.createdBy = u.userID
+	FROM cal_events e
+	JOIN users u ON e.createdBy = u.userID
 	LEFT JOIN intranet_images i ON u.imageID = i.imageID
 	WHERE e.id = " . $_GET["id"]);
 	
@@ -33,7 +33,7 @@ echo drawNavigationCal($e["month"], $e["year"], true);
 $form = new intranet_form;
 if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], $e["createdBy"], true);
 $form->addRow("itext",  "Title" , "title", $e["title"], "", true);
-$form->addRow("select", "Type", "typeID", "SELECT id, description FROM calendar_events_types ORDER BY description", $e["typeID"], true);
+$form->addRow("select", "Type", "typeID", "SELECT id, description FROM cal_events_types ORDER BY description", $e["typeID"], true);
 $form->addRow("datetime", "Date", "startDate", $e["startDate"]);
 $form->addRow("textarea", "Notes" , "description", $e["description"], "", true);
 $form->addRow("submit"  , "save changes");

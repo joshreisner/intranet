@@ -1,0 +1,19 @@
+#help {
+	width:594px;
+}
+table.links { width:291px; }
+table.right { width:291px; }
+
+span.clickme { cursor:hand; }
+tr.thread { cursor:hand; }
+
+input.button   { border:0px; 
+	padding:2px 5px 2px 5px; 
+	height:23px;
+}
+
+table.nospacing { border-spacing: 0px; padding:0px; margin:0px; border:0px; }
+table.nospacing tr { border-spacing: 0px; padding:0px; margin:0px; border:0px; }
+table.nospacing td { border-spacing: 0px; padding:0px; margin:0px; border:0px; }
+
+a.floating { margin-top:-49px }

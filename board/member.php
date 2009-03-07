@@ -6,11 +6,11 @@ $r = db_grab("SELECT
 		m.firstname,
 		m.lastname,
 		m.bio,
-		m.positionOnBoard,
+		m.board_position,
 		m.employment,
 		o.description organization
 	FROM board_members m
-	JOIN organizations o ON m.corporationID = o.id
+	JOIN organizations o ON m.organization_id = o.id
 	WHERE m.id = " . $_GET["id"]);
 ?>
 <table class="left" cellspacing="1">
@@ -29,7 +29,7 @@ $r = db_grab("SELECT
 	</tr>
 	<tr>
 		<td class="left">Position on Board</td>
-		<td><?=$r["positionOnBoard"]?></td>
+		<td><?=$r["board_position"]?></td>
 	</tr>
 	<tr>
 		<td class="left">Employment</td>

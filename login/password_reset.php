@@ -3,7 +3,7 @@ $pageIsPublic = true;
 include("../include.php");
 
 if ($posting) {
-	if ($r = db_grab("SELECT userID FROM intranet_users WHERE email = '{$_POST["email"]}' AND isActive = 1")) {
+	if ($r = db_grab("SELECT userID FROM users WHERE email = '{$_POST["email"]}' AND isActive = 1")) {
 		email_user($_POST["email"], "Reset Your Password", drawEmptyResult('To reset your password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r . '">follow this link</a>.'));
 		url_change("password_confirm.php");
 	} else {
@@ -11,8 +11,8 @@ if ($posting) {
 	}
 } elseif (url_id("id")) {
 	$_SESSION["user_id"] = false;
-	db_query("UPDATE intranet_users SET password = PWDENCRYPT('') WHERE userID = {$_GET["id"]} AND isActive = 1");
-	if ($email = db_grab("SELECT email FROM intranet_users WHERE userID = {$_GET["id"]} AND isActive = 1")) {
+	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE userID = {$_GET["id"]} AND isActive = 1");
+	if ($email = db_grab("SELECT email FROM users WHERE userID = {$_GET["id"]} AND isActive = 1")) {
 		login($r["email"], "", true);
 		cookie("last_login", $_SESSION["email"]);
 		url_change($_SESSION["homepage"]);

@@ -27,7 +27,7 @@ if ($isAdmin) {
 } else {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE isAdmin = 0", $t["priorityID"]);
 }
-$form->addRow("select", "Department" , "departmentID", "SELECT departmentID, shortName FROM intranet_departments WHERE isHelpdesk = 1", $t["departmentID"], true, 50, "updateTypes(this.value)");
+$form->addRow("select", "Department" , "departmentID", "SELECT departmentID, shortName FROM departments WHERE isHelpdesk = 1", $t["departmentID"], true, 50, "updateTypes(this.value)");
 $form->addRow("select", "Type" , "typeID", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = " . $t["departmentID"] . " ORDER BY description", $t["typeID"]);
 $form->addRow("textarea", "Description" , "description", $t["description"], "", true);
 $form->addRow("submit"  , "save changes");

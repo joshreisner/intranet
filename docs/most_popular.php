@@ -18,7 +18,7 @@ drawTop();
 			i.icon,
 			i.description alt
 		FROM documents d
-		JOIN intranet_doctypes i ON d.typeID = i.id
+		JOIN documents_types i ON d.typeID = i.id
 		WHERE d.isActive = 1
 		ORDER BY downloads DESC", 20);
 	while ($r = db_fetch($result)) {?>

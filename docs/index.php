@@ -44,7 +44,7 @@ drawTop();
 							i.description alt
 						FROM documents d
 						JOIN documents_to_categories d2c ON d.id = d2c.documentID
-						JOIN intranet_doctypes i ON d.typeID = i.id
+						JOIN documents_types i ON d.typeID = i.id
 						WHERE d2c.categoryID = " . $c["id"] . "
 						AND d.isActive = 1
 						ORDER BY d.name;");

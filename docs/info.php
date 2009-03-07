@@ -13,7 +13,7 @@ $d = db_grab("SELECT
 		i.icon,
 		i.description fileType
 	FROM documents d
-	JOIN intranet_doctypes i ON d.typeID = i.id
+	JOIN documents_types i ON d.typeID = i.id
 	WHERE d.id = " . $_GET["id"]);
 
 drawTop();
@@ -65,7 +65,7 @@ $views = db_query("SELECT
 			u.userID,
 			v.viewedOn
 			FROM documents_views v
-			JOIN intranet_users u ON v.userID = u.userID
+			JOIN users u ON v.userID = u.userID
 			WHERE v.documentID = " . $_GET["id"] . "
 			ORDER BY v.viewedOn DESC", 5);
 if (db_found($views)) {?>

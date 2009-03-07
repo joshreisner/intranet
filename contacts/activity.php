@@ -22,7 +22,7 @@ drawTop();
 			o.isactive
 		FROM intranet_objects o
 		INNER JOIN intranet_instances	i ON o.instanceCurrentID = i.id
-		INNER JOIN intranet_users		u ON i.createdBy = u.userID
+		INNER JOIN users		u ON i.createdBy = u.userID
 		ORDER BY i.createdOn DESC", 40);
 	while ($r = db_fetch($result)) {?>
 	<tr class="<?if(!$r["isActive"]){?>-deleted<? }?>">

@@ -32,8 +32,8 @@ $r = db_grab("SELECT
 				a.activityPostedBy,
 				ISNULL(u.nickname, u.firstname) + ' ' + u.lastname postedBy
 			FROM resources_activity a
-			INNER JOIN intranet_users     u  ON a.activityPostedBy = u.userID
-			INNER JOIN intranet_users     u2 ON a.activityAssignedTo = u2.userID
+			INNER JOIN users     u  ON a.activityPostedBy = u.userID
+			INNER JOIN users     u2 ON a.activityAssignedTo = u2.userID
 			INNER JOIN resources_awards   w  ON a.awardID  = w.awardID
 			INNER JOIN resources_funders  f  ON f.funderID = w.funderID
 			WHERE a.activityID = " . $_GET["id"]);

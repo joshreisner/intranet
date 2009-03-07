@@ -53,7 +53,7 @@ if ($posting) {
 
 drawTop();
 
-$types = db_query("SELECT description, extension FROM intranet_doctypes ORDER BY description");
+$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
 $extensions = $doctypes = $array = array();
 
 while ($t = db_fetch($types)) {

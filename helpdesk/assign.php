@@ -4,7 +4,7 @@ drawTop();
 
 <table class="left" cellspacing="1">
 	<?
-	echo drawHeaderRow("Assign " . db_grab("SELECT shortName name FROM intranet_departments WHERE departmentID = " . $departmentID) . " Tickets", 5);
+	echo drawHeaderRow("Assign " . db_grab("SELECT shortName name FROM departments WHERE departmentID = " . $departmentID) . " Tickets", 5);
 	echo drawTicketHeader();
 
 	//unassigned tickets
@@ -21,12 +21,12 @@ drawTop();
 				t.createdOn,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM administrators a WHERE a.moduleID = 3 AND a.userID = t.createdBy) AS isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) AS isAdminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN intranet_users			u ON u.userID	= t.createdBy
+			JOIN users			u ON u.userID	= t.createdBy
 			LEFT JOIN intranet_images	m ON u.imageID	= m.imageID
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND (t.ownerID IS NULL OR t.ownerID = 0) AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
@@ -51,12 +51,12 @@ drawTop();
 				t.createdOn,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM administrators a where a.moduleID = 3 and a.userID = t.createdBy) as isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a where a.moduleID = 3 and a.userID = t.createdBy) as isAdminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN intranet_users   u ON u.userID    = t.createdBy
+			JOIN users   u ON u.userID    = t.createdBy
 			LEFT  JOIN intranet_images  m ON u.imageID   = m.imageID
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND t.ownerID = " . $_SESSION["user_id"] . " AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
@@ -81,12 +81,12 @@ drawTop();
 				t.createdOn,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM administrators a WHERE a.moduleID = 3 AND a.userID = t.createdBy) AS isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) AS isAdminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN intranet_users   u ON u.userID    = t.createdBy
+			JOIN users   u ON u.userID    = t.createdBy
 			LEFT  JOIN intranet_images  m ON u.imageID   = m.imageID
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND t.ownerID <> 0 AND t.ownerID <> " . $_SESSION["user_id"] . " AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");

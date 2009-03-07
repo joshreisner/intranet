@@ -4,7 +4,7 @@ if (url_action("deletereq")) {
 	db_query("DELETE FROM users_requests WHERE id = " . $_GET["id"]);
 	url_query_drop("action,id");
 } elseif (url_action("invite")) {
-	$result = db_query("SELECT userID, nickname, email, firstname FROM intranet_users WHERE lastlogin IS NULL AND isactive = 1");
+	$result = db_query("SELECT userID, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND isactive = 1");
 	while ($r = db_fetch($result)) {
 		$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
 		email_invite($r["userID"], $r["email"], $name);
@@ -38,7 +38,7 @@ echo drawTableEnd();
 
 echo drawTableStart();
 echo drawHeaderRow("Never Logged In", 3, "invite them all", url_query_add(array("action"=>"invite"), false));
-$result = db_query("SELECT userid, lastname, firstname, createdOn FROM intranet_users WHERE lastlogin IS NULL AND isactive = 1 ORDER BY lastname");
+$result = db_query("SELECT userid, lastname, firstname, createdOn FROM users WHERE lastlogin IS NULL AND isactive = 1 ORDER BY lastname");
 if (db_found($result)) {?>
 	<tr>
 		<th width="70%">Name</th>

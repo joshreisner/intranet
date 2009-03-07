@@ -55,7 +55,7 @@ $i = db_grab("SELECT
 	FROM intranet_objects o
 	INNER JOIN intranet_instances i ON i.id = o.instanceCurrentID
 	LEFT  JOIN zip_codes z ON i.numeric_01 = z.zip
-	LEFT  JOIN intranet_users     u ON u.userID = o.deletedBy
+	LEFT  JOIN users     u ON u.userID = o.deletedBy
 	WHERE o.id = " . $_GET["id"]);
 
 if (!$i["id"]) {
@@ -188,7 +188,7 @@ if (!$i["id"]) {
 					i.text_01 notes
 				FROM intranet_instances i
 				JOIN intranet_objects   o ON i.objectID = o.id
-				JOIN intranet_users     u ON i.createdBy = u.userID
+				JOIN users     u ON i.createdBy = u.userID
 				WHERE o.id = {$_GET["id"]}
 				ORDER BY i.createdOn ASC");
 		while ($j = db_fetch($instances)) {

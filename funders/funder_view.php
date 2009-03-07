@@ -27,7 +27,7 @@ $r = db_grab("SELECT
 		FROM resources_funders f
 		INNER JOIN resources_funders_types    ft ON ft.FunderTypeID = f.funderTypeID
 		INNER JOIN resources_funders_statuses fs ON fs.FunderStatusID = f.FunderStatusID
-		INNER JOIN intranet_users             u  ON u.userID = f.staffID
+		INNER JOIN users             u  ON u.userID = f.staffID
 		WHERE funderID = " . $_GET["id"]);
 		
 ?>

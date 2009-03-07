@@ -4,8 +4,8 @@ $events = db_query("SELECT
 			e.title, 
 			e.startDate,
 			t.color
-		FROM calendar_events e
-		JOIN calendar_events_types t ON e.typeID = t.id
+		FROM cal_events e
+		JOIN cal_events_types t ON e.typeID = t.id
 		WHERE e.startDate > GETDATE() AND e.isActive = 1 
 		ORDER BY e.startDate ASC", 4);
 while ($e = db_fetch($events)) {?>

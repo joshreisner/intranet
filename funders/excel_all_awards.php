@@ -29,7 +29,7 @@ $return = '<table width="100%" border="1">
 							LEFT JOIN resources_awards_types at on a.awardTypeID = at.awardTypeID
 							LEFT JOIN intranet_programs p on a.awardprogramID = p.programID
 							LEFT JOIN resources_awards_statuses s on a.awardStatusID = s.awardStatusID
-							LEFT JOIN intranet_users u ON u.userID = a.staffID");
+							LEFT JOIN users u ON u.userID = a.staffID");
 while ($r = db_fetch($result)) {
 	$return .= '
 	<tr bgcolor="#FFFFFF" valign="top">

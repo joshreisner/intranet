@@ -23,11 +23,11 @@ echo drawTicketFilter();
 						m.width,
 						m.height
 					FROM helpdesk_tickets t
-					JOIN intranet_users  u ON u.userID    = t.createdBy
+					JOIN users  u ON u.userID    = t.createdBy
 					LEFT JOIN intranet_images m ON u.imageID   = m.imageID
 					WHERE t.ownerID = {$_GET["id"]} $where
 					ORDER BY t.createdOn DESC");
-	$admin = db_grab("SELECT ISNULL(u.nickname, u.firstname) first FROM intranet_users u WHERE u.userID = " . $_GET["id"]);
+	$admin = db_grab("SELECT ISNULL(u.nickname, u.firstname) first FROM users u WHERE u.userID = " . $_GET["id"]);
 	echo drawHeaderRow("<a href='admins.php' class='white'>Admins</a> &gt; " . $admin["first"] . " (" . db_found($result) . ")", 5);
 	
 	if (db_found($result)) {

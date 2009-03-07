@@ -22,7 +22,7 @@ drawTop();
 		w.createdOn
 	FROM wiki_topics w
 	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN intranet_users u ON w.createdBy = u.userID
+	JOIN users u ON w.createdBy = u.userID
 	WHERE w.isActive = 1
 	ORDER BY w.createdOn DESC");
 	if (db_found($topics)) {?>

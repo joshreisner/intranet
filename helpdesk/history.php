@@ -46,8 +46,8 @@ $result = db_query("SELECT
 						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month3 AND YEAR(t.createdOn) = $year3 AND t.departmentID = $departmentID) month3total,
 						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month4 AND YEAR(t.createdOn) = $year4 AND t.departmentID = $departmentID) month4total,
 						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month5 AND YEAR(t.createdOn) = $year5 AND t.departmentID = $departmentID) month5total
-					FROM administrators a 
-					JOIN intranet_users u ON a.userID = u.userID
+					FROM users_to_modules a 
+					JOIN users u ON a.userID = u.userID
 					WHERE a.moduleID = 3 AND u.isActive = 1
 					ORDER BY ISNULL(u.nickname, u.firstname)");
 ?>

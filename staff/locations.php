@@ -7,8 +7,8 @@ $locations = db_query("SELECT
 		o.id, 
 		o.name
 	FROM intranet_offices o 
-	WHERE (SELECT COUNT(*) FROM intranet_users u WHERE u.officeID = o.id AND u.isActive = 1) > 0
-	ORDER BY (SELECT COUNT(*) FROM intranet_users u WHERE u.officeID = o.id) DESC");
+	WHERE (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id AND u.isActive = 1) > 0
+	ORDER BY (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id) DESC");
 if (db_found($locations)) {
 	$pages = array();
 	while ($l = db_fetch($locations)) {

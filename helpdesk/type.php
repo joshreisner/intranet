@@ -23,12 +23,12 @@ $tickets = db_query("select
 			t.createdOn,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
-			(SELECT COUNT(*) FROM administrators a WHERE a.moduleID = 3 AND a.userID = t.createdBy) isAdminIT,
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) isAdminIT,
 			u.imageID,
 			m.width,
 			m.height
 		FROM helpdesk_tickets t
-		INNER JOIN intranet_users   u ON u.userID    = t.createdBy
+		INNER JOIN users   u ON u.userID    = t.createdBy
 		LEFT  JOIN intranet_images  m ON u.imageID   = m.imageID
 		WHERE t.typeID $where1 $where
 		ORDER BY t.createdOn DESC");

@@ -67,7 +67,7 @@ echo drawServerMessage($helpdeskStatus, "center");
 	<?php
 	if (url_id("dept")) {
 		$department = " AND t.departmentID = " . $_GET["dept"];
-		$deptName = db_grab("SELECT shortName FROM intranet_departments WHERE departmentID = " . $_GET["dept"]);
+		$deptName = db_grab("SELECT shortName FROM departments WHERE departmentID = " . $_GET["dept"]);
 	} else {
 		$department = "";
 		$deptName = "";
@@ -86,9 +86,9 @@ echo drawServerMessage($helpdeskStatus, "center");
 						u.lastname lastname
 					FROM helpdesk_tickets t
 					JOIN helpdesk_tickets_statuses	s  ON t.statusID = s.id
-					JOIN intranet_users				u  ON t.createdBy = u.userID
-					JOIN intranet_departments		d  ON t.departmentID = d.departmentID
-					LEFT JOIN intranet_users		u2 ON t.ownerID = u2.userID
+					JOIN users				u  ON t.createdBy = u.userID
+					JOIN departments		d  ON t.departmentID = d.departmentID
+					LEFT JOIN users		u2 ON t.ownerID = u2.userID
 					WHERE (t.statusID <> 9 OR t.statusID IS NULL) $department
 					ORDER BY d.shortName, t.createdOn DESC");
 	$lastDept = "";
@@ -148,7 +148,7 @@ if ($isAdmin) {
 } else {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE isAdmin <> 1", 3);
 }
-$form->addRow("select", "Department" , "departmentID", "SELECT departmentID, shortName FROM intranet_departments WHERE isHelpdesk = 1 ORDER BY shortName", $departmentID, true, 50, "updateTypes(this.value)");
+$form->addRow("select", "Department" , "departmentID", "SELECT departmentID, shortName FROM departments WHERE isHelpdesk = 1 ORDER BY shortName", $departmentID, true, 50, "updateTypes(this.value)");
 $form->addRow("select", "Type" , "typeID", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = $departmentID ORDER BY description");
 $form->addRow("textarea", "Description" , "description", "", "", true);
 $form->addRow("submit"  , "report problem");

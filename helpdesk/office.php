@@ -17,12 +17,12 @@ $result = db_query("SELECT
 				t.createdOn,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM administrators a WHERE a.moduleID = 3 AND a.userID = t.createdby) isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdby) isAdminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN intranet_users u ON u.userID = t.createdBy
+			JOIN users u ON u.userID = t.createdBy
 			LEFT JOIN intranet_images m ON u.imageID = m.imageID
 			WHERE u.officeID = {$_GET["id"]} $where
 			ORDER BY t.createdOn DESC");

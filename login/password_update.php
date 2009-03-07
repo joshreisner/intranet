@@ -3,7 +3,7 @@
 include("../include.php");
 
 if ($posting) {
-	db_query("UPDATE intranet_users SET password = PWDENCRYPT('{$_POST["password1"]}') WHERE userID = " . $_SESSION["user_id"]);
+	db_query("UPDATE users SET password = PWDENCRYPT('{$_POST["password1"]}') WHERE userID = " . $_SESSION["user_id"]);
 	$_SESSION["password"] = false;
 	url_change($_SESSION["homepage"]);
 }

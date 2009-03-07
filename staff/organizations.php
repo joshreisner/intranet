@@ -2,10 +2,10 @@
 include("include.php");
 
 if (isset($_GET["deleteID"])) {
-	if (db_grab("SELECT endDate FROM intranet_users WHERE userID = " . $_GET["deleteID"])) {
-		db_query("UPDATE intranet_users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["deleteID"]);
+	if (db_grab("SELECT endDate FROM users WHERE userID = " . $_GET["deleteID"])) {
+		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["deleteID"]);
 	} else {
-		db_query("UPDATE intranet_users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["deleteID"]);
+		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["deleteID"]);
 	}
 	url_query_drop("deleteID");
 }
