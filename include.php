@@ -57,6 +57,7 @@ if (!$pageIsPublic) {
 	$is_admin = (isset($modules[$page["module_id"]])) ? $modules[$page["module_id"]]["is_admin"] : false;
 	
 	//check to see if user needs update
+	//todo make this a preference
 	if (($_SESSION["update_days"] > 90 || empty($_SESSION["updated_date"])) && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
 		error_debug("user needs address update");
 		url_change("/staff/add_edit.php?id=" . $_SESSION["user_id"]);
