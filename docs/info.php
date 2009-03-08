@@ -2,7 +2,7 @@
 include("../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE documents SET isActive = 0, deletedOn = GETDATE(), deletedBy = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
+	db_query("UPDATE docs SET is_active = 0, deleted_date = GETDATE(), deleted_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
 	url_change("/docs/");
 }
 
@@ -12,8 +12,8 @@ $d = db_grab("SELECT
 		d.content,
 		i.icon,
 		i.description fileType
-	FROM documents d
-	JOIN documents_types i ON d.typeID = i.id
+	FROM docs d
+	JOIN docs_types i ON d.typeID = i.id
 	WHERE d.id = " . $_GET["id"]);
 
 drawTop();
@@ -22,7 +22,7 @@ drawTop();
 
 <table class="left" cellspacing="1">
     <?
-    if ($isAdmin) {
+    if ($is_admin) {
     	echo drawHeaderRow("Document Info", 2, "edit","add_edit.php?id=" . $_GET["id"], "delete", deleteLink("Delete document?"));
     } else {
     	echo drawHeaderRow("Document Info", 2);
@@ -45,8 +45,8 @@ drawTop();
 		<td>
 			<? $categories = db_query("SELECT
 				c.description
-			FROM documents_to_categories d2c
-			JOIN documents_categories c ON d2c.categoryID = c.id
+			FROM docs_to_categories d2c
+			JOIN docs_categories c ON d2c.categoryID = c.id
 			WHERE d2c.documentID = " . $_GET["id"]);
 				while ($c = db_fetch($categories)) {?>
 				 &#183; <?=$c["description"]?></a><br>
@@ -62,10 +62,10 @@ drawTop();
 $views = db_query("SELECT 
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
-			u.userID,
+			u.user_id,
 			v.viewedOn
-			FROM documents_views v
-			JOIN users u ON v.userID = u.userID
+			FROM docs_views v
+			JOIN users u ON v.user_id = u.user_id
 			WHERE v.documentID = " . $_GET["id"] . "
 			ORDER BY v.viewedOn DESC", 5);
 if (db_found($views)) {?>
@@ -79,7 +79,7 @@ if (db_found($views)) {?>
 	</tr>
 	<? while($v = db_fetch($views)) {?>
 	<tr>
-		<td width="70%"><a href="/staff/view.php?id=<?=$v["userID"]?>"><?=$v["first"]?> <?=$v["last"]?></a></td>
+		<td width="70%"><a href="/staff/view.php?id=<?=$v["user_id"]?>"><?=$v["first"]?> <?=$v["last"]?></a></td>
 		<td width="30%" align="right"><?=format_date_time($v["viewedOn"], " ")?></td>
 	</tr>
 	<? }?>

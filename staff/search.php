@@ -10,5 +10,5 @@ foreach ($terms as $t) {
 		foreach ($fields as $f) $where[] = $f . " LIKE '%" . $t . "%'";
 	}
 }
-echo drawStaffList("u.isactive = 1 and (" . implode(" OR ", $where) . ")", $terms);
+echo drawStaffList("u.is_active = 1 and (" . implode(" OR ", $where) . ")", $terms);
 drawBottom();?>

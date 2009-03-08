@@ -45,22 +45,22 @@ drawTop();
 						ORDER BY t.name");
 	while ($t = db_fetch($types)) {?>
 	<tr class="helptext" bgcolor="#FFFFFF" height="40" valign="bottom">
-		<td colspan="3"><?if($isAdmin) {?><a href="tag.php?id=<?=$t["id"]?>"><?}?><b><?=$t["name"]?></b></a></td>
+		<td colspan="3"><?if($is_admin) {?><a href="tag.php?id=<?=$t["id"]?>"><?}?><b><?=$t["name"]?></b></a></td>
 	</tr>
 		<?
 		$values = db_query("SELECT
 							t.id, 
 							t.tag, 
-							t.isActive,
-							(SELECT count(*) FROM intranet_objects o 
-								INNER JOIN intranet_instances i ON o.instanceCurrentID = i.id
-								INNER JOIN intranet_instances_to_tags i2t ON i.id = i2t.instanceID
-								WHERE o.typeID = 22 AND i2t.tagID = t.id AND o.isActive = 1) contactcount
+							t.is_active,
+							(SELECT count(*) FROM contacts o 
+								INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
+								INNER JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
+								WHERE o.typeID = 22 AND i2t.tagID = t.id AND o.is_active = 1) contactcount
 						FROM intranet_tags t 
 						WHERE t.typeID = {$t["id"]}
 						ORDER BY t.precedence");
 		while ($v = db_fetch($values)) {?>
-	<tr class="helptext<?if (!$v["isActive"]) {?>-deleted<?}?>" bgcolor="#FFFFFF">
+	<tr class="helptext<?if (!$v["is_active"]) {?>-deleted<?}?>" bgcolor="#FFFFFF">
 		<td width="16"><?=draw_form_checkbox("tag_" . $v["id"])?></td>
 		<td width="80%"><a href="value.php?id=<?=$v["id"]?>"><?=$v["tag"]?></a></td>
 		<td align="right"><?=number_format($v["contactcount"])?></td>

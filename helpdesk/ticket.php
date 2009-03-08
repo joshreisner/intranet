@@ -1,9 +1,9 @@
 <?	include("include.php");
 
 $r = db_grab("SELECT
-		u.userID,
+		u.user_id,
 		t.title,
-		t.createdBy,
+		t.created_user,
 		t.description,
 		t.timeSpent,
 		t.ipAddress,
@@ -13,26 +13,26 @@ $r = db_grab("SELECT
 		u.lastname last,
 		u.officeID,
 		o.name office,
-		t.createdOn,
+		t.created_date,
 		t.statusID,
 		t.typeID,
 		t.departmentID,
 		t.priorityID,
-		p.isAdmin isAdminPriority,
+		p.is_admin is_adminPriority,
 		t.closedDate,
 		y.description type,
 		u.imageID,
-		s.isActive isActiveOwner,
+		s.is_active is_activeOwner,
 		ISNULL(s.nickname, s.firstname) ownerFirst,
 		m.width,
 		m.height,
-		MONTH(t.createdOn) createdMonth,
-		YEAR(t.createdOn) createdYear
+		MONTH(t.created_date) createdMonth,
+		YEAR(t.created_date) createdYear
 	FROM helpdesk_tickets t
-	JOIN users					u ON t.createdBy	= u.userID
+	JOIN users					u ON t.created_user	= u.user_id
 	JOIN helpdesk_tickets_priorities	p ON t.priorityID	= p.id
 	JOIN intranet_offices				o ON u.officeID		= o.id
-	LEFT JOIN users			s ON t.ownerID		= s.userID
+	LEFT JOIN users			s ON t.ownerID		= s.user_id
 	LEFT JOIN helpdesk_tickets_types	y ON t.typeID		= y.id
 	LEFT JOIN intranet_images			m ON u.imageID		= m.imageID
 	WHERE t.id = " . $_GET["id"]);
@@ -48,7 +48,7 @@ if ($r["statusID"] != 9) { //open
 	$typeRequired = true;
 }
 
-//$isAdmin = ($isAdmin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
+//$is_admin = ($is_admin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
 
 if ($uploading) { //upload an attachment
 	$type = getDocTypeID($_FILES["userfile"]["name"]);
@@ -59,8 +59,8 @@ if ($uploading) { //upload an attachment
 		typeID,
 		title,
 		content,
-		createdOn,
-		createdBy
+		created_date,
+		created_user
 	) VALUES (
 		{$_GET["id"]},
 		{$type},
@@ -72,20 +72,20 @@ if ($uploading) { //upload an attachment
 	url_change();
 } elseif ($posting) { //add a comment
 	//auto-assign ticket if unassigned and followup poster is an IT admin
-	$followupAdmin = (isset($_POST["isAdmin"])) ? 1 : 0;
-	if ($isAdmin && !$followupAdmin && empty($r["ownerID"])) {
+	$followupAdmin = (isset($_POST["is_admin"])) ? 1 : 0;
+	if ($is_admin && !$followupAdmin && empty($r["ownerID"])) {
 		//set to it staff assigned if no status
 		if ($r["statusID"] == 1) $r["statusID"] = 2;
-		db_query("UPDATE helpdesk_tickets SET ownerID = {$_SESSION["user_id"]}, statusID = {$r["statusID"]}, updatedOn = GETDATE() WHERE id = " . $_GET["id"]);
+		db_query("UPDATE helpdesk_tickets SET ownerID = {$_SESSION["user_id"]}, statusID = {$r["statusID"]}, updated_date = GETDATE() WHERE id = " . $_GET["id"]);
 	}
 	
 	//insert followup
 	db_query("INSERT INTO helpdesk_tickets_followups (
 				ticketID, 
-				createdBy, 
-				createdOn, 
+				created_user, 
+				created_date, 
 				message,
-				isAdmin
+				is_admin
 			) VALUES (
 				{$_GET["id"]},
 				{$_SESSION["user_id"]},
@@ -115,7 +115,7 @@ if (!isset($timeSpentOptions[$r["timeSpent"]])) {
 	sort($timeSpentOptions);
 }
 
-if ($r["ownerID"] && !$r["isActiveOwner"]) {
+if ($r["ownerID"] && !$r["is_activeOwner"]) {
 	/* this is for if the ticket assignee has left before you are viewing this ticket
 	interesting possibility would be to show all active owners for that time period */
 	$ownerOptions[$r["ownerID"]] = $r["ownerFirst"];
@@ -125,7 +125,7 @@ if ($r["ownerID"] && !$r["isActiveOwner"]) {
 //load code for JS
 $extensions = array();
 $doctypes = array();
-$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
+$types = db_query("SELECT description, extension FROM docs_types ORDER BY description");
 while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t["extension"] . '")';
 	$doctypes[] = " - " . $t["description"] . " (." . $t["extension"] . ")";
@@ -182,7 +182,7 @@ while ($t = db_fetch($types)) {
 		$counter				= 0;
 		$counterLastTicketID	= false;
 		$counterCheckNext		= false;
-		$tickets = db_query("SELECT id FROM helpdesk_tickets WHERE statusID <> 9 ORDER BY createdOn DESC");
+		$tickets = db_query("SELECT id FROM helpdesk_tickets WHERE statusID <> 9 ORDER BY created_date DESC");
 		while ($t = db_fetch($tickets)) {
 			$counter++;
 			if ($_GET["id"] == $t["id"]) {
@@ -199,7 +199,7 @@ while ($t = db_fetch($types)) {
 		}
 		$title = "View Open Ticket (" . $ticketCount . " of " . $counter . ")";
 
-		if ($isAdmin) {
+		if ($is_admin) {
 			if ($lastTicketID && $nextTicketID) {
 				echo drawHeaderRow($title, 2, "prev", "ticket.php?id=" . $lastTicketID, "next", "ticket.php?id=" . $nextTicketID);
 			} elseif ($lastTicketID) {
@@ -216,7 +216,7 @@ while ($t = db_fetch($types)) {
 		echo drawHeaderRow("View Ticket", 2, "add a followup message","#bottom");
 	}
 	
-	if ($isAdmin) {?>
+	if ($is_admin) {?>
 	<form name="ticketForm">
 	<tr class="helpdesk-hilite" height="30">
 		<td class="left">Status</td>
@@ -225,10 +225,10 @@ while ($t = db_fetch($types)) {
 	<tr class="helpdesk-hilite" height="30">
 		<td class="left">Posted By</td>
 		<td><?
-		$sql = ($_josh["db"]["language"] == "mssql") ? "SELECT u.userID, u.lastname + ', ' + ISNULL(u.nickname, u.firstname) FROM users u WHERE u.isactive = 1 ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)" : "SELECT u.userID, CONCAT(u.lastname, ', ', IFNULL(u.nickname, u.firstname)) FROM users u WHERE u.isactive = 1 ORDER BY u.lastname, IFNULL(u.nickname, u.firstname)";
-		echo draw_form_select("postedBy", $sql, $r["createdBy"], true, "", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newUser=' + this.value");
+		$sql = ($_josh["db"]["language"] == "mssql") ? "SELECT u.user_id, u.lastname + ', ' + ISNULL(u.nickname, u.firstname) FROM users u WHERE u.is_active = 1 ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)" : "SELECT u.user_id, CONCAT(u.lastname, ', ', IFNULL(u.nickname, u.firstname)) FROM users u WHERE u.is_active = 1 ORDER BY u.lastname, IFNULL(u.nickname, u.firstname)";
+		echo draw_form_select("postedBy", $sql, $r["created_user"], true, "", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newUser=' + this.value");
 		?>
-		<a href="user.php?id=<?=$r["createdBy"]?>">view all</a> / <a href="user.php?id=<?=$r["createdBy"]?>&month=<?=$r["createdMonth"]?>&year=<?=$r["createdYear"]?>">this month</a>
+		<a href="user.php?id=<?=$r["created_user"]?>">view all</a> / <a href="user.php?id=<?=$r["created_user"]?>&month=<?=$r["createdMonth"]?>&year=<?=$r["createdYear"]?>">this month</a>
 		</td>
 	</tr>
 	<tr class="helpdesk-hilite" height="30">
@@ -263,12 +263,12 @@ while ($t = db_fetch($types)) {
 	</tr> -->
 	<tr height="30">
 		<td class="left">Ticket Age</td>
-		<td><?=format_time_business($r["createdOn"], $r["closedDate"]);?></td>
+		<td><?=format_time_business($r["created_date"], $r["closedDate"]);?></td>
 	</tr>
 	<tr height="30">
 		<td class="left">Type</td>
 		<td><?=draw_form_select("typeID", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = " . $r["departmentID"] . " ORDER BY description", $r["typeID"], $typeRequired, false, "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newType=' + this.value");?>
-			<? if ($isAdmin) {
+			<? if ($is_admin) {
 			 if ($r["typeID"]) {
 			 	echo '<a href="type.php?id=' . $r["typeID"] . '">view all</a> / <a href="type.php?id=' . $r["typeID"] . '&month=' . $r["createdMonth"] . '&year=' . $r["createdYear"] . '">this month</a>';
 			 } else {
@@ -284,10 +284,10 @@ while ($t = db_fetch($types)) {
 	<tr height="30">
 		<td class="left">Priority</td>
 		<td><?
-		if ($isAdmin || $r["isAdminPriority"]) {
+		if ($is_admin || $r["is_adminPriority"]) {
 			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
 		} else {
-			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE isAdmin = 0", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
+			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE is_admin = 0", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
 		}
 		?></td>
 	</tr>
@@ -310,7 +310,7 @@ while ($t = db_fetch($types)) {
 				t.icon,
 				t.description type
 			FROM helpdesk_tickets_attachments a
-			JOIN documents_types t ON a.typeID = t.id
+			JOIN docs_types t ON a.typeID = t.id
 			WHERE a.ticketID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
@@ -324,26 +324,26 @@ while ($t = db_fetch($types)) {
 	<? } ?>
 	</form>
 	<? 
-$editurl = ($isAdmin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
-echo drawThreadTop($r["title"], $r["description"], $r["createdBy"], $r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["createdOn"], $editurl);
+$editurl = ($is_admin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
+echo drawThreadTop($r["title"], $r["description"], $r["created_user"], $r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["created_date"], $editurl);
 
 $result = db_query("SELECT
-					u.userID,
+					u.user_id,
 					f.message,
 					ISNULL(u.nickname, u.firstname) first,
 					u.lastname last,
-					f.createdOn,
+					f.created_date,
 					u.imageID,
 					m.width,
 					m.height,
-					f.isAdmin
+					f.is_admin
 				FROM helpdesk_tickets_followups	f
-				JOIN users			u ON f.createdBy	= u.userID
+				JOIN users			u ON f.created_user	= u.user_id
 				LEFT JOIN intranet_images	m ON u.imageID		= m.imageID
 				WHERE f.ticketID = " . $_GET['id'] . "
-				ORDER BY f.createdOn");
+				ORDER BY f.created_date");
 while ($r = db_fetch($result)) {
-	echo drawThreadComment($r["message"], $r["userID"], $r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["createdOn"], $r["isAdmin"]);
+	echo drawThreadComment($r["message"], $r["user_id"], $r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["created_date"], $r["is_admin"]);
 }
 
 echo drawThreadCommentForm(true);

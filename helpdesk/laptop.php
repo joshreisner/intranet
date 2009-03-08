@@ -100,7 +100,7 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 	$result = db_query("SELECT
 							ISNULL(u.nickname, u.firstname) first,
 							u.lastname last,
-							u.userID,
+							u.user_id,
 							c.checkoutStart, 
 							c.checkoutEnd,
 							c.checkoutNotes,
@@ -108,13 +108,13 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 							m.width,
 							m.height
 						FROM IT_Laptops_Checkouts c
-						INNER JOIN users u ON c.checkoutUser = u.userID
+						INNER JOIN users u ON c.checkoutUser = u.user_id
 						LEFT  JOIN intranet_images m ON u.imageID = m.imageID
 						WHERE checkoutLaptopID = " . $_GET["id"] . "
 						ORDER BY checkoutStart DESC");
 	while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><?=drawName($r["userID"],$r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"])?></td>
+		<td><?=drawName($r["user_id"],$r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"])?></td>
 		<td><?=format_date($r["checkoutStart"]);?></td>
 		<td><?=format_date($r["checkoutEnd"]);?></td>
 		<td><?=nl2br($r["checkoutNotes"])?></td>

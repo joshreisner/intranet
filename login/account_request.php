@@ -9,7 +9,7 @@ if ($posting) {
 
 	//create request
 	//todo ~ check whether staff already exists -- forward to password reset
-	if ($id = db_grab("SELECT userID FROM users WHERE email = '" . $_POST["email"] . "' AND isActive = 1")) {
+	if ($id = db_grab("SELECT user_id FROM users WHERE email = '" . $_POST["email"] . "' AND is_active = 1")) {
 		url_change("account_exists.php");
 	} elseif ($id = db_grab("SELECT id FROM users_requests WHERE email = '" . $_POST["email"] . "'")) {
 		db_query("UPDATE users_requests SET
@@ -23,7 +23,7 @@ if ($posting) {
 			corporationID = '" . $_POST["corporationID"] . "',
 			officeID = '" . $_POST["officeID"] . "',
 			bio = '" . $_POST["bio"] . "',
-			createdOn = GETDATE()
+			created_date = GETDATE()
 		WHERE email = '" . $_POST["email"] . "'");
 		email_user($_josh["email_admin"], "Repeat Account Request", drawEmptyResult($_POST["firstname"] . " " . $_POST["lastname"] . ' is <a href="http://' . $request["host"] . '/staff/add_edit.php?requestID=' . $id . '">re-requesting an account</a>.'));
 	} else {
@@ -38,7 +38,7 @@ if ($posting) {
 			corporationID,
 			officeID,
 			bio,
-			createdOn
+			created_date
 		) VALUES (
 			'" . $_POST["firstname"] . "', 
 			'" . $_POST["lastname"] . "',

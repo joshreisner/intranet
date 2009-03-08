@@ -17,21 +17,21 @@ drawTop();
 $result = db_query("SELECT 
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last,
-						u.userID,
-						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND awardStatusID = 1) as active,
-						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND awardStatusID = 2) as proposals,
-						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND awardStatusID = 5) as strategies,
-						u.isActive
+						u.user_id,
+						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.user_id AND awardStatusID = 1) as active,
+						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.user_id AND awardStatusID = 2) as proposals,
+						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.user_id AND awardStatusID = 5) as strategies,
+						u.is_active
 					FROM users u
-					WHERE (SELECT COUNT(*) FROM resources_awards a where a.staffID = u.userID AND (awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5)) > 0
+					WHERE (SELECT COUNT(*) FROM resources_awards a where a.staffID = u.user_id AND (awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5)) > 0
 					ORDER BY last, first
 					");
 while ($r = db_fetch($result)) {?>
 	<tr>
 		<td><?=$r["first"]?> <?=$r["last"]?></td>
-		<td align="right"><a href="staffawards.php?statusID=1&staffID=<?=$r["userID"]?>"><?=$r["active"]?></a></td>
-		<td align="right"><a href="staffawards.php?statusID=2&staffID=<?=$r["userID"]?>"><?=$r["proposals"]?></a></td>
-		<td align="right"><a href="staffawards.php?statusID=5&staffID=<?=$r["userID"]?>"><?=$r["strategies"]?></a></td>
+		<td align="right"><a href="staffawards.php?statusID=1&staffID=<?=$r["user_id"]?>"><?=$r["active"]?></a></td>
+		<td align="right"><a href="staffawards.php?statusID=2&staffID=<?=$r["user_id"]?>"><?=$r["proposals"]?></a></td>
+		<td align="right"><a href="staffawards.php?statusID=5&staffID=<?=$r["user_id"]?>"><?=$r["strategies"]?></a></td>
 	</tr>
 <? }?>
 </table>

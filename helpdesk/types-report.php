@@ -11,7 +11,7 @@ $thisyear	= $total["year"];
 
 //loop through
 while (!$break) {
-	$columns[] = "(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.typeID = y.id AND MONTH(t.createdOn) = $thismonth AND YEAR(t.createdOn) = $thisyear) '" . $mos[$thismonth - 1] . " " . $thisyear . "'";
+	$columns[] = "(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.typeID = y.id AND MONTH(t.created_date) = $thismonth AND YEAR(t.created_date) = $thisyear) '" . $mos[$thismonth - 1] . " " . $thisyear . "'";
 
 	if (($thismonth == $month) && ($thisyear == $year)) { //if we're up to the current month & year, break
 		$break = true;

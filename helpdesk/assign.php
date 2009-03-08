@@ -12,21 +12,21 @@ drawTop();
 				t.title,
 				t.statusID,
 				(SELECT COUNT(*) FROM helpdesk_tickets_followups f where f.ticketID = t.id) as ticketfollowups,
-				t.createdBy,
-				t.updatedOn,
+				t.created_user,
+				t.updated_date,
 				t.departmentID,
 				t.id,
 				t.ownerID,
 				t.priorityID,
-				t.createdOn,
+				t.created_date,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) AS isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) AS is_adminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN users			u ON u.userID	= t.createdBy
+			JOIN users			u ON u.user_id	= t.created_user
 			LEFT JOIN intranet_images	m ON u.imageID	= m.imageID
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND (t.ownerID IS NULL OR t.ownerID = 0) AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
@@ -42,21 +42,21 @@ drawTop();
 				t.title,
 				t.statusID,
 				(SELECT COUNT(*) FROM helpdesk_tickets_followups f where f.id = t.id) as ticketfollowups,
-				t.createdBy,
-				t.updatedOn,
+				t.created_user,
+				t.updated_date,
 				t.departmentID,
 				t.id,
 				t.ownerID,
 				t.priorityID,
-				t.createdOn,
+				t.created_date,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM users_to_modules a where a.moduleID = 3 and a.userID = t.createdBy) as isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a where a.module_id = 3 and a.user_id = t.created_user) as is_adminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN users   u ON u.userID    = t.createdBy
+			JOIN users   u ON u.user_id    = t.created_user
 			LEFT  JOIN intranet_images  m ON u.imageID   = m.imageID
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND t.ownerID = " . $_SESSION["user_id"] . " AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
@@ -72,21 +72,21 @@ drawTop();
 				t.title,
 				t.statusID,
 				(SELECT COUNT(*) FROM helpdesk_tickets_followups f where f.id = t.id) as ticketfollowups,
-				t.createdBy,
-				t.updatedOn,
+				t.created_user,
+				t.updated_date,
 				t.departmentID,
 				t.id,
 				t.ownerID,
 				t.priorityID,
-				t.createdOn,
+				t.created_date,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
-				(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) AS isAdminIT,
+				(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) AS is_adminIT,
 				u.imageID,
 				m.width,
 				m.height
 			FROM helpdesk_tickets t
-			JOIN users   u ON u.userID    = t.createdBy
+			JOIN users   u ON u.user_id    = t.created_user
 			LEFT  JOIN intranet_images  m ON u.imageID   = m.imageID
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND t.ownerID <> 0 AND t.ownerID <> " . $_SESSION["user_id"] . " AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");

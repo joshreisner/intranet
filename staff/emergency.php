@@ -14,7 +14,7 @@ echo drawJumpToStaff();
 	</tr>
 	<?
 	$result = db_query("SELECT 
-							u.userID,
+							u.user_id,
 							u.firstname first_name,
 							u.lastname last_name,
 							u.homeAddress1,
@@ -37,11 +37,11 @@ echo drawJumpToStaff();
 							u.emerCont2Email
 						FROM users u
 						LEFT  JOIN intranet_us_states s ON s.stateID = u.homeStateID
-						WHERE u.isActive = 1
+						WHERE u.is_active = 1
 						ORDER BY u.lastname, u.firstname");
 	while ($r = db_fetch($result)) {?>
 		<tr>
-			<td rowspan="2"><a href="/staff/view.php?id=<?=$r["userID"]?>"><?=$r["last_name"]?>, <?=$r["first_name"]?></a></td>
+			<td rowspan="2"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><?=$r["last_name"]?>, <?=$r["first_name"]?></a></td>
 			<td rowspan="2">
 				<?=$r["homeAddress1"]?><br>
 				<?if ($r["homeAddress2"]) {?><?=$r["homeAddress2"]?><br><?}?>

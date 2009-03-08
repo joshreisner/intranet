@@ -6,7 +6,7 @@ $events = db_query("SELECT
 			t.color
 		FROM cal_events e
 		JOIN cal_events_types t ON e.typeID = t.id
-		WHERE e.startDate > GETDATE() AND e.isActive = 1 
+		WHERE e.startDate > GETDATE() AND e.is_active = 1 
 		ORDER BY e.startDate ASC", 4);
 while ($e = db_fetch($events)) {?>
 <tr>

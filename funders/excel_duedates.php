@@ -21,7 +21,7 @@ $return = '
 			f.name,
 			f.funderID
 		FROM Resources_Activity an
-		INNER JOIN users     u ON an.activityAssignedTo = u.userID
+		INNER JOIN users     u ON an.activityAssignedTo = u.user_id
 		INNER JOIN resources_awards   a ON an.awardID = a.awardID
 		INNER JOIN resources_funders  f ON a.funderID = f.funderID
 		WHERE an.isReport = 1 AND an.isComplete = 0

@@ -26,8 +26,8 @@ function changeCursor(state) {
 	}
 }
 
-function changeDept(id, userID) {
-	location.href='<?=$request["path_query"]?>&newDeptID=' + id + '&contactID=' + userID;
+function changeDept(id, user_id) {
+	location.href='<?=$request["path_query"]?>&newDeptID=' + id + '&contactID=' + user_id;
 }
 
 function toggleCheckbox(which) {

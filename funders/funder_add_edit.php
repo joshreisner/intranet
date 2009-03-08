@@ -132,7 +132,7 @@ if (isset($_GET["id"])) { //edit a funder
 								$result_geographic_areas_selected = db_query("SELECT geographicAreaID FROM resources_funders_geographic_interests WHERE funderID = " . $_GET["id"]);
 								while ($rg_s = db_fetch($result_geographic_areas_selected)) $selected_areas[$rg_s["geographicAreaID"]] = true;
 							}
-							$result_geographic_areas = db_query("SELECT geographicAreaID, geographicAreaDesc FROM intranet_geographic_areas ORDER BY geographicAreaDesc");
+							$result_geographic_areas = db_query("SELECT geographicAreaID, geographicAreaDesc FROM funders_geographic_areas ORDER BY geographicAreaDesc");
 							while ($rg = db_fetch($result_geographic_areas)) { ?>
 							<tr>
 								<td><input type="checkbox" name="chk_geographicArea_<?=$rg["geographicAreaID"]?>"<?if(@$selected_areas[$rg["geographicAreaID"]]) {?> checked<?}?>></td>

@@ -43,7 +43,7 @@ $message  = drawEmailHeader() . '
 			a.isActionItem,
 			a.isInternalDeadline
 		FROM resources_activity a
-		INNER JOIN users     u ON a.activityAssignedTo = u.userid
+		INNER JOIN users     u ON a.activityAssignedTo = u.user_id
 		INNER JOIN resources_awards  ra ON a.awardID = ra.awardID
 		INNER JOIN resources_funders  f ON ra.funderID = f.funderID
 		WHERE activityDate < GETDATE() AND isComplete = 0

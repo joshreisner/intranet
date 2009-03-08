@@ -27,7 +27,7 @@ $r = db_grab("SELECT
 		FROM resources_funders f
 		INNER JOIN resources_funders_types    ft ON ft.FunderTypeID = f.funderTypeID
 		INNER JOIN resources_funders_statuses fs ON fs.FunderStatusID = f.FunderStatusID
-		INNER JOIN users             u  ON u.userID = f.staffID
+		INNER JOIN users             u  ON u.user_id = f.staffID
 		WHERE funderID = " . $_GET["id"]);
 		
 ?>
@@ -43,7 +43,7 @@ $r = db_grab("SELECT
 	//-->
 </script>
 <table class="left" cellspacing="1">
-	<? if ($isAdmin) {
+	<? if ($is_admin) {
 		echo drawHeaderRow("View Funder", 2, "edit", "funder_add_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Funder", 2);
@@ -84,7 +84,7 @@ $r = db_grab("SELECT
 			<? 
 			$result_geographic_areas = db_query("SELECT 
 				geographicAreaDesc 
-				FROM intranet_geographic_areas g
+				FROM funders_geographic_areas g
 				INNER JOIN Resources_Funders_Geographic_Interests gp on g.geographicAreaID = gp.geographicAreaID
 				WHERE gp.funderID = " . $_GET["id"]);
 			while ($rg = db_fetch($result_geographic_areas)) {?>
@@ -101,7 +101,7 @@ $r = db_grab("SELECT
 				<tr>
 					<td class="bold">Awards, Proposals, Strategies, etc.</td>
 					<td class="small" align="right">
-						<? if ($isAdmin) {?>[ <a href="award_add_edit.php?funderID=<?=$_GET["id"]?>" class="black">add award / proposal</a> ]<?}?></td>
+						<? if ($is_admin) {?>[ <a href="award_add_edit.php?funderID=<?=$_GET["id"]?>" class="black">add award / proposal</a> ]<?}?></td>
 					</td>
 				</tr>
 			</table>

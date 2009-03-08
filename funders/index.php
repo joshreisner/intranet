@@ -14,7 +14,7 @@ drawTop();
 ?>
 <table class="left" cellspacing="1">
 <?
-if ($isAdmin) {
+if ($is_admin) {
 	$colspan = 6;
 	echo drawHeaderRow("Funders", $colspan, "add a funder", "funder_add_edit.php");
 } else {
@@ -25,7 +25,7 @@ if ($isAdmin) {
 		<th width="60%" align="left">Funder Name</th>
 		<th width="39%" align="left">Staff Contact</th>
 		<th align="right">Total Awards</th>
-		<? if ($isAdmin) {?><th width="16"></th><? }?>
+		<? if ($is_admin) {?><th width="16"></th><? }?>
 	</tr>
 <?
 $result_funder_statuses = db_query("SELECT funderStatusID, funderStatusDesc FROM resources_funders_statuses");
@@ -45,7 +45,7 @@ while ($rs = db_fetch($result_funder_statuses)) {
 			(SELECT SUM(a.AwardAmount) FROM resources_awards a WHERE a.funderID = f.funderID AND (a.awardStatusID = 1 OR a.awardStatusID = 4)) as awardAmt
 			FROM resources_funders f
 			INNER JOIN resources_funders_types ft ON f.funderTypeID = ft.funderTypeID
-			INNER JOIN users u     ON f.staffID           = u.userID
+			INNER JOIN users u     ON f.staffID           = u.user_id
 			WHERE f.funderStatusID = {$rs["funderStatusID"]}
 			ORDER BY f.name");
 	 		
@@ -61,7 +61,7 @@ while ($rs = db_fetch($result_funder_statuses)) {
 	<tr class="total">
 		<td colspan="2">Total: </td>
 		<td>$<?=number_format($awards_amt)?></td>
-		<? if ($isAdmin) {?><td></td><? }?>
+		<? if ($is_admin) {?><td></td><? }?>
 	</tr>
 <? }?>
 </table>

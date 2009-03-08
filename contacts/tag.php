@@ -1,7 +1,7 @@
 <?
 include("../include.php");
 
-if (!$isAdmin) url_change("tags.php");
+if (!$is_admin) url_change("tags.php");
 
 if ($_POST) {
 	$t = db_grab("SELECT MAX(precedence) precedence FROM intranet_tags WHERE typeID = " . $_GET["id"]);
@@ -11,7 +11,7 @@ if ($_POST) {
 					generation,
 					precedence,
 					tag,
-					isActive 
+					is_active 
 				) VALUES ( 
 					{$_GET["id"]},
 					1,
@@ -23,10 +23,10 @@ if ($_POST) {
 }
 
 if (isset($_GET["deactivateTagType"])) {
-	db_query("UPDATE intranet_tags_types SET isActive = 0 WHERE id = " . $_GET["deactivateTagType"]);
+	db_query("UPDATE intranet_tags_types SET is_active = 0 WHERE id = " . $_GET["deactivateTagType"]);
 	url_query_drop("deactivateTagType");
 } elseif (isset($_GET["deactivateTag"])) {
-	db_query("UPDATE intranet_tags SET isActive = 0 WHERE id = " . $_GET["deactivateTag"]);
+	db_query("UPDATE intranet_tags SET is_active = 0 WHERE id = " . $_GET["deactivateTag"]);
 	url_query_drop("deactivateTag");
 } elseif (isset($_GET["alphabetize"])) {
 	$tags = db_query("SELECT tag FROM intranet_tags WHERE typeID = " . $_GET["id"]);
@@ -102,12 +102,12 @@ drawTop();
 		$values = db_query("SELECT
 							t.id, 
 							t.tag, 
-							(SELECT count(*) FROM intranet_objects o 
-								INNER JOIN intranet_instances i ON o.instanceCurrentID = i.id
-								INNER JOIN intranet_instances_to_tags i2t ON i.id = i2t.instanceID
+							(SELECT count(*) FROM contacts o 
+								INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
+								INNER JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
 								WHERE o.typeID = 22 AND i2t.tagID = t.id) contactcount
 						FROM intranet_tags t 
-						WHERE t.typeID = {$_GET["id"]} AND t.isActive = 1
+						WHERE t.typeID = {$_GET["id"]} AND t.is_active = 1
 						ORDER BY t.precedence");
 		while ($v = db_fetch($values)) {?>
 	<tr class="helptext" bgcolor="#FFFFFF">

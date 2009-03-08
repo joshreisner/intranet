@@ -13,17 +13,17 @@ if ($posting) {
 //set topic and followups to deleted
 if (isset($_GET["delete"])) {
 	db_query("UPDATE bb_topics SET 
-				isActive = 0,
-				deletedOn = GETDATE(),
-				deletedBy = {$_SESSION["user_id"]}
+				is_active = 0,
+				deleted_date = GETDATE(),
+				deleted_user = {$_SESSION["user_id"]}
 			  WHERE id = " . $_GET["id"]);
 	syndicateBulletinBoard();
 	url_change("/bb/");
 } elseif (isset($_GET["deleteFollowupID"])) {
 	db_query("UPDATE bb_followups SET 
-				isActive = 0,
-				deletedOn = GETDATE(),
-				deletedBy = {$_SESSION["user_id"]}
+				is_active = 0,
+				deleted_date = GETDATE(),
+				deleted_user = {$_SESSION["user_id"]}
 			  WHERE ID = " . $_GET["deleteFollowupID"]);
 	url_query_drop("deleteFollowupID");
 }
@@ -32,17 +32,13 @@ if (isset($_GET["delete"])) {
 $r = db_grab("SELECT 
 		t.title,
 		t.description,
-		t.createdOn,
-		t.isAdmin,
-		u.userID,
-		u.imageID,
+		t.created_date,
+		t.is_admin,
+		u.user_id,
 		ISNULL(u.nickname, u.firstname) firstname,
-		u.lastname,
-		i.width,
-		i.height
+		u.lastname
 		FROM bb_topics t
-		JOIN users u ON t.createdBy = u.userID
-		LEFT JOIN intranet_images i ON u.imageID = i.imageID
+		JOIN users u ON t.created_user = u.user_id
 		WHERE t.id = " . $_GET["id"]);
 
 //check that it exists
@@ -51,14 +47,14 @@ $r = db_grab("SELECT
 drawTop();
 echo drawSyndicateLink("bb");
 
-$isPoster = ($r["userID"] == $_SESSION["user_id"]) ? true : false;
+$isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
 
 
 $r["description"] = htmlwrap($r["description"]);
 
 //if ($_GET["id"] == 7966) echo drawServerMessage("<b>Note</b>: This comments on this post are organized in reverse-chronological order.");
 
-if ($r["isAdmin"]) echo drawServerMessage("<b>Note</b>: This is an Administration/Human Resources topic.  For more information, please contact the <a href='mailto:hrpayroll@seedco.org'>Human Resources Department</a>.");
+if ($r["is_admin"]) echo drawServerMessage(getString("bb_admin"));
 ?>
 <script language="javascript">
 	<!--
@@ -78,37 +74,33 @@ if ($r["isAdmin"]) echo drawServerMessage("<b>Note</b>: This is an Administratio
 
 <table class="left" cellspacing="1">
 	<?php
-	if ($isAdmin || $isPoster) {
+	if ($is_admin || $isPoster) {
 		echo drawHeaderRow($r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 	} else {
-		if ($r["isAdmin"]) {
+		if ($r["is_admin"]) {
 			echo drawHeaderRow($r["title"], 2);
 		} else {
 			echo drawHeaderRow($r["title"], 2, "add a followup", "#bottom");
 		}
 	}
-	echo drawThreadTop($r["title"], $r["description"], $r["userID"], $r["firstname"] . " " . $r["lastname"], $r["imageID"], $r["width"], $r["height"], $r["createdOn"]);
+	echo drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
 	//get replies
 	//$direction = ($_GET["id"] == 7966) ? "DESC" : "ASC";
-	if (!$r["isAdmin"]) {
+	if (!$r["is_admin"]) {
 		$followups = db_query("SELECT
 					f.id,
 					f.description,
-					u.userID,
+					u.user_id,
 					ISNULL(u.nickname, u.firstname) firstname,
 					u.lastname,
-					f.createdOn as postedDate,
-					f.createdBy as userID,
-					i.imageID,
-					i.width,
-					i.height
+					f.created_date as postedDate,
+					f.created_user as user_id
 				FROM bb_followups f
-				JOIN users u ON u.userID = f.createdBy
-				LEFT JOIN intranet_images i ON u.imageID = i.imageID
-				WHERE f.isActive = 1 AND f.topicID = {$_GET["id"]}
-				ORDER BY f.createdOn");
+				JOIN users u ON u.user_id = f.created_user
+				WHERE f.is_active = 1 AND f.topicID = {$_GET["id"]}
+				ORDER BY f.created_date");
 		while ($f = db_fetch($followups)) { 
-			echo drawThreadComment($f["description"], $f["userID"], $f["firstname"] . " " . $f["lastname"], $f["imageID"], $f["width"], $f["height"], $f["postedDate"]);
+			echo drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["imageID"], $f["width"], $f["height"], $f["postedDate"]);
 		}
 		echo drawThreadCommentForm(false);
 	}

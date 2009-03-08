@@ -21,21 +21,21 @@ $r = db_grab("SELECT tt.name, t.typeID, t.tag FROM intranet_tags t INNER JOIN in
 	<?
 	$contacts = db_query("SELECT
 						o.id,
-						o.isActive,
+						o.is_active,
 						i.varchar_01 as firstname,
 						i.varchar_02 as lastname,
 						i.varchar_04 as organization,
 						i.varchar_08 as phone,
 						i.varchar_11 as email
-					FROM intranet_objects o
-					JOIN intranet_instances i ON o.instanceCurrentID = i.id
-					JOIN intranet_instances_to_tags i2t ON i.id = i2t.instanceID
-					WHERE o.isActive = 1 AND i2t.tagID = {$_GET["id"]}
+					FROM contacts o
+					JOIN contacts_instances i ON o.instanceCurrentID = i.id
+					JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
+					WHERE o.is_active = 1 AND i2t.tagID = {$_GET["id"]}
 					ORDER BY i.varchar_02, i.varchar_01");
 	while ($c = db_fetch($contacts)) {
 		if (strlen($c["organization"]) > 40) $c["organization"] = substr($c["organization"], 0, 39) . "...";
 		?>
-	<tr <? if (!$c["isActive"]) {?> class="deleted"<? }?>>
+	<tr <? if (!$c["is_active"]) {?> class="deleted"<? }?>>
 		<td><input type="checkbox"></td>
 		<td><a href="contact.php?id=<?=$c["id"]?>"><?=$c["lastname"]?>, <?=$c["firstname"]?></a></td>
 		<td><?=$c["organization"]?></td>

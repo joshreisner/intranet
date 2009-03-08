@@ -2,7 +2,7 @@
 
 //deactivate laptop
 if (isset($_GET["deactivate"])) {
-	db_query("UPDATE it_laptops SET isActive = 0 WHERE laptopID = " . $_GET["deactivate"]);
+	db_query("UPDATE it_laptops SET is_active = 0 WHERE laptopID = " . $_GET["deactivate"]);
 	url_drop();
 }
 
@@ -29,23 +29,23 @@ if ($_SESSION["departmentID"] != 8) {
 						t.title,
 						t.statusID,
 						(SELECT count(*) FROM helpdesk_tickets_followups f WHERE f.ticketID = t.id) ticketfollowups,
-						t.createdBy,
-						t.updatedOn,
+						t.created_user,
+						t.updated_date,
 						t.id,
 						t.ownerID,
 						t.priorityID,
-						t.createdOn,
+						t.created_date,
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last,
-						(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) isAdminIT,
+						(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT,
 						u.imageID,
 						m.width,
 						m.height
 					FROM helpdesk_tickets t
-					JOIN users u ON u.userID    = t.createdBy
+					JOIN users u ON u.user_id    = t.created_user
 					LEFT  JOIN intranet_images m ON u.imageID   = m.imageID
 					WHERE t.statusID <> 9 AND t.typeID = 1
-					ORDER BY t.createdOn DESC");
+					ORDER BY t.created_date DESC");
 if (db_found($result)) {?>
 	<tr>
 		<th>User</th>
@@ -106,8 +106,8 @@ if (db_found($result)) {?>
 		FROM IT_Laptops l
 		INNER JOIN IT_Laptops_Statuses s ON s.laptopStatusID = l.laptopStatusID
 		LEFT JOIN IT_Laptops_Checkouts lc ON l.checkoutID = lc.checkoutID
-		LEFT JOIN users u ON u.userID = lc.checkoutUser
-		WHERE l.laptopHomeID = {$h["id"]} AND l.isActive = 1
+		LEFT JOIN users u ON u.user_id = lc.checkoutUser
+		WHERE l.laptopHomeID = {$h["id"]} AND l.is_active = 1
 		ORDER BY laptopName");
 	while ($r = db_fetch($result)) {?>
 	<tr>

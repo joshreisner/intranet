@@ -37,7 +37,7 @@ if (isset($_GET["q"])) {
 		} else {
 			$terms[] = $searchTerm;
 			$where[] = "w$counter.word = '$searchTerm'";
-			$joins[] = "INNER JOIN intranet_instances_to_words i2w$counter ON i.id = i2w$counter.instanceID INNER JOIN intranet_words w$counter ON i2w$counter.wordID = w$counter.id";
+			$joins[] = "INNER JOIN contacts_instances_to_words i2w$counter ON i.id = i2w$counter.instanceID INNER JOIN intranet_words w$counter ON i2w$counter.wordID = w$counter.id";
 			$counter++;
 		}
 	}
@@ -48,7 +48,7 @@ if (isset($_GET["q"])) {
 			echo drawServerMessage("<b>Note:</b> The words " . formatArrayForText($skips) . " were ignored in your search.");
 		}
 	}
-	//$where[] = "o.isActive = 1";
+	//$where[] = "o.is_active = 1";
 	if (count($where)) {
 		$where = implode(" AND ", $where);
 		$joins = implode(" ", $joins);
@@ -58,15 +58,15 @@ if (isset($_GET["q"])) {
 		$result = db_query("
 						SELECT
 							o.id,
-							o.isActive,
+							o.is_active,
 							i.varchar_01 firstname,
 							i.varchar_02 lastname,
 							i.varchar_04 organization,
 							i.varchar_08 phone,
-							i.createdOn last_updated,
-							i.createdBy userID
-						FROM intranet_objects o
-						INNER JOIN intranet_instances i ON i.ID = o.instanceCurrentID
+							i.created_date last_updated,
+							i.created_user user_id
+						FROM contacts o
+						INNER JOIN contacts_instances i ON i.ID = o.instanceCurrentID
 						$joins
 						WHERE $where
 						ORDER BY 
@@ -87,7 +87,7 @@ if (isset($_GET["q"])) {
 					$c["lastname"]  = preg_replace("/($needle)/i","<font style='background-color:#FFFFBB;padding:1px;'><b>\\0</b></font>", $c["lastname"]);
 					$c["organization"] = preg_replace("/($needle)/i","<font style='background-color:#FFFFBB;padding:1px;'><b>\\0</b></font>", $c["organization"]);
 					?>
-				<tr <?if(!$c["isActive"]){?>class="deleted"<?}?>>
+				<tr <?if(!$c["is_active"]){?>class="deleted"<?}?>>
 					<td><a href="contact.php?id=<?=$c["id"]?>"><?=$c["lastname"]?>, <?=$c["firstname"]?></a></td>
 					<td><?=$c["organization"]?></td>
 					<td><?=$c["phone"]?></td>

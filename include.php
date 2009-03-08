@@ -27,10 +27,12 @@ if (!$pageIsPublic) {
 			m.name,
 			m.pallet,
 			m.isPublic,
-			(SELECT COUNT(*) FROM users_to_modules a WHERE a.userID = {$_SESSION["user_id"]} AND a.moduleID = m.id) isAdmin
+			u.is_closed,
+			u.is_admin
 		FROM modules m
 		JOIN pages p ON p.id = m.homePageID
-		WHERE m.isActive = 1
+		LEFT JOIN users_to_modules u ON u.module_id = m.id
+		WHERE m.is_active = 1 AND u.user_id = {$_SESSION["user_id"]}
 		ORDER BY m.precedence");
 
 	$modules	= array();
@@ -43,18 +45,19 @@ if (!$pageIsPublic) {
 			"url"		=> $r["url"],
 			"isPublic"	=> $r["isPublic"],
 			"pallet"	=> $r["pallet"],
-			"isAdmin"	=> $r["isAdmin"]
+			"is_closed"	=> $r["is_closed"],
+			"is_admin"	=> $r["is_admin"]
 		);
-		if (($r["name"] == "Admin") && $r["isAdmin"]) $_SESSION["isAdmin"] = true;
+		if (($r["name"] == "Admin") && $r["is_admin"]) $_SESSION["is_admin"] = true;
 		if (!$r["pallet"]) $areas[$r["name"]] = $r["id"];
 	}
 	ksort($areas);
 	
 	//indicate admin privileges for the current module
-	$isAdmin = (isset($modules[$page["moduleID"]])) ? $modules[$page["moduleID"]]["isAdmin"] : false;
+	$is_admin = (isset($modules[$page["module_id"]])) ? $modules[$page["module_id"]]["is_admin"] : false;
 	
 	//check to see if user needs update
-	if (($_SESSION["update_days"] > 90 || empty($_SESSION["updatedOn"])) && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
+	if (($_SESSION["update_days"] > 90 || empty($_SESSION["updated_date"])) && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
 		error_debug("user needs address update");
 		url_change("/staff/add_edit.php?id=" . $_SESSION["user_id"]);
 	} elseif ($_SESSION["password"] && ($_josh["request"]["path"] != "/login/password_update.php") && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
@@ -63,14 +66,14 @@ if (!$pageIsPublic) {
 	}		
 
 	//special pages that don't belong to a module still need info
-	if (!isset($page["moduleID"])) $page["moduleID"] = 0;
-	if (!isset($modules[$page["moduleID"]])) {
+	if (!isset($page["module_id"])) $page["module_id"] = 0;
+	if (!isset($modules[$page["module_id"]])) {
 		error_debug("unspecified module");
-		$modules[$page["moduleID"]]["pallet"]	= false;
-		$modules[$page["moduleID"]]["isPublic"]	= false;
-		$modules[$page["moduleID"]]["pallet"]	= false;
-		$modules[$page["moduleID"]]["name"]		= "Intranet";
-		$modules[$page["moduleID"]]["isAdmin"]	= false;
+		$modules[$page["module_id"]]["pallet"]	= false;
+		$modules[$page["module_id"]]["isPublic"]	= false;
+		$modules[$page["module_id"]]["pallet"]	= false;
+		$modules[$page["module_id"]]["name"]		= "Intranet";
+		$modules[$page["module_id"]]["is_admin"]	= false;
 	}
 
 	//get helpdesk pallet info
@@ -84,10 +87,18 @@ if (!$pageIsPublic) {
 	$helpdeskStatus = db_grab("SELECT message FROM it_system_status");
 
 	//handle side menu pref updates
-	if (isset($_GET["toggleMenuPref"])) {
-		$_SESSION[$_GET["toggleMenuPref"]] = abs($_SESSION[$_GET["toggleMenuPref"]] - 1);
-		db_query("UPDATE users SET {$_GET["toggleMenuPref"]} = {$_SESSION[$_GET["toggleMenuPref"]]} WHERE userID = " . $_SESSION["user_id"]);
-		url_query_drop("toggleMenuPref");
+	if (isset($_GET["module"])) {
+		$closed = db_grab("SELECT is_closed FROM users_to_modules WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"]);
+		if ($closed != "") {
+			db_query("UPDATE users_to_modules SET is_closed = " . abs($closed - 1) . " WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"]);
+		} else {
+			db_query("INSERT INTO users_to_modules ( user_id, module_id, is_closed ) VALUES ( {$_SESSION["user_id"]}, {$_GET["module"]}, 1 )");
+		}
+		url_query_drop("module");
+	} elseif (url_action("help")) {
+		$_SESSION["help"] = abs($_SESSION["help"] - 1);
+		db_query("UPDATE users SET help = {$_SESSION["help"]} WHERE user_id = " . $_SESSION["user_id"]);
+		url_query_drop("action");
 	}
 }
 
@@ -151,7 +162,7 @@ error_debug("done processing include!");
         }
 
  		if ($user = db_grab("SELECT 
-			u.userID id,
+			u.user_id id,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
 			u.email,
@@ -159,58 +170,38 @@ error_debug("done processing include!");
 			p.url homepage,
 			u.departmentID,
 			d.isHelpdesk,
-			u.updatedOn,
-			" . db_datediff("u.updatedOn", "GETDATE()") . " update_days,
-			u.isOpenHelp,
-			u.isOpenAreas,
-			u.isOpenCalendar,
-			u.isOpenContacts,
-			u.isOpenBulletinBoard,
-			u.isOpenHelpdesk,
-			u.isOpenDocuments,
-			u.isOpenStaff,
-			u.imageID,
-			i.width,
-			i.height
+			u.help,
+			u.updated_date,
+			" . db_datediff("u.updated_date", "GETDATE()") . " update_days
 		FROM users u
 		LEFT JOIN departments d ON u.departmentID = d.departmentID
 		LEFT JOIN pages p				ON u.homePageID = p.id
-		LEFT JOIN intranet_images i ON u.imageID = i.imageID
-		WHERE u.email = '$username' AND u.isActive = 1" . $where)) {
+		WHERE u.email = '$username' AND u.is_active = 1" . $where)) {
 			//login was good
-			db_query("UPDATE users SET lastlogin = GETDATE() WHERE userID = " . $user["id"]);
+			db_query("UPDATE users SET lastlogin = GETDATE() WHERE user_id = " . $user["id"]);
 			$_SESSION["user_id"]		= $user["id"];
 			$_SESSION["email"]			= $user["email"];
 			$_SESSION["homepage"]		= ($user["homepage"]) ? $user["homepage"] : "/bb/";
 			$_SESSION["departmentID"]	= $user["departmentID"];
 			$_SESSION["isHelpdesk"]		= $user["isHelpdesk"];
+			$_SESSION["help"]			= $user["help"];
 			$_SESSION["update_days"]	= $user["update_days"];
-			$_SESSION["updatedOn"]		= $user["updatedOn"];
+			$_SESSION["updated_date"]	= $user["updated_date"];
 			$_SESSION["password"]		= $user["password"];
-			$_SESSION["imageID"]		= $user["imageID"];
-			$_SESSION["width"]			= $user["width"];
-			$_SESSION["height"]			= $user["height"];
 			$_SESSION["full_name"]		= $user["firstname"] . " " . $user["lastname"];
-			$_SESSION["isAdmin"]		= false;
+			$_SESSION["is_admin"]		= false;
 			
-			//pretty sure these should be stored in the users_to_modules table (renamed to users_to_modules, perhaps?)
-			$_SESSION["isOpenHelp"]				= $user["isOpenHelp"];
-			$_SESSION["isOpenAreas"]			= $user["isOpenAreas"];
-			$_SESSION["isOpenCalendar"]			= $user["isOpenCalendar"];
-			$_SESSION["isOpenContacts"]			= $user["isOpenContacts"];
-			$_SESSION["isOpenBulletinBoard"]	= $user["isOpenBulletinBoard"];
-			$_SESSION["isOpenHelpdesk"]			= $user["isOpenHelpdesk"];
-			$_SESSION["isOpenDocuments"]		= $user["isOpenDocuments"];
-			$_SESSION["isOpenStaff"]			= $user["isOpenStaff"];
-
-			return true;		
+			cookie("last_login", $user["email"]);
+			cookie("last_email", $user["email"]);
+			
+			return true;
 		}		
 		return false;
 	}
 	
 	function getPage() {
 		global $_josh;
-		if ($return = db_grab("SELECT p.id, p.name, p.helpText, p.isAdmin, p.isSecure, m.id moduleID, m.name module FROM pages p LEFT JOIN modules m ON p.moduleID = m.id WHERE p.url = '{$_josh["request"]["path"]}'")) {
+		if ($return = db_grab("SELECT p.id, p.name, p.helpText, p.is_admin, p.isSecure, m.id module_id, m.name module FROM pages p LEFT JOIN modules m ON p.module_id = m.id WHERE p.url = '{$_josh["request"]["path"]}'")) {
 			return $return;
 		} else {
 			error_debug("creating page");
@@ -219,10 +210,16 @@ error_debug("done processing include!");
 		}
 	}
 	
+	function getString($key) {
+		global $_josh, $strings, $locale;
+		if (!isset($strings)) include($_josh["root"] . $locale . "strings.php");
+		return $strings[$key];
+	}
+	
 //post functions
 	function getDocTypeID($filename) {
 		$array = explode(".", $filename);
-		return db_grab("SELECT id FROM documents_types WHERE extension = '" . array_pop($array) . "'");
+		return db_grab("SELECT id FROM docs_types WHERE extension = '" . array_pop($array) . "'");
 	}
 
 	function updateInstanceWords($id, $text) {
@@ -243,8 +240,8 @@ error_debug("done processing include!");
 	}
 	
 	function deleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
-		global $isAdmin, $locale;
-		if ($adminOnly && !$isAdmin) return false;
+		global $is_admin, $locale;
+		if ($adminOnly && !$is_admin) return false;
 		if (!$id) return '<td width="16">&nbsp;</td>';
 		return '<td width="16">' . draw_img($locale . "images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
 	}
@@ -268,19 +265,19 @@ error_debug("done processing include!");
 				t.id,
 				t.title,
 				t.description,
-				t.isAdmin,
+				t.is_admin,
 				t.threadDate,
-				(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topicID AND f.isActive = 1) replies,
+				(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topicID AND f.is_active = 1) replies,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
 				u.email
 			FROM bb_topics t
-			JOIN users u ON u.userID = t.createdBy
-			WHERE t.isActive = 1 
+			JOIN users u ON u.user_id = t.created_user
+			WHERE t.is_active = 1 
 			ORDER BY t.threadDate DESC", 15);
 		
 		while ($t = db_fetch($topics)) {
-			if ($t["isAdmin"]) $t["title"] = "ADMIN: " . $t["title"];
+			if ($t["is_admin"]) $t["title"] = "ADMIN: " . $t["title"];
 			if ($t["replies"] == 1) {
 				$t["title"] .= " (" . $t["replies"] . " comment)";
 			} elseif ($t["replies"] > 1) {
@@ -303,7 +300,7 @@ error_debug("done processing include!");
 	class intranet_form {
 		var $rows, $js;
 		
-		function addUser($name="userID", $desc="User", $default=0, $nullable=false, $admin=false) {
+		function addUser($name="user_id", $desc="User", $default=0, $nullable=false, $admin=false) {
 			global $rows, $location;
 			$rows .= '<tr>
 				<td class="left">' . $desc . '</td>
@@ -346,10 +343,10 @@ error_debug("done processing include!");
 							t.$description description, 
 							(SELECT COUNT(*) FROM $linking_table l WHERE l.$table_col = $id AND l.$link_col = t.id) checked
 						FROM $table t
-						WHERE t.isActive = 1
+						WHERE t.is_active = 1
 						ORDER BY t.$description");
 				} else {
-					$result = db_query("SELECT id, $description description, 0 checked FROM $table WHERE isActive = 1 ORDER BY $description");
+					$result = db_query("SELECT id, $description description, 0 checked FROM $table WHERE is_active = 1 ORDER BY $description");
 				}
 				if ($total = db_found($result)) {
 					$counter = 0;
@@ -443,14 +440,14 @@ error_debug("done processing include!");
 					$rows .= '</td>';
 				} elseif ($type == "user") {
 					$result = db_query("SELECT 
-											userID, 
+											user_id, 
 											ISNULL(nickname, firstname) first,
 											lastname last 
 										FROM users
-										WHERE isActive = 1
+										WHERE is_active = 1
 										ORDER by lastname");
 					while ($r = db_fetch($result)) {
-						$options[$r["userID"]] = $r["first"] . ", " . $r["last"];
+						$options[$r["user_id"]] = $r["first"] . ", " . $r["last"];
 					}
 					$rows .= '<td>';
 					$rows .= draw_form_select($name, $options, $default, $required, false, $onchange);
@@ -462,7 +459,7 @@ error_debug("done processing include!");
 											departmentName,
 											quoteLevel
 										FROM departments
-										WHERE isActive = 1
+										WHERE is_active = 1
 										ORDER by precedence");
 					while ($r = db_fetch($result)) {
 						$rows .= '<option value="' . $r["departmentID"] . '"';
@@ -606,32 +603,33 @@ error_debug("done processing include!");
 			}
 		}
 		if (url_id()) {
-			$query1[] = "updatedOn = GETDATE()";
-			if (isset($_POST["updatedBy"])) {
-				$query1[] = "updatedBy = " . $_POST["updatedBy"];
+			$query1[] = "updated_date = GETDATE()";
+			if (isset($_POST["updated_user"])) {
+				$query1[] = "updated_user = " . $_POST["updated_user"];
 			} else {
-				$query1[] = "updatedBy = " . $_SESSION["user_id"];
+				$query1[] = "updated_user = " . $_SESSION["user_id"];
 			}
 			db_query("UPDATE " . $table . " SET " . implode(", ", $query1) . " WHERE " . $index . " = " . $_GET["id"]);
 			return $_GET["id"];
 		} else {
-			$query1[] = "createdOn";
+			$query1[] = "created_date";
 			$query2[] = "GETDATE()";
-			$query1[] = "createdBy";
-			$query2[] = (isset($_POST["createdBy"])) ? $_POST["createdBy"] : $_SESSION["user_id"];
-			$query1[] = "isActive";
+			$query1[] = "created_user";
+			$query2[] = (isset($_POST["created_user"])) ? $_POST["created_user"] : $_SESSION["user_id"];
+			$query1[] = "is_active";
 			$query2[] = 1;
 			$r = db_query("INSERT INTO " . $table . " ( " . implode(", ", $query1) . " ) VALUES ( " . implode(", ", $query2) . ")");
 			return $r;
 		}
 	}
 		
-	function verifyImage($imageID) {
+	function verifyImage($user_id) {
 		global $_josh, $locale;
-		if (!$imageID) return false;
-		if (!is_file($_josh["root"] . $locale . "staff/" . $imageID . ".jpg")) {
-			$content = db_grab("SELECT image FROM intranet_images WHERE imageID = " . $imageID);
-			file_put($locale . "staff/" . $imageID . ".jpg", $content);
+		if (!is_file($_josh["root"] . $locale . "staff/" . $user_id . ".jpg") || !is_file($_josh["root"] . $locale . "staff/" . $user_id . "-thumbnail.jpg")) {
+			if ($image = db_grab("SELECT image FROM users WHERE user_id = " . $user_id)) {
+				file_put($locale . "staff/" . $imageID . ".jpg", $image);
+				file_image_resize($locale . "staff/" . $imageID . ".jpg", $locale . "staff/" . $imageID . "-thumbnail.jpg", 45);
+			}
 		}
 	}
 
@@ -658,11 +656,11 @@ error_debug("done processing include!");
 	}
 							
 	function drawNavigation() {
-		global $_SESSION, $isAdmin, $page, $location;
-		if (!$page["moduleID"]) return false;
+		global $_SESSION, $is_admin, $page, $location;
+		if (!$page["module_id"]) return false;
 		$pages	= array();
-		$admin	= ($isAdmin) ? "" : "AND isAdmin = 0";
-		$result	= db_query("SELECT name, url FROM pages WHERE moduleID = {$page["moduleID"]} {$admin} AND isInstancePage = 0 ORDER BY precedence");
+		$admin	= ($is_admin) ? "" : "AND is_admin = 0";
+		$result	= db_query("SELECT name, url FROM pages WHERE module_id = {$page["module_id"]} {$admin} AND isInstancePage = 0 ORDER BY precedence");
 		while ($r = db_fetch($result)) {
 			if ($r["url"] != "/helpdesk/") $pages[$r["url"]] = $r["name"];
 		}
@@ -701,7 +699,7 @@ error_debug("done processing include!");
 					<div class="head-left">
 					';
 		if ($location != "login") {
-			$header .='<a  href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["moduleID"]]["name"] . '</a>';
+			$header .='<a  href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["name"] . '</a>';
 		}
 		if ($name) {
 			$header .=' &gt; ';
@@ -715,23 +713,17 @@ error_debug("done processing include!");
 		return $header;
 	}
 
-	function drawName($userID, $name, $imageID, $imgwidth, $imgheight, $date=false, $withtime=false, $separator="<br>") {
-		global $_josh, $locale;
+	function drawName($user_id, $name, $date=false, $withtime=false, $separator="<br>") {
+		global $locale;
+		$base = url_base();
 		$date = ($date) ? format_date_time($date, "", $separator) : false;
-		if ($imageID) {
-			$factor    = @(31 / $imgheight);
-			$imgheight = $imgheight * $factor;
-			$imgwidth  = $imgwidth * $factor;
-			verifyImage($imageID);
-			$img = '<a href="http://' . $_josh["request"]["host"] . '/staff/view.php?id=' . $userID . '"><img src="http://' . $_josh["request"]["host"] . $locale . 'staff/' . $imageID . '.jpg" width="' . $imgwidth . '" height="' . $imgheight . '"></a>';
-		} else {
-			$img = "";
-		}
+		$img  = draw_img($locale . "staff/" . $user_id . "-thumbnail.jpg", $base . "/staff/view.php?id=" . $user_id);		
+		verifyImage($user_id);
 		return '
 		<table cellpadding="0" cellspacing="0" border="0" width="144">
 			<tr valign="top" style="background-color:transparent;">
 				<td width="46" height="37" align="center">' . $img . '</td>
-				<td><a href="http://' . $_josh["request"]["host"] . '/staff/view.php?id=' . $userID . '">' . format_string($name, 20) . '</a><br>' . $date . '</td>
+				<td><a href="' . $base . '/staff/view.php?id=' . $user_id . '">' . format_string($name, 20) . '</a><br>' . $date . '</td>
 			</tr>
 		</table>';
 	}
@@ -739,20 +731,20 @@ error_debug("done processing include!");
 //custom functions - form functions
 
 	function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text="", $class=false) { 
-		$result = db_query("SELECT u.userID, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.isActive = 1 ORDER by last, first");
+		$result = db_query("SELECT u.user_id, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.is_active = 1 ORDER by last, first");
 		if ($jumpy) $jumpy = "location.href='/staff/view.php?id=' + this.value";
 		$array = array();
 		while ($r = db_fetch($result)) {
-			$array[$r["userID"]] = ($lname1st) ? $r["last"] . ", " . $r["first"] : $r["first"] . " " . $r["last"];
+			$array[$r["user_id"]] = ($lname1st) ? $r["last"] . ", " . $r["first"] : $r["first"] . " " . $r["last"];
 		}
 		return draw_form_select($name, $array, $selectedID, !$nullable, $class, $jumpy);
 	}
 	
-	function drawThreadTop($title, $content, $userID, $fullname, $imageID, $imageWidth, $imageHeight, $date, $editurl=false) {
+	function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=false) {
 		global $_josh;
 		$return  = '<tr>
 				<td height="150" class="left">' . 
-				drawName($userID, $fullname, $imageID, $imageWidth, $imageHeight, $date, true) . 
+				drawName($user_id, $fullname, $date, true) . 
 				'</td>
 				<td class="text"><h1>' . $title . '</h1>';
 		if ($editurl) {
@@ -765,30 +757,30 @@ error_debug("done processing include!");
 		return $return;	
 	}
 	
-	function drawThreadComment($content, $userID, $fullname, $imageID, $imageWidth, $imageHeight, $date, $isAdmin=false) {
+	function drawThreadComment($content, $user_id, $fullname, $date, $is_admin=false) {
 		global $location;
 		$return  = '<tr><td class="left">';
-		$return .= drawName($userID, $fullname, $imageID, $imageWidth, $imageHeight, $date, true) . '</td>';
+		$return .= drawName($user_id, $fullname, $date, true) . '</td>';
 		$return .= '<td class="right text ';
-		if ($isAdmin) $return .= $location . "-hilite";
+		if ($is_admin) $return .= $location . "-hilite";
 		$return .= '" height="80">' . $content . '</td></tr>';
 		return $return;
 	}
 	
 	function drawThreadCommentForm($showAdmin=false) {
-		global $isAdmin, $_josh, $_SESSION;
+		global $is_admin, $_josh, $_SESSION;
 		$return = '
 			<a name="bottom"></a>
 			<form method="post" action="' . $_josh["request"]["path_query"] . '" onsubmit="javascript:return validate(this);">
 			<tr valign="top">
 				<td class="left">' . drawName($_SESSION["user_id"], $_SESSION["full_name"], $_SESSION["imageID"], $_SESSION["width"], $_SESSION["height"], false, true) . '</td>
 				<td>' . draw_form_textarea("message", "", "mceEditor thread");
-		if ($showAdmin && $isAdmin) {
+		if ($showAdmin && $is_admin) {
 			$return .= '
 				<table class="nospacing">
 					<tr>
-						<td width="16">' . draw_form_checkbox("isAdmin") . '</td>
-						<td>' . drawCheckboxText("isAdmin", "This followup is admin-only (invisible to most users)") . '</td>
+						<td width="16">' . draw_form_checkbox("is_admin") . '</td>
+						<td>' . drawCheckboxText("is_admin", "This followup is admin-only (invisible to most users)") . '</td>
 					</tr>
 				</table>';
 		}
@@ -819,39 +811,31 @@ error_debug("done processing include!");
 	}
 	
 	function drawTop() {
-		global $_GET, $_SESSION, $_josh, $page, $isAdmin, $locale, $location;
+		global $_GET, $_SESSION, $_josh, $page, $is_admin, $locale, $location;
 		error_debug("starting top");
 		$title = $page["module"] . " > " . $page["name"];
 	?><html>
 		<head>
 			<title><?=$title?></title>
-			<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
-			<!--[if IE]>
-			<link rel="stylesheet" type="text/css" href="/styles/ie.css" />
-			<![endif]--> 
+			<link rel="stylesheet" type="text/css" media="screen" href="/styles/screen.css" />
+			<link rel="stylesheet" type="text/css" media="print" href="/styles/print.css" />
+			<!--[if IE]><link rel="stylesheet" type="text/css" media="screen" href="/styles/ie.css" /><![endif]--> 
 			<?
 			echo draw_javascript_src("/javascript.js");
 			echo draw_javascript_src($locale . "tinymce/jscripts/tiny_mce/tiny_mce.js");
 			echo draw_javascript_src();
-			echo draw_javascript("form_tinymce_init('" . $locale . "tinymce.css');");
+			echo draw_javascript("form_tinymce_init('/styles/tinymce.css');");
 			?>
 		</head>
 		<body>
 			<div id="container">
-				<div id="banner"><?
-				if ($banner = draw_img($locale . "banner.png", $_SESSION["homepage"])) {
-					echo $banner;
-				} else {
-					echo draw_img($locale . "banner.jpg", $_SESSION["homepage"]);
-				}
-				
-				?></div>
+				<div id="banner"><?=draw_img($locale . "images/banner.png", $_SESSION["homepage"])?></div>
 				<div id="left">
 					<div id="help">
 					<a class="button left" href="<?=$_SESSION["homepage"]?>">Home</a>
-					<a class="button right" href="<?=url_query_add(array("toggleMenuPref"=>"isOpenHelp"), false)?>">Show Help</a>
-				<? if ($_SESSION["isOpenHelp"]) {
-					if ($_SESSION["isAdmin"]) {?>
+					<a class="button right" href="<?=url_query_add(array("action"=>"help"), false)?>">Show Help</a>
+				<? if ($_SESSION["help"]) {
+					if ($_SESSION["is_admin"]) {?>
 						<a class="button right" href="/admin/pages/?id=<?=$page["id"]?>&returnTo=<?=urlencode($_josh["request"]["path_query"])?>">Edit Page Info</a>
 					<? }?>
 					<div class="text">
@@ -874,7 +858,7 @@ error_debug("done processing include!");
 				</div>
 				<div id="right">
 					<div id="tools">
-						<a class="right button" href="/index.php?logout=true">Log Out</a>
+						<a class="right button" href="/index.php?action=logout">Log Out</a>
 						Hello <b><a href="/staff/view.php?id=<?=$_SESSION["user_id"]?>"><?=$_SESSION["full_name"]?></b></a>.
 
 						<form name="search" method="get" action="/staff/search.php" onSubmit="javascript:return doSearch(this);">
@@ -882,10 +866,10 @@ error_debug("done processing include!");
 						</form>
 						
 						<table class="links">
-							<? if ($_SESSION["isAdmin"]) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/admin/links/">Edit Links</a></td></tr><? } ?>
+							<? if ($_SESSION["is_admin"]) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/admin/links/">Edit Links</a></td></tr><? } ?>
 		<?
 		$side = "left";
-		$links = db_query("SELECT url, text FROM links WHERE isActive = 1 ORDER BY precedence");
+		$links = db_query("SELECT url, text FROM links WHERE is_active = 1 ORDER BY precedence");
 		while ($l = db_fetch($links)) {
 			if ($side == "left") echo "<tr>";
 			echo '<td width="50%"><a href="' . $l["url"] . '">' . $l["text"] . '</a></td>';
@@ -897,28 +881,16 @@ error_debug("done processing include!");
 					</div>
 		<? 
 			            
-		foreach ($modules as $module) {
-			if ($module["pallet"]) {
-				if ($module["url"] == "/bb/") {
-					$index = "isOpenBulletinBoard";
-				} elseif ($module["url"] == "/cal/") {
-					$index = "isOpenCalendar";
-				} elseif ($module["url"] == "/docs/") {
-					$index = "isOpenDocuments";
-				} elseif ($module["url"] == "/areas/") {
-					$index = "isOpenAreas";
-				} elseif ($module["url"] == "/staff/") {
-					$index = "isOpenStaff";
-				}
-			?>
+		foreach ($modules as $m) {
+			if ($m["pallet"]) { ?>
 			<table class="right" cellspacing="1">
 				<tr>
-					<td colspan="2" class="head <?=str_replace("/", "", $module["url"])?>">
-						<div class="head-left"><a href="<?=$module["url"]?>"><?=$module["name"]?></a></div>
-						<a style="float:right; margin-top:1px;" href="<?=url_query_add(array("toggleMenuPref"=>$index), false)?>"><img src="<?=$module["url"]?>arrow-<? if ($_SESSION["isOpenStaff"]) {?>down<? } else {?>up<? }?>.gif" width="26" height="14" border="0"></a>
+					<td colspan="2" class="head <?=str_replace("/", "", $m["url"])?>">
+						<div class="head-left"><a href="<?=$m["url"]?>"><?=$m["name"]?></a></div>
+						<?=draw_img($m["url"] . "arrow-" . format_boolean($m["is_closed"], "up|down") . ".gif", url_query_add(array("module"=>$m["id"]), false))?>
 					</td>
 				</tr>
-				<? if ($_SESSION[$index]) include($_josh["root"] . $module["pallet"]);?>
+				<? if (!$m["is_closed"]) include($_josh["root"] . $m["pallet"]);?>
 			</table>
 			<? }
 		}?>

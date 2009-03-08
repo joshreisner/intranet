@@ -19,12 +19,12 @@ drawTop();
 		w.description,
 		ISNULL(u.nickname, u.firstname) first,
 		u.lastname last,
-		w.createdOn
+		w.created_date
 	FROM wiki_topics w
 	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN users u ON w.createdBy = u.userID
-	WHERE w.isActive = 1
-	ORDER BY w.createdOn DESC");
+	JOIN users u ON w.created_user = u.user_id
+	WHERE w.is_active = 1
+	ORDER BY w.created_date DESC");
 	if (db_found($topics)) {?>
 	<tr>
 		<th width="16"></th>
@@ -38,7 +38,7 @@ drawTop();
 		<td></td>
 		<td><a href="topic.php?id=<?=$t["id"]?>"><?=$t["title"]?></a></td>
 		<td><?=$t["first"]?> <?=$t["last"]?></td>
-		<td align="right"><?=format_date($t["createdOn"])?></td>
+		<td align="right"><?=format_date($t["created_date"])?></td>
 	</tr>
 	<? }
 	} else {
@@ -48,9 +48,9 @@ drawTop();
 
 <a name="bottom"></a>
 
-<? if ($isAdmin) {
+<? if ($is_admin) {
 	$form = new intranet_form;
-	if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], false, true);
+	if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true, 255);
 	$form->addRow("select", "Type" , "typeID", "SELECT id, description FROM wiki_topics_types");
 	$form->addCheckboxes("tags", "Tags", "wiki_tags", "wiki_topics_to_tags");

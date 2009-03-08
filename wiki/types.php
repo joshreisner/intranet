@@ -17,7 +17,7 @@ drawTop();
 		t.description,
 		(SELECT COUNT(*) FROM wiki_topics w WHERE w.typeID = t.id) topics
 		FROM wiki_topics_types t 
-		WHERE t.isActive = 1
+		WHERE t.is_active = 1
 		ORDER BY t.description");
 	if (db_found($tags)) {?>
 	<tr>
@@ -34,9 +34,9 @@ drawTop();
 		echo drawEmptyResult("No types have been entered yet.", 2);
 	}?>
 </table>
-<? if ($isAdmin) {
+<? if ($is_admin) {
 	$form = new intranet_form;
-	if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], false, true);
+	if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Tag" , "description", "", "", true, 255);
 	$form->addRow("submit"  , "add tag");
 	$form->draw("Add a New Type");

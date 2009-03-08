@@ -2,7 +2,7 @@
 include("../include.php");
 
 if (isset($_GET["deleteID"])) { //delete topic
-	db_query("UPDATE wiki_topics SET isActive = 0, deletedby = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE id = " . $_GET["deleteID"]);
+	db_query("UPDATE wiki_topics SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE id = " . $_GET["deleteID"]);
 	url_change("./");
 }
 
@@ -17,8 +17,8 @@ if ($uploading) { //upload an attachment
 		typeID,
 		title,
 		content,
-		createdOn,
-		createdBy
+		created_date,
+		created_user
 	) VALUES (
 		{$_GET["id"]},
 		{$type},
@@ -41,7 +41,7 @@ drawTop();
 //load code for JS
 $extensions = array();
 $doctypes = array();
-$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
+$types = db_query("SELECT description, extension FROM docs_types ORDER BY description");
 while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t["extension"] . '")';
 	$doctypes[] = " - " . $t["description"] . " (." . $t["extension"] . ")";
@@ -53,9 +53,9 @@ $t = db_grab("SELECT
 		w.typeID,
 		(SELECT COUNT(*) FROM wiki_topics_attachments a WHERE a.topicID = w.id) hasAttachments,
 		t.description type,
-		w.isActive,
-		w.createdOn,
-		w.createdBy,
+		w.is_active,
+		w.created_date,
+		w.created_user,
 		ISNULL(u.nickname, u.firstname) first,
 		u.lastname last,
 		u.imageID,
@@ -63,7 +63,7 @@ $t = db_grab("SELECT
 		m.height
 	FROM wiki_topics w
 	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN users u ON w.createdBy = u.userID
+	JOIN users u ON w.created_user = u.user_id
 	LEFT JOIN intranet_images m ON u.imageID = m.imageID
 	WHERE w.id = " . $_GET["id"]);
 ?>
@@ -96,7 +96,7 @@ $t = db_grab("SELECT
 </script>
 	<?
 	echo drawTableStart();
-	if ($isAdmin) {
+	if ($is_admin) {
 		echo drawHeaderRow("View Topic", 2, "edit", "topic_edit.php?id=" . $_GET["id"], "delete", "topic_edit.php?deleteID=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Topic", 2);
@@ -137,7 +137,7 @@ $t = db_grab("SELECT
 				t.icon,
 				t.description type
 			FROM wiki_topics_attachments a
-			JOIN documents_types t ON a.typeID = t.id
+			JOIN docs_types t ON a.typeID = t.id
 			WHERE a.topicID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
@@ -149,29 +149,29 @@ $t = db_grab("SELECT
 		</td>
 	</tr>
 	<? } 
-	echo drawThreadTop($t["title"], $t["description"], $t["createdBy"], $t["first"] . " " . $t["last"], $t["imageID"], $t["width"], $t["height"], $t["createdOn"]);
+	echo drawThreadTop($t["title"], $t["description"], $t["created_user"], $t["first"] . " " . $t["last"], $t["imageID"], $t["width"], $t["height"], $t["created_date"]);
 		$comments = db_query("SELECT 
 				c.id, 
 				c.description,
-				c.createdOn,
-				c.createdBy,
+				c.created_date,
+				c.created_user,
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last,
 				u.imageID,
 				m.width,
 				m.height
 			FROM wiki_topics_comments c
-			JOIN users u ON c.createdBy = u.userID
+			JOIN users u ON c.created_user = u.user_id
 			LEFT JOIN intranet_images m ON u.imageID = m.imageID
 			WHERE c.topicID = {$_GET["id"]}
-			ORDER BY c.createdOn ASC");
+			ORDER BY c.created_date ASC");
 		while ($c = db_fetch($comments)) {
-			echo drawThreadComment($c["description"], $c["createdBy"], $c["first"] . " " . $c["last"], $c["imageID"], $c["width"], $c["height"], $c["createdOn"]);
+			echo drawThreadComment($c["description"], $c["created_user"], $c["first"] . " " . $c["last"], $c["imageID"], $c["width"], $c["height"], $c["created_date"]);
 		}
 		echo drawThreadCommentForm();
 	echo drawTableEnd();
 
-if ($isAdmin) {?>
+if ($is_admin) {?>
 <table class="left">
 	<?=drawHeaderRow("Attach Document", 2);?>
 	<form enctype="multipart/form-data" action="<?=$_josh["request"]["path_query"]?>" method="post" onsubmit="javascript:return validateComment(this);">

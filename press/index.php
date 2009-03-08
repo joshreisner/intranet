@@ -2,13 +2,13 @@
 
 if (url_action("delete")) {
 	db_query("UPDATE intranet_press_releases SET 
-				deletedOn = GETDATE(),
-				deletedBy = {$_SESSION["user_id"]},
-				isActive = 0
+				deleted_date = GETDATE(),
+				deleted_user = {$_SESSION["user_id"]},
+				is_active = 0
 			WHERE id = " . $_GET["id"]);
 	url_drop();
 } elseif ($posting) {
-	$theUserID = ($isAdmin) ? $_POST["createdBy"] : $_SESSION["user_id"];
+	$theuser_id = ($is_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	db_query("INSERT INTO intranet_press_releases (
 		headline,
 		detail,
@@ -16,9 +16,9 @@ if (url_action("delete")) {
 		releaseDate,
 		text,
 		corporationID,
-		createdOn,
-		createdBy,
-		isActive
+		created_date,
+		created_user,
+		is_active
 	) VALUES (
 		'" . $_POST["headline"] . "',
 		'" . $_POST["detail"] . "',
@@ -27,7 +27,7 @@ if (url_action("delete")) {
 		'" . format_html($_POST["text"]) . "',
 		" . $_POST["corporationID"] . ",
 		GETDATE(),
-		" . $theUserID . ",
+		" . $theuser_id . ",
 		1
 	)");
 	url_change();
@@ -46,7 +46,7 @@ if (url_id()) {
 		WHERE id = " . $_GET["id"]);
 	?>
 	<table class="left" cellspacing="1">
-		<? if ($isAdmin) {
+		<? if ($is_admin) {
 			echo drawHeaderRow("Press Release", 1, "edit", "edit/?id=" . $_GET["id"]);
 		} else {
 			echo drawHeaderRow("Press Release", 1);
@@ -64,7 +64,7 @@ if (url_id()) {
 <? } else {?>
 	
 	<table class="left" cellspacing="1">
-		<? if ($isAdmin) {
+		<? if ($is_admin) {
 			echo drawHeaderRow("Press Releases", 4, "new", "#bottom");
 		} else {
 			echo drawHeaderRow("Press Releases", 3);
@@ -73,7 +73,7 @@ if (url_id()) {
 			<th align="left" width="62%">Headline</th>
 			<th align="left" width="18%">Organization</th>
 			<th align="right">Date</th>
-			 <? if ($isAdmin) echo "<th></th>"; ?>
+			 <? if ($is_admin) echo "<th></th>"; ?>
 		</tr>
 		<?
 		$result = db_query("SELECT
@@ -83,7 +83,7 @@ if (url_id()) {
 						c.description corporationName
 						FROM intranet_press_releases p
 						JOIN organizations c ON p.corporationID = c.id
-						WHERE p.isactive = 1
+						WHERE p.is_active = 1
 						ORDER BY p.releaseDate DESC");
 	
 		while ($r = db_fetch($result)) { ?>
@@ -98,9 +98,9 @@ if (url_id()) {
 	
 	<a name="bottom"></a>
 	
-	<? if ($isAdmin) {
+	<? if ($is_admin) {
 		$form = new intranet_form;
-		if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
+		if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
 		$form->addRow("itext",  "Headline" , "headline", "", "", true, 255);
 		$form->addRow("itext",  "Detail" , "detail", "", "", false, 255);
 		$form->addRow("itext",  "Location" , "location", "", "", true, 255);

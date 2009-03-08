@@ -2,10 +2,10 @@
 include("include.php");
 
 if (isset($_GET["deleteID"])) {
-	if (db_grab("SELECT endDate FROM users WHERE userID = " . $_GET["deleteID"])) {
-		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["deleteID"]);
+	if (db_grab("SELECT endDate FROM users WHERE user_id = " . $_GET["deleteID"])) {
+		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE user_id = " . $_GET["deleteID"]);
 	} else {
-		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["deleteID"]);
+		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE(), endDate = GETDATE() WHERE user_id = " . $_GET["deleteID"]);
 	}
 	url_query_drop("deleteID");
 }
@@ -30,6 +30,6 @@ drawTop();
 
 <?
 $where = ($_GET["id"] == 0) ? " IS NULL " : " = " . $_GET["id"];
-echo drawStaffList("u.isactive = 1 AND u.corporationID " . $where);
+echo drawStaffList("u.is_active = 1 AND u.corporationID " . $where);
 
 drawBottom();?>

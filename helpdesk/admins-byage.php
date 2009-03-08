@@ -4,12 +4,12 @@ include("include.php");
 $report = array();
 $result = db_query("SELECT 
 		ISNULL(u.nickname, u.firstname) 'Helpdesk Admin',
-		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND " . db_datediff("t.createdOn", "t.closeddate") . " <= 1) 'Under Day',
-		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND " . db_datediff("t.createdOn", "t.closeddate") . " <= 7 AND " . db_datediff("t.createdOn", "t.closeddate") . " > 1) 'Under Week',
-		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND " . db_datediff("t.createdOn", "t.closeddate") . " <= 30 AND " . db_datediff("t.createdOn", "t.closeddate") . " > 7) 'Under Month',
-		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND " . db_datediff("t.createdOn", "t.closeddate") . " > 30) 'Over Month'
+		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND " . db_datediff("t.created_date", "t.closeddate") . " <= 1) 'Under Day',
+		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND " . db_datediff("t.created_date", "t.closeddate") . " <= 7 AND " . db_datediff("t.created_date", "t.closeddate") . " > 1) 'Under Week',
+		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND " . db_datediff("t.created_date", "t.closeddate") . " <= 30 AND " . db_datediff("t.created_date", "t.closeddate") . " > 7) 'Under Month',
+		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND " . db_datediff("t.created_date", "t.closeddate") . " > 30) 'Over Month'
 	FROM users u
-	WHERE u.departmentid = 8 AND ((SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleId = 3 AND a.userID = u.userID) > 0)
+	WHERE u.departmentid = 8 AND ((SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = u.user_id) > 0)
 	ORDER BY ISNULL(u.nickname, u.firstname)");
 while ($r = db_fetch($result)) $report[] = $r;
 

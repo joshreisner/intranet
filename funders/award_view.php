@@ -66,7 +66,7 @@ $r = db_grab("SELECT
 	INNER JOIN intranet_programs p  ON a.awardprogramID  = p.programID
 	LEFT  JOIN intranet_programs p2 ON a.awardprogramID2 = p2.programID
 	INNER JOIN resources_awards_types at ON at.awardTypeID = a. awardTypeID
-	INNER JOIN users u ON a.staffID = u.userID
+	INNER JOIN users u ON a.staffID = u.user_id
 	WHERE awardID = " . $_GET["id"]);
 
 	?>
@@ -107,7 +107,7 @@ $r = db_grab("SELECT
 
 <table class="left" cellspacing="1">
 	<?
-	if ($isAdmin) {
+	if ($is_admin) {
 		echo drawHeaderRow("View Award", 2, "edit", "award_add_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Award", 2);
@@ -176,7 +176,7 @@ $r = db_grab("SELECT
 			a.isActionItem,
 			a.isInternalDeadline
 		FROM Resources_Activity a
-		INNER JOIN users u ON a.activityAssignedTo = u.userid
+		INNER JOIN users u ON a.activityAssignedTo = u.user_id
 		WHERE a.awardID = {$_GET["id"]}
 		ORDER BY a.activityDate DESC");
 	if (db_found($activity)) {?>

@@ -10,31 +10,31 @@ if ($posting) {
 
 	if (url_id()) {
 		if ($uploading) {
-			db_query("UPDATE policy_documents SET 
+			db_query("UPDATE policy_docs SET 
 				name = '{$_POST["name"]}',
 				typeID = {$type},
 				categoryID = {$_POST["categoryID"]},
 				content = $content,
-				updatedOn = GETDATE(),
-				updatedBy = {$_SESSION["user_id"]}
+				updated_date = GETDATE(),
+				updated_user = {$_SESSION["user_id"]}
 				WHERE id = " . $_GET["id"]);
 		} else {
-			db_query("UPDATE policy_documents SET 
+			db_query("UPDATE policy_docs SET 
 				name = '{$_POST["name"]}',
 				categoryID = {$_POST["categoryID"]},
-				updatedOn = GETDATE(),
-				updatedBy = {$_SESSION["user_id"]}
+				updated_date = GETDATE(),
+				updated_user = {$_SESSION["user_id"]}
 				WHERE id = " . $_GET["id"]);
 		}
 	} else {
-		$_GET["id"] = db_query("INSERT into policy_documents (
+		$_GET["id"] = db_query("INSERT into policy_docs (
 			name,
 			typeID,
 			categoryID,
 			content,
-			createdOn,
-			createdBy,
-			isActive
+			created_date,
+			created_user,
+			is_active
 		) VALUES (
 			'" . $_POST["name"] . "',
 			"  . $type . ",
@@ -46,14 +46,14 @@ if ($posting) {
 		)");
 	}
 
-	//db_checkboxes("doc", "documents_to_categories", "documentID", "categoryID", $_GET["id"]);
+	//db_checkboxes("doc", "docs_to_categories", "documentID", "categoryID", $_GET["id"]);
 	url_change("../?category=" . $_POST["categoryID"]);
 }
 
 
 drawTop();
 
-$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
+$types = db_query("SELECT description, extension FROM docs_types ORDER BY description");
 $extensions = $doctypes = $array = array();
 
 while ($t = db_fetch($types)) {

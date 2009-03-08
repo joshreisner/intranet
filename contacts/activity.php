@@ -12,24 +12,24 @@ drawTop();
 	<?
 	$result = db_query("SELECT
 			o.id,
-			o.isActive,
+			o.is_active,
 			i.varchar_02,
 			i.varchar_01,
-			i.createdOn,
-			(SELECT COUNT(*) FROM intranet_instances i2 WHERE i2.objectID = o.id) occurrences,
-			i.createdBy,
+			i.created_date,
+			(SELECT COUNT(*) FROM contacts_instances i2 WHERE i2.objectID = o.id) occurrences,
+			i.created_user,
 			ISNULL(u.nickname, u.firstname) updatename,
-			o.isactive
-		FROM intranet_objects o
-		INNER JOIN intranet_instances	i ON o.instanceCurrentID = i.id
-		INNER JOIN users		u ON i.createdBy = u.userID
-		ORDER BY i.createdOn DESC", 40);
+			o.is_active
+		FROM contacts o
+		INNER JOIN contacts_instances	i ON o.instanceCurrentID = i.id
+		INNER JOIN users		u ON i.created_user = u.user_id
+		ORDER BY i.created_date DESC", 40);
 	while ($r = db_fetch($result)) {?>
-	<tr class="<?if(!$r["isActive"]){?>-deleted<? }?>">
+	<tr class="<?if(!$r["is_active"]){?>-deleted<? }?>">
 		<td><a href="contact.php?id=<?=$r["id"]?>"><?=$r["varchar_02"]?>, <?=$r["varchar_01"]?></a></td>
 		<td><?if ($r["occurrences"] == 1) {?>New Contact<?} else {?>Update<?}?></td>
-		<td align="center"><a href="/staff/view.php?id=<?=$r["createdBy"]?>"><?=$r["updatename"]?></a></td>
-		<td align="right"><?=format_date($r["createdOn"])?></td>
+		<td align="center"><a href="/staff/view.php?id=<?=$r["created_user"]?>"><?=$r["updatename"]?></a></td>
+		<td align="right"><?=format_date($r["created_date"])?></td>
 	</tr>
 	<? } ?>
 </table>

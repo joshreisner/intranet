@@ -6,10 +6,10 @@ $d = db_grab("SELECT
 		t.extension, 
 		a.content 
 	FROM wiki_topics_attachments a 
-	JOIN documents_types t ON a.typeID = t.id
+	JOIN docs_types t ON a.typeID = t.id
 	WHERE a.id = " . $_GET["id"]);
 
-//db_query("INSERT INTO documents_views ( documentID, userID, viewedOn ) VALUES ( {$_GET["id"]}, {$_SESSION["user_id"]}, GETDATE() )");
+//db_query("INSERT INTO docs_views ( documentID, user_id, viewedOn ) VALUES ( {$_GET["id"]}, {$_SESSION["user_id"]}, GETDATE() )");
 
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 header("Content-Description: File Transfer");

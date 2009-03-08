@@ -7,7 +7,7 @@ $locations = db_query("SELECT
 		o.id, 
 		o.name
 	FROM intranet_offices o 
-	WHERE (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id AND u.isActive = 1) > 0
+	WHERE (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id AND u.is_active = 1) > 0
 	ORDER BY (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id) DESC");
 if (db_found($locations)) {
 	$pages = array();
@@ -23,9 +23,9 @@ if (db_found($locations)) {
 }
 
 if ($_GET["id"] == "other") {
-	echo drawStaffList("u.isactive = 1 AND u.officeID <> 1 AND u.officeID <> 6 AND u.officeID <> 11 AND u.officeID <> 9");
+	echo drawStaffList("u.is_active = 1 AND u.officeID <> 1 AND u.officeID <> 6 AND u.officeID <> 11 AND u.officeID <> 9");
 } else {
-	echo drawStaffList("u.isactive = 1 and u.officeID = " . $_GET["id"]);
+	echo drawStaffList("u.is_active = 1 and u.officeID = " . $_GET["id"]);
 }
 
 drawBottom();?>

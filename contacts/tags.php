@@ -41,22 +41,22 @@ drawTop();
 	$types = db_query("SELECT
 							t.id, 
 							t.name
-						FROM intranet_tags_types t WHERE t.isActive = 1
+						FROM intranet_tags_types t WHERE t.is_active = 1
 						ORDER BY t.name");
 	while ($t = db_fetch($types)) {?>
 	<tr class="group">
-		<td colspan="3"><? if ($isAdmin) {?><a href="tag.php?id=<?=$t["id"]?>"><?}?><b><?=$t["name"]?></b></a></td>
+		<td colspan="3"><? if ($is_admin) {?><a href="tag.php?id=<?=$t["id"]?>"><?}?><b><?=$t["name"]?></b></a></td>
 	</tr>
 		<?
 		$values = db_query("SELECT
 							t.id, 
 							t.tag, 
-							(SELECT count(*) FROM intranet_objects o 
-								INNER JOIN intranet_instances i ON o.instanceCurrentID = i.id
-								INNER JOIN intranet_instances_to_tags i2t ON i.id = i2t.instanceID
-								WHERE o.typeID = 22 AND i2t.tagID = t.id AND o.isActive = 1) contactcount
+							(SELECT count(*) FROM contacts o 
+								INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
+								INNER JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
+								WHERE o.typeID = 22 AND i2t.tagID = t.id AND o.is_active = 1) contactcount
 						FROM intranet_tags t 
-						WHERE t.typeID = {$t["id"]} AND t.isActive = 1
+						WHERE t.typeID = {$t["id"]} AND t.is_active = 1
 						ORDER BY t.precedence");
 		while ($v = db_fetch($values)) {?>
 	<tr valign="middle">

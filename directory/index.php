@@ -16,7 +16,7 @@ drawTop();
 							z.city, 
 							z.state, 
 							o.zip,
-							o.lastUpdatedOn
+							o.lastupdated_date
 						FROM web_organizations o
 						INNER JOIN zip_codes z ON o.zip = z.zip
 						ORDER BY name");
@@ -24,7 +24,7 @@ drawTop();
 		<tr>
 			<td><a href="organization_view.php?id=<?=$r["id"]?>"><?=$r["name"]?></a></td>
 			<td><?=$r["city"]?>, <?=$r["state"]?></td>
-			<td align="right"><?=format_date($r["lastUpdatedOn"])?></td>
+			<td align="right"><?=format_date($r["lastupdated_date"])?></td>
 		</tr>
 	<? }?>
 </table>

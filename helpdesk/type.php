@@ -15,23 +15,23 @@ $tickets = db_query("select
 			t.statusID,
 			t.typeID,
 			(SELECT COUNT(*) FROM helpdesk_tickets_followups f WHERE f.ticketID = t.id) as ticketfollowups,
-			t.createdBy,
-			t.updatedOn,
+			t.created_user,
+			t.updated_date,
 			t.id,
 			t.ownerID,
 			t.priorityID,
-			t.createdOn,
+			t.created_date,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
-			(SELECT COUNT(*) FROM users_to_modules a WHERE a.moduleID = 3 AND a.userID = t.createdBy) isAdminIT,
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT,
 			u.imageID,
 			m.width,
 			m.height
 		FROM helpdesk_tickets t
-		INNER JOIN users   u ON u.userID    = t.createdBy
+		INNER JOIN users   u ON u.user_id    = t.created_user
 		LEFT  JOIN intranet_images  m ON u.imageID   = m.imageID
 		WHERE t.typeID $where1 $where
-		ORDER BY t.createdOn DESC");
+		ORDER BY t.created_date DESC");
 
 echo drawTicketFilter();
 ?>

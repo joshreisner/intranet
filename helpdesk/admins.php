@@ -14,21 +14,21 @@ echo drawTicketFilter();
 	<? 
 	$counter = 0;
 	$users = db_query("SELECT 
-		u.userID,
+		u.user_id,
 		ISNULL(u.nickname, u.firstname) first, 
 		u.lastname last,
-		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE u.userID = t.ownerID $where) tickets,
-		(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE u.userID = t.ownerID $where) minutes		
+		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE u.user_id = t.ownerID $where) tickets,
+		(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE u.user_id = t.ownerID $where) minutes		
 		FROM users u
-		JOIN users_to_modules a ON u.userID = a.userID
-		WHERE a.moduleID = 3 AND u.departmentID = $departmentID
+		JOIN users_to_modules a ON u.user_id = a.user_id
+		WHERE a.module_id = 3 AND u.departmentID = $departmentID
 		ORDER BY last, first");
 	while ($u = db_fetch($users)) {
 		if (!$u["tickets"] && $filtered) continue;
 		$counter++;
 		?>
 		<tr class="helptext" bgcolor="#FFFFFF">
-			<td><a href="admin.php?id=<?=$u["userID"]?><? if ($filtered) {?>&month=<?=$_GET["month"]?>&year=<?=$_GET["year"]?><? }?>"><?=$u["last"]?>, <?=$u["first"]?></td>
+			<td><a href="admin.php?id=<?=$u["user_id"]?><? if ($filtered) {?>&month=<?=$_GET["month"]?>&year=<?=$_GET["year"]?><? }?>"><?=$u["last"]?>, <?=$u["first"]?></td>
 			<td align="right"><?=number_format($u["tickets"])?></a></td>
 			<td align="right"><?=@round($u["minutes"] / $total["minutes"] * 100)?></td>
 		</tr>

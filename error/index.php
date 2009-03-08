@@ -26,8 +26,8 @@ if (stristr($req, "/it")) {
 	$target = str_replace("/departments/earnfair", "/queries", $req);
 } elseif (stristr($req, "/departments/resource_development")) {
 	$target = str_replace("/departments/resource_development", "/funders", $req);
-} elseif (stristr($req, "/documents")) {
-	$target = str_replace("/documents", "/docs", $req);
+} elseif (stristr($req, "/docs")) {
+	$target = str_replace("/docs", "/docs", $req);
 } elseif (stristr($req, "/btw")) {
 	//back to work application ~ used to have the intranet domain
 	$target = "http://btw.seedco.org" . $req;

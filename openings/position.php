@@ -8,29 +8,29 @@ $r = db_grab("SELECT
 		j.description,
 		c.description corporationName,
 		o.name office,
-		j.createdOn, 
-		j.updatedOn,
-		j.deletedOn,
-		u1.firstname createdByFirst,
-		u1.lastname createdByLast,
-		u2.firstname updatedByFirst,
-		u2.lastname updatedByLast,
-		u3.firstname deletedByFirst,
-		u3.lastname updatedByLast
+		j.created_date, 
+		j.updated_date,
+		j.deleted_date,
+		u1.firstname created_userFirst,
+		u1.lastname created_userLast,
+		u2.firstname updated_userFirst,
+		u2.lastname updated_userLast,
+		u3.firstname deleted_userFirst,
+		u3.lastname updated_userLast
 	FROM intranet_jobs j
 	LEFT JOIN organizations c ON j.corporationID = c.id
 	LEFT JOIN intranet_offices o ON j.officeID = o.id
-	LEFT JOIN users u1 ON j.createdBy = u1.userID
-	LEFT JOIN users u2 ON j.updatedBy = u2.userID
-	LEFT JOIN users u3 ON j.deletedBy = u3.userID
+	LEFT JOIN users u1 ON j.created_user = u1.user_id
+	LEFT JOIN users u2 ON j.updated_user = u2.user_id
+	LEFT JOIN users u3 ON j.deleted_user = u3.user_id
 	
 	WHERE j.id = " . $_GET["id"]);
-	$r["createdBy"] = ($r["createdByFirst"]) ? $r["createdByFirst"] . " " . $r["createdByLast"] : false;
-	$r["updatedBy"] = ($r["updatedByFirst"]) ? $r["updatedByFirst"] . " " . $r["updatedByLast"] : false;
-	$r["deletedBy"] = ($r["deletedByFirst"]) ? $r["deletedByFirst"] . " " . $r["deletedByLast"] : false;
+	$r["created_user"] = ($r["created_userFirst"]) ? $r["created_userFirst"] . " " . $r["created_userLast"] : false;
+	$r["updated_user"] = ($r["updated_userFirst"]) ? $r["updated_userFirst"] . " " . $r["updated_userLast"] : false;
+	$r["deleted_user"] = ($r["deleted_userFirst"]) ? $r["deleted_userFirst"] . " " . $r["deleted_userLast"] : false;
 ?>
 <table class="left" cellspacing="1">
-	<? if ($isAdmin) {
+	<? if ($is_admin) {
 		echo drawHeaderRow("View Position", 2, "edit", "position_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Position", 2);
@@ -50,22 +50,22 @@ $r = db_grab("SELECT
 			<?=$r["description"]?>
 		</td>
 	</tr>
-	<? if ($r["createdOn"]) {?>
+	<? if ($r["created_date"]) {?>
 	<tr>
 		<td class="left">Posted</td>
-		<td><?=format_date($r["createdOn"])?> by <?=$r["createdBy"]?></td>
+		<td><?=format_date($r["created_date"])?> by <?=$r["created_user"]?></td>
 	</tr>
 	<? }
-	if ($r["updatedOn"]) {?>
+	if ($r["updated_date"]) {?>
 	<tr>
 		<td class="left">Updated</td>
-		<td><?=format_date($r["updatedOn"])?> by <?=$r["updatedBy"]?></td>
+		<td><?=format_date($r["updated_date"])?> by <?=$r["updated_user"]?></td>
 	</tr>
 	<? }
-	if ($r["deletedOn"]) {?>
+	if ($r["deleted_date"]) {?>
 	<tr>
 		<td class="left">Deleted</td>
-		<td><?=format_date($r["deletedOn"])?> by <?=$r["deletedBy"]?></td>
+		<td><?=format_date($r["deleted_date"])?> by <?=$r["deleted_user"]?></td>
 	</tr>
 	<? } ?>
 </table>

@@ -5,7 +5,7 @@ if ($posting) {
 	db_enter("links", "text url precedence");
 	url_change();
 } elseif (url_action("delete")) {
-	db_query("UPDATE links SET isActive = 0, deletedOn = NOW(), deletedBy = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
+	db_query("UPDATE links SET is_active = 0, deleted_date = NOW(), deleted_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
 	url_drop("id, action");
 }
 
@@ -21,7 +21,7 @@ echo drawHeaderRow(false, 5, "new", "#bottom");?>
 	<th style="width:16px;"></th>
 </tr>
 <?
-$links = db_query("SELECT id, text, url FROM links WHERE isActive = 1 ORDER BY precedence");
+$links = db_query("SELECT id, text, url FROM links WHERE is_active = 1 ORDER BY precedence");
 if ($max = db_found($links)) {
 	$counter = 1;
 	while ($l = db_fetch($links)) {?>

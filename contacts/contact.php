@@ -1,27 +1,27 @@
 <?	include("../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE intranet_objects SET
-				isActive = 0,
-				deletedOn = GETDATE(),
-				deletedBy = {$_SESSION["user_id"]}
+	db_query("UPDATE contacts SET
+				is_active = 0,
+				deleted_date = GETDATE(),
+				deleted_user = {$_SESSION["user_id"]}
 			WHERE id = " . $_GET["id"]);
 	url_query_drop("action");
 } elseif (url_action("undelete")) {
-	db_query("UPDATE intranet_objects SET
-				isActive = 1,
-				deletedOn = NULL,
-				deletedBy = NULL
+	db_query("UPDATE contacts SET
+				is_active = 1,
+				deleted_date = NULL,
+				deleted_user = NULL
 			WHERE id = " . $_GET["id"]);
 	url_query_drop("action");
 } elseif (url_action("expunge")) {
-	$result = db_query("SELECT id FROM intranet_instances WHERE objectID = " . $_GET["id"]);
+	$result = db_query("SELECT id FROM contacts_instances WHERE objectID = " . $_GET["id"]);
 	while ($r = db_fetch($result)) {
-		db_query("delete from intranet_instances_to_tags where instanceID = " . $r["id"]);
-		db_query("delete from intranet_instances_to_words where instanceID = " . $r["id"]);
-		db_query("delete from intranet_instances where id = " . $r["id"]);
+		db_query("delete from contacts_instances_to_tags where instanceID = " . $r["id"]);
+		db_query("delete from contacts_instances_to_words where instanceID = " . $r["id"]);
+		db_query("delete from contacts_instances where id = " . $r["id"]);
 	}
-	db_query("delete from intranet_objects where id = " . $_GET["id"]);
+	db_query("delete from contacts where id = " . $_GET["id"]);
 	url_change("./");
 }
 
@@ -31,10 +31,10 @@ drawTop();
 
 $i = db_grab("SELECT
 		i.id,
-		(SELECT t1.tag FROM intranet_tags t1 INNER JOIN intranet_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.isActive = 1 AND t1.typeID = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
+		(SELECT t1.tag FROM intranet_tags t1 INNER JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.typeID = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
 		i.varchar_01 first,
 		i.varchar_02 last,
-		(SELECT t2.tag FROM intranet_tags t2 INNER JOIN intranet_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.isActive = 1 AND t2.typeID = 11 AND i2t2.instanceID = o.instanceCurrentID) suffix,
+		(SELECT t2.tag FROM intranet_tags t2 INNER JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.typeID = 11 AND i2t2.instanceID = o.instanceCurrentID) suffix,
 		i.varchar_03 nickname,
 		i.varchar_04 org,
 		i.varchar_05 title,
@@ -45,23 +45,23 @@ $i = db_grab("SELECT
 		i.varchar_09 fax,
 		i.varchar_10 cell,
 		i.varchar_11 email,
-		o.isActive,
-		o.deletedOn,
-		o.deletedBy,
-		ISNULL(u.nickname, u.firstname) + ' ' + u.lastname deletedByName,
+		o.is_active,
+		o.deleted_date,
+		o.deleted_user,
+		ISNULL(u.nickname, u.firstname) + ' ' + u.lastname deleted_userName,
 		z.city,
 		z.state,
 		i.text_01 notes
-	FROM intranet_objects o
-	INNER JOIN intranet_instances i ON i.id = o.instanceCurrentID
+	FROM contacts o
+	INNER JOIN contacts_instances i ON i.id = o.instanceCurrentID
 	LEFT  JOIN zip_codes z ON i.numeric_01 = z.zip
-	LEFT  JOIN users     u ON u.userID = o.deletedBy
+	LEFT  JOIN users     u ON u.user_id = o.deleted_user
 	WHERE o.id = " . $_GET["id"]);
 
 if (!$i["id"]) {
 	echo drawServerMessage("Either the link you clicked on is bad, or else this contact has been expunged from the system.  No further information is available.");
 } else {
-	if (!$i["isActive"]) echo drawServerMessage("This contact was deleted on " . format_date_excel($i["deletedOn"]) . " by <a href='/staff/view.php?id=" . $i["deletedBy"] . "'>" . $i["deletedByName"] . "</a>.  You can click below to undo the deletion.");
+	if (!$i["is_active"]) echo drawServerMessage("This contact was deleted on " . format_date_excel($i["deleted_date"]) . " by <a href='/staff/view.php?id=" . $i["deleted_user"] . "'>" . $i["deleted_userName"] . "</a>.  You can click below to undo the deletion.");
 	?>
 	<script language="javascript">
 		<!--
@@ -76,18 +76,18 @@ if (!$i["id"]) {
 	</script>
 	<table class="left" cellspacing="1">
 		<?
-		if ($isAdmin && $i["isActive"]) {
+		if ($is_admin && $i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");
-		} elseif ($isAdmin && !$i["isActive"]) {
+		} elseif ($is_admin && !$i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"), "expunge", "javascript:confirmExpunge({$_GET["id"]});");
-		} elseif ($i["isActive"]) {
+		} elseif ($i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");
 		} else {
 			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"));
 		}?>
 		<tr>
 			<td class="left">Name</td>
-			<td width="82%" colspan="2" class="input"><font size="+1"><b><? if(!$i["isActive"]) {?><strike><font color="#666666"><?}?><? if($i["salutation"]) {?><?=$i["salutation"]?> <?}?><?=$i["first"]?> <? if($i["nickname"]) {?>(<?=$i["nickname"]?>)<?}?> <?=$i["last"]?><? if($i["suffix"]) {?>, <?=$i["suffix"]?><?}?><? if(!$i["isActive"]) {?></strike></font><? }?></b></font></td>
+			<td width="82%" colspan="2" class="input"><font size="+1"><b><? if(!$i["is_active"]) {?><strike><font color="#666666"><?}?><? if($i["salutation"]) {?><?=$i["salutation"]?> <?}?><?=$i["first"]?> <? if($i["nickname"]) {?>(<?=$i["nickname"]?>)<?}?> <?=$i["last"]?><? if($i["suffix"]) {?>, <?=$i["suffix"]?><?}?><? if(!$i["is_active"]) {?></strike></font><? }?></b></font></td>
 		</tr>
 		<? if ($i["org"]) {?>
 		<tr>
@@ -141,11 +141,11 @@ if (!$i["id"]) {
 						f.tagTypeID,
 						f.name,
 						f.fieldTypeID
-					FROM intranet_fields f
+					FROM contacts_fields f
 					JOIN intranet_tags_types t ON f.tagTypeID = t.id
-					WHERE f.objectTypeID = 22 AND f.tagTypeID > 11 AND t.isActive = 1 ORDER BY f.precedence");
+					WHERE f.objectTypeID = 22 AND f.tagTypeID > 11 AND t.is_active = 1 ORDER BY f.precedence");
 		while ($t = db_fetch($tags)) {
-			$values = db_query("SELECT t.id, t.tag FROM intranet_tags t JOIN intranet_instances_to_tags i2t ON t.id = i2t.tagID WHERE t.isActive = 1 AND t.typeID = {$t["tagTypeID"]} AND i2t.instanceID = {$i["id"]} ORDER BY t.precedence");
+			$values = db_query("SELECT t.id, t.tag FROM intranet_tags t JOIN contacts_instances_to_tags i2t ON t.id = i2t.tagID WHERE t.is_active = 1 AND t.typeID = {$t["tagTypeID"]} AND i2t.instanceID = {$i["id"]} ORDER BY t.precedence");
 			if (db_found($values)) {
 				$found = true;
 				$output .= '<tr valign="top"><td class="left">' . $t["name"] . '</td>';
@@ -170,9 +170,9 @@ if (!$i["id"]) {
 					i.id,
 					o.instanceFirstID,
 					o.instanceCurrentID,
-					i.createdBy,
+					i.created_user,
 					ISNULL(u.nickname, u.firstname) + ' ' + u.lastname createdName,
-					i.createdOn,
+					i.created_date,
 					i.varchar_01 firstname,
 					i.varchar_02 lastname,
 					i.varchar_03 nickname,
@@ -186,11 +186,11 @@ if (!$i["id"]) {
 					i.varchar_10 cell,
 					i.varchar_11 email,
 					i.text_01 notes
-				FROM intranet_instances i
-				JOIN intranet_objects   o ON i.objectID = o.id
-				JOIN users     u ON i.createdBy = u.userID
+				FROM contacts_instances i
+				JOIN contacts   o ON i.objectID = o.id
+				JOIN users     u ON i.created_user = u.user_id
 				WHERE o.id = {$_GET["id"]}
-				ORDER BY i.createdOn ASC");
+				ORDER BY i.created_date ASC");
 		while ($j = db_fetch($instances)) {
 			if ($j["id"] == $j["instanceFirstID"]) {
 				$description = "contact created";
@@ -231,7 +231,7 @@ if (!$i["id"]) {
 				$email        = $j["email"];
 				$notes        = $j["notes"];
 			}
-			$output = '<tr bgcolor="#FFFFFF" class="helptext"><td><a href="/staff/view.php?id=' . $j["createdBy"] . '">' . $j["createdName"] . '</a></td><td>' . $description . '</td><td align="right">' . format_date($j["createdOn"]) . '</td></tr>' . $output;
+			$output = '<tr bgcolor="#FFFFFF" class="helptext"><td><a href="/staff/view.php?id=' . $j["created_user"] . '">' . $j["createdName"] . '</a></td><td>' . $description . '</td><td align="right">' . format_date($j["created_date"]) . '</td></tr>' . $output;
 		}
 		echo $output;
 		echo "</table>";

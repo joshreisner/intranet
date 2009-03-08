@@ -7,8 +7,8 @@ $e = db_grab("SELECT
 		e.startDate, 
 		ISNULL(u.nickname, u.firstname) first,
 		u.lastname last,
-		e.createdBy,
-		e.createdOn,
+		e.created_user,
+		e.created_date,
 		t.color,
 		t.description type,
 		MONTH(e.startDate) month, 
@@ -17,7 +17,7 @@ $e = db_grab("SELECT
 		i.width imgwidth,
 		i.height imgheight
 	FROM cal_events e
-	JOIN users u ON e.createdBy = u.userID
+	JOIN users u ON e.created_user = u.user_id
 	JOIN cal_events_types t ON e.typeID = t.id
 	LEFT JOIN intranet_images i ON u.imageID = i.imageID
 	WHERE e.id = " . $_GET["id"]);
@@ -32,9 +32,9 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 ?>
 <table class="left" cellspacing="1">
 	<?
-	if ($isAdmin) {
+	if ($is_admin) {
 		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", url_query_add(array("action"=>"delete"), false));
-	} elseif ($_SESSION["user_id"] == $e["createdBy"]) {
+	} elseif ($_SESSION["user_id"] == $e["created_user"]) {
 		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", url_query_add(array("action"=>"delete"), false));
 	} else {
 		echo drawHeaderRow("Event Details", 2);
@@ -57,7 +57,7 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 	</tr>
 	<tr valign="top">
 		<td class="left">Created</td>
-		<td><?=drawName($e["createdBy"], $e["first"] . " " . $e["last"], $e["imageID"], $e["imgwidth"], $e["imgheight"], $e["createdOn"], true);?></td>
+		<td><?=drawName($e["created_user"], $e["first"] . " " . $e["last"], $e["imageID"], $e["imgwidth"], $e["imgheight"], $e["created_date"], true);?></td>
 	</tr>
 </table>
 <? drawBottom();?>

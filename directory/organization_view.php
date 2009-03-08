@@ -12,10 +12,10 @@ if (isset($_GET["id"])) {
 			o.phone,
 			o.hours,
 			o.zip,
-			o.lastUpdatedOn,
-			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname lastUpdatedBy
+			o.lastupdated_date,
+			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname lastupdated_user
 		FROM web_organizations o
-		INNER JOIN users u ON o.lastUpdatedBy = u.userID
+		INNER JOIN users u ON o.lastupdated_user = u.user_id
 		WHERE o.id = " . $_GET["id"]);
 } else {
 	$_GET["id"] = 0;
@@ -79,7 +79,7 @@ if (isset($_GET["id"])) {
 	</tr>
 	<tr valign="top">
 		<td class="left">Last Update</td>
-		<td><?=format_date($r["lastUpdatedOn"])?> by <?=$r["lastUpdatedBy"]?></td>
+		<td><?=format_date($r["lastupdated_date"])?> by <?=$r["lastupdated_user"]?></td>
 	</tr>
 	</form>
 </table>

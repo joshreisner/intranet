@@ -3,15 +3,15 @@ include("include.php");
 
 //delete user handled by include
 if (url_action("undelete")) { //undelete user
-	db_query("UPDATE users SET isActive = 1, deletedBy = NULL, deletedOn = NULL, endDate = NULL, updatedBy = {$_SESSION["user_id"]}, updatedOn = GETDATE() WHERE userID = " . $_GET["id"]);
+	db_query("UPDATE users SET is_active = 1, deleted_user = NULL, deleted_date = NULL, endDate = NULL, updated_user = {$_SESSION["user_id"]}, updated_date = GETDATE() WHERE user_id = " . $_GET["id"]);
 	url_query_drop("action");
 } elseif (url_action("passwd")) {
-	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE userID = " . $_GET["id"]);
-	$r = db_grab("SELECT userID, email FROM users WHERE userID = " . $_GET["id"]);
-	email_user($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["firstname"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="http://' . $_josh["request"]["host"] . '/login/password_reset.php?id=' . $r["userID"] . '">follow this link</a>.'));
+	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE user_id = " . $_GET["id"]);
+	$r = db_grab("SELECT user_id, email FROM users WHERE user_id = " . $_GET["id"]);
+	email_user($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["firstname"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="http://' . $_josh["request"]["host"] . '/login/password_reset.php?id=' . $r["user_id"] . '">follow this link</a>.'));
 	url_query_drop("action");
 } elseif (url_action("invite")) {
-	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE userID = " . $_GET["id"]);
+	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE user_id = " . $_GET["id"]);
 	$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
 	email_invite($_GET["id"], $r["email"], $name);
 	url_query_drop("action");
@@ -33,9 +33,6 @@ $r = db_grab("SELECT
 		d.departmentName,
 		u.corporationID,
 		c.description corporationName,
-		u.imageID,
-		m.width,
-		m.height,
 		u.homeAddress1,
 		u.homeAddress2,
 		u.homeCity,
@@ -57,34 +54,28 @@ $r = db_grab("SELECT
 		u.startDate,
 		u.longDistanceCode,
 		u.endDate,
-		u.isActive,
+		u.is_active,
 		r.description rank
 	FROM users u
 	LEFT JOIN intranet_ranks r ON u.rankID = r.id
 	LEFT JOIN organizations			c ON u.corporationID = c.id
 	LEFT JOIN departments		d ON d.departmentID	= u.departmentID 				
 	LEFT JOIN intranet_offices    		f ON f.id			= u.officeID 				
-	LEFT JOIN intranet_images     		m ON u.imageID		= m.imageID
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
-	WHERE u.userID = " . $_GET["id"]);
+	WHERE u.user_id = " . $_GET["id"]);
 				
 $r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations.php?id=0">Shared</a>' : '<a href="organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
 
-if (!isset($r["isActive"])) url_change("./");
+if (!isset($r["is_active"])) url_change("./");
 
 drawTop();
+verifyImage($_GET["id"]);
 
-//get image props
-if (isset($r["imageID"]) && $r["imageID"]) {
-	$img = "<img src=\"" . $locale . "staff/" . $r["imageID"] . ".jpg\" width=\"" . $r["width"] . "\" height=\"" . $r["height"] . "\" border=\"0\">";
-	verifyImage($r["imageID"]);
-} else {
-	$img = "<img src='" . $locale . "images/to-be-taken.png' width='240' height='167' border='0'>";
-}
+if (!$img = draw_img($locale . "staff/" . $_GET["id"] . ".jpg")) $img = draw_img($locale . "images/to-be-taken.png");
 
 echo drawJumpToStaff($_GET["id"]);
 
-if (!$r["isActive"]) {
+if (!$r["is_active"]) {
 	$msg = "This is a former staff member.  ";
 	if ($r["endDate"]) {
 		$msg .= ($r["nickname"]) ? $r["nickname"] : $r["firstname"];
@@ -94,8 +85,8 @@ if (!$r["isActive"]) {
 }
 ?>
 <table class="left" cellspacing="1">
-	<? if ($isAdmin) {
-		if ($r["isActive"]) {
+	<? if ($is_admin) {
+		if ($r["is_active"]) {
 			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "deactivate", deleteLink("Deactivate this staff member?"));
 		} else {
 			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "re-activate", deleteLink("Re-activate this staff member?", false, "undelete"));
@@ -142,7 +133,7 @@ if (!$r["isActive"]) {
 		<td class="left">Bio</td>
 		<td colspan="2" height="167" class="text"><?=nl2br($r["bio"])?></td>
 	</tr>
-	<? if ($isAdmin || ($_GET["id"] == $_SESSION["user_id"])) {?>
+	<? if ($is_admin || ($_GET["id"] == $_SESSION["user_id"])) {?>
 	<tr class="group">
 		<td colspan="3">Intranet</td>
 	</tr>
@@ -170,7 +161,7 @@ if (!$r["isActive"]) {
 			<td class="left">Password</td>
 			<td colspan="2"><a href="<?=deleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">change your password</a></td>
 		</tr>
-		<? } elseif ($isAdmin) {?>
+		<? } elseif ($is_admin) {?>
 		<tr>
 			<td class="left">Password</td>
 			<td colspan="2">
@@ -182,7 +173,7 @@ if (!$r["isActive"]) {
 			</td>
 		</tr>
 	<? }?>
-	<? if ($isAdmin) {?>
+	<? if ($is_admin) {?>
 	<tr>
 		<td class="left">Invite</td>
 		<td colspan="2"><a href="<?=deleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
@@ -202,8 +193,8 @@ if (!$r["isActive"]) {
 			p.url
 			FROM modules m 
 			JOIN pages p ON m.homePageID = p.id
-			JOIN users_to_modules a ON m.id = a.moduleID
-			WHERE a.userID = {$_GET["id"]}
+			JOIN users_to_modules a ON m.id = a.module_id
+			WHERE a.user_id = {$_GET["id"]}
 			ORDER BY m.name");
 		while ($p = db_fetch($permissions)) {
 			$hasPermission = true;

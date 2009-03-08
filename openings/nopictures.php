@@ -5,7 +5,7 @@ drawTop();
 
 
 $result = db_query("SELECT
-					u.userID,
+					u.user_id,
 					u.firstname,
 					u.lastname,
 					u.title,
@@ -13,7 +13,7 @@ $result = db_query("SELECT
 				FROM users u
 				JOIN intranet_offices o on u.officeID = o.officeID
 				JOIN intranet_ranks r ON u.rankID = r.id
-				WHERE u.imageID is null and u.isactive = 1 and r.ispayroll = 1
+				WHERE u.imageID is null and u.is_active = 1 and r.ispayroll = 1
 				ORDER BY o.name, u.lastname, u.firstname");
 ?>
 <table class="left" cellspacing="1">
@@ -25,7 +25,7 @@ $result = db_query("SELECT
 	</tr>
 	<? while ($r = db_fetch($result)) {?>
 	<tr>
-		<td width="33%"><a href="/staff/view.php?id=<?=$r["userID"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
+		<td width="33%"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 		<td width="33%"><?=$r["title"]?></td>
 		<td width="33%"><?=$r["office"]?></td>
 	</tr>

@@ -3,31 +3,31 @@ include("../include.php");
 
 if (url_action("delete")) {
 	db_query("UPDATE intranet_jobs SET 
-				deletedOn = GETDATE(),
-				deletedBy = {$_SESSION["user_id"]},
-				isActive = 0
+				deleted_date = GETDATE(),
+				deleted_user = {$_SESSION["user_id"]},
+				is_active = 0
 			WHERE id = " . $_GET["id"]);
 	url_drop();
 }
 
 
 if ($posting) {
-	$userID = ($isAdmin) ? $_POST["createdBy"] : $_SESSION["user_id"];
+	$user_id = ($is_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	format_post_html("description");
     db_query("INSERT INTO intranet_jobs (
     	title,
     	description,
 		corporationID,
 		officeID,
-		createdBy,
-		createdOn,
-		isActive
+		created_user,
+		created_date,
+		is_active
 	) VALUES (
 		'" . $_POST["title"] . "',
 		" . $_POST["description"] . ",
 		" . $_POST["corporationID"] . ",
 		" . $_POST["officeID"] . ",
-		" . $userID . ",
+		" . $user_id . ",
 		GETDATE(),
 		1
     );");
@@ -37,7 +37,7 @@ if ($posting) {
 drawTop();
 ?>
 <table class="left" cellspacing="1">
-	<? if ($isAdmin) {
+	<? if ($is_admin) {
 		$colspan = 4;
 		echo drawHeaderRow("Open Positions", $colspan, "new", "#bottom");
 	} else {
@@ -48,7 +48,7 @@ drawTop();
 		<th align="left" width="50%">Title</th>
 		<th align="left" width="30%">Location</th>
 		<th align="right" width="20%"><nobr>Last Update</nobr></th>
-		<? if ($isAdmin) {?><th></th><? }?>
+		<? if ($is_admin) {?><th></th><? }?>
 	</tr>
 	<?
 	$result = db_query("SELECT 
@@ -56,11 +56,11 @@ drawTop();
 							j.title,
 							c.description corporationName,
 							o.name office,
-							ISNULL(j.updatedOn, j.createdOn) updatedOn
+							ISNULL(j.updated_date, j.created_date) updated_date
 						FROM intranet_jobs j
 						LEFT JOIN organizations c ON j.corporationID = c.id
 						LEFT JOIN intranet_offices o ON j.officeID = o.id
-						WHERE j.isActive = 1
+						WHERE j.is_active = 1
 						ORDER BY c.description, j.title");
 	$lastCorporation = "";
 	while ($r = db_fetch($result)) {
@@ -71,7 +71,7 @@ drawTop();
 		<tr>
 			<td><a href="position.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["office"]?></td>
-			<td align="right"><?=format_date($r["updatedOn"])?></td>
+			<td align="right"><?=format_date($r["updated_date"])?></td>
 			<?=deleteColumn("Delete this position?", $r["id"])?>
 		</tr>
 		<? }?>
@@ -79,9 +79,9 @@ drawTop();
 
 <a name="bottom"></a>
 
-<? if ($isAdmin) {
+<? if ($is_admin) {
 	$form = new intranet_form;
-	if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], false, true);
+	if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true);
 	$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
 	$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM intranet_offices ORDER BY precedence", "", true);

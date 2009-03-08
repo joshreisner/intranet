@@ -36,7 +36,7 @@ if ($_POST) {
 		$numeric_01 = (!empty($numeric_01)) ? substr($numeric_01, 0, 5) : "NULL";
 		
 		//create new instance
-		die("INSERT INTO intranet_instances (
+		die("INSERT INTO contacts_instances (
 					varchar_01,
 					varchar_02,
 					varchar_03,
@@ -49,8 +49,8 @@ if ($_POST) {
 					varchar_10,
 					varchar_11,
 					numeric_01,
-					createdOn,
-					createdBy
+					created_date,
+					created_user
 				) VALUES (
 					" . $varchar_01. ",
 					" . $varchar_02. ",
@@ -67,7 +67,7 @@ if ($_POST) {
 					GETDATE(),
 					" . $_SESSION["user_id"] . "
 				)");
-		$instance = db_grab("SELECT MAX(id) id FROM intranet_instances");
+		$instance = db_grab("SELECT MAX(id) id FROM contacts_instances");
 	
 		//handle tags
 		reset($_POST);
@@ -75,24 +75,24 @@ if ($_POST) {
 			@list($control, $type, $id) = explode("_", $key);
 			if ($control == "tag") {
 				$tagID = ($type == "single") ? $value : $id;
-				if ($tagID) db_query("INSERT INTO intranet_instances_to_tags ( instanceID, tagID ) VALUES ( {$instance["id"]}, {$tagID} )");
+				if ($tagID) db_query("INSERT INTO contacts_instances_to_tags ( instanceID, tagID ) VALUES ( {$instance["id"]}, {$tagID} )");
 			}
 		}
 		
 		//create or update object
-		db_query("INSERT INTO intranet_objects (
+		db_query("INSERT INTO contacts (
 					typeID,
 					instanceFirstID,
 					instanceCurrentID,
-					isActive
+					is_active
 					) VALUES ( 
 					22,
 					{$instance["id"]},
 					{$instance["id"]},
 					1
 					)");
-		$_GET = db_grab("SELECT MAX(id) id FROM intranet_objects");
-		db_query("UPDATE intranet_instances SET objectID = {$_GET["id"]} WHERE id = " . $instance["id"]);
+		$_GET = db_grab("SELECT MAX(id) id FROM contacts");
+		db_query("UPDATE contacts_instances SET objectID = {$_GET["id"]} WHERE id = " . $instance["id"]);
 		
 		//populate search indexes
 		$text = $varchar_01 . " " . $varchar_02 . " " . $varchar_03 . " " . $varchar_04 . " " . $varchar_05 . " " . $varchar_06 . " " . $varchar_07 . " " . $varchar_08 . " " . $varchar_09 . " " . $varchar_10 . " " . $varchar_11 . " " . $numeric_01;
@@ -134,17 +134,17 @@ drawTop();
 					f.name,
 					f.fieldTypeID,
 					f.isRequired
-				from intranet_fields f
+				from contacts_fields f
 				join intranet_tags_types t on f.tagTypeID = t.id
-				where f.objectTypeID = 22 and t.isactive = 1 
+				where f.objectTypeID = 22 and t.is_active = 1 
 				order by f.precedence");
 	while ($t = db_fetch($tags)) {?>
 	<tr>
 		<td bgcolor="#<?if($t["isRequired"]){?>FFDDDD<?}else{?>F6F6F6<?}?>" width="18%"><?=$t["name"]?></td>
 		<td class="input" width="82%">
 			<? if ($t["fieldTypeID"] == 4) {
-				if (isset($_GET["id"])) $v = db_grab("SELECT i2t.tagID FROM intranet_instances_to_tags i2t JOIN intranet_tags t ON i2t.tagID = t.id WHERE i2t.instanceID = {$i["id"]} and t.typeID = {$t["tagTypeID"]} AND t.isActive = 1");
-				echo form_select("tag_single_" . $t["tagTypeID"], "SELECT id, tag FROM intranet_tags WHERE typeID = {$t["tagTypeID"]} AND isActive = 1 ORDER BY precedence", @$v["tagID"], false, "field", false, !$t["isRequired"]);
+				if (isset($_GET["id"])) $v = db_grab("SELECT i2t.tagID FROM contacts_instances_to_tags i2t JOIN intranet_tags t ON i2t.tagID = t.id WHERE i2t.instanceID = {$i["id"]} and t.typeID = {$t["tagTypeID"]} AND t.is_active = 1");
+				echo form_select("tag_single_" . $t["tagTypeID"], "SELECT id, tag FROM intranet_tags WHERE typeID = {$t["tagTypeID"]} AND is_active = 1 ORDER BY precedence", @$v["tagID"], false, "field", false, !$t["isRequired"]);
 			} elseif ($t["fieldTypeID"] == 5) {?>
 				<table cellpadding="0" cellspacing="0" border="0" width="100%">
 				<tr valign="top">
@@ -154,10 +154,10 @@ drawTop();
 				$values = db_query("SELECT 
 										t.id, 
 										t.tag, 
-										(SELECT count(*) FROM intranet_instances_to_tags i2t WHERE i2t.tagID = t.id AND i2t.instanceID = {$i["id"]}) selected
+										(SELECT count(*) FROM contacts_instances_to_tags i2t WHERE i2t.tagID = t.id AND i2t.instanceID = {$i["id"]}) selected
 									FROM intranet_tags t
 									WHERE t.typeID = {$t["tagTypeID"]}
-										AND t.isActive = 1
+										AND t.is_active = 1
 									ORDER by t.precedence");
 				} else {
 				$values = db_query("SELECT 
@@ -166,7 +166,7 @@ drawTop();
 										0 selected
 									FROM intranet_tags t
 									WHERE t.typeID = {$t["tagTypeID"]}
-										AND t.isActive = 1
+										AND t.is_active = 1
 									ORDER by t.precedence");
 				}
 				$oneFound = false;

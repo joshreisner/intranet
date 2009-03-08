@@ -3,7 +3,7 @@
 if ($posting) {
 	format_post_html("message");
 	db_query("DELETE FROM it_system_status");
-	db_query("INSERT INTO it_system_status ( message, updatedOn, updatedBy ) VALUES (
+	db_query("INSERT INTO it_system_status ( message, updated_date, updated_user ) VALUES (
 		{$_POST["message"]},
 		GETDATE(),
 		{$_SESSION["user_id"]}

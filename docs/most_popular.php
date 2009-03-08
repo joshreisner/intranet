@@ -14,12 +14,12 @@ drawTop();
 	$result = db_query("SELECT 
 			d.id,
 			d.name,
-			(SELECT COUNT(*) FROM documents_views v WHERE v.documentID = d.id) downloads,
+			(SELECT COUNT(*) FROM docs_views v WHERE v.documentID = d.id) downloads,
 			i.icon,
 			i.description alt
-		FROM documents d
-		JOIN documents_types i ON d.typeID = i.id
-		WHERE d.isActive = 1
+		FROM docs d
+		JOIN docs_types i ON d.typeID = i.id
+		WHERE d.is_active = 1
 		ORDER BY downloads DESC", 20);
 	while ($r = db_fetch($result)) {?>
 	<tr>

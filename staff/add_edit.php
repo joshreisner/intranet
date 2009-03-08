@@ -1,7 +1,7 @@
 <?
 include("include.php");
 
-//$isAdmin = false; //debugging
+//$is_admin = false; //debugging
 
 if ($posting) {
 	//make checkboxes into bits
@@ -15,9 +15,9 @@ if ($posting) {
 	$_POST["emerCont2Cell"]		= format_phone($_POST["emerCont2Cell"]);
 	
 	format_post_nulls("departmentID,officeID,rankID");
-	if ($isAdmin) {
+	if ($is_admin) {
 		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
-		$id = db_enter("users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
+		$id = db_enter("users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
 		
 		//if new user, reset password, delete request, and send invite
 		if (!isset($_GET["id"])) {
@@ -26,55 +26,42 @@ if ($posting) {
 					"<a href='http://intranet.seedco.org/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet.", 
 					"Intranet: New Staff Added");
 			}
-			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE userID = " . $id);
+			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE user_id = " . $id);
 			if (isset($_GET["requestID"])) db_query("DELETE FROM users_requests WHERE id = " . $_GET["requestID"]);
 			//send invitation
 			$name = str_replace("'", "", ($_POST["nickname"] == "NULL") ? $_POST["firstname"] : $_POST["nickname"]);
 			email_invite($id, $email_address, $name);
 		}
 		//update permissions
-		db_checkboxes("permissions", "users_to_modules", "userID", "moduleID", $id);
+		db_checkboxes("permissions", "users_to_modules", "user_id", "module_id", $id);
 
 		//check long distance code
 		if (($locale == "/_seedco/") && ($_POST["officeID"] == "1")) {
-			if (!db_grab("SELECT longdistancecode FROM users WHERE userID = " . $id)) {
-				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM users WHERE isActive = 1 AND longdistancecode IS NOT NULL)");
-				db_query("UPDATE users SET longDistanceCode = {$code} WHERE userID = " . $id);
+			if (!db_grab("SELECT longdistancecode FROM users WHERE user_id = " . $id)) {
+				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM users WHERE is_active = 1 AND longdistancecode IS NOT NULL)");
+				db_query("UPDATE users SET longDistanceCode = {$code} WHERE user_id = " . $id);
 			}
 		}
 	} else {
-		$id = db_enter("users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "userID");
+		$id = db_enter("users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
 	}
 	
 	if ($id == $_SESSION["user_id"]) {
-		$user = db_grab("SELECT u.updatedOn, " . db_datediff("u.updatedOn", "GETDATE()") . " update_days FROM users u WHERE u.userID = " . $_SESSION["user_id"]);
-		$_SESSION["updatedOn"]	 = $user["updatedOn"];
+		$user = db_grab("SELECT u.updated_date, " . db_datediff("u.updated_date", "GETDATE()") . " update_days FROM users u WHERE u.user_id = " . $_SESSION["user_id"]);
+		$_SESSION["updated_date"]	 = $user["updated_date"];
 		$_SESSION["update_days"] = $user["update_days"];
 	}
 
-	if ($uploading) { //upload new staff image
-		//debug();
-		//get file type id, size, read file
-		$type	= getDocTypeID($_FILES["userfile"]["name"]);
-		$size	= getimagesize($_FILES["userfile"]["tmp_name"]);
-		$image	= format_binary(file_get($_FILES["userfile"]["tmp_name"]));
+	if ($uploading) { 
+		//upload new staff image, probably should insert this in above update statement
+		//also need to ensure they're uploading a JPG
+		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $_GET["id"] . ",jpg", 270);
+		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $_GET["id"] . "-thumbnail,jpg", 40);
 		unlink($_FILES["userfile"]["tmp_name"]);
-		//die($image);
-		//insert into images table
-		$imageID = db_query("INSERT into intranet_images (
-				image,
-				width,
-				height,
-				docTypeID			
-			) VALUES (
-				" . $image . ", 
-				" . $size[0] . ", 
-				" . $size[1] . ",
-				" . $type . "
-			)");
-	
+		$image	= format_binary(file_get($locale . "staff/" . $id . ",jpg"));
+
 		//add imageID to user	
-		db_query("UPDATE users SET imageID = $imageID WHERE userID = " . $id);
+		db_query("UPDATE users SET imageID = $image WHERE user_id = " . $id);
 	}
 
 	url_change("view.php?id=" . $id);
@@ -114,16 +101,16 @@ if (isset($_GET["id"])) {
 		u.emerCont2Phone,
 		u.emerCont2Cell,
 		u.emerCont2Email,
-		u.createdOn,
-		u.updatedOn,
+		u.created_date,
+		u.updated_date,
 		u.startDate,
 		u.endDate
 		FROM users u
-		WHERE u.userID = " . $_GET["id"]);
+		WHERE u.user_id = " . $_GET["id"]);
 		
 	if (($_GET["id"] == $_SESSION["user_id"]) && ($_SESSION["update_days"] > 90)) {
 		echo drawServerMessage("Your personal info hasn't been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff (and their assistants) have access to it.");
-	} elseif (empty($_SESSION["updatedOn"])) {
+	} elseif (empty($_SESSION["updated_date"])) {
 		echo drawServerMessage("Welcome to the Intranet!  Since this is your first time logging in, please make certain that the staff information here is correct, then click 'save changes' at the bottom.  (The emergency and home info is private and optional.)");
 	}
 } elseif (isset($_GET["requestID"])) {
@@ -138,7 +125,7 @@ if (isset($_GET["id"])) {
 		u.officeID, 
 		u.corporationID,
 		u.departmentID,
-		u.createdOn,
+		u.created_date,
 		GETDATE() startDate
 		FROM users_requests u WHERE id = " . $_GET["requestID"]);
 } else {
@@ -164,12 +151,12 @@ $form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_o
 $form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 14);
 $form->addRow("textarea-plain", "Bio", "bio", @$r["bio"]);
 
-if ($isAdmin) { //some fields are admin-only (we don't want people editing the staff page on the website)
+if ($is_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
 	$form->addGroup("Administrative Information [public, but not editable by staff]");
 	$form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);
-	$form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "userID", "moduleID", @$_GET["id"]);
+	$form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
 	$form->addRow("file", "Image", "userfile");
 }
 

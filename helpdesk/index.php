@@ -1,18 +1,18 @@
 <?php include("include.php");
 
 if ($posting) {
-	$user_id = ($isAdmin) ? $_POST["userID"] : $_SESSION["user_id"];
+	$user_id = ($is_admin) ? $_POST["user_id"] : $_SESSION["user_id"];
 	format_post_nulls("typeID");
 	$r = db_query("INSERT INTO helpdesk_tickets (
-    	createdBy,
+    	created_user,
     	typeID,
 		priorityID,
 		departmentID,
 		description,
 		statusID,
 		ipAddress,
-		createdOn,
-		updatedOn,
+		created_date,
+		updated_date,
 		title
 	) VALUES (
 		" . $user_id . ",
@@ -78,19 +78,19 @@ echo drawServerMessage($helpdeskStatus, "center");
 						s.description,
 						t.departmentID,
 						d.shortName department,
-						t.createdOn,
-						t.createdBy,
+						t.created_date,
+						t.created_user,
 						t.id,
 						ISNULL(u2.nickname, u2.firstname) owner,
 						ISNULL(u.nickname, u.firstname) firstname,
 						u.lastname lastname
 					FROM helpdesk_tickets t
 					JOIN helpdesk_tickets_statuses	s  ON t.statusID = s.id
-					JOIN users				u  ON t.createdBy = u.userID
+					JOIN users				u  ON t.created_user = u.user_id
 					JOIN departments		d  ON t.departmentID = d.departmentID
-					LEFT JOIN users		u2 ON t.ownerID = u2.userID
+					LEFT JOIN users		u2 ON t.ownerID = u2.user_id
 					WHERE (t.statusID <> 9 OR t.statusID IS NULL) $department
-					ORDER BY d.shortName, t.createdOn DESC");
+					ORDER BY d.shortName, t.created_date DESC");
 	$lastDept = "";
 	$num = db_found($result);
 	if ($num) {
@@ -111,7 +111,7 @@ echo drawServerMessage($helpdeskStatus, "center");
 			<td colspan="4"><?=$lastDept?> Tickets (<?=$count ?>)</td>
 		</tr>
 		<? }
-		if (($r["departmentID"] == 2) && !$isAdmin && ($r["createdBy"] != $_SESSION["user_id"])) {
+		if (($r["departmentID"] == 2) && !$is_admin && ($r["created_user"] != $_SESSION["user_id"])) {
 			//ticket not clickable in this scenario
 			?>
 		<tr height="32" class="thread">
@@ -141,12 +141,12 @@ echo drawServerMessage($helpdeskStatus, "center");
 <a name="bottom"></a>
 <?
 $form = new intranet_form;
-if ($isAdmin) $form->addUser("userID",  "Posted By" , $_SESSION["user_id"], false);
+if ($is_admin) $form->addUser("user_id",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Problem" , "title", "", "", true);
-if ($isAdmin) {
+if ($is_admin) {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities", 3);
 } else {
-	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE isAdmin <> 1", 3);
+	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE is_admin <> 1", 3);
 }
 $form->addRow("select", "Department" , "departmentID", "SELECT departmentID, shortName FROM departments WHERE isHelpdesk = 1 ORDER BY shortName", $departmentID, true, 50, "updateTypes(this.value)");
 $form->addRow("select", "Type" , "typeID", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = $departmentID ORDER BY description");

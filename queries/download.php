@@ -54,7 +54,7 @@ $return .= '</table>';
 	db_switch($_josh["db"]["database"]);	
 	db_query("INSERT INTO queries_executions ( 
 				queryID, 
-				userID, 
+				user_id, 
 				executedOn, 
 				num_rows, 
 				num_columns

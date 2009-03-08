@@ -3,11 +3,11 @@ include("../include.php");
 
 if (url_action("delete")) {
 	if (!isset($_GET["staffID"]) && isset($_GET["id"])) $_GET["staffID"] = $_GET["id"];
-	$r = db_grab("SELECT firstname, lastname, endDate FROM users WHERE userID = " . $_GET["staffID"]);
+	$r = db_grab("SELECT firstname, lastname, endDate FROM users WHERE user_id = " . $_GET["staffID"]);
 	if ($r["endDate"]) {
-		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE() WHERE userID = " . $_GET["staffID"]);
+		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE user_id = " . $_GET["staffID"]);
 	} else {
-		db_query("UPDATE users SET isActive = 0, deletedBy = {$_SESSION["user_id"]}, deletedOn = GETDATE(), endDate = GETDATE() WHERE userID = " . $_GET["staffID"]);
+		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE(), endDate = GETDATE() WHERE user_id = " . $_GET["staffID"]);
 	}
 	if ($locale == "/_seedco/") {	
 		email("jreisner@seedco.org,pchoi@seedco.org", 
@@ -18,7 +18,7 @@ if (url_action("delete")) {
 }
 
 function drawJumpToStaff($selectedID=false) {
-	global $isAdmin;
+	global $is_admin;
 	$nullable = ($selectedID === false);
 	$return = '
 		<table class="message">
@@ -26,7 +26,7 @@ function drawJumpToStaff($selectedID=false) {
 				<td class="gray">Jump to ' . drawSelectUser("", $selectedID, $nullable, 0, true, true, "Staff Member:") . '</td>
 			</tr>
 		</table>';
-	if ($isAdmin) { 
+	if ($is_admin) { 
 		if ($r = db_grab("SELECT COUNT(*) FROM users_requests")) {
 			$return = drawServerMessage("There are pending <a href='requests.php'>account requests</a> for you to review.") . $return;
 		}
@@ -36,9 +36,9 @@ function drawJumpToStaff($selectedID=false) {
 }
 
 function drawStaffList($where, $searchterms=false) {
-	global $isAdmin, $_josh;
+	global $is_admin, $_josh;
 	$return = drawJumpToStaff() . '<table class="left" cellspacing="1">';
-	if ($isAdmin) {
+	if ($is_admin) {
 		$colspan = 5;
 		$return .= drawHeaderRow(false, $colspan, "new", "add_edit.php");
 	} else {
@@ -50,11 +50,11 @@ function drawStaffList($where, $searchterms=false) {
 		<th style="text-align:left">Name / Office</th>
 		<th style="text-align:left">Title / Department</th>
 		<th style="text-align:left">Phone</th>';
-	if ($isAdmin) $return .= '<th></th>';
+	if ($is_admin) $return .= '<th></th>';
 	$return .= '</tr>';
 	
 	$result = db_query("SELECT 
-							u.userID, 
+							u.user_id, 
 							u.lastname,
 							ISNULL(u.nickname, u.firstname) firstname, 
 							u.bio, 
@@ -80,7 +80,7 @@ function drawStaffList($where, $searchterms=false) {
 		if (($count == 1) && $searchterms) {
 			$r = db_fetch($result);
 			$_josh["slow"] = true;
-			url_change("view.php?id=" . $r["userID"]);
+			url_change("view.php?id=" . $r["user_id"]);
 		} else {
 			while ($r = db_fetch($result)) $return .= drawStaffRow($r, $searchterms);
 		}
@@ -91,7 +91,7 @@ function drawStaffList($where, $searchterms=false) {
 }
 
 function drawStaffRow($r, $searchterms=false) {
-	global $isAdmin, $locale;
+	global $is_admin, $locale;
 	if ($searchterms) {
 		global $fields;
 		foreach ($fields as $f) {
@@ -105,11 +105,11 @@ function drawStaffRow($r, $searchterms=false) {
 		$factor      = @(31 / $r["height"]);
 		$r["width"]  = $r["width"]  * $factor;
 		$r["height"] = $r["height"] * $factor;
-		$return .= '<td width="47" align="center"><a href="/staff/view.php?id=' . $r["userID"] . '"><img src="' . $locale . 'staff/' . $r["imageID"] . '.jpg" width="' . $r["width"] . '" height="' . $r["height"] . '" border="0"></a></td>';
+		$return .= '<td width="47" align="center"><a href="/staff/view.php?id=' . $r["user_id"] . '"><img src="' . $locale . 'staff/' . $r["imageID"] . '.jpg" width="' . $r["width"] . '" height="' . $r["height"] . '" border="0"></a></td>';
 	} else {
 		$return .= '<td>&nbsp;</td>';
 	}
-	$return .= '<td><nobr><a href="view.php?id=' . $r["userID"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
+	$return .= '<td><nobr><a href="view.php?id=' . $r["user_id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
 	if (!$r["isMain"]) $return .= "<br>" . $r["office"];
 	$return .= '</nobr></td><td>';
 	if ($r["title"]) $return .= $r["title"] . '<br>';
@@ -118,7 +118,7 @@ function drawStaffRow($r, $searchterms=false) {
 	$return .= '</td>
 		<td align="right"><nobr>' . format_phone($r["phone"]) . '</nobr></td>
 		';
-		if ($isAdmin) $return .= '<td><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["userID"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
+		if ($is_admin) $return .= '<td><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

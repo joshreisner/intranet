@@ -49,15 +49,15 @@ if (!isset($_GET["print"])) {?>
 	<?
 	$contacts = db_query("SELECT
 						o.id,
-						o.isActive,
+						o.is_active,
 						i.varchar_01 as firstname,
 						i.varchar_02 as lastname,
 						i.varchar_04 as organization,
 						i.varchar_08 as phone,
 						i.varchar_11 as email
-					FROM intranet_objects o
-					INNER JOIN intranet_instances i ON o.instanceCurrentID = i.id
-					WHERE o.isActive = 1 AND i.varchar_02 LIKE '" . $_GET["id"] . "%'
+					FROM contacts o
+					INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
+					WHERE o.is_active = 1 AND i.varchar_02 LIKE '" . $_GET["id"] . "%'
 					ORDER BY i.varchar_02, i.varchar_01");
 	while ($c = db_fetch($contacts)) {
 		if (strlen($c["organization"]) > 40) $c["organization"] = substr($c["organization"], 0, 39) . "...";

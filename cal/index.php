@@ -2,7 +2,7 @@
 include("include.php");
 
 if ($posting) {
-	$_POST["isActive"] = 1;
+	$_POST["is_active"] = 1;
 	$id = db_enter("cal_events", "title description *startDate typeID");
 	url_query_add(array("month"=>$_POST["startDateMonth"], "year"=>$_POST["startDateYear"]));
 }
@@ -21,7 +21,7 @@ $result = db_query("SELECT
 			t.color
 		FROM cal_events e
 		JOIN cal_events_types t ON e.typeID = t.id
-		WHERE e.isActive = 1 AND 
+		WHERE e.is_active = 1 AND 
 			MONTH(e.startDate) = {$_GET["month"]} AND
 			YEAR(e.startDate) = " . $_GET["year"]);
 while ($r = db_fetch($result)) {
@@ -178,7 +178,7 @@ if (!isset($_GET["year"])) $_GET["year"]   = $year;
 			if (($_GET['year'] < 2006) && ($day == 2)) {
 				$timesheet = round((date("U", mktime(0,0,0,$_GET["month"],$thisday,$_GET["year"])) - 1042434000) / 1209600, 1);
 				if ($timesheet == round($timesheet)) {?>
-					<a href="/documents/history.php?id=108" class="calendaractivity"><b>Timesheets Are Due</b></a>
+					<a href="/docs/history.php?id=108" class="calendaractivity"><b>Timesheets Are Due</b></a>
 				<? }
 			}?>
 
@@ -201,7 +201,7 @@ if (!isset($_GET["year"])) $_GET["year"]   = $year;
 <a name="bottom"></a>
 <?
 $form = new intranet_form;
-if ($isAdmin) $form->addUser("createdBy",  "Posted By" , $_SESSION["user_id"], false);
+if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Title" , "title", "", "", true);
 $form->addRow("select", "Type", "typeID", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
 $form->addRow("datetime", "Date", "startDate");

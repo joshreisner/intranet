@@ -39,16 +39,16 @@ $month5amt = 0;
 </table>
 <?
 $result = db_query("SELECT 
-						u.userID,
+						u.user_id,
 						ISNULL(u.nickname, u.firstname) name,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month1 AND YEAR(t.createdOn) = $year1 AND t.departmentID = $departmentID) month1total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month2 AND YEAR(t.createdOn) = $year2 AND t.departmentID = $departmentID) month2total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month3 AND YEAR(t.createdOn) = $year3 AND t.departmentID = $departmentID) month3total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month4 AND YEAR(t.createdOn) = $year4 AND t.departmentID = $departmentID) month4total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.userID AND MONTH(t.createdOn) = $month5 AND YEAR(t.createdOn) = $year5 AND t.departmentID = $departmentID) month5total
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month1 AND YEAR(t.created_date) = $year1 AND t.departmentID = $departmentID) month1total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month2 AND YEAR(t.created_date) = $year2 AND t.departmentID = $departmentID) month2total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month3 AND YEAR(t.created_date) = $year3 AND t.departmentID = $departmentID) month3total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month4 AND YEAR(t.created_date) = $year4 AND t.departmentID = $departmentID) month4total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month5 AND YEAR(t.created_date) = $year5 AND t.departmentID = $departmentID) month5total
 					FROM users_to_modules a 
-					JOIN users u ON a.userID = u.userID
-					WHERE a.moduleID = 3 AND u.isActive = 1
+					JOIN users u ON a.user_id = u.user_id
+					WHERE a.module_id = 3 AND u.is_active = 1
 					ORDER BY ISNULL(u.nickname, u.firstname)");
 ?>
 <table class="left" cellspacing="1">
@@ -63,12 +63,12 @@ $result = db_query("SELECT
 	</tr>
 	<? while ($r = db_fetch($result)) {?>
 		<tr>
-			<td><a href="administrator_tickets.php?userID=<?=$r["userID"]?>"><?=$r["name"]?></a></td>
-			<td align="right"><?if ($r["month1total"]) {?><a href="administrator_tickets.php?userID=<?=$r["userID"]?>&month=<?=$month1?>&year=<?=$year1?>"><?}?><?=$r["month1total"]?></a></td>
-			<td align="right"><?if ($r["month2total"]) {?><a href="administrator_tickets.php?userID=<?=$r["userID"]?>&month=<?=$month2?>&year=<?=$year2?>"><?}?><?=$r["month2total"]?></a></td>
-			<td align="right"><?if ($r["month3total"]) {?><a href="administrator_tickets.php?userID=<?=$r["userID"]?>&month=<?=$month3?>&year=<?=$year3?>"><?}?><?=$r["month3total"]?></a></td>
-			<td align="right"><?if ($r["month4total"]) {?><a href="administrator_tickets.php?userID=<?=$r["userID"]?>&month=<?=$month4?>&year=<?=$year4?>"><?}?><?=$r["month4total"]?></a></td>
-			<td align="right"><?if ($r["month5total"]) {?><a href="administrator_tickets.php?userID=<?=$r["userID"]?>&month=<?=$month5?>&year=<?=$year5?>"><?}?><?=$r["month5total"]?></a></td>
+			<td><a href="administrator_tickets.php?user_id=<?=$r["user_id"]?>"><?=$r["name"]?></a></td>
+			<td align="right"><?if ($r["month1total"]) {?><a href="administrator_tickets.php?user_id=<?=$r["user_id"]?>&month=<?=$month1?>&year=<?=$year1?>"><?}?><?=$r["month1total"]?></a></td>
+			<td align="right"><?if ($r["month2total"]) {?><a href="administrator_tickets.php?user_id=<?=$r["user_id"]?>&month=<?=$month2?>&year=<?=$year2?>"><?}?><?=$r["month2total"]?></a></td>
+			<td align="right"><?if ($r["month3total"]) {?><a href="administrator_tickets.php?user_id=<?=$r["user_id"]?>&month=<?=$month3?>&year=<?=$year3?>"><?}?><?=$r["month3total"]?></a></td>
+			<td align="right"><?if ($r["month4total"]) {?><a href="administrator_tickets.php?user_id=<?=$r["user_id"]?>&month=<?=$month4?>&year=<?=$year4?>"><?}?><?=$r["month4total"]?></a></td>
+			<td align="right"><?if ($r["month5total"]) {?><a href="administrator_tickets.php?user_id=<?=$r["user_id"]?>&month=<?=$month5?>&year=<?=$year5?>"><?}?><?=$r["month5total"]?></a></td>
 		</tr>
 		<?
 		$month1amt += $r["month1total"];

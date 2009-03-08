@@ -17,8 +17,8 @@ if (url_id()) {
 		n.url,
 		n.description
 		FROM news_stories n
-		LEFT JOIN documents_types d ON n.imageTypeID = d.id
-		LEFT JOIN documents_types d2 ON n.fileTypeID = d2.id
+		LEFT JOIN docs_types d ON n.imageTypeID = d.id
+		LEFT JOIN docs_types d2 ON n.fileTypeID = d2.id
 		WHERE n.id = " . $_GET["id"]);
 	if ($r["image"]) {
 		$filename = $locale . "news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"];
@@ -73,7 +73,7 @@ if (url_id()) {
 
 } else {
 	echo drawTableStart();
-	$colspan = ($isAdmin) ? 5 : 4;
+	$colspan = ($is_admin) ? 5 : 4;
 	echo drawHeaderRow("", $colspan, "new", "#bottom");
 	
 	$result = db_query("SELECT 
@@ -93,7 +93,7 @@ if (url_id()) {
 			<th>Outlet</th>
 			<th>Organization</th>
 			<th class="r">Date</th>
-			<? if ($isAdmin) {?><th class="x"></th><? }?>
+			<? if ($is_admin) {?><th class="x"></th><? }?>
 		</tr>
 		<?
 		while ($r = db_fetch($result)) {?>

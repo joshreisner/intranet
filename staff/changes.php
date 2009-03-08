@@ -4,13 +4,13 @@ echo drawJumpToStaff();
 ?>
 <table class="left" cellspacing="1">
 	<?
-	if ($isAdmin) {
+	if ($is_admin) {
 		echo drawHeaderRow("Comings", 2, "new", "add_edit.php");
 	} else {
 		echo drawHeaderRow("Comings", 2);
 	}
 	$staff = db_query("SELECT
-		u.userID,
+		u.user_id,
 		ISNULL(u.nickname, u.firstname) first, 
 		u.lastname last,
 		u.title,
@@ -25,7 +25,7 @@ echo drawJumpToStaff();
 	JOIN intranet_offices o ON u.officeID = o.id
 	JOIN departments d ON u.departmentID = d.departmentID
 	LEFT JOIN intranet_images m ON u.imageID = m.imageID
-	WHERE " . db_datediff("u.startdate", "GETDATE()") . " < 60 AND u.isActive = 1
+	WHERE " . db_datediff("u.startdate", "GETDATE()") . " < 60 AND u.is_active = 1
 	ORDER BY u.startdate DESC");
 
 	while ($s = db_fetch($staff)) {?>
@@ -35,13 +35,13 @@ echo drawJumpToStaff();
 				$factor    = @(90 / $s["height"]);
 				$s["height"] = $s["height"] * $factor;
 				$s["width"]  = round($s["width"] * $factor);
-				echo "<a href='/staff/view.php?id=" . $s["userID"] . "'><img src='" . $locale . "staff/" . $s["imageID"] . ".jpg' width='" . $s["width"] . "' height='" . $s["height"] . "' border='0'></a>";
+				echo "<a href='/staff/view.php?id=" . $s["user_id"] . "'><img src='" . $locale . "staff/" . $s["imageID"] . ".jpg' width='" . $s["width"] . "' height='" . $s["height"] . "' border='0'></a>";
 			} else {
-				echo "<a href='/staff/view.php?id=" . $s["userID"] . "'><img src='" . $locale . "images/to-be-taken.png' width='129' height='90' border='0'></a>";
+				echo "<a href='/staff/view.php?id=" . $s["user_id"] . "'><img src='" . $locale . "images/to-be-taken.png' width='129' height='90' border='0'></a>";
 			}
 		?></td>
 		<td class="text">
-			<b><a href="/staff/view.php?id=<?=$s["userID"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
+			<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
 			<?=$s["title"]?><br>
 			<?=$s["departmentName"]?><br>
 			<?=$s["office"]?><br>
@@ -59,7 +59,7 @@ $result = db_query("SELECT
 			d.departmentName,
 			m.width,
 			m.height,
-			u.userID, 
+			u.user_id, 
 			u.imageID,
 			u.endDate
 			FROM users u
@@ -84,11 +84,11 @@ $result = db_query("SELECT
 			$r["width"]  = $r["width"]  * $factor;
 			$r["height"] = $r["height"] * $factor;
 			?>
-		<td align="center"><a href="/staff/view.php?id=<?=$r["userID"]?>"><img src="<?=$locale?>staff/<?=$r["imageID"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
+		<td align="center"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><img src="<?=$locale?>staff/<?=$r["imageID"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
 		<? } else {?>
 		<td></td>
 		<? }?>
-		<td><a href="/staff/view.php?id=<?=$r["userID"]?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
+		<td><a href="/staff/view.php?id=<?=$r["user_id"]?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
 		<td><?=$r["title"]?>, <?=$r["departmentName"]?></td>
 		<td align="right"><?=format_date($r["endDate"]);?></td>
 	</tr>

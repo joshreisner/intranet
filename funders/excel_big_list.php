@@ -59,7 +59,7 @@ $return = '<table width="100%" cellpadding="3" cellspacing="1" border="1" bgcolo
 						(select top 1 activityDate from resources_activity where awardID = a.awardID and isComplete = 1 order by activityDate desc) as pastActivityDate
 					FROM resources_awards a 
 					INNER JOIN resources_funders  f ON f.funderID = a.funderID
-					INNER JOIN users     u ON u.userID = a.staffID
+					INNER JOIN users     u ON u.user_id = a.staffID
 					WHERE a.awardStatusID = " . $rs["awardStatusID"] . " AND a.awardProgramID = " . $rp["programID"]);
 				while ($r = db_fetch($result)) {
 					$return .= '

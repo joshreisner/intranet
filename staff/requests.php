@@ -4,10 +4,10 @@ if (url_action("deletereq")) {
 	db_query("DELETE FROM users_requests WHERE id = " . $_GET["id"]);
 	url_query_drop("action,id");
 } elseif (url_action("invite")) {
-	$result = db_query("SELECT userID, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND isactive = 1");
+	$result = db_query("SELECT user_id, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND is_active = 1");
 	while ($r = db_fetch($result)) {
 		$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
-		email_invite($r["userID"], $r["email"], $name);
+		email_invite($r["user_id"], $r["email"], $name);
 	}
 	url_query_drop("action");
 }
@@ -16,7 +16,7 @@ drawTop();
 echo drawJumpToStaff();
 echo drawTableStart();
 echo drawHeaderRow("", 3);
-$result = db_query("SELECT id, lastname, firstname, createdOn FROM users_requests ORDER BY createdOn DESC");
+$result = db_query("SELECT id, lastname, firstname, created_date FROM users_requests ORDER BY created_date DESC");
 if (db_found($result)) {?>
 	<tr>
 		<th width="70%">Name</th>
@@ -26,7 +26,7 @@ if (db_found($result)) {?>
 	<? while ($r = db_fetch($result)) {?>
 	<tr>
 		<td><a href="add_edit.php?requestID=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
-		<td class="r"><?=format_date_time($r["createdOn"])?></td>
+		<td class="r"><?=format_date_time($r["created_date"])?></td>
 		<td width="16"><?=draw_img($locale . "images/icons/delete.gif", url_query_add(array("action"=>"deletereq", "id"=>$r["id"]), false))?></td>
 	</tr>
 	<?
@@ -38,7 +38,7 @@ echo drawTableEnd();
 
 echo drawTableStart();
 echo drawHeaderRow("Never Logged In", 3, "invite them all", url_query_add(array("action"=>"invite"), false));
-$result = db_query("SELECT userid, lastname, firstname, createdOn FROM users WHERE lastlogin IS NULL AND isactive = 1 ORDER BY lastname");
+$result = db_query("SELECT user_id, lastname, firstname, created_date FROM users WHERE lastlogin IS NULL AND is_active = 1 ORDER BY lastname");
 if (db_found($result)) {?>
 	<tr>
 		<th width="70%">Name</th>
@@ -48,9 +48,9 @@ if (db_found($result)) {?>
 	<?
 	while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><a href="view.php?id=<?=$r["userid"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
-		<td class="r"><?=format_date_time($r["createdOn"])?></td>
-		<?=deleteColumn("Delete user?", $r["userid"])?>
+		<td><a href="view.php?id=<?=$r["user_id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
+		<td class="r"><?=format_date_time($r["created_date"])?></td>
+		<?=deleteColumn("Delete user?", $r["user_id"])?>
 	</tr>
 	<?
 	}

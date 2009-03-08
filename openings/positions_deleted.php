@@ -21,10 +21,10 @@ drawTop();
 								j.id,
 								j.title,
 								d.departmentName,
-								ISNULL(j.updatedOn, j.createdOn) updatedOn
+								ISNULL(j.updated_date, j.created_date) updated_date
 							FROM intranet_jobs j
 							LEFT JOIN departments d ON j.departmentID = d.departmentID
-							WHERE j.isActive = 0
+							WHERE j.is_active = 0
 							ORDER BY j.title, departmentName");
 		if (db_found($result)) {?>
 			<tr class="group">
@@ -34,7 +34,7 @@ drawTop();
 			<tr>
 				<td><a href="position.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 				<td><?=$r["departmentName"]?></td>
-				<td align="right"><?=format_date($r["updatedOn"])?></td>
+				<td align="right"><?=format_date($r["updated_date"])?></td>
 			</tr>
 			<? }
 		}

@@ -10,31 +10,31 @@ if ($posting) {
 
 	if (url_id()) {
 		if ($uploading) {
-			db_query("UPDATE documents SET 
+			db_query("UPDATE docs SET 
 				name = '{$_POST["name"]}',
 				description = '{$_POST["description"]}',
 				typeID = {$type},
 				content = $content,
-				updatedOn = GETDATE(),
-				updatedBy = {$_SESSION["user_id"]}
+				updated_date = GETDATE(),
+				updated_user = {$_SESSION["user_id"]}
 				WHERE id = " . $_GET["id"]);
 		} else {
-			db_query("UPDATE documents SET 
+			db_query("UPDATE docs SET 
 				name = '{$_POST["name"]}',
 				description = '{$_POST["description"]}',
-				updatedOn = GETDATE(),
-				updatedBy = {$_SESSION["user_id"]}
+				updated_date = GETDATE(),
+				updated_user = {$_SESSION["user_id"]}
 				WHERE id = " . $_GET["id"]);
 		}
 	} else {
-		$_GET["id"] = db_query("INSERT into documents (
+		$_GET["id"] = db_query("INSERT into docs (
 			name,
 			description,
 			typeID,
 			content,
-			createdOn,
-			createdBy,
-			isActive
+			created_date,
+			created_user,
+			is_active
 		) VALUES (
 			'" . $_POST["name"] . "',
 			'" . $_POST["description"] . "',
@@ -46,12 +46,12 @@ if ($posting) {
 		)");
 	}
 
-	db_checkboxes("doc", "documents_to_categories", "documentID", "categoryID", $_GET["id"]);
+	db_checkboxes("doc", "docs_to_categories", "documentID", "categoryID", $_GET["id"]);
 	url_change("/docs/info.php?id=" . $_GET["id"]);
 }
 
 if (url_id()) {
-	$d = db_grab("SELECT name, description FROM documents WHERE id = " . $_GET["id"]);
+	$d = db_grab("SELECT name, description FROM docs WHERE id = " . $_GET["id"]);
 	$pageAction = "Edit Document";
 } else {
 	$pageAction = "Add Document";
@@ -63,7 +63,7 @@ drawTop();
 //load code for JS
 $extensions = array();
 $doctypes = array();
-$types = db_query("SELECT description, extension FROM documents_types ORDER BY description");
+$types = db_query("SELECT description, extension FROM docs_types ORDER BY description");
 while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t["extension"] . '")';
 	$doctypes[] = " - " . $t["description"] . " (." . $t["extension"] . ")";
@@ -124,9 +124,9 @@ while ($t = db_fetch($types)) {
 			<table class="nospacing">
 				<?
 				if (url_id()) {
-					$categories = db_query("SELECT c.id, c.description, (SELECT COUNT(*) FROM documents_to_categories d2c WHERE d2c.categoryID = c.id AND d2c.documentID = {$_GET["id"]}) checked FROM documents_categories c ORDER BY c.precedence");
+					$categories = db_query("SELECT c.id, c.description, (SELECT COUNT(*) FROM docs_to_categories d2c WHERE d2c.categoryID = c.id AND d2c.documentID = {$_GET["id"]}) checked FROM docs_categories c ORDER BY c.precedence");
 				} else {
-					$categories = db_query("SELECT id, description FROM documents_categories ORDER BY precedence");
+					$categories = db_query("SELECT id, description FROM docs							_categories ORDER BY precedence");
 				}
 				while ($c = db_fetch($categories)) {?>
 				<tr>

@@ -9,7 +9,7 @@ drawTop();
 $r  = db_grab("SELECT awardStatusDescPlural FROM resources_awards_statuses WHERE awardStatusID = " . $_GET["statusID"]);
 $r2 = db_grab("SELECT ISNULL(u.nickname, u.firstname) staffname 
 					FROM users u
-					WHERE u.userID = " . $_GET["staffID"]);
+					WHERE u.user_id = " . $_GET["staffID"]);
 	
 ?>
 <table width="100%" cellpadding="3" cellspacing="1" border="0" bgcolor="#EEEEEE" class="small">
@@ -80,7 +80,7 @@ while ($rp = db_fetch($programs)) {
 						u.lastname last,
 						a.isComplete
 					FROM resources_activity a
-					INNER JOIN users u     ON a.activityAssignedTo = u.userID
+					INNER JOIN users u     ON a.activityAssignedTo = u.user_id
 					WHERE awardID = " . $r["awardID"] . " AND 
 					((" . db_datediff("GETDATE()", "a.activityDate") . " > -60 AND " . db_datediff("GETDATE()", "a.activityDate") . " < 60) OR
 					(" . db_datediff("GETDATE()", "a.activityDate") . " < 60) AND isComplete = 0)

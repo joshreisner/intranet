@@ -36,7 +36,7 @@ drawTop();
 ?>
 
 <table class="left" cellspacing="1">
-	<? if ($isAdmin) {
+	<? if ($is_admin) {
 		$colspan = 3;
 		echo drawHeaderRow("Board Members", $colspan, "new", "#bottom");
 	} else {
@@ -46,7 +46,7 @@ drawTop();
 	<tr>
 		<th align="left" width="60%">Name</th>
 		<th align="left" width="40%">Position on Board</th>
-		 <? if ($isAdmin) echo "<th width='16'></th>"; ?>
+		 <? if ($is_admin) echo "<th width='16'></th>"; ?>
 	</tr>
 	<?
 	$result = db_query("SELECT
@@ -76,7 +76,7 @@ drawTop();
 
 <a name="bottom"></a><br>
 
-<? if ($isAdmin) {
+<? if ($is_admin) {
 	$form = new intranet_form;
 	$form->addRow("itext",  "First Name" , "firstname", "", "", true, 255);
 	$form->addRow("itext",  "Last Name" , "lastname", "", "", true, 255);

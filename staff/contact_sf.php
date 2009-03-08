@@ -5,13 +5,13 @@ drawTop();
 drawNavigation();
 
 $result = db_query("select
-						u.userID,
+						u.user_id,
 						u.lastname + ', ' + ISNULL(u.nickname, u.firstname) name,
 						u.title,
 						u.homephone, 
 						u.homecell 
 					FROM users u
-					WHERE (u.rankid < 8 OR u.departmentID = 7) AND u.isactive = 1
+					WHERE (u.rankid < 8 OR u.departmentID = 7) AND u.is_active = 1
 					ORDER BY u.rankID, u.lastname, ISNULL(u.nickname, u.firstname)");
 ?>
 
@@ -25,7 +25,7 @@ $result = db_query("select
 	</tr>
 	<? while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><a href="staff_view.php?id=<?=$r["userID"]?>"><?=$r["name"]?></a></td>
+		<td><a href="staff_view.php?id=<?=$r["user_id"]?>"><?=$r["name"]?></a></td>
 		<td><?=$r["title"]?></td>
 		<td><?=format_phone($r["homephone"])?></td>
 		<td><?=format_phone($r["homecell"])?></td>
