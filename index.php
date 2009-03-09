@@ -61,7 +61,6 @@ if ($redirect) url_change($redirect);
 			#logos	{ height:334px; }
 			.top-right { right:-1px; }
 			.bottom-right { right:-1px; }
-			//-->
 		</style>
 		<![endif]--> 
 		<script language="javascript">

@@ -55,13 +55,13 @@ if ($posting) {
 	if ($uploading) { 
 		//upload new staff image, probably should insert this in above update statement
 		//also need to ensure they're uploading a JPG
-		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $_GET["id"] . ",jpg", 270);
-		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $_GET["id"] . "-thumbnail,jpg", 40);
+		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $id . ",jpg", 270);
+		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $id . "-thumbnail,jpg", 40);
 		unlink($_FILES["userfile"]["tmp_name"]);
 		$image	= format_binary(file_get($locale . "staff/" . $id . ",jpg"));
 
 		//add imageID to user	
-		db_query("UPDATE users SET imageID = $image WHERE user_id = " . $id);
+		db_query("UPDATE users SET image = $image WHERE user_id = " . $id);
 	}
 
 	url_change("view.php?id=" . $id);

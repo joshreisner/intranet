@@ -64,15 +64,11 @@ function drawStaffList($where, $searchterms=false) {
 							o.name office, 
 							o.isMain,
 							u.title, 
-							d.departmentName,
-							u.imageID,
-							m.height,
-							m.width
+							d.departmentName
 						FROM users u
 						LEFT JOIN departments d	ON d.departmentID = u.departmentID 
 						LEFT JOIN organizations c			ON u.corporationID = c.id
 						LEFT JOIN intranet_offices o		ON o.id = u.officeID
-						LEFT JOIN intranet_images m			ON u.imageID = m.imageID
 						WHERE " . $where . "
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	$count = db_found($result);
@@ -100,25 +96,16 @@ function drawStaffRow($r, $searchterms=false) {
 	}
 
 	$return  = '<tr height="38">';
-	if ($r["imageID"]) {
-		verifyImage($r["imageID"]);
-		$factor      = @(31 / $r["height"]);
-		$r["width"]  = $r["width"]  * $factor;
-		$r["height"] = $r["height"] * $factor;
-		$return .= '<td width="47" align="center"><a href="/staff/view.php?id=' . $r["user_id"] . '"><img src="' . $locale . 'staff/' . $r["imageID"] . '.jpg" width="' . $r["width"] . '" height="' . $r["height"] . '" border="0"></a></td>';
-	} else {
-		$return .= '<td>&nbsp;</td>';
-	}
+	verifyImage($r["user_id"]);
+	$return .= '<td width="50">' . draw_img($locale . 'staff/' . $r["user_id"] . '-thumbnail.jpg', '/staff/view.php?id=' . $r["user_id"]) . '</td>';
 	$return .= '<td><nobr><a href="view.php?id=' . $r["user_id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
 	if (!$r["isMain"]) $return .= "<br>" . $r["office"];
 	$return .= '</nobr></td><td>';
 	if ($r["title"]) $return .= $r["title"] . '<br>';
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
 	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
-	$return .= '</td>
-		<td align="right"><nobr>' . format_phone($r["phone"]) . '</nobr></td>
-		';
-		if ($is_admin) $return .= '<td><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
+	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
+	if ($is_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 
