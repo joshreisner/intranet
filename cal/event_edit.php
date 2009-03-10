@@ -17,13 +17,9 @@ $e = db_grab("SELECT
 		e.created_user,
 		e.created_date,
 		MONTH(e.startDate) month, 
-		YEAR(e.startDate) year,
-		u.imageID,
-		i.width imgwidth,
-		i.height imgheight
+		YEAR(e.startDate) year
 	FROM cal_events e
 	JOIN users u ON e.created_user = u.user_id
-	LEFT JOIN intranet_images i ON u.imageID = i.imageID
 	WHERE e.id = " . $_GET["id"]);
 	
 drawTop();

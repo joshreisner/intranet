@@ -69,7 +69,7 @@ if ($posting) {
 		unlink($_FILES["userfile"]["tmp_name"]);
 		$image	= format_binary(file_get($locale . "staff/" . $id . ",jpg"));
 
-		//add imageID to user	
+		//add image to user	
 		db_query("UPDATE users SET image = $image WHERE user_id = " . $id);
 	}
 

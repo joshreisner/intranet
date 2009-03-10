@@ -41,30 +41,18 @@ drawNavigation();
 							u.phone, 
 							f.name office, 
 							u.title, 
-							d.departmentName,
-							u.imageID,
-							m.height,
-							m.width,
+							d.departmentName
 							r.isPayroll
 						FROM users u
 						JOIN intranet_ranks r ON u.rankID = r.id
 						LEFT  JOIN departments d ON d.departmentID = u.departmentID 
 						LEFT  JOIN intranet_offices f     ON f.id = u.officeID
-						LEFT  JOIN intranet_images m      ON u.imageID = m.imageID
 						WHERE u.is_active = 1 AND r.isPayroll = 0
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	while ($r = db_fetch($result)) {?>
 	<tr height="38">
-		<? if ($r["imageID"]) {
-			verifyImage($r["imageID"]);
-			$factor      = (31 / $r["height"]);
-			$r["width"]  = $r["width"]  * $factor;
-			$r["height"] = $r["height"] * $factor;
-			?>
-		<td width="47" align="center"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><img src="/data/staff/<?=$r["imageID"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
-		<? } else {?>
-		<td>&nbsp;</td>
-		<? }?>
+		<? verifyImage($r["user_id"]);?>
+		<td width="47" align="center"><?=draw_img($locale . "staff/" . $r["user_id"] . "-small.jpg", "/staff/view.php?id=" . $r["user_id"])?></td>
 		<td><nobr><a href="view.php?id=<?=$r["user_id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></nobr></td>
 		<td><?=$r["title"]?></td>
 		<td><?=$r["office"]?></td>

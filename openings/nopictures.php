@@ -13,7 +13,7 @@ $result = db_query("SELECT
 				FROM users u
 				JOIN intranet_offices o on u.officeID = o.officeID
 				JOIN intranet_ranks r ON u.rankID = r.id
-				WHERE u.imageID is null and u.is_active = 1 and r.ispayroll = 1
+				WHERE u.image is null and u.is_active = 1 and r.ispayroll = 1
 				ORDER BY o.name, u.lastname, u.firstname");
 ?>
 <table class="left" cellspacing="1">

@@ -57,14 +57,10 @@ $t = db_grab("SELECT
 		w.created_date,
 		w.created_user,
 		ISNULL(u.nickname, u.firstname) first,
-		u.lastname last,
-		u.imageID,
-		m.width,
-		m.height
+		u.lastname last
 	FROM wiki_topics w
 	JOIN wiki_topics_types t ON w.typeID = t.id
 	JOIN users u ON w.created_user = u.user_id
-	LEFT JOIN intranet_images m ON u.imageID = m.imageID
 	WHERE w.id = " . $_GET["id"]);
 ?>
 <script language="javascript">
@@ -149,24 +145,20 @@ $t = db_grab("SELECT
 		</td>
 	</tr>
 	<? } 
-	echo drawThreadTop($t["title"], $t["description"], $t["created_user"], $t["first"] . " " . $t["last"], $t["imageID"], $t["width"], $t["height"], $t["created_date"]);
+	echo drawThreadTop($t["title"], $t["description"], $t["created_user"], $t["first"] . " " . $t["last"], $t["created_date"]);
 		$comments = db_query("SELECT 
 				c.id, 
 				c.description,
 				c.created_date,
 				c.created_user,
 				ISNULL(u.nickname, u.firstname) first,
-				u.lastname last,
-				u.imageID,
-				m.width,
-				m.height
+				u.lastname last
 			FROM wiki_topics_comments c
 			JOIN users u ON c.created_user = u.user_id
-			LEFT JOIN intranet_images m ON u.imageID = m.imageID
 			WHERE c.topicID = {$_GET["id"]}
 			ORDER BY c.created_date ASC");
 		while ($c = db_fetch($comments)) {
-			echo drawThreadComment($c["description"], $c["created_user"], $c["first"] . " " . $c["last"], $c["imageID"], $c["width"], $c["height"], $c["created_date"]);
+			echo drawThreadComment($c["description"], $c["created_user"], $c["first"] . " " . $c["last"], $c["created_date"]);
 		}
 		echo drawThreadCommentForm();
 	echo drawTableEnd();

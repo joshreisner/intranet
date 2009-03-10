@@ -18,13 +18,9 @@ echo drawTicketFilter();
 						t.priorityID,
 						t.created_date,
 						ISNULL(u.nickname, u.firstname) first,
-						u.lastname last,
-						u.imageID,
-						m.width,
-						m.height
+						u.lastname last
 					FROM helpdesk_tickets t
 					JOIN users  u ON u.user_id    = t.created_user
-					LEFT JOIN intranet_images m ON u.imageID   = m.imageID
 					WHERE t.ownerID = {$_GET["id"]} $where
 					ORDER BY t.created_date DESC");
 	$admin = db_grab("SELECT ISNULL(u.nickname, u.firstname) first FROM users u WHERE u.user_id = " . $_GET["id"]);

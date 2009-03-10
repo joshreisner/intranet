@@ -14,13 +14,9 @@ if ($posting) {
 				u.user_id,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
-				u.imageID,
-				m.width,
-				m.height,
 				t.created_date
 				FROM bb_topics t
 				JOIN users u ON t.created_user = u.user_id
-				LEFT JOIN intranet_images m ON u.imageID = m.imageID
 				WHERE t.id = " . $id);
 		
 		//construct email
@@ -28,7 +24,7 @@ if ($posting) {
 		$message .= drawServerMessage("<b>Note</b>: This is an Administration/Human Resources topic from the <a href='http://" . $server . "/bulletin_board/'>Intranet Bulletin Board</a>.  For more information, please contact the <a href='mailto:hrpayroll@seedco.org'>Human Resources Department</a>.");
 		$message .= '<table width="100%" cellpadding="3" cellspacing="1" border="0">';
 		$message .= drawHeaderRow("Email", 2);
-		$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["imageID"], $r["width"], $r["height"], $r["created_date"]);
+		$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
 		$message .= '</table>' . drawEmailFooter();
 		
 		$headers  = "MIME-Version: 1.0\r\n";

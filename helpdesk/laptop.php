@@ -103,18 +103,14 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 							u.user_id,
 							c.checkoutStart, 
 							c.checkoutEnd,
-							c.checkoutNotes,
-							u.imageID,
-							m.width,
-							m.height
+							c.checkoutNotes
 						FROM IT_Laptops_Checkouts c
 						INNER JOIN users u ON c.checkoutUser = u.user_id
-						LEFT  JOIN intranet_images m ON u.imageID = m.imageID
 						WHERE checkoutLaptopID = " . $_GET["id"] . "
 						ORDER BY checkoutStart DESC");
 	while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><?=drawName($r["user_id"],$r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"])?></td>
+		<td><?=drawName($r["user_id"],$r["first"] . " " . $r["last"])?></td>
 		<td><?=format_date($r["checkoutStart"]);?></td>
 		<td><?=format_date($r["checkoutEnd"]);?></td>
 		<td><?=nl2br($r["checkoutNotes"])?></td>

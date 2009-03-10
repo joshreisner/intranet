@@ -162,7 +162,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 	global $priorityOptions, $statusOptions, $ownerOptions, $typeOptions, $request, $colors, $locale;
 	$return  = '
 	<tr>
-		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["created_date"], true) . '</td>
+		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["created_date"], true) . '</td>
 		<td colspan="3"><a href="ticket.php?id=' . $r["id"] . '"><b>' . $r["title"] . '</b></a></td>
 		<td rowspan="2">' . draw_img($locale . "images/icons/delete.gif", deleteLink("Delete this ticket?", $r["id"], "delete", "ticketID")) . '</td>
 	</tr>
@@ -199,9 +199,6 @@ function emailITticket($id, $scenario, $admin=false) {
 			d.shortName department,
 			t.typeID,
 			y.description type,
-			u.imageID,
-			m.width,
-			m.height,
 			u2.email as ownerEmail,
 			t.ownerID,
 			ISNULL(u2.nickname, u2.firstname) as ownerName
@@ -209,7 +206,6 @@ function emailITticket($id, $scenario, $admin=false) {
 		LEFT  JOIN helpdesk_tickets_types y	ON t.typeID		= y.id
 		JOIN users  u	ON t.created_user	= u.user_id
 		JOIN departments d ON t.departmentID = d.departmentID
-		LEFT  JOIN intranet_images m	ON u.imageID	= m.imageID
 		LEFT  JOIN users  u2	ON t.ownerID	= u2.user_id
 		WHERE t.id = " . $id);
 		
@@ -258,7 +254,7 @@ function emailITticket($id, $scenario, $admin=false) {
 	//add owner if ticket is assigned
 	if ($ticket["ownerEmail"]) $admins[] = $ticket["ownerEmail"]; //owner logically has to be admin
 
-	$message .= drawThreadTop($ticket["title"], $ticket["description"], $ticket["user_id"], $ticket["first"] . " " . $ticket["last"], $ticket["imageID"], $ticket["width"], $ticket["height"], $ticket["created_date"]);
+	$message .= drawThreadTop($ticket["title"], $ticket["description"], $ticket["user_id"], $ticket["first"] . " " . $ticket["last"], $ticket["created_date"]);
 	
 	//second message for the admins -- this seems overly complicated!
 	$admin_message = $message;
@@ -272,17 +268,13 @@ function emailITticket($id, $scenario, $admin=false) {
 			u.lastname last,
 			u.email,
 			f.created_date,
-			u.imageID,
-			m.width,
-			m.height,
 			f.is_admin
 		FROM helpdesk_tickets_followups f
 		INNER JOIN users  u  ON f.created_user	= u.user_id
-		LEFT  JOIN intranet_images m  ON u.imageID		= m.imageID
 		WHERE f.ticketID = {$id} ORDER BY f.created_date");
 	while ($f = db_fetch($followups)) {
-		$admin_message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["imageID"], $f["width"], $f["height"], $f["created_date"], $f["is_admin"]);
-		if (!$f["is_admin"]) $message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["imageID"], $f["width"], $f["height"], $f["created_date"], $f["is_admin"]);
+		$admin_message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
+		if (!$f["is_admin"]) $message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
 		if ($f["isUserAdmin"]) {
 			$admins[] = $f["email"];
 		} else {

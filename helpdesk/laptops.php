@@ -37,13 +37,9 @@ if ($_SESSION["departmentID"] != 8) {
 						t.created_date,
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last,
-						(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT,
-						u.imageID,
-						m.width,
-						m.height
+						(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT
 					FROM helpdesk_tickets t
 					JOIN users u ON u.user_id    = t.created_user
-					LEFT  JOIN intranet_images m ON u.imageID   = m.imageID
 					WHERE t.statusID <> 9 AND t.typeID = 1
 					ORDER BY t.created_date DESC");
 if (db_found($result)) {?>

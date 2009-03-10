@@ -21,11 +21,8 @@ $r = db_grab("SELECT
 		p.is_admin is_adminPriority,
 		t.closedDate,
 		y.description type,
-		u.imageID,
 		s.is_active is_activeOwner,
 		ISNULL(s.nickname, s.firstname) ownerFirst,
-		m.width,
-		m.height,
 		MONTH(t.created_date) createdMonth,
 		YEAR(t.created_date) createdYear
 	FROM helpdesk_tickets t
@@ -34,7 +31,6 @@ $r = db_grab("SELECT
 	JOIN intranet_offices				o ON u.officeID		= o.id
 	LEFT JOIN users			s ON t.ownerID		= s.user_id
 	LEFT JOIN helpdesk_tickets_types	y ON t.typeID		= y.id
-	LEFT JOIN intranet_images			m ON u.imageID		= m.imageID
 	WHERE t.id = " . $_GET["id"]);
 
 //maybe ticketID is bad?
@@ -325,7 +321,7 @@ while ($t = db_fetch($types)) {
 	</form>
 	<? 
 $editurl = ($is_admin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
-echo drawThreadTop($r["title"], $r["description"], $r["created_user"], $r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["created_date"], $editurl);
+echo drawThreadTop($r["title"], $r["description"], $r["created_user"], $r["first"] . " " . $r["last"], $r["created_date"], $editurl);
 
 $result = db_query("SELECT
 					u.user_id,
@@ -333,17 +329,13 @@ $result = db_query("SELECT
 					ISNULL(u.nickname, u.firstname) first,
 					u.lastname last,
 					f.created_date,
-					u.imageID,
-					m.width,
-					m.height,
 					f.is_admin
 				FROM helpdesk_tickets_followups	f
 				JOIN users			u ON f.created_user	= u.user_id
-				LEFT JOIN intranet_images	m ON u.imageID		= m.imageID
 				WHERE f.ticketID = " . $_GET['id'] . "
 				ORDER BY f.created_date");
 while ($r = db_fetch($result)) {
-	echo drawThreadComment($r["message"], $r["user_id"], $r["first"] . " " . $r["last"], $r["imageID"], $r["width"], $r["height"], $r["created_date"], $r["is_admin"]);
+	echo drawThreadComment($r["message"], $r["user_id"], $r["first"] . " " . $r["last"], $r["created_date"], $r["is_admin"]);
 }
 
 echo drawThreadCommentForm(true);

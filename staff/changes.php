@@ -46,6 +46,7 @@ echo drawTableEnd();
 
 echo drawTableStart();
 $result = db_query("SELECT 
+			u.user_id,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
 			u.title,
@@ -64,7 +65,7 @@ $result = db_query("SELECT
 			<th width="20%" align="right">Last Day</th>
 		</tr>
 		<? while ($r = db_fetch($result)) {
-			verifyImage($r["imageID"]);
+			verifyImage($r["user_id"]);
 		?>
 		<tr bgcolor="#FFFFFF" class="helptext" valign="top" height="38">
 			<td align="center"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><img src="<?=$locale?>staff/<?=$r["user_id"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
