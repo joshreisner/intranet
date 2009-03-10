@@ -119,9 +119,9 @@ if (isset($_GET["id"])) {
 		WHERE u.user_id = " . $_GET["id"]);
 		
 	if (($_GET["id"] == $_SESSION["user_id"]) && ($_SESSION["update_days"] > 90)) {
-		echo drawServerMessage("Your personal info hasn't been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff (and their assistants) have access to it.");
+		echo drawServerMessage(getString("staff_update"));
 	} elseif (empty($_SESSION["updated_date"])) {
-		echo drawServerMessage("Welcome to the Intranet!  Since this is your first time logging in, please make certain that the staff information here is correct, then click 'save changes' at the bottom.  (The emergency and home info is private and optional.)");
+		echo drawServerMessage(getString("staff_firsttime"));
 	}
 } elseif (isset($_GET["requestID"])) {
 	$r = db_grab("SELECT 
@@ -157,7 +157,7 @@ $form->addRow("itext",  "Email", "email", @$r["email"], "", true, 50);
 
 $form->addRow("itext",  "Title", "title", @$r["title"], "", false, 100);
 $form->addRow("select", "Organization", "corporationID", "SELECT id, description FROM organizations ORDER BY description", @$r["corporationID"], false);
-if ($locale != "/_soc.joshreisner.site/") {
+if ($locale != "/_soc.joshreisner.com/") {
 	$form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
 	$form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_offices order by name", @$r["officeID"], true);
 }
@@ -167,7 +167,7 @@ $form->addRow("textarea-plain", "Bio", "bio", @$r["bio"]);
 
 if ($is_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
 	$form->addGroup("Administrative Information [public, but not editable by staff]");
-	if ($locale != "/_soc.joshreisner.site/") $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
+	if ($locale != "/_soc.joshreisner.com/") $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);
 	if ($_SESSION["is_admin"]) $form->addCheckbox("is_admin", "Site Admin", $r["is_admin"]);
@@ -175,7 +175,7 @@ if ($is_admin) { //some fields are admin-only (we don't want people editing the 
 	$form->addRow("file", "Image", "userfile");
 }
 
-if ($locale != "/_soc.joshreisner.site/") {
+if ($locale != "/_soc.joshreisner.com/") {
 	$form->addGroup("Home Contact Information [private]");
 	$form->addRow("itext", "Address 1", "homeAddress1", @$r["homeAddress1"], "", false);
 	$form->addRow("itext", "Address 2", "homeAddress2", @$r["homeAddress2"], "", false);

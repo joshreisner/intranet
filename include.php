@@ -5,22 +5,32 @@ if (!isset($_SESSION["user_id"])) $_SESSION["user_id"] = false;
 if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
 //joshlib & localize
-$locale = "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
-$_josh["config"] = $locale . "config.php";
+$locale				= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
+$_josh["config"]	= $locale . "config.php";
+//$_josh["debug"]		= true;
+$_josh["mode"]		= "dev";
 
 @extract(includeLibrary()) or die("Can't locate library! " . $_SERVER["DOCUMENT_ROOT"]);
-//debug();
 
 //apply security
 if (!$pageIsPublic) {
-	if (!$_SESSION["user_id"] && !login(@$_COOKIE["last_login"], "", true)) url_change("/?goto=" . urlencode($_josh["request"]["path_query"]));
+	error_debug("page is not public");
+	if (!$_SESSION["user_id"]) {
+		error_debug("user_id session not set");
+		if (!login(@$_COOKIE["last_login"], "", true)) {
+			error_debug("couldn't log in with " . @$_COOKIE["last_login"] . ", redirecting");
+			url_change("/?goto=" . urlencode($_josh["request"]["path_query"]));
+		}
+	} 
 
 	//determine location & scenario
+	error_debug("user is logged in, determining location & scenario");
 	$page		= getPage();
 	$location	= $_josh["request"]["folder"];
 	$uploading	= (isset($_FILES["userfile"]["tmp_name"]) && !empty($_FILES["userfile"]["tmp_name"])) ? true : false;
 
 	//get modules info
+	error_debug("getting modules");
 	$result = db_query("SELECT 
 			m.id,
 			p.url,
@@ -53,11 +63,14 @@ if (!$pageIsPublic) {
 	ksort($areas);
 	
 	//indicate admin privileges for the current module
-	$is_admin = (isset($modules[$page["module_id"]])) ? $modules[$page["module_id"]]["is_admin"] : false;
-	if ($_SESSION["is_admin"]) $is_admin = true;
+	if (!$_SESSION["is_admin"]) {
+		$is_admin = (isset($modules[$page["module_id"]])) ? $modules[$page["module_id"]]["is_admin"] : false;
+	} else {
+		$is_admin = true;
+	}
 	
-	//check to see if user needs update
-	//todo make this a preference
+	//check to see if user needs update ~ todo make this a preference
+	error_debug("checking if user needs update");
 	if (($_SESSION["update_days"] > 90 || empty($_SESSION["updated_date"])) && ($_josh["request"]["path"] != "/staff/add_edit.php")) {
 		error_debug("user needs address update");
 		url_change("/staff/add_edit.php?id=" . $_SESSION["user_id"]);
@@ -78,6 +91,7 @@ if (!$pageIsPublic) {
 	}
 
 	//get helpdesk pallet info
+	error_debug("getting helpdesk pallet info");
 	$helpdeskOptions = db_table("SELECT 
 			d.departmentID id, 
 			d.shortName name, 
@@ -137,13 +151,13 @@ error_debug("done processing include!");
 		if (!mail($address, $title, $message, $headers)) error_handle("Couldn't Send Email", "The message to " . $address . " was rejected by the mailserver for some reason", true);
 	}
 	
-	function error_email($msg="Undefined error message") {
+	function errorNotify($msg="Undefined error message") {
 		global $_SESSION, $_josh;
 		//if (isset($_josh["email_default"]) && ($_SESSION["user_id"] != 1)) {
 		if (isset($_josh["email_default"]) && isset($_josh["email_admin"])) {
 			if ($_SESSION["user_id"]) {
 				if ($_josh["email_admin"] == $_SESSION["email"]) return;
-				$msg = str_replace("<!--user-->", "<a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $_SESSION["user_id"] . "'>" . $_SESSION["full_name"] . "</a>", $msg);
+				$msg = str_replace("<!--user-->", "<a href='" . url_base() . "/staff/view.php?id=" . $_SESSION["user_id"] . "'>" . $_SESSION["full_name"] . "</a>", $msg);
 			} else {
 				$msg = str_replace("<!--user-->", "<i>User ID not set yet</i>", $msg);
 			}
@@ -182,6 +196,7 @@ error_debug("done processing include!");
 			//login was good
 			db_query("UPDATE users SET lastlogin = GETDATE() WHERE user_id = " . $user["id"]);
 			$_SESSION["user_id"]		= $user["id"];
+			$_SESSION["is_admin"]		= $user["is_admin"];
 			$_SESSION["email"]			= $user["email"];
 			$_SESSION["homepage"]		= ($user["homepage"]) ? $user["homepage"] : "/bb/";
 			$_SESSION["departmentID"]	= $user["departmentID"];
@@ -191,13 +206,13 @@ error_debug("done processing include!");
 			$_SESSION["updated_date"]	= $user["updated_date"];
 			$_SESSION["password"]		= $user["password"];
 			$_SESSION["full_name"]		= $user["firstname"] . " " . $user["lastname"];
-			$_SESSION["is_admin"]		= $user["is_admin"];
 			
 			cookie("last_login", $user["email"]);
 			cookie("last_email", $user["email"]);
 			
 			return true;
-		}		
+		}
+		$_SESSION["user_id"]		= false;
 		return false;
 	}
 	
@@ -215,6 +230,7 @@ error_debug("done processing include!");
 	function getString($key) {
 		global $_josh, $strings, $locale;
 		if (!isset($strings)) include($_josh["root"] . $locale . "strings.php");
+		if (!isset($strings[$key])) $strings[$key] = "";
 		return $strings[$key];
 	}
 	
@@ -587,7 +603,7 @@ error_debug("done processing include!");
 				$field = substr($field, 1);
 				if (isset($_POST[$field])) {
 					if (url_id()) {
-						$query1[] = $field . " = " . format_html($_POST[$field]);
+						$query1[] = $field . " = '" . format_html($_POST[$field]) . "'";
 					} else {
 						$query1[] = $field;
 						$query2[] = "'" . format_html($_POST[$field]) . "'";

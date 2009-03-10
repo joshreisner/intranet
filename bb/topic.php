@@ -3,9 +3,9 @@
 if ($posting) {
 	$_POST["description"] = format_html($_POST["message"]);
 	$_POST["topicID"] = $_GET["id"];
+	$_GET["id"] = false; //stupid hack for db_enter
 	$id = db_enter("bb_followups", "topicID |description");
-	db_grab("SELECT topicID FROM bb_followups WHERE id = " . $id);
-	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " .  $_GET["id"]);
+	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " .  db_grab("SELECT topicID FROM bb_followups WHERE id = " . $id));
 	syndicateBulletinBoard();
 	url_change();
 }
@@ -100,7 +100,7 @@ if ($r["is_admin"]) echo drawServerMessage(getString("bb_admin"));
 				WHERE f.is_active = 1 AND f.topicID = {$_GET["id"]}
 				ORDER BY f.created_date");
 		while ($f = db_fetch($followups)) { 
-			echo drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["imageID"], $f["width"], $f["height"], $f["postedDate"]);
+			echo drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["postedDate"]);
 		}
 		echo drawThreadCommentForm(false);
 	}

@@ -181,9 +181,10 @@ table.left td.empty {
 	color:#666; 
 }
 
-table.nospacing { border-spacing:1px; }
+table.nospacing { line-height:12px; font-size:10px; border:none; padding:0px; }
 table.nospacing tr { background-color:transparent; }
-table.nospacing td { height:20px; vertical-align:middle; padding:2px; }
+table.nospacing td { height:10px; vertical-align:middle; padding:0px; margin:0px; }
+table.nospacing td input.checkbox { border:none; height:auto; margin:2px 2px 4px 0px; }
 
 table.right {
 	width:290px; 

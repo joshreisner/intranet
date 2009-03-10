@@ -9,12 +9,12 @@ if (url_action("logout")) {
 	$redirect = "/";
 } elseif (login(@$_COOKIE["last_login"], "", true)) { //log in with last login
 	error_debug("<b>index.php</b> Cookie Found (good)");
-	$redirect = (!empty($_GET["goto"])) ? $_GET["goto"] : $_SESSION["homepage"];
+	$redirect = (empty($_GET["goto"])) ? $_SESSION["homepage"] : $_GET["goto"];
 } elseif ($posting) { //logging in
 	error_debug("<b>index.php</b> Posting");
 	if (login($_POST["email"], $_POST["password"])) {
 		error_debug("<b>index.php</b> Login successful");
-		$redirect = (!empty($_POST["goto"])) ? $_POST["goto"] : $_SESSION["homepage"];
+		$redirect = (empty($_POST["goto"])) ? $_SESSION["homepage"] : $_POST["goto"];
    	} else {
 		error_debug("<b>index.php</b> Login unsuccessful");
 		$redirect = "/";

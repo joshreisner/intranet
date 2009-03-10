@@ -18,5 +18,5 @@ if (db_found($result)) {
 	</tr>
 	<? }
 } else {
-	echo drawEmptyResult("No Documents Added Yet", 2);
+	echo drawEmptyResult("No documents added yet.", 2);
 }

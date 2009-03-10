@@ -33,7 +33,7 @@ echo drawJumpToStaff();
 			<td class="text">
 				<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
 				<?=$s["title"]?><br>
-				<? if ($locale != "/_soc.joshreisner.site/") {?><?=$s["departmentName"]?><br>
+				<? if ($locale != "/_soc.joshreisner.com/") {?><?=$s["departmentName"]?><br>
 				<?=$s["office"]?><br><? }?>
 				<?=$s["bio"]?>
 			</td>

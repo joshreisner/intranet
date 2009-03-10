@@ -49,88 +49,89 @@ if ($prevmonth == 0) {
 }
 
 //HOLIDAYS
-$count = 0;
-if ($_GET['month'] == 1) {
-	//new year's day
-	$holidays[1] = "New Year's Day";
-	if (date("w", mktime(0,0,0,1,1,$_GET["year"])) == 0) $holidays[2] = "New Year's";
-
-	//martin luther king day -- 3rd monday in jan
-	for ($i = 1; $i < 32; $i++) {
-		if (date("w", mktime(0,0,0,1,$i,$_GET["year"])) == 1) $count++;
-		if ($count == 3) {
-			$holidays[$i] = "Martin Luther King Day";
-			break;
+if ($locale != "/_soc.joshreisner.com/") {
+	$count = 0;
+	if ($_GET['month'] == 1) {
+		//new year's day
+		$holidays[1] = "New Year's Day";
+		if (date("w", mktime(0,0,0,1,1,$_GET["year"])) == 0) $holidays[2] = "New Year's";
+	
+		//martin luther king day -- 3rd monday in jan
+		for ($i = 1; $i < 32; $i++) {
+			if (date("w", mktime(0,0,0,1,$i,$_GET["year"])) == 1) $count++;
+			if ($count == 3) {
+				$holidays[$i] = "Martin Luther King Day";
+				break;
+			}
 		}
-	}
-} elseif ($_GET['month'] == 2) {
-	//president's day -- 3rd monday in feb
-	for ($i = 1; $i <= $lastday; $i++) {
-		if (date("w", mktime(0,0,0,2,$i,$_GET["year"])) == 1) $count++;
-		if ($count == 3) {
-			$holidays[$i] = "President's Day";
-			break;
+	} elseif ($_GET['month'] == 2) {
+		//president's day -- 3rd monday in feb
+		for ($i = 1; $i <= $lastday; $i++) {
+			if (date("w", mktime(0,0,0,2,$i,$_GET["year"])) == 1) $count++;
+			if ($count == 3) {
+				$holidays[$i] = "President's Day";
+				break;
+			}
 		}
-	}
-} elseif ($_GET['month'] == 5) {
-	//memorial day -- last monday in may
-	for ($i = 31; $i > 0; $i--) {
-		if (date("w", mktime(0,0,0,5,$i,$_GET["year"])) == 1) {
-			$holidays[$i] = "Memorial Day";
-			break;
+	} elseif ($_GET['month'] == 5) {
+		//memorial day -- last monday in may
+		for ($i = 31; $i > 0; $i--) {
+			if (date("w", mktime(0,0,0,5,$i,$_GET["year"])) == 1) {
+				$holidays[$i] = "Memorial Day";
+				break;
+			}
 		}
-	}
-} elseif ($_GET['month'] == 7) {
-	//fourth of july
-	if (date("w", mktime(0,0,0,7,4,$_GET["year"])) == 6) $holidays[3] = "Independence Day";
-	if (date("w", mktime(0,0,0,7,4,$_GET["year"])) == 0) $holidays[5] = "Independence Day";
-	$holidays[4] = "Independence Day";
-} elseif ($_GET['month'] == 9) {
-	//labor day -- first monday in sept
-	for ($i = 1; $i < 31; $i++) {
-		if (date("w", mktime(0,0,0,9,$i,$_GET["year"])) == 1) {
-			$holidays[$i] = "Labor Day";
-			break;
+	} elseif ($_GET['month'] == 7) {
+		//fourth of july
+		if (date("w", mktime(0,0,0,7,4,$_GET["year"])) == 6) $holidays[3] = "Independence Day";
+		if (date("w", mktime(0,0,0,7,4,$_GET["year"])) == 0) $holidays[5] = "Independence Day";
+		$holidays[4] = "Independence Day";
+	} elseif ($_GET['month'] == 9) {
+		//labor day -- first monday in sept
+		for ($i = 1; $i < 31; $i++) {
+			if (date("w", mktime(0,0,0,9,$i,$_GET["year"])) == 1) {
+				$holidays[$i] = "Labor Day";
+				break;
+			}
 		}
-	}
-} elseif ($_GET['month'] == 10) {
-	//columbus day -- second monday in oct
-	for ($i = 1; $i < 32; $i++) {
-		if (date("w", mktime(0,0,0,10,$i,$_GET["year"])) == 1) $count++;
-		if ($count == 2) {
-			$holidays[$i] = "Columbus Day";
-			break;
+	} elseif ($_GET['month'] == 10) {
+		//columbus day -- second monday in oct
+		for ($i = 1; $i < 32; $i++) {
+			if (date("w", mktime(0,0,0,10,$i,$_GET["year"])) == 1) $count++;
+			if ($count == 2) {
+				$holidays[$i] = "Columbus Day";
+				break;
+			}
 		}
-	}
-} elseif ($_GET['month'] == 11) {
-	//thanksgiving -- 4th thursday in nov
-	for ($i = 1; $i < 31; $i++) {
-		if (date("w", mktime(0,0,0,11,$i,$_GET["year"])) == 4) $count++;
-		if ($count == 4) {
-			$holidays[$i] = "Thanksgiving";
-			$holidays[$i+1] = "Day After Thanksgiving";
-			break;
+	} elseif ($_GET['month'] == 11) {
+		//thanksgiving -- 4th thursday in nov
+		for ($i = 1; $i < 31; $i++) {
+			if (date("w", mktime(0,0,0,11,$i,$_GET["year"])) == 4) $count++;
+			if ($count == 4) {
+				$holidays[$i] = "Thanksgiving";
+				$holidays[$i+1] = "Day After Thanksgiving";
+				break;
+			}
 		}
-	}
-} elseif ($_GET['month'] == 12) {
-	//obscure possibility that friday after thanksgiving is 12/1
-	for ($i = 1; $i < 31; $i++) {
-		if (date("w", mktime(0,0,0,11,$i,$_GET["year"])) == 4) $count++;
-		if ($count == 4) {
-			if ($i == 30) $holidays[1] = "Day After Thanksgiving";
-			break;
+	} elseif ($_GET['month'] == 12) {
+		//obscure possibility that friday after thanksgiving is 12/1
+		for ($i = 1; $i < 31; $i++) {
+			if (date("w", mktime(0,0,0,11,$i,$_GET["year"])) == 4) $count++;
+			if ($count == 4) {
+				if ($i == 30) $holidays[1] = "Day After Thanksgiving";
+				break;
+			}
 		}
+	
+		//christmas
+		$holidays[25] = "Christmas Day";
+		if (date("w", mktime(0,0,0,12,25,$_GET["year"])) == 6) $holidays[24] = "Christmas";
+		if (date("w", mktime(0,0,0,12,25,$_GET["year"])) == 0) $holidays[26] = "Christmas";
+	
+		//obscure possibility that new year's is on a saturday; take friday off (score)
+		if (date("w", mktime(0,0,0,12,31,$_GET["year"])) == 5) $holidays[31] = "New Year's";
 	}
-
-	//christmas
-	$holidays[25] = "Christmas Day";
-	if (date("w", mktime(0,0,0,12,25,$_GET["year"])) == 6) $holidays[24] = "Christmas";
-	if (date("w", mktime(0,0,0,12,25,$_GET["year"])) == 0) $holidays[26] = "Christmas";
-
-	//obscure possibility that new year's is on a saturday; take friday off (score)
-	if (date("w", mktime(0,0,0,12,31,$_GET["year"])) == 5) $holidays[31] = "New Year's";
-}
-
+}	
 
 
 if (!isset($_GET["month"])) $_GET["month"] = $month;

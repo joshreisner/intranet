@@ -96,7 +96,7 @@ if (!$r["is_active"]) {
 	} else {
 		echo drawHeaderRow("View Staff Info", 3);
 	}
-	$rowspan = ($locale != "/_soc.joshreisner.site/") ? 8 : 6;
+	$rowspan = ($locale != "/_soc.joshreisner.com/") ? 8 : 6;
 	?>
 	<tr>
 		<td class="left">Name</td>
@@ -111,7 +111,7 @@ if (!$r["is_active"]) {
 		<td class="left">Title</td>
 		<td><?=$r["title"]?></td>
 	</tr>
-	<? if ($locale != "/_soc.joshreisner.site/") {?>
+	<? if ($locale != "/_soc.joshreisner.com/") {?>
 	<tr>
 		<td class="left">Department</td>
 		<td><?=$r["departmentName"]?></td>
@@ -182,7 +182,7 @@ if (!$r["is_active"]) {
 		<td class="left">Invite</td>
 		<td colspan="2"><a href="<?=deleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
 	</tr>
-	<? if ($locale != "/_soc.joshreisner.site/") {?>
+	<? if ($locale != "/_soc.joshreisner.com/") {?>
 	<tr>
 		<td class="left">Rank</td>
 		<td colspan="2"><?=$r["rank"]?></td>
@@ -217,7 +217,7 @@ if (!$r["is_active"]) {
 	</tr>
 	<? }
 	
-	if ($locale != "/_soc.joshreisner.site/") {?>
+	if ($locale != "/_soc.joshreisner.com/") {?>
 	<tr class="group">
 		<td colspan="3">Home Contact Information [private]</td>
 	</tr>
