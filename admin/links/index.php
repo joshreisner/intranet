@@ -13,17 +13,18 @@ drawTop();
 
 echo drawTableStart();
 echo drawHeaderRow(false, 5, "new", "#bottom");?>
-<tr>
-	<th style="text-align:left;">Link</th>
-	<th style="text-align:left;">Address</th>
-	<th style="width:16px;"></th>
-	<th style="width:16px;"></th>
-	<th style="width:16px;"></th>
-</tr>
 <?
 $links = db_query("SELECT id, text, url FROM links WHERE is_active = 1 ORDER BY precedence");
 if ($max = db_found($links)) {
-	$counter = 1;
+	$counter = 1;?>
+	<tr>
+		<th style="text-align:left;">Link</th>
+		<th style="text-align:left;">Address</th>
+		<th style="width:16px;"></th>
+		<th style="width:16px;"></th>
+		<th style="width:16px;"></th>
+	</tr>
+	<?
 	while ($l = db_fetch($links)) {?>
 		<tr>
 			<td><?=$l["text"]?></td>
@@ -36,7 +37,7 @@ if ($max = db_found($links)) {
 	$counter++;
 	}
 } else {
-	echo drawEmptyResult("No links entered in the system yet!");
+	echo drawEmptyResult("No links entered in the system yet!", 5);
 }
 echo drawTableEnd();
 

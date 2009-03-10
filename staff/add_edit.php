@@ -7,14 +7,15 @@ if ($posting) {
 	//make checkboxes into bits
 	$_POST["email"]				= strtolower($_POST["email"]);
 	$_POST["phone"]				= format_phone($_POST["phone"]);
-	$_POST["homePhone"]			= format_phone($_POST["homePhone"]);
-	$_POST["homeCell"]			= format_phone($_POST["homeCell"]);
-	$_POST["emerCont1Phone"]	= format_phone($_POST["emerCont1Phone"]);
-	$_POST["emerCont1Cell"]		= format_phone($_POST["emerCont1Cell"]);
-	$_POST["emerCont2Phone"]	= format_phone($_POST["emerCont2Phone"]);
-	$_POST["emerCont2Cell"]		= format_phone($_POST["emerCont2Cell"]);
+	$_POST["homePhone"]			= format_phone(@$_POST["homePhone"]);
+	$_POST["homeCell"]			= format_phone(@$_POST["homeCell"]);
+	$_POST["emerCont1Phone"]	= format_phone(@$_POST["emerCont1Phone"]);
+	$_POST["emerCont1Cell"]		= format_phone(@$_POST["emerCont1Cell"]);
+	$_POST["emerCont2Phone"]	= format_phone(@$_POST["emerCont2Phone"]);
+	$_POST["emerCont2Cell"]		= format_phone(@$_POST["emerCont2Cell"]);
 	
 	format_post_nulls("departmentID,officeID,rankID");
+		
 	if ($is_admin) {
 		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
 		$id = db_enter("users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
@@ -32,9 +33,16 @@ if ($posting) {
 			$name = str_replace("'", "", ($_POST["nickname"] == "NULL") ? $_POST["firstname"] : $_POST["nickname"]);
 			email_invite($id, $email_address, $name);
 		}
+		
 		//update permissions
 		db_checkboxes("permissions", "users_to_modules", "user_id", "module_id", $id);
 
+		//handle is_admin
+		if ($_SESSION["is_admin"]) {
+			format_post_bits("is_admin");
+			db_query("UPDATE users SET is_admin = {$_POST["is_admin"]} WHERE user_id = " . $id);
+		}
+		
 		//check long distance code
 		if (($locale == "/_seedco/") && ($_POST["officeID"] == "1")) {
 			if (!db_grab("SELECT longdistancecode FROM users WHERE user_id = " . $id)) {
@@ -42,6 +50,7 @@ if ($posting) {
 				db_query("UPDATE users SET longDistanceCode = {$code} WHERE user_id = " . $id);
 			}
 		}
+		
 	} else {
 		$id = db_enter("users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
 	}
@@ -83,6 +92,7 @@ if (isset($_GET["id"])) {
 		u.officeID, 
 		u.corporationID,
 		u.departmentID,
+		u.is_admin,
 		u.homeAddress1,
 		u.homeAddress2,
 		u.homeCity,
@@ -124,6 +134,7 @@ if (isset($_GET["id"])) {
 		u.phone, 
 		u.officeID, 
 		u.corporationID,
+		u.is_admin,
 		u.departmentID,
 		u.created_date,
 		GETDATE() startDate
@@ -146,43 +157,49 @@ $form->addRow("itext",  "Email", "email", @$r["email"], "", true, 50);
 
 $form->addRow("itext",  "Title", "title", @$r["title"], "", false, 100);
 $form->addRow("select", "Organization", "corporationID", "SELECT id, description FROM organizations ORDER BY description", @$r["corporationID"], false);
-$form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
-$form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_offices order by name", @$r["officeID"], true);
+if ($locale != "/_soc.joshreisner.site/") {
+	$form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
+	$form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_offices order by name", @$r["officeID"], true);
+}
+
 $form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 14);
 $form->addRow("textarea-plain", "Bio", "bio", @$r["bio"]);
 
 if ($is_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
 	$form->addGroup("Administrative Information [public, but not editable by staff]");
-	$form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
+	if ($locale != "/_soc.joshreisner.site/") $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);
-	$form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
+	if ($_SESSION["is_admin"]) $form->addCheckbox("is_admin", "Site Admin", $r["is_admin"]);
+	if (!$r["is_admin"]) $form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
 	$form->addRow("file", "Image", "userfile");
 }
 
-$form->addGroup("Home Contact Information [private]");
-$form->addRow("itext", "Address 1", "homeAddress1", @$r["homeAddress1"], "", false);
-$form->addRow("itext", "Address 2", "homeAddress2", @$r["homeAddress2"], "", false);
-$form->addRow("itext", "City", "homeCity", @$r["homeCity"], "", false);
-$form->addRow("select", "State", "homeStateID", "SELECT stateID, stateName from intranet_us_states order by stateName", @$r["homeStateID"], false);
-$form->addRow("itext", "ZIP", "homeZIP", @$r["homeZIP"], "", false, 5);
-$form->addRow("itext", "Home Phone", "homePhone", @format_phone($r["homePhone"]), "", false, 14);
-$form->addRow("itext", "Cell Phone", "homeCell", @format_phone($r["homeCell"]), "", false, 14);
-$form->addRow("itext", "Personal Email", "homeEmail", @$r["homeEmail"], "", false);
+if ($locale != "/_soc.joshreisner.site/") {
+	$form->addGroup("Home Contact Information [private]");
+	$form->addRow("itext", "Address 1", "homeAddress1", @$r["homeAddress1"], "", false);
+	$form->addRow("itext", "Address 2", "homeAddress2", @$r["homeAddress2"], "", false);
+	$form->addRow("itext", "City", "homeCity", @$r["homeCity"], "", false);
+	$form->addRow("select", "State", "homeStateID", "SELECT stateID, stateName from intranet_us_states order by stateName", @$r["homeStateID"], false);
+	$form->addRow("itext", "ZIP", "homeZIP", @$r["homeZIP"], "", false, 5);
+	$form->addRow("itext", "Home Phone", "homePhone", @format_phone($r["homePhone"]), "", false, 14);
+	$form->addRow("itext", "Cell Phone", "homeCell", @format_phone($r["homeCell"]), "", false, 14);
+	$form->addRow("itext", "Personal Email", "homeEmail", @$r["homeEmail"], "", false);
 
-$form->addGroup("First Emergency Contact [private]");
-$form->addRow("itext", "Name", "emerCont1Name", @$r["emerCont1Name"], "", false);
-$form->addRow("itext", "Relationship", "emerCont1Relationship", @$r["emerCont1Relationship"], "", false);
-$form->addRow("itext", "Phone", "emerCont1Phone", @format_phone($r["emerCont1Phone"]), "", false, 14);
-$form->addRow("itext", "Cell", "emerCont1Cell", @format_phone($r["emerCont1Cell"]), "", false, 14);
-$form->addRow("itext", "Email", "emerCont1Email", @$r["emerCont1Email"], "", false);
-
-$form->addGroup("Second Emergency Contact [private]");
-$form->addRow("itext", "Name", "emerCont2Name", @$r["emerCont2Name"], "", false);
-$form->addRow("itext", "Relationship", "emerCont2Relationship", @$r["emerCont2Relationship"], "", false);
-$form->addRow("itext", "Phone", "emerCont2Phone", @format_phone($r["emerCont2Phone"]), "", false, 14);
-$form->addRow("itext", "Cell", "emerCont2Cell", @format_phone($r["emerCont2Cell"]), "", false, 14);
-$form->addRow("itext", "Email", "emerCont2Email", @$r["emerCont2Email"], "", false);
+	$form->addGroup("First Emergency Contact [private]");
+	$form->addRow("itext", "Name", "emerCont1Name", @$r["emerCont1Name"], "", false);
+	$form->addRow("itext", "Relationship", "emerCont1Relationship", @$r["emerCont1Relationship"], "", false);
+	$form->addRow("itext", "Phone", "emerCont1Phone", @format_phone($r["emerCont1Phone"]), "", false, 14);
+	$form->addRow("itext", "Cell", "emerCont1Cell", @format_phone($r["emerCont1Cell"]), "", false, 14);
+	$form->addRow("itext", "Email", "emerCont1Email", @$r["emerCont1Email"], "", false);
+	
+	$form->addGroup("Second Emergency Contact [private]");
+	$form->addRow("itext", "Name", "emerCont2Name", @$r["emerCont2Name"], "", false);
+	$form->addRow("itext", "Relationship", "emerCont2Relationship", @$r["emerCont2Relationship"], "", false);
+	$form->addRow("itext", "Phone", "emerCont2Phone", @format_phone($r["emerCont2Phone"]), "", false, 14);
+	$form->addRow("itext", "Cell", "emerCont2Cell", @format_phone($r["emerCont2Cell"]), "", false, 14);
+	$form->addRow("itext", "Email", "emerCont2Email", @$r["emerCont2Email"], "", false);
+}
 
 $form->addRow("submit",   "Save Changes");
 if (isset($_GET["id"])) {

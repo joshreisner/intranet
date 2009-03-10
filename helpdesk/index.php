@@ -92,8 +92,8 @@ echo drawServerMessage($helpdeskStatus, "center");
 					WHERE (t.statusID <> 9 OR t.statusID IS NULL) $department
 					ORDER BY d.shortName, t.created_date DESC");
 	$lastDept = "";
-	$num = db_found($result);
-	if ($num) {
+	$count = db_found($result);
+	if ($count) {
 		echo drawHeaderRow($deptName . " Open Tickets", 4, "new", "#bottom");
 		?>
 	<tr>

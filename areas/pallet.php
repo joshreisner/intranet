@@ -1,7 +1,7 @@
 <?
 $left = true;
 foreach ($areas as $a) {
-	if (!$modules[$a]["isPublic"] && !$modules[$a]["is_admin"]) continue;
+	if (!$_SESSION["is_admin"] && !$modules[$a]["isPublic"] && !$modules[$a]["is_admin"]) continue;
 	if ($left) echo "<tr>";
 	echo '<td width="50%"><a href="' . $modules[$a]["url"] . '">' . $modules[$a]["name"] . '</a></td>';
 	if (!$left) echo "</tr>";

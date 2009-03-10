@@ -86,7 +86,7 @@ if ($posting) {
 <html>
 	<head>
 		<title>Request an Account</title>
-		<link rel="stylesheet" type="text/css" href="<?=$locale?>style.css" />
+		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
 			<script language="javascript" type="text/javascript" src="/javascript.js"></script>
 			<script language="javascript" type="text/javascript" src="<?=$locale?>tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 			<script language="javascript">

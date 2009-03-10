@@ -7,31 +7,31 @@ if (url_action("delete")) {
 
 drawTop();
 
-?>
-<table class="left" cellspacing="1">
-    <? if ($is_admin) {
-    	$colspan = 4;
-	    echo drawHeaderRow("List", $colspan, "add", "add_edit.php");
-    } else {
-    	$colspan = 4;
-	    echo drawHeaderRow("List", $colspan);
-    }?>
+echo drawTableStart();
+if ($is_admin) {
+	$colspan = 4;
+	echo drawHeaderRow("List", $colspan, "add", "add_edit.php");
+} else {
+	$colspan = 3;
+    echo drawHeaderRow("List", $colspan);
+}
+$categories = db_query("SELECT 
+			c.id, 
+			c.description, 
+			(SELECT COUNT(*) FROM docs_to_categories d2c JOIN docs d ON d2c.documentID = d.id WHERE d2c.categoryID = c.id AND d.is_active = 1) docs 
+		FROM docs_categories c
+		WHERE (SELECT COUNT(*) FROM docs_to_categories d2c JOIN docs d ON d2c.documentID = d.id WHERE d2c.categoryID = c.id AND d.is_active = 1) > 0
+		ORDER BY c.precedence");
+		
+if (db_found($categories)) {?>
 	<tr>
 		<th></th>
 		<th align="left">Name, Description</th>
 		<th align="right">Updated</th>
 		<? if ($is_admin) {?><th></th><? }?>
 	</tr>
-    <?
-    $categories = db_query("SELECT 
-    			c.id, 
-    			c.description, 
-    			(SELECT COUNT(*) FROM docs_to_categories d2c JOIN docs d ON d2c.documentID = d.id WHERE d2c.categoryID = c.id AND d.is_active = 1) docs 
-    		FROM docs_categories c
-    		ORDER BY c.precedence");
-	while ($c = db_fetch($categories)) {
-		if (!$c["docs"]) continue;
-		?>
+	<?
+	while ($c = db_fetch($categories)) { ?>
 		<tr class="group">
 			<td colspan="<?=$colspan?>"><?=$c["description"]?></td>
 		</tr>
@@ -56,6 +56,10 @@ drawTop();
 			<?=deleteColumn("Delete document?", $d["id"]);?>
 		</tr>
 	<? }
-} ?>
-</table>
-<? drawBottom(); ?>
+	}
+} else {
+	echo drawEmptyResult("No documents have been added yet.", $colspan);
+}
+echo drawTableEnd();
+drawBottom();
+?>

@@ -8,9 +8,11 @@ body {
 }
 
 #container 	{ width:900px; margin:0px auto 30px auto; text-align:left; }
-#left		{ float:left; width:590px; margin-bottom:50px; }
-#right		{ float:right; width:290px;   }
-#footer		{ float:right; clear:right; font-size:10px; color:#ccc; margin:10px 0px 50px 0px; }
+#left		{ float:left; width:590px; }
+#right		{ float:right; width:290px; }
+#footer		{ float:right; clear:right; font-size:10px; color:#ccc; margin:10px 0px 0px 0px; }
+#subfooter	{ clear:both; height:20px; }
+
 /* tag-specific */
 	form			{ margin:0px; padding:0px; }
 	a, a.out		{ color:#0000ff;  text-decoration:none; }
@@ -27,6 +29,7 @@ body {
 		background-color:#999; color:#fff; width:auto; padding:2px 20px 2px 20px; font-size:11px; text-transform:uppercase; 
 		height:auto;
 		vertical-align:middle;
+		cursor:pointer;
 	}
 	input.checkbox	{ width:auto; border:0px; padding:0px; margin:0px; background-color:transparent; }
 	input.file		{ border:none; }
@@ -48,7 +51,6 @@ body {
 	.r { text-align:right; }
 	.x { width:16px; }
 	
-	table.left td.text { position:relative; }
 	a.floating { margin:-42px -8px 0px 0px;  }
 	
 	a.left { float:left; margin-right:5px; }
@@ -129,7 +131,7 @@ body {
 	table.center td			{ padding:4px 3px 4px 3px; }
 	table.center tr			{ background-color:#fff; vertical-align:top; }
 	table.center td.head	{ padding:1px 2px 1px 4px; height:24px; font-size:13px; color:#fff; vertical-align:middle; }
-	table.center td.text	{ padding:15px; font-size:13px; line-height:20px; }
+	table.center td.text	{ padding:15px; font-size:13px; line-height:20px; position:relative; }
 	table.center td.left	{ background-color:#ededed; width:130px; }
 	table.center td.bottom { text-align:center; background-color:#ededed; }
 	div.emailfooter { 

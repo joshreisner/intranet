@@ -71,7 +71,7 @@ if (!isset($r["is_active"])) url_change("./");
 drawTop();
 verifyImage($_GET["id"]);
 
-if (!$img = draw_img($locale . "staff/" . $_GET["id"] . ".jpg")) $img = draw_img($locale . "images/to-be-taken.png");
+if (!$img = draw_img($locale . "staff/" . $_GET["id"] . "-large.jpg")) $img = draw_img($locale . "images/to-be-taken.png");
 
 echo drawJumpToStaff($_GET["id"]);
 
@@ -95,11 +95,13 @@ if (!$r["is_active"]) {
 		echo drawHeaderRow("View Staff Info", 3, "edit your info", "add_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Staff Info", 3);
-	} ?>
+	}
+	$rowspan = ($locale != "/_soc.joshreisner.site/") ? 8 : 6;
+	?>
 	<tr>
 		<td class="left">Name</td>
 		<td width="99%" class="big"><?=$r["firstname"]?> <? if ($r["nickname"]) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
-		<td rowspan="8" style="width:271px; text-align:center; vertical-align:middle;"><?=$img?></td>
+		<td rowspan="<?=$rowspan?>" style="width:271px; text-align:center; vertical-align:middle;"><?=$img?></td>
 	</tr>
 	<tr>
 		<td class="left">Organization</td>
@@ -109,6 +111,7 @@ if (!$r["is_active"]) {
 		<td class="left">Title</td>
 		<td><?=$r["title"]?></td>
 	</tr>
+	<? if ($locale != "/_soc.joshreisner.site/") {?>
 	<tr>
 		<td class="left">Department</td>
 		<td><?=$r["departmentName"]?></td>
@@ -117,6 +120,7 @@ if (!$r["is_active"]) {
 		<td class="left">Office</td>
 		<td><?=$r["office"]?></td>
 	</tr>
+	<? }?>
 	<tr>
 		<td class="left">Phone</td>
 		<td><?=format_phone($r["phone"])?></td>
@@ -178,10 +182,12 @@ if (!$r["is_active"]) {
 		<td class="left">Invite</td>
 		<td colspan="2"><a href="<?=deleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
 	</tr>
+	<? if ($locale != "/_soc.joshreisner.site/") {?>
 	<tr>
 		<td class="left">Rank</td>
 		<td colspan="2"><?=$r["rank"]?></td>
 	</tr>
+	<? } ?>
 	<tr>
 		<td class="left">Permissions</td>
 		<td colspan="2">
@@ -209,7 +215,9 @@ if (!$r["is_active"]) {
 			
 		</td>
 	</tr>
-	<? }?>
+	<? }
+	
+	if ($locale != "/_soc.joshreisner.site/") {?>
 	<tr class="group">
 		<td colspan="3">Home Contact Information [private]</td>
 	</tr>
@@ -253,6 +261,7 @@ if (!$r["is_active"]) {
 			<?=$r["emerCont2Email"]?>
 		</td>
 	</tr>
-	<? }?>
+	<? }
+	}?>
 </table>
 <? drawBottom();?>

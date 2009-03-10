@@ -33,48 +33,50 @@ if (url_action("delete")) {
 }
 
 drawTop();
-?>
-
-<table class="left" cellspacing="1">
-	<? if ($is_admin) {
-		$colspan = 3;
-		echo drawHeaderRow("Board Members", $colspan, "new", "#bottom");
-	} else {
-		$colspan = 3;
-		echo drawHeaderRow("Board Members", $colspan);
-	}?>
+echo drawTableStart();
+if ($is_admin) {
+	$colspan = 2;
+	echo drawHeaderRow("Board Members", $colspan, "new", "#bottom");
+} else {
+	$colspan = 3;
+	echo drawHeaderRow("Board Members", $colspan);
+}
+$result = db_query("SELECT
+				m.id,
+				m.firstname,
+				m.lastname,
+				m.board_position,
+				o.description organization
+				FROM board_members m
+				JOIN organizations o ON m.organization_id = o.id
+				WHERE m.is_active = 1
+				ORDER BY o.description, m.lastname, m.firstname");
+if (db_found($result)) {?>
 	<tr>
 		<th align="left" width="60%">Name</th>
 		<th align="left" width="40%">Position on Board</th>
 		 <? if ($is_admin) echo "<th width='16'></th>"; ?>
 	</tr>
 	<?
-	$result = db_query("SELECT
-					m.id,
-					m.firstname,
-					m.lastname,
-					m.board_position,
-					o.description organization
-					FROM board_members m
-					JOIN organizations o ON m.organization_id = o.id
-					WHERE m.is_active = 1
-					ORDER BY o.description, m.lastname, m.firstname");
 	$lastCorporation = "";
 	while ($r = db_fetch($result)) {
 		if ($r["organization"] != $lastCorporation) {
 			$lastCorporation = $r["organization"];
 			echo "<tr class='group'><td colspan='" . $colspan . "'>" . $lastCorporation . "</td></tr>";
-		}
-	 ?>
+		}?>
 	    <tr>
 	        <td><a href="member.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 	        <td><nobr><?=$r["board_position"]?></nobr></td>
 			<?=deleteColumn("Are you sure you want to delete this board member?", $r["id"])?>
 	    </tr>
-	<? }?>
-</table>
+	<? }
+} else {
+	echo drawEmptyResult("No board members added yet", $colspan);
+}
+echo drawTableEnd();
+?>
 
-<a name="bottom"></a><br>
+<a name="bottom"></a>
 
 <? if ($is_admin) {
 	$form = new intranet_form;

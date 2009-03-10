@@ -11,7 +11,7 @@ if ($posting) {
 <html>
 	<head>
 		<title>Update Your Password</title>
-		<link rel="stylesheet" type="text/css" href="<?=$locale?>style.css" />
+		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
 		<script language="javascript" src="/javascript.js"></script>
 	</head>
 	<body>

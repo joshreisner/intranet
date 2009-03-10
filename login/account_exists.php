@@ -4,7 +4,7 @@ include("../include.php");?>
 <html>
 	<head>
 		<title>Request an Account</title>
-		<link rel="stylesheet" type="text/css" href="<?=$locale?>style.css" />
+		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
 	</head>
 	<body>
 <br>

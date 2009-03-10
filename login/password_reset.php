@@ -13,7 +13,7 @@ if ($posting) {
 	$_SESSION["user_id"] = false;
 	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE user_id = {$_GET["id"]} AND is_active = 1");
 	if ($email = db_grab("SELECT email FROM users WHERE user_id = {$_GET["id"]} AND is_active = 1")) {
-		login($r["email"], "", true);
+		login($email, "", true);
 		url_change($_SESSION["homepage"]);
 	} else {
 		url_change(false);
@@ -26,7 +26,7 @@ if ($posting) {
 <html>
 	<head>
 		<title>Reset Your Password</title>
-		<link rel="stylesheet" type="text/css" href="<?=$locale?>style.css" />
+		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
 		<script language="javascript" src="/javascript.js"></script>
 	</head>
 	<body>

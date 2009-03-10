@@ -19,27 +19,29 @@ echo drawJumpToStaff();
 		u.startdate,
 		u.bio
 	FROM users u
-	JOIN intranet_offices o ON u.officeID = o.id
-	JOIN departments d ON u.departmentID = d.departmentID
+	LEFT JOIN intranet_offices o ON u.officeID = o.id
+	LEFT JOIN departments d ON u.departmentID = d.departmentID
 	WHERE " . db_datediff("u.startdate", "GETDATE()") . " < 60 AND u.is_active = 1
 	ORDER BY u.startdate DESC");
-
-	while ($s = db_fetch($staff)) {?>
-	<tr>
-		<td width="135" height="60" align="center" style="padding:0px;"><?
-			verifyImage($s["user_id"]);
-			echo draw_img($locale . "staff/" . $s["user_id"] . "-medium.jpg", "/staff/view.php?id=" . $s["user_id"]);
-			?></td>
-		<td class="text">
-			<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
-			<?=$s["title"]?><br>
-			<?=$s["departmentName"]?><br>
-			<?=$s["office"]?><br>
-			<?=$s["bio"]?>
-		</td>
-	</tr>
-	<? }
-
+	if (db_found($staff)) {
+		while ($s = db_fetch($staff)) {?>
+		<tr>
+			<td width="135" height="60" align="center" style="padding:0px;"><?
+				verifyImage($s["user_id"]);
+				echo draw_img($locale . "staff/" . $s["user_id"] . "-medium.jpg", "/staff/view.php?id=" . $s["user_id"]);
+				?></td>
+			<td class="text">
+				<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
+				<?=$s["title"]?><br>
+				<? if ($locale != "/_soc.joshreisner.site/") {?><?=$s["departmentName"]?><br>
+				<?=$s["office"]?><br><? }?>
+				<?=$s["bio"]?>
+			</td>
+		</tr>
+		<? }
+	} else {
+		echo drawEmptyResult("No staff are listed as having started in the last two months.", 2);
+	}
 echo drawTableEnd();
 
 echo drawTableStart();
@@ -51,7 +53,7 @@ $result = db_query("SELECT
 			u.user_id, 
 			u.endDate
 			FROM users u
-			JOIN departments d ON u.departmentID = d.departmentID
+			LEFT JOIN departments d ON u.departmentID = d.departmentID
 			WHERE " . db_datediff("u.endDate", "GETDATE()") . " < 32 ORDER BY endDate DESC");
 	echo drawHeaderRow("Goings", 4);
 	if (db_found($result)) {?>
@@ -72,7 +74,7 @@ $result = db_query("SELECT
 		</tr>
 		<? }
 	} else {
-		echo drawEmptyResult("No staff left in the last month.");
+		echo drawEmptyResult("No staff left in the last month.", 4);
 	}
 echo drawTableEnd();
 drawBottom();?>

@@ -45,13 +45,6 @@ function drawStaffList($where, $searchterms=false) {
 		$colspan = 4;
 		$return .= drawHeaderRow(false, $colspan);
 	}
-	$return .= '<tr>
-		<th style="width:50px;"></th>
-		<th style="text-align:left">Name / Office</th>
-		<th style="text-align:left">Title / Department</th>
-		<th style="text-align:left">Phone</th>';
-	if ($is_admin) $return .= '<th></th>';
-	$return .= '</tr>';
 	
 	$result = db_query("SELECT 
 							u.user_id, 
@@ -73,6 +66,13 @@ function drawStaffList($where, $searchterms=false) {
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	$count = db_found($result);
 	if ($count) { 
+		$return .= '<tr>
+			<th style="width:50px;"></th>
+			<th style="text-align:left">Name / Office</th>
+			<th style="text-align:left">Title / Department</th>
+			<th style="text-align:left">Phone</th>';
+		if ($is_admin) $return .= '<th></th>';
+		$return .= '</tr>';
 		if (($count == 1) && $searchterms) {
 			$r = db_fetch($result);
 			$_josh["slow"] = true;
@@ -97,7 +97,7 @@ function drawStaffRow($r, $searchterms=false) {
 
 	$return  = '<tr height="38">';
 	verifyImage($r["user_id"]);
-	$return .= '<td width="50">' . draw_img($locale . 'staff/' . $r["user_id"] . '-thumbnail.jpg', '/staff/view.php?id=' . $r["user_id"]) . '</td>';
+	$return .= '<td width="50">' . draw_img($locale . 'staff/' . $r["user_id"] . '-small.jpg', '/staff/view.php?id=' . $r["user_id"]) . '</td>';
 	$return .= '<td><nobr><a href="view.php?id=' . $r["user_id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
 	if (!$r["isMain"]) $return .= "<br>" . $r["office"];
 	$return .= '</nobr></td><td>';

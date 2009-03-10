@@ -252,7 +252,7 @@ function emailITticket($id, $scenario, $admin=false) {
 	if ($is_admin) {
 		$admins[] = $_SESSION["email"];
 	} else {
-		$users[] = $_SESSION"email"];
+		$users[] = $_SESSION["email"];
 	}
 	
 	//add owner if ticket is assigned

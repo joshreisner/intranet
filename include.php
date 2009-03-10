@@ -27,12 +27,12 @@ if (!$pageIsPublic) {
 			m.name,
 			m.pallet,
 			m.isPublic,
-			u.is_closed,
-			u.is_admin
+			(SELECT u.is_closed FROM users_to_modules u WHERE u.user_id = {$_SESSION["user_id"]} AND u.module_id = m.id) is_closed,
+			(SELECT u.is_admin FROM users_to_modules u WHERE u.user_id = {$_SESSION["user_id"]} AND u.module_id = m.id) is_admin
 		FROM modules m
 		JOIN pages p ON p.id = m.homePageID
 		LEFT JOIN users_to_modules u ON u.module_id = m.id
-		WHERE m.is_active = 1 AND u.user_id = {$_SESSION["user_id"]}
+		WHERE m.is_active = 1
 		ORDER BY m.precedence");
 
 	$modules	= array();
@@ -540,6 +540,7 @@ error_debug("done processing include!");
 		
 		$fields = explode(" ", $fields);
 		foreach ($fields as $field) {
+			if (!isset($_POST[$field])) $_POST[$field] = "";
 			if ($field == "password") { //binary password
 				if (url_id()) {
 					$query1[] = $field . " = PWDENCRYPT('" . $_POST[$field] . "')";
@@ -549,7 +550,6 @@ error_debug("done processing include!");
 				}
 			} elseif (substr($field, 0, 1) == "#") { //numeric
 				$field = substr($field, 1);
-				if (empty($_POST[$field])) $_POST[$field] = "NULL";
 				if (url_id()) {
 					$query1[] = $field . " = " . $_POST[$field];
 				} else {
@@ -895,6 +895,7 @@ error_debug("done processing include!");
 				</div>
 				<div id="footer">page rendered in <?=format_time_exec()?></div>
 			</div>
+			<div id="subfooter"></div>
 		</body>
 	</html>
 		<? db_close();
