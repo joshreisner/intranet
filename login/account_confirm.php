@@ -11,7 +11,7 @@ include("../include.php");?>
 		<table width="600" align="center">
 			<tr>
 				<td>
-				<?=drawServerMessage("<h1>Thank you!</h1>  Your request has been submitted for approval.<br>Click <a href='/'>here</a> to go back.")?>
+				<?=drawMessage("<h1>Thank you!</h1>  Your request has been submitted for approval.<br>Click <a href='/'>here</a> to go back.")?>
 				</td>
 			</tr>
 		</table>

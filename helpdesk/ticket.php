@@ -44,7 +44,7 @@ if ($r["statusID"] != 9) { //open
 	$typeRequired = true;
 }
 
-//$is_admin = ($is_admin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
+//$module_admin = ($module_admin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
 
 if ($uploading) { //upload an attachment
 	$type = getDocTypeID($_FILES["userfile"]["name"]);
@@ -69,7 +69,7 @@ if ($uploading) { //upload an attachment
 } elseif ($posting) { //add a comment
 	//auto-assign ticket if unassigned and followup poster is an IT admin
 	$followupAdmin = (isset($_POST["is_admin"])) ? 1 : 0;
-	if ($is_admin && !$followupAdmin && empty($r["ownerID"])) {
+	if ($module_admin && !$followupAdmin && empty($r["ownerID"])) {
 		//set to it staff assigned if no status
 		if ($r["statusID"] == 1) $r["statusID"] = 2;
 		db_query("UPDATE helpdesk_tickets SET ownerID = {$_SESSION["user_id"]}, statusID = {$r["statusID"]}, updated_date = GETDATE() WHERE id = " . $_GET["id"]);
@@ -101,10 +101,10 @@ if ($uploading) { //upload an attachment
 
 drawTop();
 
-echo drawServerMessage($helpdeskStatus, "center");
+echo drawMessage($helpdeskStatus, "center");
 
 //populate dropdowns
-$timeSpentOptions = array(0=>0, 15=>15, 30=>30, 45=>45, 60=>60, 75=>75, 90=>90, 105=>105, 120=>120, 135=>135, 150=>150);
+$timeSpentOptions = array(0=>0, 15=>15, 30=>30, 45=>45, 60=>60, 75=>75, 90=>90, 105=>105, 120=>"Two Hours", 180=>"Three Hours", 240=>"Four Hours", 300=>"Five Hours", 360=>"Six Hours", 420=>"Seven Hours", 480=>"Eight Hours", 540=>"Nine Hours", 600=>"10 Hours");
 if (!$r["timeSpent"]) $r["timeSpent"] = 0;
 if (!isset($timeSpentOptions[$r["timeSpent"]])) {
 	$timeSpentOptions[$r["timeSpent"]] = $r["timeSpent"];
@@ -195,7 +195,7 @@ while ($t = db_fetch($types)) {
 		}
 		$title = "View Open Ticket (" . $ticketCount . " of " . $counter . ")";
 
-		if ($is_admin) {
+		if ($module_admin) {
 			if ($lastTicketID && $nextTicketID) {
 				echo drawHeaderRow($title, 2, "prev", "ticket.php?id=" . $lastTicketID, "next", "ticket.php?id=" . $nextTicketID);
 			} elseif ($lastTicketID) {
@@ -212,7 +212,7 @@ while ($t = db_fetch($types)) {
 		echo drawHeaderRow("View Ticket", 2, "add a followup message","#bottom");
 	}
 	
-	if ($is_admin) {?>
+	if ($module_admin) {?>
 	<form name="ticketForm">
 	<tr class="helpdesk-hilite" height="30">
 		<td class="left">Status</td>
@@ -264,7 +264,7 @@ while ($t = db_fetch($types)) {
 	<tr height="30">
 		<td class="left">Type</td>
 		<td><?=draw_form_select("typeID", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = " . $r["departmentID"] . " ORDER BY description", $r["typeID"], $typeRequired, false, "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newType=' + this.value");?>
-			<? if ($is_admin) {
+			<? if ($module_admin) {
 			 if ($r["typeID"]) {
 			 	echo '<a href="type.php?id=' . $r["typeID"] . '">view all</a> / <a href="type.php?id=' . $r["typeID"] . '&month=' . $r["createdMonth"] . '&year=' . $r["createdYear"] . '">this month</a>';
 			 } else {
@@ -280,7 +280,7 @@ while ($t = db_fetch($types)) {
 	<tr height="30">
 		<td class="left">Priority</td>
 		<td><?
-		if ($is_admin || $r["is_adminPriority"]) {
+		if ($module_admin || $r["is_adminPriority"]) {
 			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
 		} else {
 			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE is_admin = 0", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
@@ -320,7 +320,7 @@ while ($t = db_fetch($types)) {
 	<? } ?>
 	</form>
 	<? 
-$editurl = ($is_admin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
+$editurl = ($module_admin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
 echo drawThreadTop($r["title"], $r["description"], $r["created_user"], $r["first"] . " " . $r["last"], $r["created_date"], $editurl);
 
 $result = db_query("SELECT

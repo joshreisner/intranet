@@ -49,7 +49,7 @@ if ($prevmonth == 0) {
 }
 
 //HOLIDAYS
-if ($locale != "/_soc.joshreisner.com/") {
+if (getOption("cal_showholidays")) {
 	$count = 0;
 	if ($_GET['month'] == 1) {
 		//new year's day
@@ -202,7 +202,7 @@ if (!isset($_GET["year"])) $_GET["year"]   = $year;
 <a name="bottom"></a>
 <?
 $form = new intranet_form;
-if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false);
+if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Title" , "title", "", "", true);
 $form->addRow("select", "Type", "typeID", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
 $form->addRow("datetime", "Date", "startDate");

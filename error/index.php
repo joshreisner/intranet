@@ -47,7 +47,7 @@ if ($target) url_change($target, true);
 
 drawTop();
 
-echo drawServerMessage("<b>Error: Page Not Found</b><br>
+echo drawMessage("<b>Error: Page Not Found</b><br>
 Sorry, the page you're looking for isn't here!  If you feel you reached this page in error, please contact 
 <a href='mailto:josh@joshreisner.com'>Josh Reisner</a> so it can be fixed.");
 

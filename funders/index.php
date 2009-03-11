@@ -14,7 +14,7 @@ drawTop();
 ?>
 <table class="left" cellspacing="1">
 <?
-if ($is_admin) {
+if ($module_admin) {
 	$colspan = 6;
 	echo drawHeaderRow("Funders", $colspan, "add a funder", "funder_add_edit.php");
 } else {
@@ -25,7 +25,7 @@ if ($is_admin) {
 		<th width="60%" align="left">Funder Name</th>
 		<th width="39%" align="left">Staff Contact</th>
 		<th align="right">Total Awards</th>
-		<? if ($is_admin) {?><th width="16"></th><? }?>
+		<? if ($module_admin) {?><th width="16"></th><? }?>
 	</tr>
 <?
 $result_funder_statuses = db_query("SELECT funderStatusID, funderStatusDesc FROM resources_funders_statuses");
@@ -61,7 +61,7 @@ while ($rs = db_fetch($result_funder_statuses)) {
 	<tr class="total">
 		<td colspan="2">Total: </td>
 		<td>$<?=number_format($awards_amt)?></td>
-		<? if ($is_admin) {?><td></td><? }?>
+		<? if ($module_admin) {?><td></td><? }?>
 	</tr>
 <? }?>
 </table>

@@ -92,7 +92,7 @@ $t = db_grab("SELECT
 </script>
 	<?
 	echo drawTableStart();
-	if ($is_admin) {
+	if ($module_admin) {
 		echo drawHeaderRow("View Topic", 2, "edit", "topic_edit.php?id=" . $_GET["id"], "delete", "topic_edit.php?deleteID=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Topic", 2);
@@ -163,7 +163,7 @@ $t = db_grab("SELECT
 		echo drawThreadCommentForm();
 	echo drawTableEnd();
 
-if ($is_admin) {?>
+if ($module_admin) {?>
 <table class="left">
 	<?=drawHeaderRow("Attach Document", 2);?>
 	<form enctype="multipart/form-data" action="<?=$_josh["request"]["path_query"]?>" method="post" onsubmit="javascript:return validateComment(this);">

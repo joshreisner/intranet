@@ -2,7 +2,7 @@
 include("../../include.php");
 
 if ($posting) {
-	$theuser_id = ($is_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
+	$theuser_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	db_query("UPDATE intranet_press_releases SET
 			headline       = '{$_POST["headline"]}',	
 			detail         = '{$_POST["detail"]}',	
@@ -20,7 +20,7 @@ drawTop();
 $r = db_grab("SELECT id, headline, detail, location, releaseDate, corporationID, text FROM intranet_press_releases WHERE id = " . $_GET["id"]);
 	
 $form = new intranet_form;
-if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
+if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
 $form->addRow("itext",  "Headline" , "headline", $r["headline"], "", true, 255);
 $form->addRow("itext",  "Detail" , "detail", $r["detail"], "", false, 255);
 $form->addRow("itext",  "Location" , "location", $r["location"], "", true, 255);

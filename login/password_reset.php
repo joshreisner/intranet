@@ -36,9 +36,9 @@ if ($posting) {
 		<td>
 <?
 if (@$_GET["msg"] == "email-not-found") {
-	echo drawServerMessage("<h1>Email Not Found</h1>That email address wasn't found in the system.  If the address below is correct and you've never logged in, you may need to <a href='account_request.php'>request an account</a>.");
+	echo drawMessage("<h1>Email Not Found</h1>That email address wasn't found in the system.  If the address below is correct and you've never logged in, you may need to <a href='account_request.php'>request an account</a>.");
 } else {
-	echo drawServerMessage("<h1>Starting Over, Password-Wise</h1>Your old password can't be recovered, since it was encrypted.  However, it can be reset so you can pick a new one.  What is the email address on the account?");
+	echo drawMessage("<h1>Starting Over, Password-Wise</h1>Your old password can't be recovered, since it was encrypted.  However, it can be reset so you can pick a new one.  What is the email address on the account?");
 }
 
 $form = new intranet_form;

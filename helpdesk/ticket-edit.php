@@ -2,7 +2,7 @@
 include("include.php");
 
 if ($posting) {
-	if (!$is_admin) $_POST["user_id"] = $_SESSION["user_id"];	
+	if (!$module_admin) $_POST["user_id"] = $_SESSION["user_id"];	
 	format_post_nulls("typeID, priorityID");
 	db_query("UPDATE helpdesk_tickets SET 
 		created_user = {$_POST["user_id"]},
@@ -20,9 +20,9 @@ echo drawTop();
 $t = db_grab("SELECT created_user, title, description, typeID, departmentID, priorityID FROM helpdesk_tickets t WHERE t.id = " . $_GET["id"]);
 
 $form = new intranet_form;
-if ($is_admin) $form->addUser("user_id",  "Posted By" , $t["created_user"], false);
+if ($module_admin) $form->addUser("user_id",  "Posted By" , $t["created_user"], false);
 $form->addRow("itext",  "Problem" , "title", $t["title"], "", true);
-if ($is_admin) {
+if ($module_admin) {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities", $t["priorityID"]);
 } else {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE is_admin = 0", $t["priorityID"]);

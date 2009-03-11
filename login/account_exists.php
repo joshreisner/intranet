@@ -12,7 +12,7 @@ include("../include.php");?>
 	<tr>
 		<td>
 <?
-echo drawServerMessage("<h1>Account Already Exists</h1>  The email you entered already belongs to an active account on the system.  Would you
+echo drawMessage("<h1>Account Already Exists</h1>  The email you entered already belongs to an active account on the system.  Would you
 like to <a href='password_reset.php'>reset your password</a>?");
 ?>
 				</td>

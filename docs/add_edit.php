@@ -1,8 +1,9 @@
 <?
 include("../include.php");
-
 if ($posting) {
+	error_debug("user is posting");
 	if ($uploading) {
+		error_debug("user is uploading a file");
 		$type = getDocTypeID($_FILES["userfile"]["name"]);
 		$content = format_binary(file_get($_FILES["userfile"]["tmp_name"]));
 		@unlink($_FILES["userfile"]["tmp_name"]);
@@ -68,6 +69,7 @@ while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t["extension"] . '")';
 	$doctypes[] = " - " . $t["description"] . " (." . $t["extension"] . ")";
 }
+echo drawMessage("The maximum size you can upload here is " . file_get_max() . ".");
 ?>
 <script language="javascript">
 	<!--
@@ -110,14 +112,19 @@ while ($t = db_fetch($types)) {
 <table class="left">
 	<?=drawHeaderRow($pageAction, 2);?>
 	<form enctype="multipart/form-data" action="<?=$_josh["request"]["path_query"]?>" method="post" onsubmit="javascript:return validate(this);">
+	<input type="hidden" name="MAX_FILE_SIZE" value="<?=file_get_max(false)?>" />
 	<tr>
 		<td class="left">Name</td>
 		<td><?=draw_form_text("name",  @$d["name"], "text")?></td>
 	</tr>
 	<tr>
 		<td class="left">Description</td>
-		<td><?=draw_form_textarea("description", @$d["description"])?></td>
+		<td><?=draw_form_textarea("description", @$d["description"], "mceEditor")?></td>
 	</tr>
+	<!--<tr> need to add this, but think the problem is the column names are nonstandard?
+		<td class="left">Categories</td>
+		<td><?//=draw_form_checkboxes("docs", "docs_to_categories", "documentID", "categoryID", @$_GET["id"])?></td>
+	</tr>-->
 	<tr>
 		<td class="left">Category</td>
 		<td>
@@ -126,7 +133,7 @@ while ($t = db_fetch($types)) {
 				if (url_id()) {
 					$categories = db_query("SELECT c.id, c.description, (SELECT COUNT(*) FROM docs_to_categories d2c WHERE d2c.categoryID = c.id AND d2c.documentID = {$_GET["id"]}) checked FROM docs_categories c ORDER BY c.precedence");
 				} else {
-					$categories = db_query("SELECT id, description FROM docs							_categories ORDER BY precedence");
+					$categories = db_query("SELECT id, description FROM docs_categories ORDER BY precedence");
 				}
 				while ($c = db_fetch($categories)) {?>
 				<tr>

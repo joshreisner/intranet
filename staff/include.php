@@ -9,16 +9,12 @@ if (url_action("delete")) {
 	} else {
 		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE(), endDate = GETDATE() WHERE user_id = " . $_GET["staffID"]);
 	}
-	if ($locale == "/_seedco/") {	
-		email("jreisner@seedco.org,pchoi@seedco.org", 
-		"<a href='http://intranet.seedco.org/staff/view.php?id=" . $_GET["staffID"] . "'>" . $r["firstname"] . " " . $r["lastname"] . "</a> was just deactivated on the Intranet.", 
-		"Intranet: Staff Deleted");
-	}
+	if (getOption("staff_alertdelete")) emailAdmins("<a href='" . url_base() . "/staff/view.php?id=" . $_GET["staffID"] . "'>" . $r["firstname"] . " " . $r["lastname"] . "</a> was just deactivated on the Intranet.", "Intranet: Staff Deleted");
 	url_query_drop("action,staffID");
 }
 
 function drawJumpToStaff($selectedID=false) {
-	global $is_admin;
+	global $module_admin;
 	$nullable = ($selectedID === false);
 	$return = '
 		<table class="message">
@@ -26,9 +22,9 @@ function drawJumpToStaff($selectedID=false) {
 				<td class="gray">Jump to ' . drawSelectUser("", $selectedID, $nullable, 0, true, true, "Staff Member:") . '</td>
 			</tr>
 		</table>';
-	if ($is_admin) { 
+	if ($module_admin) { 
 		if ($r = db_grab("SELECT COUNT(*) FROM users_requests")) {
-			$return = drawServerMessage("There are pending <a href='requests.php'>account requests</a> for you to review.") . $return;
+			$return = drawMessage("There are pending <a href='requests.php'>account requests</a> for you to review.") . $return;
 		}
 		
 	}
@@ -36,9 +32,9 @@ function drawJumpToStaff($selectedID=false) {
 }
 
 function drawStaffList($where, $searchterms=false) {
-	global $is_admin, $_josh;
+	global $module_admin, $_josh;
 	$return = drawJumpToStaff() . '<table class="left" cellspacing="1">';
-	if ($is_admin) {
+	if ($module_admin) {
 		$colspan = 5;
 		$return .= drawHeaderRow(false, $colspan, "new", "add_edit.php");
 	} else {
@@ -71,7 +67,7 @@ function drawStaffList($where, $searchterms=false) {
 			<th style="text-align:left">Name / Office</th>
 			<th style="text-align:left">Title / Department</th>
 			<th style="text-align:left">Phone</th>';
-		if ($is_admin) $return .= '<th></th>';
+		if ($module_admin) $return .= '<th></th>';
 		$return .= '</tr>';
 		if (($count == 1) && $searchterms) {
 			$r = db_fetch($result);
@@ -87,7 +83,7 @@ function drawStaffList($where, $searchterms=false) {
 }
 
 function drawStaffRow($r, $searchterms=false) {
-	global $is_admin, $locale;
+	global $module_admin, $locale;
 	if ($searchterms) {
 		global $fields;
 		foreach ($fields as $f) {
@@ -105,7 +101,7 @@ function drawStaffRow($r, $searchterms=false) {
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
 	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
 	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
-	if ($is_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
+	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

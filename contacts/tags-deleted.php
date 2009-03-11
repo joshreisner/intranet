@@ -45,7 +45,7 @@ drawTop();
 						ORDER BY t.name");
 	while ($t = db_fetch($types)) {?>
 	<tr class="helptext" bgcolor="#FFFFFF" height="40" valign="bottom">
-		<td colspan="3"><?if($is_admin) {?><a href="tag.php?id=<?=$t["id"]?>"><?}?><b><?=$t["name"]?></b></a></td>
+		<td colspan="3"><?if($module_admin) {?><a href="tag.php?id=<?=$t["id"]?>"><?}?><b><?=$t["name"]?></b></a></td>
 	</tr>
 		<?
 		$values = db_query("SELECT

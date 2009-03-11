@@ -14,7 +14,7 @@ $r = db_grab("SELECT
 	WHERE m.id = " . $_GET["id"]);
 ?>
 <table class="left" cellspacing="1">
-	<? if ($is_admin) {
+	<? if ($module_admin) {
 		echo drawHeaderRow("Board Member", 2, "edit", "member_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("Board Member", 2);

@@ -21,7 +21,7 @@ if ($posting) {
 		
 		//construct email
 		$message  = drawEmailHeader();
-		$message .= drawServerMessage("<b>Note</b>: This is an Administration/Human Resources topic from the <a href='http://" . $server . "/bulletin_board/'>Intranet Bulletin Board</a>.  For more information, please contact the <a href='mailto:hrpayroll@seedco.org'>Human Resources Department</a>.");
+		$message .= drawMessage(getString("bb_admin"));
 		$message .= '<table width="100%" cellpadding="3" cellspacing="1" border="0">';
 		$message .= drawHeaderRow("Email", 2);
 		$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
@@ -89,7 +89,7 @@ if (db_found($topics)) {?>
 <a name="bottom"></a>
 <?
 $form = new intranet_form;
-if ($is_admin) {
+if ($module_admin) {
 	$form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addCheckbox("is_admin",  "Admin Post?", 0, "(check if yes)", true);
 }

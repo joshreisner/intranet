@@ -4,7 +4,7 @@ echo drawJumpToStaff();
 ?>
 <table class="left" cellspacing="1">
 	<?
-	if ($is_admin) {
+	if ($module_admin) {
 		echo drawHeaderRow("Comings", 2, "new", "add_edit.php");
 	} else {
 		echo drawHeaderRow("Comings", 2);
@@ -33,8 +33,8 @@ echo drawJumpToStaff();
 			<td class="text">
 				<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
 				<?=$s["title"]?><br>
-				<? if ($locale != "/_soc.joshreisner.com/") {?><?=$s["departmentName"]?><br>
-				<?=$s["office"]?><br><? }?>
+				<? if (getOption("staff_showdept")) echo $s["departmentName"] . "<br>";?>
+				<? if (getOption("staff_office")) echo $s["office"] . "<br>";?>
 				<?=$s["bio"]?>
 			</td>
 		</tr>

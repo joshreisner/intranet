@@ -81,11 +81,11 @@ if (!$r["is_active"]) {
 		$msg .= ($r["nickname"]) ? $r["nickname"] : $r["firstname"];
 		$msg .= "'s last day was " . format_date($r["endDate"]) . ".";
 	}
-	echo drawServerMessage($msg, "center");
+	echo drawMessage($msg, "center");
 }
 ?>
 <table class="left" cellspacing="1">
-	<? if ($is_admin) {
+	<? if ($module_admin) {
 		if ($r["is_active"]) {
 			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "deactivate", deleteLink("Deactivate this staff member?"));
 		} else {
@@ -96,7 +96,9 @@ if (!$r["is_active"]) {
 	} else {
 		echo drawHeaderRow("View Staff Info", 3);
 	}
-	$rowspan = ($locale != "/_soc.joshreisner.com/") ? 8 : 6;
+	$rowspan = 6;
+	if (getOption("staff_showdept")) $rowspan++;
+	if (getOption("staff_showoffice")) $rowspan++;
 	?>
 	<tr>
 		<td class="left">Name</td>
@@ -111,11 +113,13 @@ if (!$r["is_active"]) {
 		<td class="left">Title</td>
 		<td><?=$r["title"]?></td>
 	</tr>
-	<? if ($locale != "/_soc.joshreisner.com/") {?>
+	<? if (getOption("staff_showoffice")) {?>
 	<tr>
 		<td class="left">Department</td>
 		<td><?=$r["departmentName"]?></td>
 	</tr>
+	<? }
+	if (getOption("staff_showoffice")) {?>
 	<tr>
 		<td class="left">Office</td>
 		<td><?=$r["office"]?></td>
@@ -137,7 +141,7 @@ if (!$r["is_active"]) {
 		<td class="left">Bio</td>
 		<td colspan="2" height="167" class="text"><?=nl2br($r["bio"])?></td>
 	</tr>
-	<? if ($is_admin || ($_GET["id"] == $_SESSION["user_id"])) {?>
+	<? if ($module_admin || ($_GET["id"] == $_SESSION["user_id"])) {?>
 	<tr class="group">
 		<td colspan="3">Intranet</td>
 	</tr>
@@ -165,7 +169,7 @@ if (!$r["is_active"]) {
 			<td class="left">Password</td>
 			<td colspan="2"><a href="<?=deleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">change your password</a></td>
 		</tr>
-		<? } elseif ($is_admin) {?>
+		<? } elseif ($module_admin) {?>
 		<tr>
 			<td class="left">Password</td>
 			<td colspan="2">
@@ -177,12 +181,12 @@ if (!$r["is_active"]) {
 			</td>
 		</tr>
 	<? }?>
-	<? if ($is_admin) {?>
+	<? if ($module_admin) {?>
 	<tr>
 		<td class="left">Invite</td>
 		<td colspan="2"><a href="<?=deleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
 	</tr>
-	<? if ($locale != "/_soc.joshreisner.com/") {?>
+	<? if (getOption("staff_showrank")) {?>
 	<tr>
 		<td class="left">Rank</td>
 		<td colspan="2"><?=$r["rank"]?></td>
@@ -192,32 +196,35 @@ if (!$r["is_active"]) {
 		<td class="left">Permissions</td>
 		<td colspan="2">
 		<?
-		$hasPermission = false;
-		$permissions = db_query("SELECT 
-			m.name,
-			m.isPublic,
-			p.url
-			FROM modules m 
-			JOIN pages p ON m.homePageID = p.id
-			JOIN users_to_modules a ON m.id = a.module_id
-			WHERE a.user_id = {$_GET["id"]}
-			ORDER BY m.name");
-		while ($p = db_fetch($permissions)) {
-			$hasPermission = true;
-			echo "&#183;&nbsp;";
-			if ($p["isPublic"]) echo "<a href='" . $p["url"] . "'>";
-			echo $p["name"];
-			if ($p["isPublic"]) echo "</a>";
-			echo "<br>";
+		if ($_SESSION["is_admin"]) {
+			echo "Site Administrator";
+		} else {
+			$hasPermission = false;
+			$permissions = db_query("SELECT 
+				m.name,
+				m.isPublic,
+				p.url
+				FROM modules m 
+				JOIN pages p ON m.homePageID = p.id
+				JOIN users_to_modules a ON m.id = a.module_id
+				WHERE a.user_id = {$_GET["id"]}
+				ORDER BY m.name");
+			while ($p = db_fetch($permissions)) {
+				$hasPermission = true;
+				echo "&#183;&nbsp;";
+				if ($p["isPublic"]) echo "<a href='" . $p["url"] . "'>";
+				echo $p["name"];
+				if ($p["isPublic"]) echo "</a>";
+				echo "<br>";
+			}
+			if (!$hasPermission) echo "None";
 		}
-		if (!$hasPermission) echo "None";
 		?>
-			
 		</td>
 	</tr>
 	<? }
 	
-	if ($locale != "/_soc.joshreisner.com/") {?>
+	if (getOption("show_home")) {?>
 	<tr class="group">
 		<td colspan="3">Home Contact Information [private]</td>
 	</tr>
@@ -240,6 +247,8 @@ if (!$r["is_active"]) {
 		<td class="left">Personal Email</td>
 		<td colspan="2"><a href="mailto:<?=$r["homeEmail"]?>"><?=$r["homeEmail"]?></a></td>
 	</tr>
+	<? }
+	if (getOption("show_emergency")) {?>
 	<tr class="group">
 		<td colspan="3">Emergency Contact Information [private]</td>
 	</tr>

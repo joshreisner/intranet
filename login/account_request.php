@@ -101,7 +101,7 @@ if ($posting) {
 	<tr>
 		<td>
 <?
-echo drawServerMessage("<h1>Welcome!</h1>  To request an account, please fill out the fields below.  Your login information will be emailed to you once your request is approved.");
+echo drawMessage("<h1>Welcome!</h1>  To request an account, please fill out the fields below.  Your login information will be emailed to you once your request is approved.");
 $form = new intranet_form;
 $form->addRow("itext",			"First Name",	"firstname", '', "", true, 20);
 $form->addRow("itext",			"Nickname (optional)", "nickname", '', "", false, 20);

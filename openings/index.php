@@ -12,7 +12,7 @@ if (url_action("delete")) {
 
 
 if ($posting) {
-	$user_id = ($is_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
+	$user_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	format_post_html("description");
     db_query("INSERT INTO intranet_jobs (
     	title,
@@ -37,7 +37,7 @@ if ($posting) {
 drawTop();
 ?>
 <table class="left" cellspacing="1">
-	<? if ($is_admin) {
+	<? if ($module_admin) {
 		$colspan = 4;
 		echo drawHeaderRow("Open Positions", $colspan, "new", "#bottom");
 	} else {
@@ -48,7 +48,7 @@ drawTop();
 		<th align="left" width="50%">Title</th>
 		<th align="left" width="30%">Location</th>
 		<th align="right" width="20%"><nobr>Last Update</nobr></th>
-		<? if ($is_admin) {?><th></th><? }?>
+		<? if ($module_admin) {?><th></th><? }?>
 	</tr>
 	<?
 	$result = db_query("SELECT 
@@ -79,9 +79,9 @@ drawTop();
 
 <a name="bottom"></a>
 
-<? if ($is_admin) {
+<? if ($module_admin) {
 	$form = new intranet_form;
-	if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
+	if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true);
 	$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
 	$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM intranet_offices ORDER BY precedence", "", true);

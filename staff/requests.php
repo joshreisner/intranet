@@ -55,7 +55,7 @@ if (db_found($result)) {?>
 	<?
 	}
 } else {
-	echo drawEmptyResult("No pending requests!");
+	echo drawEmptyResult("All users have logged in.");
 }
 echo drawTableEnd();
 

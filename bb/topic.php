@@ -52,9 +52,9 @@ $isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
 
 $r["description"] = htmlwrap($r["description"]);
 
-//if ($_GET["id"] == 7966) echo drawServerMessage("<b>Note</b>: This comments on this post are organized in reverse-chronological order.");
+//if ($_GET["id"] == 7966) echo drawMessage("<b>Note</b>: This comments on this post are organized in reverse-chronological order.");
 
-if ($r["is_admin"]) echo drawServerMessage(getString("bb_admin"));
+if ($r["is_admin"]) echo drawMessage(getString("bb_admin"));
 ?>
 <script language="javascript">
 	<!--
@@ -74,7 +74,7 @@ if ($r["is_admin"]) echo drawServerMessage(getString("bb_admin"));
 
 <table class="left" cellspacing="1">
 	<?php
-	if ($is_admin || $isPoster) {
+	if ($module_admin || $isPoster) {
 		echo drawHeaderRow($r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 	} else {
 		if ($r["is_admin"]) {

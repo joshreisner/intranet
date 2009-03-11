@@ -1,7 +1,7 @@
 <?php include("../include.php");
 
 //kick out user if not administrator ~ should be done with page info
-if (!$is_admin && $page["is_admin"]) url_change("/helpdesk/");
+if (!$module_admin && $page["is_admin"]) url_change("/helpdesk/");
 
 //department may become settable
 if (url_id("dept")) {
@@ -180,7 +180,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 }
 
 function emailITticket($id, $scenario, $admin=false) {
-	global $_SESSION, $_josh, $is_admin;
+	global $_SESSION, $_josh, $module_admin;
 	$message  = drawEmailHeader();
 	
 	$ticket = db_grab("SELECT
@@ -212,25 +212,25 @@ function emailITticket($id, $scenario, $admin=false) {
 	//yellow box
 	if ($scenario == "followup") {
 		$subject = "Followup On Your Helpdesk Ticket";
-		$message .= drawServerMessage("There's been followup on your Helpdesk ticket - please see below.  <b>Don't reply to this email!</b>  Instead, please <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view your ticket</a> in the intranet ticketing system.<br><br><b>Note:</b> if you add this sender to your 'safe senders list,' pictures will always download.");
+		$message .= drawMessage("There's been followup on your Helpdesk ticket - please see below.  <b>Don't reply to this email!</b>  Instead, please <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view your ticket</a> in the intranet ticketing system.<br><br><b>Note:</b> if you add this sender to your 'safe senders list,' pictures will always download.");
 	} elseif ($scenario == "followupadmin") {
 		$subject = "Admin Followup on Helpdesk Ticket";
-		$message .= drawServerMessage("<a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $_SESSION["user_id"] . "'>" . $_SESSION["full_name"] . "</a> just made an administrative followup on this Helpdesk ticket.  Regular staff were not copied on this message.");
+		$message .= drawMessage("<a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $_SESSION["user_id"] . "'>" . $_SESSION["full_name"] . "</a> just made an administrative followup on this Helpdesk ticket.  Regular staff were not copied on this message.");
 	} elseif ($scenario == "closed") {
 		$subject = "Your Ticket Has Been Closed";
-		$message .= drawServerMessage("This is to let you know that your ticket has been closed.  <b>Don't reply to this email!</b>  You can still followup on this thread by <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>viewing your ticket</a> in the intranet ticketing system.<br><br><b>Note:</b> if you add this sender to your 'safe senders list,' pictures will always download.");
+		$message .= drawMessage("This is to let you know that your ticket has been closed.  <b>Don't reply to this email!</b>  You can still followup on this thread by <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>viewing your ticket</a> in the intranet ticketing system.<br><br><b>Note:</b> if you add this sender to your 'safe senders list,' pictures will always download.");
 	} elseif ($scenario == "assign") {
 		$subject = "Your Ticket Has Been Assigned";
-		$message .= drawServerMessage("<a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $_SESSION["user_id"] . "'>" . $_SESSION["full_name"] . "</a> has assigned this ticket to <a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $ticket["ownerID"] . "'>" . $ticket["ownerName"] . "</a>.  <b>Don't reply to this email!</b>  Instead, please <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view your ticket</a> in the intranet ticketing system.<br><br><b>Note:</b> if you add this sender to your 'safe senders list,' pictures will always download.");
+		$message .= drawMessage("<a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $_SESSION["user_id"] . "'>" . $_SESSION["full_name"] . "</a> has assigned this ticket to <a href='http://" . $_josh["request"]["host"] . "/staff/view.php?id=" . $ticket["ownerID"] . "'>" . $ticket["ownerName"] . "</a>.  <b>Don't reply to this email!</b>  Instead, please <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view your ticket</a> in the intranet ticketing system.<br><br><b>Note:</b> if you add this sender to your 'safe senders list,' pictures will always download.");
 	} elseif ($scenario == "new") {
 		$subject = "New " . $ticket["department"] . " Ticket Posted";
-		$message .= drawServerMessage("This is to let you know that a new ticket has just been posted to the Helpdesk.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
+		$message .= drawMessage("This is to let you know that a new ticket has just been posted to the Helpdesk.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
 	} elseif ($scenario == "critical") {
 		$subject = "Critical " . $ticket["department"] . " Ticket Still Open";
-		$message .= drawServerMessage("A ticket flagged \"Critical\" is open on the Helpdesk.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
+		$message .= drawMessage("A ticket flagged \"Critical\" is open on the Helpdesk.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
 	} elseif ($scenario == "languishing") {
 		$subject = $ticket["department"] . " Ticket Languishing on the Helpdesk";
-		$message .= drawServerMessage("This ticket has been open on the Helpdesk for at least five days now.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
+		$message .= drawMessage("This ticket has been open on the Helpdesk for at least five days now.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
 	}
 
 	$message .= '<table class="center">' . drawHeaderRow("Email", 2);
@@ -245,7 +245,7 @@ function emailITticket($id, $scenario, $admin=false) {
 		$users[] = $ticket["email"];
 	}
 	
-	if ($is_admin) {
+	if ($module_admin) {
 		$admins[] = $_SESSION["email"];
 	} else {
 		$users[] = $_SESSION["email"];
@@ -285,10 +285,6 @@ function emailITticket($id, $scenario, $admin=false) {
 	$message		.= '</table>' . drawEmailFooter();
 	$admin_message	.= '</table>' . drawEmailFooter();
 	
-	$headers  = "MIME-Version: 1.0\r\n";
-	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-	$headers .= "From: Intranet <donotreply@seedco.org>\r\n";
-
 	$admins = array_unique($admins);
 	$admins = array_remove($_SESSION["email"], $admins);
 	
@@ -296,6 +292,7 @@ function emailITticket($id, $scenario, $admin=false) {
 	$users = array_remove($_SESSION["email"], $users);
 		
 	//special codes for email
+	//todo: put this in db, possibly by adding something to the users table or something
 	if (($scenario == "new")			&& ($ticket["departmentID"] == 3)) $admins = array("czanoni@seedco.org","cpena@seedco.org");
 	if (($scenario == "new")			&& ($ticket["departmentID"] == 13)) $admins = array("mdavidson@seedco.org","mtorinese@seedco.org");
 	if (($scenario == "new")			&& ($ticket["departmentID"] == 2)) $admins = array("smalach@seedco.org");
@@ -303,14 +300,12 @@ function emailITticket($id, $scenario, $admin=false) {
 
 	if (count($admins)) {
 		$admins = join(", ", $admins);
-		mail($admins, $subject, $admin_message, $headers);
-		//echo "Sending admin email to " . $admins;
+		email($admins, $admin_message, $subject);
 	}
 	
 	if (count($users) && ($scenario != "followupadmin") && !$admin) {
 		$users = join(", ", $users);
-		mail($users, $subject, $message, $headers);
-		//echo "Sending user email to " . $users;
+		email($users, $message, $subject);
 	}
 	//exit;
 }

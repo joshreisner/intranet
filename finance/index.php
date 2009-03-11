@@ -5,7 +5,7 @@ drawTop();
 if ($_josh["db"]["language"] == "mssql") {
 	db_switch("trackit");
 	$l = db_grab("SELECT MAX(loadDate) loadDate FROM _josh_loads");
-	echo drawServerMessage("These database indexes were loaded: " . format_date($l["loadDate"], true, " at "));
+	echo drawMessage("These database indexes were loaded: " . format_date($l["loadDate"], true, " at "));
 	db_switch($_josh["db"]["database"]);
 }
 ?>

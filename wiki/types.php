@@ -34,9 +34,9 @@ drawTop();
 		echo drawEmptyResult("No types have been entered yet.", 2);
 	}?>
 </table>
-<? if ($is_admin) {
+<? if ($module_admin) {
 	$form = new intranet_form;
-	if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
+	if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Tag" , "description", "", "", true, 255);
 	$form->addRow("submit"  , "add tag");
 	$form->draw("Add a New Type");

@@ -107,7 +107,7 @@ $r = db_grab("SELECT
 
 <table class="left" cellspacing="1">
 	<?
-	if ($is_admin) {
+	if ($module_admin) {
 		echo drawHeaderRow("View Award", 2, "edit", "award_add_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Award", 2);

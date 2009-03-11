@@ -1,7 +1,7 @@
 <?
 include("include.php");
 
-//$is_admin = false; //debugging
+//$module_admin = false; //debugging
 
 if ($posting) {
 	//make checkboxes into bits
@@ -16,19 +16,19 @@ if ($posting) {
 	
 	format_post_nulls("corporationID,departmentID,officeID,rankID");
 		
-	if ($is_admin) {
+	if ($module_admin) {
 		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
 		$id = db_enter("users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
 		
 		//if new user, reset password, delete request, and send invite
 		if (!isset($_GET["id"])) {
-			if ($locale == "/_seedco/") {
-				email("jreisner@seedco.org,pchoi@seedco.org", 
-					"<a href='http://intranet.seedco.org/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet.", 
-					"Intranet: New Staff Added");
-			}
+			//optional new staff alert message
+			if (getOption("staff_alertnew")) emailAdmins("<a href='" . url_base() . "/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet.", "Intranet: New Staff Added");
+
+			//reset pass and delete request
 			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE user_id = " . $id);
 			if (isset($_GET["requestID"])) db_query("DELETE FROM users_requests WHERE id = " . $_GET["requestID"]);
+
 			//send invitation
 			$name = str_replace("'", "", ($_POST["nickname"] == "NULL") ? $_POST["firstname"] : $_POST["nickname"]);
 			email_invite($id, $email_address, $name);
@@ -119,9 +119,9 @@ if (isset($_GET["id"])) {
 		WHERE u.user_id = " . $_GET["id"]);
 		
 	if (($_GET["id"] == $_SESSION["user_id"]) && ($_SESSION["update_days"] > 90)) {
-		echo drawServerMessage(getString("staff_update"));
+		echo drawMessage(getString("staff_update"));
 	} elseif (empty($_SESSION["updated_date"])) {
-		echo drawServerMessage(getString("staff_firsttime"));
+		echo drawMessage(getString("staff_firsttime"));
 	}
 } elseif (isset($_GET["requestID"])) {
 	$r = db_grab("SELECT 
@@ -157,25 +157,23 @@ $form->addRow("itext",  "Email", "email", @$r["email"], "", true, 50);
 
 $form->addRow("itext",  "Title", "title", @$r["title"], "", false, 100);
 $form->addRow("select", "Organization", "corporationID", "SELECT id, description FROM organizations ORDER BY description", @$r["corporationID"], false);
-if ($locale != "/_soc.joshreisner.com/") {
-	$form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
-	$form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_offices order by name", @$r["officeID"], true);
-}
+if (getOption("staff_showdept")) $form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
+if (getOption("staff_showoffice")) $form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_offices order by name", @$r["officeID"], true);
 
 $form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 14);
 $form->addRow("textarea-plain", "Bio", "bio", @$r["bio"]);
 
-if ($is_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
+if ($module_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
 	$form->addGroup("Administrative Information [public, but not editable by staff]");
-	if ($locale != "/_soc.joshreisner.com/") $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
+	if (getOption("staff_showrank")) $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);
-	if ($_SESSION["is_admin"]) $form->addCheckbox("is_admin", "Site Admin", $r["is_admin"]);
-	if (!$r["is_admin"]) $form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
+	if ($_SESSION["is_admin"]) $form->addCheckbox("is_admin", "Site Admin", @$r["is_admin"]);
+	if (!@$r["is_admin"]) $form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
 	$form->addRow("file", "Image", "userfile");
 }
 
-if ($locale != "/_soc.joshreisner.com/") {
+if (getOption("staff_showhome")) {
 	$form->addGroup("Home Contact Information [private]");
 	$form->addRow("itext", "Address 1", "homeAddress1", @$r["homeAddress1"], "", false);
 	$form->addRow("itext", "Address 2", "homeAddress2", @$r["homeAddress2"], "", false);
@@ -185,7 +183,9 @@ if ($locale != "/_soc.joshreisner.com/") {
 	$form->addRow("itext", "Home Phone", "homePhone", @format_phone($r["homePhone"]), "", false, 14);
 	$form->addRow("itext", "Cell Phone", "homeCell", @format_phone($r["homeCell"]), "", false, 14);
 	$form->addRow("itext", "Personal Email", "homeEmail", @$r["homeEmail"], "", false);
+}
 
+if (getOption("staff_showemergency")) {
 	$form->addGroup("First Emergency Contact [private]");
 	$form->addRow("itext", "Name", "emerCont1Name", @$r["emerCont1Name"], "", false);
 	$form->addRow("itext", "Relationship", "emerCont1Relationship", @$r["emerCont1Relationship"], "", false);

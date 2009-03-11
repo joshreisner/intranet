@@ -22,7 +22,7 @@ if (!$pageIsPublic) {
 			url_change("/?goto=" . urlencode($_josh["request"]["path_query"]));
 		}
 	} 
-
+	
 	//determine location & scenario
 	error_debug("user is logged in, determining location & scenario");
 	$page		= getPage();
@@ -64,9 +64,9 @@ if (!$pageIsPublic) {
 	
 	//indicate admin privileges for the current module
 	if (!$_SESSION["is_admin"]) {
-		$is_admin = (isset($modules[$page["module_id"]])) ? $modules[$page["module_id"]]["is_admin"] : false;
+		$module_admin = (isset($modules[$page["module_id"]])) ? $modules[$page["module_id"]]["is_admin"] : false;
 	} else {
-		$is_admin = true;
+		$module_admin = true;
 	}
 	
 	//check to see if user needs update ~ todo make this a preference
@@ -83,9 +83,9 @@ if (!$pageIsPublic) {
 	if (!isset($page["module_id"])) $page["module_id"] = 0;
 	if (!isset($modules[$page["module_id"]])) {
 		error_debug("unspecified module");
-		$modules[$page["module_id"]]["pallet"]	= false;
+		$modules[$page["module_id"]]["pallet"]		= false;
 		$modules[$page["module_id"]]["isPublic"]	= false;
-		$modules[$page["module_id"]]["pallet"]	= false;
+		$modules[$page["module_id"]]["pallet"]		= false;
 		$modules[$page["module_id"]]["name"]		= "Intranet";
 		$modules[$page["module_id"]]["is_admin"]	= false;
 	}
@@ -228,10 +228,20 @@ error_debug("done processing include!");
 	}
 	
 	function getString($key) {
-		global $_josh, $strings, $locale;
-		if (!isset($strings)) include($_josh["root"] . $locale . "strings.php");
+		global $strings;
 		if (!isset($strings[$key])) $strings[$key] = "";
 		return $strings[$key];
+	}
+	
+	function getOption($key) {
+		global $options;
+		if (!isset($options[$key])) $options[$key] = "";
+		return $options[$key];
+	}
+	
+	function emailAdmins($message, $subject) {
+		$admins = "jreisner@seedco.org,pchoi@seedco.org"; //todo - make this dynamic
+		return email($admins, $message, $subject);
 	}
 	
 //post functions
@@ -258,8 +268,8 @@ error_debug("done processing include!");
 	}
 	
 	function deleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
-		global $is_admin, $locale;
-		if ($adminOnly && !$is_admin) return false;
+		global $module_admin, $locale;
+		if ($adminOnly && !$module_admin) return false;
 		if (!$id) return '<td width="16">&nbsp;</td>';
 		return '<td width="16">' . draw_img($locale . "images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
 	}
@@ -669,7 +679,7 @@ error_debug("done processing include!");
 		return '<tr><td class="empty" colspan="' . $colspan . '">' . $text . '</td></tr>';
 	}
 	
-	function drawServerMessage($str, $align="left") {
+	function drawMessage($str, $align="left") {
 		if (empty($str) || !format_html_text($str)) return false;
 		$message  = '<table class="message">';
 		$message .= '<tr><td class="yellow" align="' . $align . '">' . $str . '</td>';
@@ -678,10 +688,10 @@ error_debug("done processing include!");
 	}
 							
 	function drawNavigation() {
-		global $_SESSION, $is_admin, $page, $location;
+		global $_SESSION, $module_admin, $page, $location;
 		if (!$page["module_id"]) return false;
 		$pages	= array();
-		$admin	= ($is_admin) ? "" : "AND is_admin = 0";
+		$admin	= ($module_admin) ? "" : "AND is_admin = 0";
 		$result	= db_query("SELECT name, url FROM pages WHERE module_id = {$page["module_id"]} {$admin} AND isInstancePage = 0 ORDER BY precedence");
 		while ($r = db_fetch($result)) {
 			if ($r["url"] != "/helpdesk/") $pages[$r["url"]] = $r["name"];
@@ -779,25 +789,25 @@ error_debug("done processing include!");
 		return $return;	
 	}
 	
-	function drawThreadComment($content, $user_id, $fullname, $date, $is_admin=false) {
+	function drawThreadComment($content, $user_id, $fullname, $date, $module_admin=false) {
 		global $location;
 		$return  = '<tr><td class="left">';
 		$return .= drawName($user_id, $fullname, $date, true) . '</td>';
 		$return .= '<td class="right text ';
-		if ($is_admin) $return .= $location . "-hilite";
+		if ($module_admin) $return .= $location . "-hilite";
 		$return .= '" height="80">' . $content . '</td></tr>';
 		return $return;
 	}
 	
 	function drawThreadCommentForm($showAdmin=false) {
-		global $is_admin, $_josh, $_SESSION;
+		global $module_admin, $_josh, $_SESSION;
 		$return = '
 			<a name="bottom"></a>
 			<form method="post" action="' . $_josh["request"]["path_query"] . '" onsubmit="javascript:return validate(this);">
 			<tr valign="top">
 				<td class="left">' . drawName($_SESSION["user_id"], $_SESSION["full_name"], false, true) . '</td>
 				<td>' . draw_form_textarea("message", "", "mceEditor thread");
-		if ($showAdmin && $is_admin) {
+		if ($showAdmin && $module_admin) {
 			$return .= '
 				<table class="nospacing">
 					<tr>
@@ -825,7 +835,7 @@ error_debug("done processing include!");
 	}
 	
 	function drawTop() {
-		global $_GET, $_SESSION, $_josh, $page, $is_admin, $locale, $location;
+		global $_GET, $_SESSION, $_josh, $page, $module_admin, $locale, $location;
 		error_debug("starting top");
 		$title = $page["module"] . " > " . $page["name"];
 	?><html>
@@ -886,7 +896,7 @@ error_debug("done processing include!");
 		$links = db_query("SELECT url, text FROM links WHERE is_active = 1 ORDER BY precedence");
 		while ($l = db_fetch($links)) {
 			if ($side == "left") echo "<tr>";
-			echo '<td width="50%"><a href="' . $l["url"] . '">' . $l["text"] . '</a></td>';
+			echo '<td width="50%"><a href="' . $l["url"] . '" target="new">' . $l["text"] . '</a></td>';
 			if ($side == "right") echo "</tr>";
 			$side = ($side == "left") ? "right" : "left";
 		}

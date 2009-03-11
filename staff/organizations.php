@@ -11,11 +11,11 @@ if (isset($_GET["deleteID"])) {
 }
 
 $orgs = array();
-if ($locale == "/_seedco/") {
-	if (!isset($_GET["id"])) $_GET["id"] = 1;
-} else {
+if (getOption("staff_allowshared")) {
 	if (!isset($_GET["id"])) $_GET["id"] = 0;
 	$orgs[0] = "Shared";
+} else {
+	if (!isset($_GET["id"])) $_GET["id"] = 1;
 }
 $orgs = db_array("SELECT id, description FROM organizations ORDER BY description", $orgs);
 drawTop();

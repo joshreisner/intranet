@@ -9,6 +9,8 @@ if (isset($_josh)) { //included
 			$r = db_grab("SELECT fileTypeID, imageTypeID FROM news_stories WHERE id = " . $_GET["id"]);
 			$_POST = array_merge($r, $_POST);
 		}
+		$_POST["fileTypeID"] = "NULL";
+		$_POST["imageTypeID"] = "NULL";
 		if (isset($_FILES["content"]["name"]) && !empty($_FILES["content"]["name"])) {
 			$_POST["fileTypeID"]	= getDocTypeID($_FILES["content"]["name"]);
 			$_POST["content"]		= file_get($_FILES["content"]["tmp_name"]);

@@ -43,9 +43,9 @@ if (isset($_GET["q"])) {
 	}
 	if (count($skips)) {
 		if (count($skips) == 1) {
-			echo drawServerMessage("<b>Note:</b> The word {$skips[0]} was ignored in your search.");
+			echo drawMessage("<b>Note:</b> The word {$skips[0]} was ignored in your search.");
 		} else {
-			echo drawServerMessage("<b>Note:</b> The words " . formatArrayForText($skips) . " were ignored in your search.");
+			echo drawMessage("<b>Note:</b> The words " . formatArrayForText($skips) . " were ignored in your search.");
 		}
 	}
 	//$where[] = "o.is_active = 1";

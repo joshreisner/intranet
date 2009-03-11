@@ -16,7 +16,7 @@ drawTop();
 
 
 if ($_SESSION["departmentID"] != 8) {
-	echo drawServerMessage("This page is specific to IT.");
+	echo drawMessage("This page is specific to IT.");
 	drawBottom();
 	exit;
 }

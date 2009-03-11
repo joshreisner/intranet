@@ -51,13 +51,15 @@ if (url_id()) {
 		<td class="left">Date</td>
 		<td><?=format_date($r["pubDate"])?></td>
 	</tr>
+	<? if ($r["docExt"]) {?>
 	<tr>
 		<td class="left">File</td>
 		<td><table class="nospacing"><tr><td><?=draw_img($locale . $r["icon"], "download.php?id=" . $_GET["id"])?></td>
 		<td><a href="download.php?id=<?=$_GET["id"]?>"> <?=$r["docTypeDesc"]?> (<?=format_size(strlen($r["content"]))?>)</a></td>
 		</tr></table></td>
 	</tr>
-	<? if ($r["url"]) {?>
+	<?  }
+	if ($r["url"]) {?>
 	<tr>
 		<td class="left">URL</td>
 		<td><a href="<?=$r["url"]?>"><?=$r["url"]?></a></td>
@@ -73,7 +75,7 @@ if (url_id()) {
 
 } else {
 	echo drawTableStart();
-	$colspan = ($is_admin) ? 5 : 4;
+	$colspan = ($module_admin) ? 5 : 4;
 	echo drawHeaderRow("", $colspan, "new", "#bottom");
 	
 	$result = db_query("SELECT 
@@ -93,7 +95,7 @@ if (url_id()) {
 			<th>Outlet</th>
 			<th>Organization</th>
 			<th class="r">Date</th>
-			<? if ($is_admin) {?><th class="x"></th><? }?>
+			<? if ($module_admin) {?><th class="x"></th><? }?>
 		</tr>
 		<?
 		while ($r = db_fetch($result)) {?>

@@ -8,7 +8,7 @@ if (url_action("delete")) {
 drawTop();
 
 echo drawTableStart();
-if ($is_admin) {
+if ($module_admin) {
 	$colspan = 4;
 	echo drawHeaderRow("List", $colspan, "add", "add_edit.php");
 } else {
@@ -28,7 +28,7 @@ if (db_found($categories)) {?>
 		<th></th>
 		<th>Name</th>
 		<th class="r">Updated</th>
-		<? if ($is_admin) {?><th></th><? }?>
+		<? if ($module_admin) {?><th></th><? }?>
 	</tr>
 	<?
 	while ($c = db_fetch($categories)) { ?>

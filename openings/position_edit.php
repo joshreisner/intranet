@@ -2,7 +2,7 @@
 include("../include.php");
 
 if ($_POST) {
-	$theuser_id = ($is_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
+	$theuser_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	$_POST["description"] = format_html($_POST["description"]);
 	db_query("UPDATE intranet_jobs SET
 			title			= '{$_POST["title"]}',	
@@ -27,7 +27,7 @@ $r = db_grab("SELECT
 			WHERE j.id = " . $_GET["id"]);
 
 $form = new intranet_form;
-if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
+if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
 $form->addRow("itext",  "Title" , "title", $r["title"], "", true);
 $form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", $r["corporationID"], true);
 $form->addRow("select", "Location" , "officeID", "SELECT id, name FROM intranet_offices ORDER BY precedence", $r["officeID"], true);

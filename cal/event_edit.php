@@ -27,7 +27,7 @@ echo drawNavigationCal($e["month"], $e["year"], true);
 
 
 $form = new intranet_form;
-if ($is_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], $e["created_user"], true);
+if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], $e["created_user"], true);
 $form->addRow("itext",  "Title" , "title", $e["title"], "", true);
 $form->addRow("select", "Type", "typeID", "SELECT id, description FROM cal_events_types ORDER BY description", $e["typeID"], true);
 $form->addRow("datetime", "Date", "startDate", $e["startDate"]);

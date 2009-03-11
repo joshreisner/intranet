@@ -59,9 +59,9 @@ $i = db_grab("SELECT
 	WHERE o.id = " . $_GET["id"]);
 
 if (!$i["id"]) {
-	echo drawServerMessage("Either the link you clicked on is bad, or else this contact has been expunged from the system.  No further information is available.");
+	echo drawMessage("Either the link you clicked on is bad, or else this contact has been expunged from the system.  No further information is available.");
 } else {
-	if (!$i["is_active"]) echo drawServerMessage("This contact was deleted on " . format_date_excel($i["deleted_date"]) . " by <a href='/staff/view.php?id=" . $i["deleted_user"] . "'>" . $i["deleted_userName"] . "</a>.  You can click below to undo the deletion.");
+	if (!$i["is_active"]) echo drawMessage("This contact was deleted on " . format_date_excel($i["deleted_date"]) . " by <a href='/staff/view.php?id=" . $i["deleted_user"] . "'>" . $i["deleted_userName"] . "</a>.  You can click below to undo the deletion.");
 	?>
 	<script language="javascript">
 		<!--
@@ -76,9 +76,9 @@ if (!$i["id"]) {
 	</script>
 	<table class="left" cellspacing="1">
 		<?
-		if ($is_admin && $i["is_active"]) {
+		if ($module_admin && $i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");
-		} elseif ($is_admin && !$i["is_active"]) {
+		} elseif ($module_admin && !$i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"), "expunge", "javascript:confirmExpunge({$_GET["id"]});");
 		} elseif ($i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");

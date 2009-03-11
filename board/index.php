@@ -34,7 +34,7 @@ if (url_action("delete")) {
 
 drawTop();
 echo drawTableStart();
-if ($is_admin) {
+if ($module_admin) {
 	$colspan = 2;
 	echo drawHeaderRow("Board Members", $colspan, "new", "#bottom");
 } else {
@@ -55,7 +55,7 @@ if (db_found($result)) {?>
 	<tr>
 		<th align="left" width="60%">Name</th>
 		<th align="left" width="40%">Position on Board</th>
-		 <? if ($is_admin) echo "<th width='16'></th>"; ?>
+		 <? if ($module_admin) echo "<th width='16'></th>"; ?>
 	</tr>
 	<?
 	$lastCorporation = "";
@@ -78,7 +78,7 @@ echo drawTableEnd();
 
 <a name="bottom"></a>
 
-<? if ($is_admin) {
+<? if ($module_admin) {
 	$form = new intranet_form;
 	$form->addRow("itext",  "First Name" , "firstname", "", "", true, 255);
 	$form->addRow("itext",  "Last Name" , "lastname", "", "", true, 255);

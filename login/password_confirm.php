@@ -13,7 +13,7 @@ include("../include.php");?>
 	<tr>
 		<td>
 <?
-echo drawServerMessage("<h1>Check your email</h1>  You should receive an email shortly with a link to reset your password.<br>
+echo drawMessage("<h1>Check your email</h1>  You should receive an email shortly with a link to reset your password.<br>
 Click <a href='/'>here</a> to go back.");
 ?>
 				</td>

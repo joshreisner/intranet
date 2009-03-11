@@ -1,7 +1,7 @@
 <?
 include("../include.php");
 
-if (!$is_admin) url_change("tags.php");
+if (!$module_admin) url_change("tags.php");
 
 if ($_POST) {
 	$t = db_grab("SELECT MAX(precedence) precedence FROM intranet_tags WHERE typeID = " . $_GET["id"]);

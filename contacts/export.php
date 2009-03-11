@@ -7,7 +7,7 @@ $where = (!isset($_GET["id"])) ? "" : "AND i.id IN (SELECT i2t.instanceID FROM c
 
 $result = db_query("SELECT
 				o.id,
-				'http://intranet.seedco.org/contacts/contact.php?id=' + cast(o.id as varchar) link,
+				'" . url_base() . "/contacts/contact.php?id=' + cast(o.id as varchar) link,
 				(SELECT t1.tag FROM intranet_tags t1 JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.typeID = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
 				i.varchar_01 firstname,
 				i.varchar_02 lastname,

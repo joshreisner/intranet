@@ -16,7 +16,7 @@ drawTop();
 $t = db_grab("SELECT title, description, is_admin, created_user FROM bb_topics WHERE id = " . $_GET["id"]);
 
 $form = new intranet_form;
-if ($is_admin) {
+if ($module_admin) {
 	$form->addUser("created_user",  "Posted By" , $t["created_user"], false, "ddeedd");
 	$form->addCheckbox("is_admin",  "Admin Post?", $t["is_admin"], "(check if yes)", "ddeedd");
 }
