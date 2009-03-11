@@ -26,8 +26,8 @@ $categories = db_query("SELECT
 if (db_found($categories)) {?>
 	<tr>
 		<th></th>
-		<th align="left">Name, Description</th>
-		<th align="right">Updated</th>
+		<th>Name</th>
+		<th class="r">Updated</th>
 		<? if ($is_admin) {?><th></th><? }?>
 	</tr>
 	<?

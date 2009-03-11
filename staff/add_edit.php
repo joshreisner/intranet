@@ -14,7 +14,7 @@ if ($posting) {
 	$_POST["emerCont2Phone"]	= format_phone(@$_POST["emerCont2Phone"]);
 	$_POST["emerCont2Cell"]		= format_phone(@$_POST["emerCont2Cell"]);
 	
-	format_post_nulls("departmentID,officeID,rankID");
+	format_post_nulls("corporationID,departmentID,officeID,rankID");
 		
 	if ($is_admin) {
 		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
