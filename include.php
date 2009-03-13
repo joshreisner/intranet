@@ -929,7 +929,7 @@ error_debug("done processing include!");
 
 //include joshlib it's the convention to put this at the bottom
 function includeLibrary() {
-	global $_SERVER, $_josh;
+	global $_SERVER, $_josh, $strings, $options;
 	$possibilities = array(
 		"D:\Sites\joshlib\\", //seedco-web-srv
 		"/home/hcfacc/www/joshlib/", //icd 2

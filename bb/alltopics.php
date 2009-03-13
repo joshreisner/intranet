@@ -70,14 +70,14 @@ if (db_found($topics)) {?>
 	<?
 	while ($r = db_fetch($topics)) {
 		if ($r["is_admin"]) $r["replies"] = "-";?>
-		<tr class="thread"<? if ($r["is_admin"]) {?> style="background-color:<?=$colors["yellow"]?>""<?}?>
+		<tr class="thread"<? if ($r["is_admin"]) {?> style="background-color:#fffce0;"<? }?>
 				onclick		= "location.href='topic.php?id=<?=$r["id"]?>';"
 				onmouseover	= "javascript:aOver('id<?=$r["id"]?>')"
 				onmouseout	= "javascript:aOut('id<?=$r["id"]?>')">
 			<td class="input"><a href="topic.php?id=<?=$r["id"]?>" id="id<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["firstname"]?> <?=$r["lastname"]?></td>
 			<td align="center"><?=$r["replies"]?></td>
-			<td align="right"><?=format_date($r["threadDate"])?></td>
+			<td align="right"><nobr><?=format_date($r["threadDate"])?></nobr></td>
 		</tr>
 		<? 
 	}

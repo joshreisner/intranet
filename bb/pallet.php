@@ -15,7 +15,7 @@ if (db_found($result)) {
 		if ($r["is_admin"]) $r["replies"] = "-";
 		?>
 		<tr height="20"<? if ($r["is_admin"]) {?> style="background-color:#fffce0;"<? }?>>
-			<td width="90%"><a href="<?=$m["url"]?>topic.php?id=<?=$r["id"]?>"><?=format_text_shorten($r["title"], 41)?></a></td>
+			<td width="90%"><a href="<?=$m["url"]?>topic.php?id=<?=$r["id"]?>"><?=format_text_shorten($r["title"], 39)?></a></td>
 			<td width="10%" align="center"><?=$r["replies"]?></td>
 		</tr>
 	<? }

@@ -52,8 +52,6 @@ $isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
 
 $r["description"] = htmlwrap($r["description"]);
 
-//if ($_GET["id"] == 7966) echo drawMessage("<b>Note</b>: This comments on this post are organized in reverse-chronological order.");
-
 if ($r["is_admin"]) echo drawMessage(getString("bb_admin"));
 ?>
 <script language="javascript">

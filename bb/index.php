@@ -78,7 +78,7 @@ if (db_found($topics)) {?>
 			<td class="input"><a href="topic.php?id=<?=$r["id"]?>" id="id<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["firstname"]?> <?=$r["lastname"]?></td>
 			<td align="center"><?=$r["replies"]?></td>
-			<td align="right"><?=format_date($r["threadDate"])?></td>
+			<td align="right"><nobr><?=format_date($r["threadDate"])?></nobr></td>
 		</tr>
 	<? }
 } else {
