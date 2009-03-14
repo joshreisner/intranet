@@ -23,7 +23,7 @@ if (db_found($result)) {?>
 	</tr>
 	<? while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><a href="info.php?id=<?=$r["id"]?>"><img src="<?=$locale?><?=$r["icon"]?>" width="16" height="16" border="0" alt="<?=$r["alt"]?>"></a></td>
+		<td><a href="info.php?id=<?=$r["id"]?>"><img src="<?=$_josh["write_folder"]?><?=$r["icon"]?>" width="16" height="16" border="0" alt="<?=$r["alt"]?>"></a></td>
 		<td><a href="info.php?id=<?=$r["id"]?>"><?=$r["name"]?></a></td>
 		<td align="right"><?=number_format($r["downloads"])?></td>
 	</tr>

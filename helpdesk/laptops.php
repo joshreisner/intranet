@@ -117,7 +117,7 @@ if (db_found($result)) {?>
 			<? } else { ?>
 			<a href="<?=url_query_add(array("checkin"=>$r["laptopID"]), false)?>">check in</a>
 			<? }?></nobr></td>
-		<td width="16"><a href="javascript:deactivateLaptop(<?=$r["laptopID"]?>,'<?=$r["laptopName"]?>');"><img src="<?=$locale?>images/icons/delete.gif" width="16" height="16" border="0"></a></td>
+		<td width="16"><a href="javascript:deactivateLaptop(<?=$r["laptopID"]?>,'<?=$r["laptopName"]?>');"><img src="<?=$_josh["write_folder"]?>images/icons/delete.gif" width="16" height="16" border="0"></a></td>
 	</tr>
 			<? }
 		}

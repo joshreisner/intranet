@@ -159,12 +159,12 @@ function drawTicketHeader() {
 }
 
 function drawTicketRow($r, $mode="status") { //mode can be status or type
-	global $priorityOptions, $statusOptions, $ownerOptions, $typeOptions, $request, $colors, $locale;
+	global $priorityOptions, $statusOptions, $ownerOptions, $typeOptions, $request, $colors, $_josh["write_folder"];
 	$return  = '
 	<tr>
 		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["created_date"], true) . '</td>
 		<td colspan="3"><a href="ticket.php?id=' . $r["id"] . '"><b>' . $r["title"] . '</b></a></td>
-		<td rowspan="2">' . draw_img($locale . "images/icons/delete.gif", deleteLink("Delete this ticket?", $r["id"], "delete", "ticketID")) . '</td>
+		<td rowspan="2">' . draw_img($_josh["write_folder"] . "images/icons/delete.gif", deleteLink("Delete this ticket?", $r["id"], "delete", "ticketID")) . '</td>
 	</tr>
 	<tr>';
 	$t = array("ticketID"=>$r["id"]);

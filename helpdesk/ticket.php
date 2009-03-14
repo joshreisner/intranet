@@ -310,7 +310,7 @@ while ($t = db_fetch($types)) {
 			WHERE a.ticketID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
-				<td width="18"><a href="download.php?id=<?=$a["id"]?>"><img src="<?=$locale?><?=$a["icon"]?>" width="16" height="16" border="0"></a></td>
+				<td width="18"><a href="download.php?id=<?=$a["id"]?>"><img src="<?=$_josh["write_folder"]?><?=$a["icon"]?>" width="16" height="16" border="0"></a></td>
 				<td><a href="download.php?id=<?=$a["id"]?>"><?=$a["title"]?></a></td>
 			</tr>
 		<? } ?>

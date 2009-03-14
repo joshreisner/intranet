@@ -35,7 +35,7 @@ drawTop();
 	<tr>
 		<td class="left">Type</td>
 		<td><table class="nospacing"><tr>
-			<td><?=draw_img($locale . $d["icon"])?></td>
+			<td><?=draw_img($_josh["write_folder"] . $d["icon"])?></td>
 			<td><?=$d["fileType"]?> (<?=format_size(strlen($d["content"]))?>)</td>
 			</tr></table>
 		</td>

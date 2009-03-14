@@ -5,12 +5,10 @@ if (!isset($_SESSION["user_id"])) $_SESSION["user_id"] = false;
 if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
 //joshlib & localize
-$locale				= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
-$_josh["config"]	= $locale . "config.php";
-//$_josh["debug"]		= true;
-$_josh["mode"]		= "dev";
+$_josh["write_folder"]	= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
+$_josh["config"]		= $_josh["write_folder"] . "/config.php";
 
-@extract(includeLibrary()) or die("Can't locate library! " . $_SERVER["DOCUMENT_ROOT"]);
+extract(joshlib());
 
 //apply security
 if (!$pageIsPublic) {
@@ -268,10 +266,10 @@ error_debug("done processing include!");
 	}
 	
 	function deleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
-		global $module_admin, $locale;
+		global $module_admin, $_josh["write_folder"];
 		if ($adminOnly && !$module_admin) return false;
 		if (!$id) return '<td width="16">&nbsp;</td>';
-		return '<td width="16">' . draw_img($locale . "images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
+		return '<td width="16">' . draw_img($_josh["write_folder"] . "images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
 	}
 
 	function drawCheckboxText($chkname, $description) {
@@ -280,12 +278,12 @@ error_debug("done processing include!");
 
 //rss functions (syndication)
 	function drawSyndicateLink($name) {
-		global $locale;
-		return '<link rel="alternate" type="application/rss+xml" title="RSS" href="' . $locale . 'syndicate/' . $name . '.xml">';
+		global $_josh["write_folder"];
+		return '<link rel="alternate" type="application/rss+xml" title="RSS" href="' . $_josh["write_folder"] . 'syndicate/' . $name . '.xml">';
 	}
 	
 	function syndicateBulletinBoard() {
-		global $_josh, $locale;
+		global $_josh, $_josh["write_folder"];
 		
 		$items = array();
 		
@@ -320,7 +318,7 @@ error_debug("done processing include!");
 			);
 		}
 
-		file_rss("Bulletin Board: Last 15 Topics", "http://" . $_josh["request"]["host"] . "/bb/", $items, $locale . "syndicate/bb.xml");
+		file_rss("Bulletin Board: Last 15 Topics", "http://" . $_josh["request"]["host"] . "/bb/", $items, $_josh["write_folder"] . "syndicate/bb.xml");
 	}
 	
 
@@ -652,15 +650,15 @@ error_debug("done processing include!");
 	}
 		
 	function verifyImage($user_id) {
-		global $_josh, $locale;
-		$large	= $_josh["root"] . $locale . "staff/" . $user_id . "-large.jpg";
-		$medium = $_josh["root"] . $locale . "staff/" . $user_id . "-medium.jpg";
-		$small	= $_josh["root"] . $locale . "staff/" . $user_id . "-small.jpg";
+		global $_josh, $_josh["write_folder"];
+		$large	= $_josh["root"] . $_josh["write_folder"] . "staff/" . $user_id . "-large.jpg";
+		$medium = $_josh["root"] . $_josh["write_folder"] . "staff/" . $user_id . "-medium.jpg";
+		$small	= $_josh["root"] . $_josh["write_folder"] . "staff/" . $user_id . "-small.jpg";
 		if (!is_file($large) || !is_file($medium) || !is_file($small)) {
 			if ($image = db_grab("SELECT image FROM users WHERE user_id = " . $user_id)) {
-				file_put($locale . "staff/" . $user_id . "-large.jpg", $image);
-				file_image_resize($large, $locale . "staff/" . $user_id . "-medium.jpg", 135);
-				file_image_resize($large, $locale . "staff/" . $user_id . "-small.jpg", 50);
+				file_put($_josh["write_folder"] . "staff/" . $user_id . "-large.jpg", $image);
+				file_image_resize($large, $_josh["write_folder"] . "staff/" . $user_id . "-medium.jpg", 135);
+				file_image_resize($large, $_josh["write_folder"] . "staff/" . $user_id . "-small.jpg", 50);
 			}
 		}
 	}
@@ -746,10 +744,10 @@ error_debug("done processing include!");
 	}
 
 	function drawName($user_id, $name, $date=false, $withtime=false, $separator="<br>") {
-		global $locale;
+		global $_josh["write_folder"];
 		$base = url_base();
 		$date = ($date) ? format_date_time($date, "", $separator) : false;
-		$img  = draw_img($locale . "staff/" . $user_id . "-small.jpg", $base . "/staff/view.php?id=" . $user_id);		
+		$img  = draw_img($_josh["write_folder"] . "staff/" . $user_id . "-small.jpg", $base . "/staff/view.php?id=" . $user_id);		
 		verifyImage($user_id);
 		return '
 		<table cellpadding="0" cellspacing="0" border="0" width="144">
@@ -835,7 +833,7 @@ error_debug("done processing include!");
 	}
 	
 	function drawTop() {
-		global $_GET, $_SESSION, $_josh, $page, $module_admin, $locale, $location;
+		global $_GET, $_SESSION, $_josh, $page, $module_admin, $_josh["write_folder"], $location;
 		error_debug("starting top");
 		$title = $page["module"] . " > " . $page["name"];
 	?><html>
@@ -845,7 +843,7 @@ error_debug("done processing include!");
 			echo draw_css_src("/styles/screen.css",	"screen");
 			echo draw_css_src("/styles/print.css",	"print");
 			echo draw_css_src("/styles/ie.css",		"ie");
-			echo draw_javascript_src($locale . "tinymce/jscripts/tiny_mce/tiny_mce.js");
+			echo draw_javascript_src($_josh["write_folder"] . "tinymce/jscripts/tiny_mce/tiny_mce.js");
 			echo draw_javascript_src("/javascript.js");
 			echo draw_javascript_src();
 			echo draw_javascript("form_tinymce_init('/styles/tinymce.css');");
@@ -853,7 +851,7 @@ error_debug("done processing include!");
 		</head>
 		<body>
 			<div id="container">
-				<div id="banner"><?=draw_img($locale . "images/banner.png", $_SESSION["homepage"])?></div>
+				<div id="banner"><?=draw_img($_josh["write_folder"] . "images/banner.png", $_SESSION["homepage"])?></div>
 				<div id="left">
 					<div id="help">
 					<a class="button left" href="<?=$_SESSION["homepage"]?>">Home</a>
@@ -877,7 +875,7 @@ error_debug("done processing include!");
 	}
 			
 	function drawBottom() {
-		global $_SESSION, $_GET, $_josh, $modules, $areas, $locale, $helpdeskOptions, $helpdeskStatus;
+		global $_SESSION, $_GET, $_josh, $modules, $areas, $_josh["write_folder"], $helpdeskOptions, $helpdeskStatus;
 		?>
 				</div>
 				<div id="right">
@@ -928,23 +926,16 @@ error_debug("done processing include!");
 	}
 
 //include joshlib it's the convention to put this at the bottom
-function includeLibrary() {
+function joshlib() {
 	global $_SERVER, $_josh, $strings, $options;
 	$possibilities = array(
-		"D:\Sites\joshlib\\", //seedco-web-srv
-		"/home/hcfacc/www/joshlib/", //icd 2
-		"/Users/josh/Sites/joshlib/",  //dora mac mini
-		"/Users/joshreisner/Sites/joshlib/", //macbook
-		"/home/joshreisner/www/joshlib/joshlib/" //icdsoft
+		"D:\Sites\joshlib\index.php", //seedco-web-srv
+		"/home/hcfacc/www/joshlib/index.php", //icd 2
+		"/Users/josh/Sites/joshlib/index.php",  //dora mac mini
+		"/Users/joshreisner/Sites/joshlib/index.php", //macbook
+		"/home/joshreisner/www/joshlib/joshlib/index.php" //icdsoft
 	);
-	if ($_SERVER["HTTP_HOST"] == "dev-intranet.seedco.org") array_unshift($possibilities, "D:\Sites\joshlib-dev\\");
-	foreach ($possibilities as $p) {
-		if (@include($p . "index.php")) {
-			$_josh["joshlib"] = $p;
-			//echo $p . "<br>";
-			return $_josh;
-		}
-	}
-	return false;
+	foreach ($possibilities as $p) if (@include($p)) return $_josh;
+	die("Can't locate library! " . $_SERVER["DOCUMENT_ROOT"]);
 }
 ?>
