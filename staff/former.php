@@ -22,7 +22,7 @@ drawTop();
 	while ($s = db_fetch($staff)) {?>
 	<tr height="38">
 		<? verifyImage($r["user_id"]);?>
-		<td width="47" align="center"><?=draw_img($locale . "staff/" . $r["user_id"] . "-small.jpg", "/staff/view.php?id=" . $r["user_id"])?></td>
+		<td width="47" align="center"><?=draw_img($_josh["write_folder"] . "/staff/" . $r["user_id"] . "-small.jpg", "/staff/view.php?id=" . $r["user_id"])?></td>
 		<td><nobr><a href="view.php?id=<?=$s["user_id"]?>"><?=$s["lastname"]?>, <?=$s["firstname"]?></a></nobr></td>
 		<td><?=$s["title"]?></td>
 		<td><?=$s["office"]?></td>

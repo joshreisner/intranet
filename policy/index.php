@@ -42,7 +42,7 @@ echo drawNavigationRow($options, "areas", true);
 		$link = "./?id=" . $d["id"];
 	?>
 	<tr>
-		<td width="16"><?=draw_img($locale . $d["icon"], $link)?></td>
+		<td width="16"><?=draw_img($_josh["write_folder"] . $d["icon"], $link)?></td>
 		<td><a href="<?=$link?>"><?=$d["name"]?></a></td>
 		<td class="r"><?=format_date($d["updated_date"])?></td>
 		<?=deleteColumn("Delete document?", $d["id"]);?>

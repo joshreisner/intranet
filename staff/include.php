@@ -83,7 +83,7 @@ function drawStaffList($where, $searchterms=false) {
 }
 
 function drawStaffRow($r, $searchterms=false) {
-	global $module_admin, $locale;
+	global $module_admin, $_josh;
 	if ($searchterms) {
 		global $fields;
 		foreach ($fields as $f) {
@@ -93,7 +93,7 @@ function drawStaffRow($r, $searchterms=false) {
 
 	$return  = '<tr height="38">';
 	verifyImage($r["user_id"]);
-	$return .= '<td width="50">' . draw_img($locale . 'staff/' . $r["user_id"] . '-small.jpg', '/staff/view.php?id=' . $r["user_id"]) . '</td>';
+	$return .= '<td width="50">' . draw_img($_josh["write_folder"] . '/staff/' . $r["user_id"] . '-small.jpg', '/staff/view.php?id=' . $r["user_id"]) . '</td>';
 	$return .= '<td><nobr><a href="view.php?id=' . $r["user_id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
 	if (!$r["isMain"]) $return .= "<br>" . $r["office"];
 	$return .= '</nobr></td><td>';
@@ -101,7 +101,7 @@ function drawStaffRow($r, $searchterms=false) {
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
 	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
 	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
-	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $locale . 'images/icons/delete.gif" width="16" height="16" border="0"></td>';
+	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $_josh["write_folder"] . '/images/icons/delete.gif" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

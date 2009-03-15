@@ -28,7 +28,7 @@ echo drawJumpToStaff();
 		<tr>
 			<td width="135" height="60" align="center" style="padding:0px;"><?
 				verifyImage($s["user_id"]);
-				echo draw_img($locale . "staff/" . $s["user_id"] . "-medium.jpg", "/staff/view.php?id=" . $s["user_id"]);
+				echo draw_img($_josh["write_folder"] . "/staff/" . $s["user_id"] . "-medium.jpg", "/staff/view.php?id=" . $s["user_id"]);
 				?></td>
 			<td class="text">
 				<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
@@ -68,7 +68,7 @@ $result = db_query("SELECT
 			verifyImage($r["user_id"]);
 		?>
 		<tr bgcolor="#FFFFFF" class="helptext" valign="top" height="38">
-			<td align="center"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><img src="<?=$locale?>staff/<?=$r["user_id"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
+			<td align="center"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><img src="<?=$_josh["write_folder"]?>/staff/<?=$r["user_id"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
 			<td><a href="/staff/view.php?id=<?=$r["user_id"]?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
 			<td><?=$r["title"]?>, <?=$r["departmentName"]?></td>
 			<td align="right"><?=format_date($r["endDate"]);?></td>

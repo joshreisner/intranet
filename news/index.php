@@ -21,7 +21,7 @@ if (url_id()) {
 		LEFT JOIN docs_types d2 ON n.fileTypeID = d2.id
 		WHERE n.id = " . $_GET["id"]);
 	if ($r["image"]) {
-		$filename = $locale . "news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"];
+		$filename = $_josh["write_folder"] . "/news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"];
 		if (!file_exists($filename)) file_put($filename, $r["image"]);
 	}
 	echo drawTableStart();
@@ -41,7 +41,7 @@ if (url_id()) {
 	</tr>
 	<tr>
 		<td class="left">Headline</td>
-		<td class="big"><?=draw_img($locale . "news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"], false, "", "news-thumbnail")?><?=$r["headline"]?></td>
+		<td class="big"><?=draw_img($_josh["write_folder"] . "/news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"], false, "", "news-thumbnail")?><?=$r["headline"]?></td>
 	</tr>
 	<tr>
 		<td class="left">News Outlet</td>
@@ -54,7 +54,7 @@ if (url_id()) {
 	<? if ($r["docExt"]) {?>
 	<tr>
 		<td class="left">File</td>
-		<td><table class="nospacing"><tr><td><?=draw_img($locale . $r["icon"], "download.php?id=" . $_GET["id"])?></td>
+		<td><table class="nospacing"><tr><td><?=draw_img($_josh["write_folder"] . $r["icon"], "download.php?id=" . $_GET["id"])?></td>
 		<td><a href="download.php?id=<?=$_GET["id"]?>"> <?=$r["docTypeDesc"]?> (<?=format_size(strlen($r["content"]))?>)</a></td>
 		</tr></table></td>
 	</tr>

@@ -78,11 +78,11 @@ if ($redirect) url_change($redirect);
 	<body>
 		<div id="container">
 			<div id="white">
-				<div class="top-left"><img src="<?=$locale?>images/corners-white/top-left.png" width="10" height"10" border="0"></div>
-				<div class="top-right"><img src="<?=$locale?>images/corners-white/top-right.png" width="10" height"10" border="0"></div>
-				<div class="bottom-left"><img src="<?=$locale?>images/corners-white/bottom-left.png" width="10" height"10" border="0"></div>
-				<div class="bottom-right"><img src="<?=$locale?>images/corners-white/bottom-right.png" width="10" height"10" border="0"></div>
-				<?=draw_img($locale . "images/logos.png");?>
+				<div class="top-left"><img src="<?=$_josh["write_folder"]?>/images/corners-white/top-left.png" width="10" height"10" border="0"></div>
+				<div class="top-right"><img src="<?=$_josh["write_folder"]?>/images/corners-white/top-right.png" width="10" height"10" border="0"></div>
+				<div class="bottom-left"><img src="<?=$_josh["write_folder"]?>/images/corners-white/bottom-left.png" width="10" height"10" border="0"></div>
+				<div class="bottom-right"><img src="<?=$_josh["write_folder"]?>/images/corners-white/bottom-right.png" width="10" height"10" border="0"></div>
+				<?=draw_img($_josh["write_folder"] . "/images/logos.png");?>
 				<div id="login">
 					<form method="post" action="/" name="login">
 					<input type="hidden" name="goto" value="<?=@$_GET["goto"]?>">
@@ -98,10 +98,10 @@ if ($redirect) url_change($redirect);
 				</div>
 			</div>
 			<div id="grey">
-				<div class="top-left"><img src="<?=$locale?>images/corners-grey/top-left.png" width="10" height"10" border="0"></div>
-				<div class="top-right"><img src="<?=$locale?>images/corners-grey/top-right.png" width="10" height"10" border="0"></div>
-				<div class="bottom-left"><img src="<?=$locale?>images/corners-grey/bottom-left.png" width="10" height"10" border="0"></div>
-				<div class="bottom-right"><img src="<?=$locale?>images/corners-grey/bottom-right.png" width="10" height"10" border="0"></div>
+				<div class="top-left"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/top-left.png" width="10" height"10" border="0"></div>
+				<div class="top-right"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/top-right.png" width="10" height"10" border="0"></div>
+				<div class="bottom-left"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/bottom-left.png" width="10" height"10" border="0"></div>
+				<div class="bottom-right"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/bottom-right.png" width="10" height"10" border="0"></div>
 				<?=getString("login")?>
 				<ul>
 				<li><a href="/login/password_reset.php">I Forgot My Password</a></li>

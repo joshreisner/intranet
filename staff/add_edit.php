@@ -44,7 +44,7 @@ if ($posting) {
 		}
 		
 		//check long distance code
-		if (($locale == "/_seedco/") && ($_POST["officeID"] == "1")) {
+		if (($_josh["write_folder"] == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
 			if (!db_grab("SELECT longdistancecode FROM users WHERE user_id = " . $id)) {
 				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM users WHERE is_active = 1 AND longdistancecode IS NOT NULL)");
 				db_query("UPDATE users SET longDistanceCode = {$code} WHERE user_id = " . $id);
@@ -64,10 +64,10 @@ if ($posting) {
 	if ($uploading) { 
 		//upload new staff image, probably should insert this in above update statement
 		//also need to ensure they're uploading a JPG
-		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $id . ",jpg", 270);
-		file_image_resize($_FILES["userfile"]["tmp_name"], $locale . "staff/" . $id . "-thumbnail,jpg", 40);
+		file_image_resize($_FILES["userfile"]["tmp_name"], $_josh["write_folder"] . "/staff/" . $id . ",jpg", 270);
+		file_image_resize($_FILES["userfile"]["tmp_name"], $_josh["write_folder"] . "/staff/" . $id . "-thumbnail,jpg", 40);
 		unlink($_FILES["userfile"]["tmp_name"]);
-		$image	= format_binary(file_get($locale . "staff/" . $id . ",jpg"));
+		$image	= format_binary(file_get($_josh["write_folder"] . "/staff/" . $id . ",jpg"));
 
 		//add image to user	
 		db_query("UPDATE users SET image = $image WHERE user_id = " . $id);
@@ -146,7 +146,8 @@ if (isset($_GET["id"])) {
 //set default rank
 if (!isset($r["rankID"])) $r["rankID"] = db_grab("SELECT id FROM intranet_ranks WHERE isDefault = 1");
 
-$isRequired = (isset($_GET["id"]) && ($_GET["id"] == $_SESSION["user_id"]) && ($locale == "/_seedco/"));
+//this should be an $option
+$isRequired = (isset($_GET["id"]) && ($_GET["id"] == $_SESSION["user_id"]) && ($_josh["write_folder"] == "/_intranet.seedco.org"));
 
 $form = new intranet_form;
 $form->addGroup("Public Information");

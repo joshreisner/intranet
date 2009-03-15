@@ -71,7 +71,7 @@ if (!isset($r["is_active"])) url_change("./");
 drawTop();
 verifyImage($_GET["id"]);
 
-if (!$img = draw_img($locale . "staff/" . $_GET["id"] . "-large.jpg")) $img = draw_img($locale . "images/to-be-taken.png");
+if (!$img = draw_img($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-large.jpg")) $img = draw_img($_josh["write_folder"] . "/images/to-be-taken.png");
 
 echo drawJumpToStaff($_GET["id"]);
 

@@ -52,7 +52,7 @@ drawNavigation();
 	while ($r = db_fetch($result)) {?>
 	<tr height="38">
 		<? verifyImage($r["user_id"]);?>
-		<td width="47" align="center"><?=draw_img($locale . "staff/" . $r["user_id"] . "-small.jpg", "/staff/view.php?id=" . $r["user_id"])?></td>
+		<td width="47" align="center"><?=draw_img($_josh["write_folder"] . "/staff/" . $r["user_id"] . "-small.jpg", "/staff/view.php?id=" . $r["user_id"])?></td>
 		<td><nobr><a href="view.php?id=<?=$r["user_id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></nobr></td>
 		<td><?=$r["title"]?></td>
 		<td><?=$r["office"]?></td>
