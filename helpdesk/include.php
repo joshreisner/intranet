@@ -159,7 +159,7 @@ function drawTicketHeader() {
 }
 
 function drawTicketRow($r, $mode="status") { //mode can be status or type
-	global $priorityOptions, $statusOptions, $ownerOptions, $typeOptions, $request, $colors, $_josh["write_folder"];
+	global $priorityOptions, $statusOptions, $ownerOptions, $typeOptions, $_josh;
 	$return  = '
 	<tr>
 		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["created_date"], true) . '</td>

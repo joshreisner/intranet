@@ -5,7 +5,7 @@ if (!isset($_SESSION["user_id"])) $_SESSION["user_id"] = false;
 if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
 //joshlib & localize
-$_josh["write_folder"]	= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]) . "/";
+$_josh["write_folder"]	= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]);
 $_josh["config"]		= $_josh["write_folder"] . "/config.php";
 
 extract(joshlib());
@@ -25,6 +25,8 @@ if (!$pageIsPublic) {
 	error_debug("user is logged in, determining location & scenario");
 	$page		= getPage();
 	$location	= $_josh["request"]["folder"];
+	$location = (($location == "bb") || ($location == "cal") || ($location == "docs") || ($location == "staff") || ($location == "helpdesk") || ($location == "contacts") || ($location == "external-orgs")) ? $location : "areas";
+
 	$uploading	= (isset($_FILES["userfile"]["tmp_name"]) && !empty($_FILES["userfile"]["tmp_name"])) ? true : false;
 
 	//get modules info
@@ -260,16 +262,16 @@ error_debug("done processing include!");
 //delete functions
 	function deleteLink($prompt=false, $id=false, $action="delete", $index="id") {
 		global $_GET;
-		if (!$id && isset($_GET["id"])) $id = $_GET[$index];
+		if (!$id && isset($_GET[$index])) $id = $_GET[$index];
 		$prompt = ($prompt) ? "'" . str_replace("'", '"', $prompt) . "'" : "false";
 		return "javascript:url_prompt('" . url_query_add(array("action"=>$action, $index=>$id), false) . "', " . $prompt . ");";
 	}
 	
 	function deleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
-		global $module_admin, $_josh["write_folder"];
+		global $module_admin, $_josh;
 		if ($adminOnly && !$module_admin) return false;
 		if (!$id) return '<td width="16">&nbsp;</td>';
-		return '<td width="16">' . draw_img($_josh["write_folder"] . "images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
+		return '<td width="16">' . draw_img($_josh["write_folder"] . "/images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
 	}
 
 	function drawCheckboxText($chkname, $description) {
@@ -278,12 +280,12 @@ error_debug("done processing include!");
 
 //rss functions (syndication)
 	function drawSyndicateLink($name) {
-		global $_josh["write_folder"];
-		return '<link rel="alternate" type="application/rss+xml" title="RSS" href="' . $_josh["write_folder"] . 'syndicate/' . $name . '.xml">';
+		global $_josh;
+		return '<link rel="alternate" type="application/rss+xml" title="RSS" href="' . $_josh["write_folder"] . '/syndicate/' . $name . '.xml">';
 	}
 	
 	function syndicateBulletinBoard() {
-		global $_josh, $_josh["write_folder"];
+		global $_josh;
 		
 		$items = array();
 		
@@ -318,7 +320,7 @@ error_debug("done processing include!");
 			);
 		}
 
-		file_rss("Bulletin Board: Last 15 Topics", "http://" . $_josh["request"]["host"] . "/bb/", $items, $_josh["write_folder"] . "syndicate/bb.xml");
+		file_rss("Bulletin Board: Last 15 Topics", url_base() . "/bb/", $items, $_josh["write_folder"] . "/syndicate/bb.xml");
 	}
 	
 
@@ -357,7 +359,7 @@ error_debug("done processing include!");
 			$rows .= '<tr';
 			if ($admin) $rows .= ' class="admin"';
 			
-			//special exception for modules table
+			//special exception for modules table -- todo either replace with a different thing, or make them all name
 			$description = ($table == "modules") ? "name" : "description";
 			
 			$rows .= '>
@@ -562,7 +564,7 @@ error_debug("done processing include!");
 	function db_enter($table, $fields, $index="id") {
 		global $_POST, $_GET, $language, $_SESSION;
 		
-		$fields = explode(" ", $fields);
+		$fields = explode(" ", str_replace(",", "", $fields));
 		foreach ($fields as $field) {
 			if (!isset($_POST[$field])) $_POST[$field] = "";
 			if ($field == "password") { //binary password
@@ -650,15 +652,15 @@ error_debug("done processing include!");
 	}
 		
 	function verifyImage($user_id) {
-		global $_josh, $_josh["write_folder"];
-		$large	= $_josh["root"] . $_josh["write_folder"] . "staff/" . $user_id . "-large.jpg";
-		$medium = $_josh["root"] . $_josh["write_folder"] . "staff/" . $user_id . "-medium.jpg";
-		$small	= $_josh["root"] . $_josh["write_folder"] . "staff/" . $user_id . "-small.jpg";
+		global $_josh;
+		$large	= $_josh["root"] . $_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg";
+		$medium = $_josh["root"] . $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg";
+		$small	= $_josh["root"] . $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg";
 		if (!is_file($large) || !is_file($medium) || !is_file($small)) {
 			if ($image = db_grab("SELECT image FROM users WHERE user_id = " . $user_id)) {
-				file_put($_josh["write_folder"] . "staff/" . $user_id . "-large.jpg", $image);
-				file_image_resize($large, $_josh["write_folder"] . "staff/" . $user_id . "-medium.jpg", 135);
-				file_image_resize($large, $_josh["write_folder"] . "staff/" . $user_id . "-small.jpg", 50);
+				file_put($_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg", $image);
+				file_image_resize($large, $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg", 135);
+				file_image_resize($large, $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg", 50);
 			}
 		}
 	}
@@ -692,14 +694,15 @@ error_debug("done processing include!");
 		$admin	= ($module_admin) ? "" : "AND is_admin = 0";
 		$result	= db_query("SELECT name, url FROM pages WHERE module_id = {$page["module_id"]} {$admin} AND isInstancePage = 0 ORDER BY precedence");
 		while ($r = db_fetch($result)) {
+			//don't do navigation for helpdesk.  it needs to do it, since a message could go above
 			if ($r["url"] != "/helpdesk/") $pages[$r["url"]] = $r["name"];
 		}
-		$location = (($location == "bb") || ($location == "cal") || ($location == "docs") || ($location == "staff") || ($location == "helpdesk") || ($location == "contacts")) ? $location : "areas";
 		return drawNavigationRow($pages, $location);
 	}
 	
-	function drawNavigationRow($pages, $module="areas", $pq=false) {
-		global $_josh;
+	function drawNavigationRow($pages, $module=false, $pq=false) {
+		global $_josh, $location;
+		if (!$module) $module = $location;
 		$count = count($pages);
 		if ($count < 2) return false;
 		$return = '<table class="navigation ' . $module . '" cellspacing="1">
@@ -708,7 +711,7 @@ error_debug("done processing include!");
 		$match = ($pq) ? $_josh["request"]["path_query"] : $_josh["request"]["path"];
 		//echo $match;  don't put url_base in match, if you can help it
 		foreach ($pages as $url=>$name) {
-			if ($match == $url) {
+			if (($url == $match) || ($url == url_base() . $match)) {
 				$cell = ' class="selected">' . $name . '';
 			} else {
 				$cell = '><a href="' . $url . '">' . $name . '</a>';
@@ -729,11 +732,11 @@ error_debug("done processing include!");
 					<div class="head-left">
 					';
 		if ($location != "login") {
-			$header .='<a  href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["name"] . '</a>';
+			$header .='<a  href="' . url_base() . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["name"] . '</a>';
 		}
 		if ($name) {
 			$header .=' &gt; ';
-			if ($_josh["request"]["subfolder"]) $header .= '<a href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
+			if ($_josh["request"]["subfolder"]) $header .= '<a href="' . url_base() . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
 			$header .= $name;
 		}
 		$header .= "</div>";
@@ -744,10 +747,10 @@ error_debug("done processing include!");
 	}
 
 	function drawName($user_id, $name, $date=false, $withtime=false, $separator="<br>") {
-		global $_josh["write_folder"];
+		global $_josh;
 		$base = url_base();
 		$date = ($date) ? format_date_time($date, "", $separator) : false;
-		$img  = draw_img($_josh["write_folder"] . "staff/" . $user_id . "-small.jpg", $base . "/staff/view.php?id=" . $user_id);		
+		$img  = draw_img($_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg", $base . "/staff/view.php?id=" . $user_id);		
 		verifyImage($user_id);
 		return '
 		<table cellpadding="0" cellspacing="0" border="0" width="144">
@@ -833,7 +836,7 @@ error_debug("done processing include!");
 	}
 	
 	function drawTop() {
-		global $_GET, $_SESSION, $_josh, $page, $module_admin, $_josh["write_folder"], $location;
+		global $_GET, $_SESSION, $_josh, $page, $module_admin, $location;
 		error_debug("starting top");
 		$title = $page["module"] . " > " . $page["name"];
 	?><html>
@@ -843,7 +846,7 @@ error_debug("done processing include!");
 			echo draw_css_src("/styles/screen.css",	"screen");
 			echo draw_css_src("/styles/print.css",	"print");
 			echo draw_css_src("/styles/ie.css",		"ie");
-			echo draw_javascript_src($_josh["write_folder"] . "tinymce/jscripts/tiny_mce/tiny_mce.js");
+			echo draw_javascript_src($_josh["write_folder"] . "/tinymce/jscripts/tiny_mce/tiny_mce.js");
 			echo draw_javascript_src("/javascript.js");
 			echo draw_javascript_src();
 			echo draw_javascript("form_tinymce_init('/styles/tinymce.css');");
@@ -851,7 +854,7 @@ error_debug("done processing include!");
 		</head>
 		<body>
 			<div id="container">
-				<div id="banner"><?=draw_img($_josh["write_folder"] . "images/banner.png", $_SESSION["homepage"])?></div>
+				<div id="banner"><?=draw_img($_josh["write_folder"] . "/images/banner.png", $_SESSION["homepage"])?></div>
 				<div id="left">
 					<div id="help">
 					<a class="button left" href="<?=$_SESSION["homepage"]?>">Home</a>
@@ -875,7 +878,7 @@ error_debug("done processing include!");
 	}
 			
 	function drawBottom() {
-		global $_SESSION, $_GET, $_josh, $modules, $areas, $_josh["write_folder"], $helpdeskOptions, $helpdeskStatus;
+		global $_SESSION, $_GET, $_josh, $modules, $areas, $helpdeskOptions, $helpdeskStatus;
 		?>
 				</div>
 				<div id="right">
@@ -925,7 +928,6 @@ error_debug("done processing include!");
 		<? db_close();
 	}
 
-//include joshlib it's the convention to put this at the bottom
 function joshlib() {
 	global $_SERVER, $_josh, $strings, $options;
 	$possibilities = array(

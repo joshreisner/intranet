@@ -201,7 +201,7 @@ $r = db_grab("SELECT
 			<td width="120"><b><nobr><?=$a["staffname"]?>&nbsp;&nbsp;</nobr></b><br><nobr><?=$date?></nobr>&nbsp;</td>
 			<td width="99%"><b><a href="activity_view.php?id=<?=$a["activityID"]?>"><?=$a["activityTitle"]?></a></b><br><?=$a["activityText"]?></td>
 			<td><?=$status?></td>
-			<td width="16"><a href="javascript:deleteActivity(<?=$a["activityID"]?>,'<?=$a["activityID"]?>');"><img src="<?=$_josh["write_folder"]?>images/icons/delete.gif" width="16" height="16" border="0"></a></td>
+			<td width="16"><a href="javascript:deleteActivity(<?=$a["activityID"]?>,'<?=$a["activityID"]?>');"><img src="<?=$_josh["write_folder"]?>/images/icons/delete.gif" width="16" height="16" border="0"></a></td>
 		</tr>
 		<? }
 	} else {
