@@ -60,9 +60,9 @@ $result = db_query("SELECT
 	if (db_found($result)) {?>
 		<tr>
 			<th width="47"></th>
-			<th width="25%" align="left">Name</th>
-			<th width="50%" align="left">Title, Department</th>
-			<th width="20%" align="right">Last Day</th>
+			<th width="25%">Name</th>
+			<th width="50%">Title, Department</th>
+			<th width="20%" class="r">Day Removed</th>
 		</tr>
 		<? while ($r = db_fetch($result)) {
 			verifyImage($r["user_id"]);
