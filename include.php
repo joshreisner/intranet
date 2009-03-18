@@ -25,7 +25,7 @@ if (!$pageIsPublic) {
 	error_debug("user is logged in, determining location & scenario");
 	$page		= getPage();
 	$location	= $_josh["request"]["folder"];
-	$location = (($location == "bb") || ($location == "cal") || ($location == "docs") || ($location == "staff") || ($location == "helpdesk") || ($location == "contacts") || ($location == "external-orgs")) ? $location : "areas";
+	$location = (($location == "bb") || ($location == "cal") || ($location == "docs") || ($location == "staff") || ($location == "helpdesk") || ($location == "contacts") || ($location == "external-orgs") || ($location == "communications")) ? $location : "areas";
 
 	$uploading	= (isset($_FILES["userfile"]["tmp_name"]) && !empty($_FILES["userfile"]["tmp_name"])) ? true : false;
 

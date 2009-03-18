@@ -17,18 +17,24 @@ if (getOption("staff_allowshared")) {
 } else {
 	if (!isset($_GET["id"])) $_GET["id"] = 1;
 }
-$orgs = db_array("SELECT id, description FROM organizations ORDER BY description", $orgs);
+$orgs = db_array("SELECT id, description FROM organizations ORDER BY description", $orgs, false, false);
+
 drawTop();
+
+if (count($orgs) < 8) {
 ?>
 <table class="navigation staff" cellspacing="1">
 	<tr class="staff-hilite">
-		<? foreach ($orgs as $key=>$value) {?>
+		<? foreach ($orgs as $key=>$value) {
+		$value = format_string($value, 26);
+		?>
 		<td width="14.28%"<? if ($_GET["id"] == $key) {?> class="selected"<? }?>><? if ($_GET["id"] != $key) {?><a href="organizations.php?id=<?=$key?>"><?} else {?><b><?}?><?=$value?></b></a></td>
 		<? }?>
 	</tr>
 </table>
-
 <?
+}
+
 $where = ($_GET["id"] == 0) ? " IS NULL " : " = " . $_GET["id"];
 echo drawStaffList("u.is_active = 1 AND u.corporationID " . $where);
 
