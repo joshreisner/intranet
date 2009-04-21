@@ -233,22 +233,22 @@ ul.navigation li {
 }
 ul.navigation li a { display:block; background-color:#ffdddd; border-right:1px solid #d8282d; height:22px; line-height:20px; }
 
-
-table.message {
-	width:594px; 
+#message { 
+	width:560px; 
 	border:1px solid #bbb;
-	border-spacing:0px;
+	background-color:#fffce0;
+	padding:16px;
 	font-size:13px;
 	line-height:18px;
 	margin:14px 0px 0px 0px;
 }
 
-table.message td.yellow {
-	padding:16px;
-	background-color:#fffce0;
-}
-
-table.message td.gray {
+#panel {
+	width:572px; 
+	border:1px solid #bbb;
+	font-size:13px;
+	line-height:18px;
+	margin:14px 0px 0px 0px;
 	text-align:center;
 	padding:10px;
 	background-color:#ededed;

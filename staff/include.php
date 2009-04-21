@@ -16,12 +16,7 @@ if (url_action("delete")) {
 function drawJumpToStaff($selectedID=false) {
 	global $module_admin;
 	$nullable = ($selectedID === false);
-	$return = '
-		<table class="message">
-			<tr>
-				<td class="gray">Jump to ' . drawSelectUser("", $selectedID, $nullable, 0, true, true, "Staff Member:") . '</td>
-			</tr>
-		</table>';
+	$return = draw_div("panel", 'Jump to ' . drawSelectUser("", $selectedID, $nullable, 0, true, true, "Staff Member:"));
 	if ($module_admin) { 
 		if ($r = db_grab("SELECT COUNT(*) FROM users_requests")) {
 			$return = drawMessage("There are pending <a href='requests.php'>account requests</a> for you to review.") . $return;

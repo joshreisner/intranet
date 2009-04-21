@@ -7,7 +7,6 @@ if (!isset($pageIsPublic)) $pageIsPublic = false;
 //joshlib & localize
 $_josh["write_folder"]	= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]);
 $_josh["config"]		= $_josh["write_folder"] . "/config.php";
-
 extract(joshlib());
 
 //apply security
@@ -24,8 +23,7 @@ if (!$pageIsPublic) {
 	//determine location & scenario
 	error_debug("user is logged in, determining location & scenario");
 	$page		= getPage();
-	$location	= $_josh["request"]["folder"];
-	$location = (($location == "bb") || ($location == "cal") || ($location == "docs") || ($location == "staff") || ($location == "helpdesk") || ($location == "contacts") || ($location == "external-orgs") || ($location == "communications")) ? $location : "areas";
+	$location	= (($request["folder"] == "bb") || ($request["folder"] == "cal") || ($request["folder"] == "docs") || ($request["folder"] == "staff") || ($request["folder"] == "helpdesk") || ($request["folder"] == "contacts") || ($request["folder"] == "external-orgs") || ($request["folder"] == "communications")) ? $request["folder"] : "areas";
 
 	$uploading	= (isset($_FILES["userfile"]["tmp_name"]) && !empty($_FILES["userfile"]["tmp_name"])) ? true : false;
 
@@ -136,19 +134,13 @@ error_debug("done processing include!");
 	}
 
 	function email_user($address, $title, $content, $colspan=1) {
-		global $_josh;
-		
 		$message = drawEmailHeader() . 
 			drawTableStart() . 
 			drawHeaderRow($title, $colspan) . 
 			$content . 
 			drawTableEnd() . 
 			drawEmailFooter();
-	
-		$headers	 = "MIME-Version: 1.0\r\n";
-		$headers	.= "Content-type: text/html; charset=iso-8859-1\r\n";
-		$headers	.= "From: " . $_josh["email_default"] . "\r\n";
-		if (!mail($address, $title, $message, $headers)) error_handle("Couldn't Send Email", "The message to " . $address . " was rejected by the mailserver for some reason", true);
+		return email($address, $message, $title);
 	}
 	
 	function errorNotify($msg="Undefined error message") {
@@ -161,8 +153,9 @@ error_debug("done processing include!");
 			} else {
 				$msg = str_replace("<!--user-->", "<i>User ID not set yet</i>", $msg);
 			}
-			email($_josh["email_admin"], $msg, "Error: " . $_josh["request"]["host"], $_josh["email_default"]);
+			return email($_josh["email_admin"], $msg, "Error: " . $_josh["request"]["host"], $_josh["email_default"]);
 		}
+		return false;
 	}
 	
     function login($username, $password, $skippass=false) {
@@ -271,17 +264,17 @@ error_debug("done processing include!");
 		global $module_admin, $_josh;
 		if ($adminOnly && !$module_admin) return false;
 		if (!$id) return '<td width="16">&nbsp;</td>';
-		return '<td width="16">' . draw_img($_josh["write_folder"] . "/images/icons/delete.gif", deleteLink($prompt, $id, $action)) . '</td>';
+		return draw_tag("td", array("width"=>"16"), draw_img($_josh["write_folder"] . "/images/icons/delete.gif", deleteLink($prompt, $id, $action)));
 	}
 
 	function drawCheckboxText($chkname, $description) {
-		return '<span class="clickme" onclick="javascript:toggleCheckbox(\'' . $chkname . '\');">' . $description . '</span>';
+		return draw_tag("span", array("class"=>"clickme", "onclick"=>"javascript:toggleCheckbox(\'' . $chkname . '\');", $description));
 	}
 
 //rss functions (syndication)
 	function drawSyndicateLink($name) {
 		global $_josh;
-		return '<link rel="alternate" type="application/rss+xml" title="RSS" href="' . $_josh["write_folder"] . '/syndicate/' . $name . '.xml">';
+		return draw_rss_link($_josh["write_folder"] . '/syndicate/' . $name . '.xml');
 	}
 	
 	function syndicateBulletinBoard() {
@@ -330,12 +323,11 @@ error_debug("done processing include!");
 		
 		function addUser($name="user_id", $desc="User", $default=0, $nullable=false, $admin=false) {
 			global $rows, $location;
-			$rows .= '<tr>
-				<td class="left">' . $desc . '</td>
-				<td';
-			if ($admin) $rows .= ' class="admin ' . $location . '-hilite"';
-			$rows .= '>' . drawSelectUser($name, $default, $nullable) . '</td>
-			</tr>';
+			$class = ($admin) ? "admin " . $location . "-hilite" : false;
+			$rows .= draw_container("tr", 
+				draw_container("td", $desc, array("class"=>"left")) . 
+				draw_container("td", drawSelectUser($name, $default, $nullable), array("class"=>$class))
+			);
 		}
 		
 		function addCheckbox($name="", $desc="", $default=0, $additionalText="(check if yes)", $admin=false) {
@@ -405,11 +397,10 @@ error_debug("done processing include!");
 		
 		function addSelect($name="", $desc="", $sql="", $default=0, $nullable=false, $bgcolor=false) {
 			global $rows;
-			$rows .= '
-			<tr>
-				<td>' . $desc . '</td>
-				<td>' . draw_form_select($name, $sql, $default, $nullable) . '</td>
-			</tr>';
+			$rows .= draw_container("tr", 
+				draw_container("td", $desc) . 
+				draw_container("td", draw_form_select($name, $sql, $default, $nullable))
+			);
 		}
 		
 		function addJavascript($conditions, $message) {
@@ -426,10 +417,7 @@ error_debug("done processing include!");
 		
 		function addGroup($text="") {
 			global $rows;
-			$rows .= '
-				<tr class="group">
-					<td colspan="2">' . $text . '</td>
-				</tr>';
+			$rows .= draw_container("tr", draw_container("td", $text, array("colspan"=>2)), array("class"=>"group"));
 		}
 			
 		function addRow($type, $title, $name="", $value="", $default="", $required=false, $maxlength=50, $onchange=false) {
@@ -526,17 +514,12 @@ error_debug("done processing include!");
 		function draw($pageTitle) {
 			global $rows, $_josh, $js, $location;
 			if ($js) {
-			?>
-			<script language="javascript">
-			<!--
-				function validate(form) {
+			echo draw_javascript("function validate(form) {
 					var errors = new Array();
-					<?=$js;?>
+					" . $js . "
 					return showErrors(errors);
-				}
-			//-->
-			</script>
-			<? }?>
+				}");
+			}?>
 			<a name="bottom"></a>
 			<table class="left" cellspacing="1">
 				<tr>
@@ -676,15 +659,12 @@ error_debug("done processing include!");
 	}
 	
 	function drawEmptyResult($text="None found.", $colspan=1) {
-		return '<tr><td class="empty" colspan="' . $colspan . '">' . $text . '</td></tr>';
+		return draw_tag("tr", false, draw_tag("td", array("class"=>"empty", "colspan"=>$colspan), $text));
 	}
 	
 	function drawMessage($str, $align="left") {
 		if (empty($str) || !format_html_text($str)) return false;
-		$message  = '<table class="message">';
-		$message .= '<tr><td class="yellow" align="' . $align . '">' . $str . '</td>';
-		$message .= '</tr></table>';
-		return $message;
+		return draw_div("message", $str);
 	}
 							
 	function drawNavigation() {
@@ -840,21 +820,21 @@ error_debug("done processing include!");
 		error_debug("starting top");
 		$title = $page["module"] . " > " . $page["name"];
 	?><html>
-		<head>
-			<title><?=$title?></title>
-			<?
-			echo draw_css_src("/styles/screen.css",	"screen");
-			echo draw_css_src("/styles/print.css",	"print");
-			echo draw_css_src("/styles/ie.css",		"ie");
-			echo draw_javascript_src($_josh["write_folder"] . "/tinymce/jscripts/tiny_mce/tiny_mce.js");
-			echo draw_javascript_src("/javascript.js");
-			echo draw_javascript_src();
-			echo draw_javascript("form_tinymce_init('/styles/tinymce.css');");
-			?>
-		</head>
+		<?
+		echo draw_container("head",
+			draw_container("title", $title) .
+			draw_css_src("/styles/screen.css",	"screen") .
+			draw_css_src("/styles/print.css",	"print") .
+			draw_css_src("/styles/ie.css",		"ie") .
+			draw_javascript_src($_josh["write_folder"] . "/tinymce/jscripts/tiny_mce/tiny_mce.js") .
+			draw_javascript_src("/javascript.js") .
+			draw_javascript_src() .
+			draw_javascript("form_tinymce_init('/styles/tinymce.css');")
+		);
+		?>
 		<body>
 			<div id="container">
-				<div id="banner"><?=draw_img($_josh["write_folder"] . "/images/banner.png", $_SESSION["homepage"])?></div>
+				<?=draw_div("banner", draw_img($_josh["write_folder"] . "/images/banner.png", $_SESSION["homepage"]))?>
 				<div id="left">
 					<div id="help">
 					<a class="button left" href="<?=$_SESSION["homepage"]?>">Home</a>
