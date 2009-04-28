@@ -30,7 +30,7 @@ echo drawNavigationRow($options, "areas", true);
 		echo drawheaderRow("", 3);
 	}	
 
-	$docs = db_query("SELECT d.id, d.name, t.icon, ISNULL(d.updated_date, d.created_date) updated_date FROM policy_docs d JOIN docs_types t ON d.typeID = t.id WHERE d.is_active = 1 AND d.categoryID = " . $_GET["category"]);
+	$docs = db_query("SELECT d.id, d.name, t.icon, ISNULL(d.updated_date, d.created_date) updated_date FROM policy_docs d JOIN docs_types t ON d.typeID = t.id WHERE d.is_active = 1 AND d.categoryID = " . $_GET["category"] . " ORDER BY d.name");
 	if (db_found($docs)) {?>
 	<tr>
 		<th width="16"></th>
