@@ -664,7 +664,7 @@ error_debug("done processing include!");
 	
 	function drawMessage($str, $align="left") {
 		if (empty($str) || !format_html_text($str)) return false;
-		return draw_div("message", $str);
+		return draw_container("div", $str, array("class"=>"message"));
 	}
 							
 	function drawNavigation() {
@@ -828,7 +828,7 @@ error_debug("done processing include!");
 			draw_css_src("/styles/ie.css",		"ie") .
 			draw_javascript_src($_josh["write_folder"] . "/tinymce/jscripts/tiny_mce/tiny_mce.js") .
 			draw_javascript_src("/javascript.js") .
-			draw_javascript_src() .
+			draw_javascript_src($_josh["write_folder"] . "/javascript.js") .
 			draw_javascript("form_tinymce_init('/styles/tinymce.css');")
 		);
 		?>
@@ -917,6 +917,7 @@ function joshlib() {
 		"/Users/joshreisner/Sites/joshlib/index.php", //macbook
 		"/home/joshreisner/www/joshlib/joshlib/index.php" //icdsoft
 	);
+	if ($_SERVER["HTTP_HOST"] == "dev-intranet.seedco.org") array_unshift($possibilities, "D:\Sites\joshlib-dev\index.php");
 	foreach ($possibilities as $p) if (@include($p)) return $_josh;
 	die("Can't locate library! " . $_SERVER["DOCUMENT_ROOT"]);
 }

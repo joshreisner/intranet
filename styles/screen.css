@@ -8,8 +8,8 @@ body {
 }
 
 #container 	{ width:900px; margin:0px auto 30px auto; text-align:left; }
-#left		{ float:left; width:590px; }
-#right		{ float:right; width:290px; }
+#left		{ float:left; position:relative; width:590px; z-index:2; }
+#right		{ float:right; position:relative; width:290px; z-index:1; }
 #footer		{ float:right; clear:right; font-size:10px; color:#ccc; margin:10px 0px 0px 0px; }
 #subfooter	{ clear:both; height:20px; }
 
@@ -34,8 +34,8 @@ body {
 	input.checkbox	{ width:auto; border:0px; padding:0px; margin:0px; background-color:transparent; }
 	input.file		{ border:none; }
 	select			{ font-family:verdana,sans-serif; font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
-	textarea		{ font-family:verdana,sans-serif; font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; width:500px; height:300px; }
-	textarea.thread { border-width:0px; width:435px; background-color:#fff; font-size:13px; line-height:20px; color:#444; }
+	textarea		{ font-family:verdana,sans-serif; font-size:13px; border:1px solid #ddd; padding:2px; width:500px; height:300px; }
+	textarea.thread { border-width:0px; width:435px; font-size:13px; line-height:20px; color:#444; }
 	textarea.full	{ width:586px; font-size:13px; line-height:20px; color:#444; }
 	h1				{ font-size:18px; line-height:22px; font-weight:normal; }
 	img				{ border-width:0px; }
@@ -158,6 +158,7 @@ body {
 
 table.left { 
 	width:594px; 
+	overflow-x:hidden;
 	background-color:#ddd;
 	border-width:0px; 
 	border-spacing:1px; 
@@ -172,7 +173,7 @@ table.left td.bottom { text-align:center; background-color:#ededed; }
 table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
 
 table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
-table.left td.text { padding:10px; font-size:13px; line-height:20px; }
+table.left td.text { width:500px; padding:10px; font-size:13px; line-height:20px; overflow-x:hidden; }
 table.left tr.thread { height:32px; vertical-align:middle; font-size:13px; }
 table.left tr.thread:hover { background-color:#f0f0f0; cursor:pointer; }
 table.left tr.total { background-color:#f3f3f3; text-align:right; }
@@ -233,7 +234,7 @@ ul.navigation li {
 }
 ul.navigation li a { display:block; background-color:#ffdddd; border-right:1px solid #d8282d; height:22px; line-height:20px; }
 
-#message { 
+div.message { 
 	width:560px; 
 	border:1px solid #bbb;
 	background-color:#fffce0;
