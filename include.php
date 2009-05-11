@@ -23,7 +23,7 @@ if (!$pageIsPublic) {
 	//determine location & scenario
 	error_debug("user is logged in, determining location & scenario");
 	$page		= getPage();
-	$location	= (($request["folder"] == "bb") || ($request["folder"] == "cal") || ($request["folder"] == "docs") || ($request["folder"] == "staff") || ($request["folder"] == "helpdesk") || ($request["folder"] == "contacts") || ($request["folder"] == "external-orgs") || ($request["folder"] == "communications")) ? $request["folder"] : "areas";
+	$location	= (($request["folder"] == "bb") || ($request["folder"] == "cal") || ($request["folder"] == "docs") || ($request["folder"] == "staff") || ($request["folder"] == "helpdesk") || ($request["folder"] == "contacts") || ($request["folder"] == "external-orgs") || ($request["folder"] == "press-clips")) ? $request["folder"] : "areas";
 
 	$uploading	= (isset($_FILES["userfile"]["tmp_name"]) && !empty($_FILES["userfile"]["tmp_name"])) ? true : false;
 
