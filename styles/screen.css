@@ -171,6 +171,7 @@ table.left td.left	{ background-color:#ededed; width:130px; }
 table.left td.right	{ width:414px; overflow-y:hidden; }
 table.left td.bottom { text-align:center; background-color:#ededed; }
 table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
+table.left td.title { font-size:15px; font-weight:bold; }
 
 table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
 table.left td.text { width:500px; padding:10px; font-size:13px; line-height:20px; overflow-x:hidden; }

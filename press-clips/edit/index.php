@@ -1,16 +1,18 @@
 <?
 $included = !@include("../../include.php");
-
 if ($posting) {
-	$id = db_enter("press_clips", "name, url, description");
-	url_change("./");
+	$id = db_save("press_clips");
+	url_change("/press-clips/clip.php?id=" . $id);
 } elseif ($included) {
 	$_josh["request"]["path_query"] = "/" . $location . "/edit/"; //shoddy way of setting the form target
 	$r["url"] = "http://";
-} else {
-	url_query_require();
+} elseif (url_id()) {
 	drawTop();
 	$r = db_grab("SELECT id, title, url, publication, pub_date, description, type_id from press_clips WHERE id = " . $_GET["id"]);
+} else {
+	echo drawTop();
+	$r["title"] = $_GET["title"];
+	$r["url"] = $_GET["url"];
 }
 
 $form = new intranet_form;
@@ -18,7 +20,8 @@ $form->addRow("itext",  "Title", "title", @$r["title"], "", true, 255);
 $form->addRow("itext",  "URL", "url", @$r["url"], "", true, 255);
 $form->addJavascript("form.url.value == 'http://'", "the 'URL' field is empty");
 $form->addRow("itext",  "Publication", "publication", @$r["publication"], "", true, 255);
-$form->addRow("date",  "Date", "pub_date", @$r["pub_date"]);
+$form->addRow("select",  "Type", "type_id", "SELECT id, title FROM press_clips_types", @$r["type_id"], true);
+$form->addRow("date",  "Date", "pub_date", @$r["pub_date"], "", true);
 $form->addRow("textarea", "Description", "description", @$r["description"], "", true);
 if ($included) {
 	//we are on the index page
