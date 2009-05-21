@@ -17,8 +17,7 @@ if ($posting) {
 	format_post_nulls("corporationID,departmentID,officeID,rankID");
 		
 	if ($module_admin) {
-		$email_address = $_POST["email"]; //db_enter is going to mess it up; i should fix that!
-		$id = db_enter("users", "firstname nickname lastname title email rankID *startDate *endDate #corporationID #departmentID #officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
+		$id = db_save("users");
 		
 		//if new user, reset password, delete request, and send invite
 		if (!isset($_GET["id"])) {
@@ -31,7 +30,7 @@ if ($posting) {
 
 			//send invitation
 			$name = str_replace("'", "", ($_POST["nickname"] == "NULL") ? $_POST["firstname"] : $_POST["nickname"]);
-			email_invite($id, $email_address, $name);
+			email_invite($id, $_POST["email"], $name);
 		}
 		
 		//update permissions
@@ -50,9 +49,8 @@ if ($posting) {
 				db_query("UPDATE users SET longDistanceCode = {$code} WHERE user_id = " . $id);
 			}
 		}
-		
 	} else {
-		$id = db_enter("users", "firstname nickname lastname email title #corporationID departmentID officeID phone bio homeAddress1 homeAddress2 homeCity homeStateID homeZIP homePhone homeCell homeEmail emerCont1Name emerCont1Relationship emerCont1Phone emerCont1Cell emerCont1Email emerCont2Name emerCont2Relationship emerCont2Phone emerCont2Cell emerCont2Email", "user_id");
+		$id = db_save("users");
 	}
 	
 	if ($id == $_SESSION["user_id"]) {

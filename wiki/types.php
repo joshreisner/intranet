@@ -2,7 +2,7 @@
 include("../include.php");
 
 if ($posting) {
-	$id = db_enter("wiki_topics_types", "description");
+	$id = db_save("wiki_topics_types");
     url_change();
 }
 

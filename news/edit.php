@@ -21,7 +21,7 @@ if (isset($_josh)) { //included
 			$_POST["image"]		= file_get($_FILES["image"]["tmp_name"]);
 			@unlink($_FILES["image"]["tmp_name"]);
 		}
-		$id = db_enter("news_stories", "headline outlet *pubdate @content #fileTypeID @image #imageTypeID url description");
+		$id = db_save("news_stories");
 		db_checkboxes("corporationID", "news_stories_to_organizations", "newsID", "organizationID", $id);
 		url_change("./?id=" . $id);
 	}	

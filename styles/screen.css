@@ -176,6 +176,7 @@ table.left td.title { font-size:15px; font-weight:bold; }
 table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
 table.left td.text { width:500px; padding:10px; font-size:13px; line-height:20px; overflow-x:hidden; }
 table.left tr.thread { height:32px; vertical-align:middle; font-size:13px; }
+table.left tr.admin { background-color:#fffce0; }
 table.left tr.thread:hover { background-color:#f0f0f0; cursor:pointer; }
 table.left tr.total { background-color:#f3f3f3; text-align:right; }
 

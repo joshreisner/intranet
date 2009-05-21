@@ -2,7 +2,7 @@
 include("../../include.php");
 
 if ($posting) {
-	db_enter("links", "text url precedence");
+	db_save("links");
 	url_change();
 } elseif (url_action("delete")) {
 	db_query("UPDATE links SET is_active = 0, deleted_date = NOW(), deleted_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);

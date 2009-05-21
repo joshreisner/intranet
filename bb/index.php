@@ -3,10 +3,10 @@
 if ($posting) {
 	error_debug("handling bb post");
 	format_post_bits("is_admin");
-	$id = db_enter("bb_topics", "title |description is_admin");
+	$id = db_save("bb_topics");
 	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " . $id);
-	
-	if ($_POST["is_admin"] == "'1'") { //send admin email
+
+	if ($_POST["is_admin"] == "1") { //send admin email
 		//get topic 
 		$r = db_grab("SELECT 
 				t.title,
@@ -34,6 +34,7 @@ if ($posting) {
 		//get addresses & send
 		$users = db_query("SELECT email FROM users WHERE is_active = 1");
 		while ($u = db_fetch($users)) {
+			die("you were about to send email");
 			mail($u["email"], $r["title"], $message, $headers);
 		}
 	}
@@ -70,8 +71,8 @@ if (db_found($topics)) {?>
 	<?
 	while ($r = db_fetch($topics)) {
 		$r["lastname"] = htmlentities($r["lastname"]); //see http://work.joshreisner.com/request/?id=477
-		if ($r["is_admin"]) $r["replies"] = "-";?>
-		<tr class="thread"<? if ($r["is_admin"]) {?> style="background-color:#fffce0;"<? }?>
+		?>
+		<tr class="thread<? if ($r["is_admin"] == 1) {?> admin<? }?>"
 			onclick		= "location.href='topic.php?id=<?=$r["id"]?>';"
 			onmouseover	= "javascript:aOver('id<?=$r["id"]?>')"
 			onmouseout	= "javascript:aOut('id<?=$r["id"]?>')">

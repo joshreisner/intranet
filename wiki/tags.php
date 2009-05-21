@@ -2,7 +2,7 @@
 include("../include.php");
 
 if ($posting) {
-	$id = db_enter("wiki_tags", "description");
+	$id = db_save("wiki_tags");
     url_change();
 }
 

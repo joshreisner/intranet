@@ -2,8 +2,7 @@
 include("include.php");
 
 if ($posting) {
-	$_POST["is_active"] = 1;
-	$id = db_enter("cal_events", "title description *startDate typeID");
+	$id = db_save("cal_events");
 	url_query_add(array("month"=>$_POST["startDateMonth"], "year"=>$_POST["startDateYear"]));
 }
 

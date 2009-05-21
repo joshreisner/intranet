@@ -3,7 +3,7 @@
 //adding a new type
 if ($posting) {
 	$_POST["departmentID"] = $departmentID;
-	$id = db_enter("helpdesk_tickets_types", "description departmentID", "id");
+	$id = db_save("helpdesk_tickets_types");
 	url_change();
 }
 

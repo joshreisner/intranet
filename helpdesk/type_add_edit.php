@@ -1,7 +1,7 @@
 <?php include("include.php");
 
 if ($posting) {
-	$id = db_enter("helpdesk_tickets_types", "description", "id");
+	$id = db_save("helpdesk_tickets_types");
 	url_change("type.php?id=" . $id);
 }
 

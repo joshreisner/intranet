@@ -25,6 +25,7 @@ if (!$pageIsPublic) {
 	$page		= getPage();
 	$location	= (($request["folder"] == "bb") || ($request["folder"] == "cal") || ($request["folder"] == "docs") || ($request["folder"] == "staff") || ($request["folder"] == "helpdesk") || ($request["folder"] == "contacts") || ($request["folder"] == "external-orgs") || ($request["folder"] == "press-clips")) ? $request["folder"] : "areas";
 
+	//this is bad
 	$uploading	= (isset($_FILES["userfile"]["tmp_name"]) && !empty($_FILES["userfile"]["tmp_name"])) ? true : false;
 
 	//get modules info
@@ -544,106 +545,16 @@ error_debug("done processing include!");
 		return $str;
 	}
 
-	function db_enter($table, $fields, $index="id") {
-		global $_POST, $_GET, $language, $_SESSION;
-		
-		$fields = explode(" ", str_replace(",", "", $fields));
-		foreach ($fields as $field) {
-			if (!isset($_POST[$field])) $_POST[$field] = "";
-			if ($field == "password") { //binary password
-				if (url_id()) {
-					$query1[] = $field . " = PWDENCRYPT('" . $_POST[$field] . "')";
-				} else {
-					$query1[] = $field;
-					$query2[] = $field . " = PWDENCRYPT('" . $_POST[$field] . "')";
-				}
-			} elseif (substr($field, 0, 1) == "#") { //numeric
-				$field = substr($field, 1);
-				if (url_id()) {
-					$query1[] = $field . " = " . $_POST[$field];
-				} else {
-					$query1[] = $field;
-					$query2[] = $_POST[$field];
-				}
-			} elseif (substr($field, 0, 1) == "*") { //date
-				$field = substr($field, 1);
-				if (isset($_POST["no" . $field])) {
-					if (url_id()) {
-						$query1[] = $field . " = NULL";
-					} else {
-						$query1[] = $field;
-						$query2[] = "NULL";
-					}
-				} else {
-					if (url_id()) {
-						$query1[] = $field . " = " . format_post_date($field);
-					} else {
-						$query1[] = $field;
-						$query2[] = format_post_date($field);
-					}
-				}
-			} elseif (substr($field, 0, 1) == "@") { //file
-				$field = substr($field, 1);
-				if (isset($_POST[$field])) { //file posting is optional, from a php point of view
-					if (url_id()) {
-						$query1[] = $field . " = " . format_binary($_POST[$field]);
-					} else {
-						$query1[] = $field;
-						$query2[] = format_binary($_POST[$field]);
-					}
-				}
-			} elseif (substr($field, 0, 1) == "|") { //html
-				$field = substr($field, 1);
-				if (isset($_POST[$field])) {
-					if (url_id()) {
-						$query1[] = $field . " = '" . format_html($_POST[$field]) . "'";
-					} else {
-						$query1[] = $field;
-						$query2[] = "'" . format_html($_POST[$field]) . "'";
-					}
-				}
-			} else { //text
-				$_POST[$field] = trim($_POST[$field]);
-				$_POST[$field] = (empty($_POST[$field])) ? "NULL" : "'" . $_POST[$field] . "'";
-				if (url_id()) {
-					$query1[] = $field . " = " . $_POST[$field];
-				} else {
-					$query1[] = $field;
-					$query2[] = $_POST[$field];
-				}
-			}
-		}
-		if (url_id()) {
-			$query1[] = "updated_date = GETDATE()";
-			if (isset($_POST["updated_user"])) {
-				$query1[] = "updated_user = " . $_POST["updated_user"];
-			} else {
-				$query1[] = "updated_user = " . $_SESSION["user_id"];
-			}
-			db_query("UPDATE " . $table . " SET " . implode(", ", $query1) . " WHERE " . $index . " = " . $_GET["id"]);
-			return $_GET["id"];
-		} else {
-			$query1[] = "created_date";
-			$query2[] = "GETDATE()";
-			$query1[] = "created_user";
-			$query2[] = (isset($_POST["created_user"])) ? $_POST["created_user"] : $_SESSION["user_id"];
-			$query1[] = "is_active";
-			$query2[] = 1;
-			$r = db_query("INSERT INTO " . $table . " ( " . implode(", ", $query1) . " ) VALUES ( " . implode(", ", $query2) . ")");
-			return $r;
-		}
-	}
-		
 	function verifyImage($user_id) {
 		global $_josh;
-		$large	= $_josh["root"] . $_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg";
-		$medium = $_josh["root"] . $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg";
-		$small	= $_josh["root"] . $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg";
-		if (!is_file($large) || !is_file($medium) || !is_file($small)) {
+		$large	= $_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg";
+		$medium = $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg";
+		$small	= $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg";
+		if (!file_is($large) || !file_is($medium) || !file_is($small)) {
 			if ($image = db_grab("SELECT image FROM users WHERE user_id = " . $user_id)) {
-				file_put($_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg", $image);
-				file_image_resize($large, $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg", 135);
-				file_image_resize($large, $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg", 50);
+				file_put($large, $image);
+				file_put($medium, format_image_resize($image, 135));
+				file_put($small, format_image_resize($image, 50));
 			}
 		}
 	}

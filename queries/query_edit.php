@@ -2,10 +2,9 @@
 include("../include.php");
 
 if ($posting) {
-	$id = db_enter("queries", "databaseID name description query");
+	$id = db_save("queries");
 	$db = db_grab("SELECT dbname FROM queries_databases WHERE id = " . $_POST["databaseID"]);
 	db_switch($db);
-	$_POST["query"] = str_replace("'", "", $_POST["query"]); //undo what db_enter just did
 	if (db_query($_POST["query"], 1, true)) {
 		url_change("./");
 	} else {

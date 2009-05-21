@@ -4,7 +4,7 @@ include("../include.php");
 if ($posting) {
 	format_post_bits("is_admin");
 	$_POST["description"] = format_html($_POST["description"]);
-	db_enter("bb_topics", "title description is_admin");
+	db_save("bb_topics");
 	//db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " . $_GET["id"]); don't do this
 	syndicateBulletinBoard();
 	url_change("topic.php?id=" . $_GET["id"]);

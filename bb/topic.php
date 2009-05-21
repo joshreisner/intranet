@@ -1,10 +1,10 @@
 <? include("../include.php");
 
 if ($posting) {
-	$_POST["description"] = format_html($_POST["message"]);
+	$_POST["description"] = $_POST["message"];
 	$_POST["topicID"] = $_GET["id"];
-	$_GET["id"] = false; //stupid hack for db_enter
-	$id = db_enter("bb_followups", "#topicID |description");
+	$_GET["id"] = false; //shameless hack for db_save
+	$id = db_save("bb_followups");
 	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " . $_POST["topicID"]);
 	
 	//send followup email to all topic posters
@@ -94,7 +94,7 @@ $isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
 
 $r["description"] = htmlwrap($r["description"]);
 
-if ($r["is_admin"]) echo drawMessage(getString("bb_admin"));
+if ($r["is_admin"] == 1) echo drawMessage(getString("bb_admin"));
 ?>
 <script language="javascript">
 	<!--
@@ -117,33 +117,27 @@ if ($r["is_admin"]) echo drawMessage(getString("bb_admin"));
 	if ($module_admin || $isPoster) {
 		echo drawHeaderRow($r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 	} else {
-		if ($r["is_admin"]) {
-			echo drawHeaderRow($r["title"], 2);
-		} else {
-			echo drawHeaderRow($r["title"], 2, "add a followup", "#bottom");
-		}
+		echo drawHeaderRow($r["title"], 2, "add a followup", "#bottom");
 	}
 	echo drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
-	//get replies
-	//$direction = ($_GET["id"] == 7966) ? "DESC" : "ASC";
-	if (!$r["is_admin"]) {
-		$followups = db_query("SELECT
-					f.id,
-					f.description,
-					u.user_id,
-					ISNULL(u.nickname, u.firstname) firstname,
-					u.lastname,
-					f.created_date as postedDate,
-					f.created_user as user_id
-				FROM bb_followups f
-				JOIN users u ON u.user_id = f.created_user
-				WHERE f.is_active = 1 AND f.topicID = {$_GET["id"]}
-				ORDER BY f.created_date");
-		while ($f = db_fetch($followups)) { 
-			echo drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["postedDate"]);
-		}
-		echo drawThreadCommentForm(false);
+
+	$followups = db_query("SELECT
+				f.id,
+				f.description,
+				u.user_id,
+				ISNULL(u.nickname, u.firstname) firstname,
+				u.lastname,
+				f.created_date as postedDate,
+				f.created_user as user_id
+			FROM bb_followups f
+			JOIN users u ON u.user_id = f.created_user
+			WHERE f.is_active = 1 AND f.topicID = {$_GET["id"]}
+			ORDER BY f.created_date");
+	while ($f = db_fetch($followups)) { 
+		echo drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["postedDate"]);
 	}
+	echo drawThreadCommentForm(false);
+
 echo '</table>';
 
 drawBottom();?>

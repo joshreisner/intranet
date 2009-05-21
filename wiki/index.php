@@ -2,7 +2,7 @@
 include("../include.php");
 
 if ($posting) {
-	$id = db_enter("wiki_topics", "title typeID description");
+	$id = db_save("wiki_topics");
 	db_checkboxes("tags", "wiki_topics_to_tags", "topicID", "tagID", $id);
     url_change();
 }

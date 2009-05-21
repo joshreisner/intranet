@@ -31,7 +31,7 @@ if ($uploading) { //upload an attachment
 } elseif ($posting) { //add a comment
 	$_POST["description"] = format_html($_POST["message"]);
 	$_POST["topicID"] = $_GET["id"];
-	$id = db_enter("wiki_topics_comments", "topicID description");
+	$id = db_save("wiki_topics_comments");
 	url_change();
 }
 

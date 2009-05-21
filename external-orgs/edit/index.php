@@ -2,7 +2,7 @@
 $included = !@include("../../include.php");
 
 if ($posting) {
-	$id = db_enter("external_orgs", "name, url, description");
+	$id = db_save("external_orgs");
 	db_checkboxes("types", "external_orgs_to_types", "org_id", "type_id", $id);
 	url_change("/" . $location . "/?type=" . db_grab("SELECT type_id FROM external_orgs_to_types WHERE org_id = " . $id)); //pure hackery
 } elseif ($included) {

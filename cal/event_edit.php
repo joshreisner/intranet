@@ -2,7 +2,7 @@
 include("include.php");
 
 if ($posting) {
-	$id = db_enter("cal_events", "title description *startDate typeID");
+	$id = db_save("cal_events");
 	url_change("./event.php?id=" . $_GET["id"]);
 }
 
