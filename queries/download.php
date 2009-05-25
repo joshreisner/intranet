@@ -28,7 +28,7 @@ for ($i = 0; $i < $num_columns; $i++) {
 
 $return = '
 <table border="1">
-	<tr bgcolor="' . $colors["yellow"] . '">';
+	<tr bgcolor="#fffceo">';
 	foreach ($fields as $field) { 
 		list($name, $datatype) = explode("|||", $field);
 		$return .= '
@@ -54,7 +54,7 @@ $return .= '</table>';
 	db_switch($_josh["db"]["database"]);	
 	db_query("INSERT INTO queries_executions ( 
 				queryID, 
-				user_id, 
+				userID, 
 				executedOn, 
 				num_rows, 
 				num_columns

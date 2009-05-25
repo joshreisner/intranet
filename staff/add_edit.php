@@ -13,9 +13,8 @@ if ($posting) {
 	$_POST["emerCont1Cell"]		= format_phone(@$_POST["emerCont1Cell"]);
 	$_POST["emerCont2Phone"]	= format_phone(@$_POST["emerCont2Phone"]);
 	$_POST["emerCont2Cell"]		= format_phone(@$_POST["emerCont2Cell"]);
-	
-	format_post_nulls("organization_id,departmentID,officeID,rankID");
-		
+	if (!isset($_POST["is_admin"])) $_POST["is_admin"] = 0;
+			
 	if ($module_admin) {
 		$id = db_save("users");
 		
@@ -34,7 +33,20 @@ if ($posting) {
 		}
 		
 		//update permissions
-		db_checkboxes("permissions", "users_to_modules", "user_id", "module_id", $id);
+		//db_checkboxes("permissions", "users_to_modules", "user_id", "module_id", $id);
+		db_query("UPDATE users_to_modules SET is_admin = 0 WHERE user_id = " . $id);
+		foreach ($_POST as $key => $value) {
+			@list($control, $field_name, $module_id) = explode("_", $key);
+			if (($control == "chk") && ($field_name == "permissions")) {
+				//set admin flag
+				if (db_grab("SELECT COUNT(*) FROM users_to_modules WHERE module_id = $module_id AND user_id = " . $id)) {
+					db_query("UPDATE users_to_modules SET is_admin = 1 WHERE module_id = $module_id AND user_id = " . $id);
+				} else {
+					db_query("INSERT INTO users_to_modules ( module_id, user_id, is_admin ) VALUES ( $module_id, $id, 1 )");
+				}
+			}
+		}
+
 
 		//check long distance code
 		if (($_josh["write_folder"] == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
@@ -162,7 +174,9 @@ if ($module_admin) { //some fields are admin-only (we don't want people editing 
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);
 	if ($_SESSION["is_admin"]) $form->addCheckbox("is_admin", "Site Admin", @$r["is_admin"]);
-	if (!@$r["is_admin"]) $form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
+	if (!@$r["is_admin"]) {
+		$form->addCheckboxes("permissions", "Permissions", "modules", "users_to_modules", "user_id", "module_id", @$_GET["id"]);
+	}
 	$form->addRow("file", "Image", "userfile");
 }
 

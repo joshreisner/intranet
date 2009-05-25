@@ -186,12 +186,12 @@ if (!$r["is_active"]) {
 		<td class="left">Invite</td>
 		<td colspan="2"><a href="<?=deleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
 	</tr>
-	<? if (getOption("staff_showrank")) {?>
-	<tr>
-		<td class="left">Rank</td>
-		<td colspan="2"><?=$r["rank"]?></td>
-	</tr>
-	<? } ?>
+		<? if (getOption("staff_showrank")) {?>
+		<tr>
+			<td class="left">Rank</td>
+			<td colspan="2"><?=$r["rank"]?></td>
+		</tr>
+		<? } ?>
 	<tr>
 		<td class="left">Permissions</td>
 		<td colspan="2">

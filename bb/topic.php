@@ -54,11 +54,7 @@ if ($posting) {
 
 //set topic and followups to deleted
 if (isset($_GET["delete"])) {
-	db_query("UPDATE bb_topics SET 
-				is_active = 0,
-				deleted_date = GETDATE(),
-				deleted_user = {$_SESSION["user_id"]}
-			  WHERE id = " . $_GET["id"]);
+	db_delete("bb_topics");
 	syndicateBulletinBoard();
 	url_change("/bb/");
 } elseif (isset($_GET["deleteFollowupID"])) {
@@ -90,7 +86,6 @@ drawTop();
 echo drawSyndicateLink("bb");
 
 $isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
-
 
 $r["description"] = htmlwrap($r["description"]);
 

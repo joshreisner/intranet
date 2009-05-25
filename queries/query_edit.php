@@ -3,13 +3,7 @@ include("../include.php");
 
 if ($posting) {
 	$id = db_save("queries");
-	$db = db_grab("SELECT dbname FROM queries_databases WHERE id = " . $_POST["databaseID"]);
-	db_switch($db);
-	if (db_query($_POST["query"], 1, true)) {
-		url_change("./");
-	} else {
-		url_change("./query_edit.php?id=" . $id, true);
-	}
+	url_change("./");
 }
 	
 drawTop();

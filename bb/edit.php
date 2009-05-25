@@ -2,16 +2,13 @@
 include("../include.php");
 
 if ($posting) {
-	format_post_bits("is_admin");
-	$_POST["description"] = format_html($_POST["description"]);
+	//update topic.  don't update the thread_date, or send any emails
 	db_save("bb_topics");
-	//db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $_GET["id"]); don't do this
 	syndicateBulletinBoard();
 	url_change("topic.php?id=" . $_GET["id"]);
 }
 
 drawTop();
-
 
 $t = db_grab("SELECT title, description, is_admin, created_user FROM bb_topics WHERE id = " . $_GET["id"]);
 

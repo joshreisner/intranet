@@ -19,7 +19,7 @@ $e = db_grab("SELECT
 	WHERE e.id = " . $_GET["id"]);
 	
 if (url_action("delete")) {
-	db_query("DELETE FROM cal_events WHERE id = " . $_GET["id"]);
+	db_delete("cal_events");
 	url_change("/cal/?month="  . $e["month"] . "&year=" . $e["year"]);
 }
 

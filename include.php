@@ -40,7 +40,6 @@ if (!$pageIsPublic) {
 			(SELECT u.is_admin FROM users_to_modules u WHERE u.user_id = {$_SESSION["user_id"]} AND u.module_id = m.id) is_admin
 		FROM modules m
 		JOIN pages p ON p.id = m.homePageID
-		LEFT JOIN users_to_modules u ON u.module_id = m.id
 		WHERE m.is_active = 1
 		ORDER BY m.precedence");
 
@@ -102,8 +101,7 @@ if (!$pageIsPublic) {
 
 	//handle side menu pref updates
 	if (isset($_GET["module"])) {
-		$closed = db_grab("SELECT is_closed FROM users_to_modules WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"]);
-		if ($closed != "") {
+		if (db_grab("SELECT COUNT(*) FROM users_to_modules WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"])) {
 			db_query("UPDATE users_to_modules SET is_closed = " . abs($closed - 1) . " WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"]);
 		} else {
 			db_query("INSERT INTO users_to_modules ( user_id, module_id, is_closed ) VALUES ( {$_SESSION["user_id"]}, {$_GET["module"]}, 1 )");
@@ -221,13 +219,32 @@ error_debug("done processing include!");
 	
 	function getString($key) {
 		global $strings;
-		if (!isset($strings[$key])) $strings[$key] = "";
+		
+		//default strings.  override these in your config file by specifying $strings variables
+		$defaults["login"]				= 'Welcome to the intranet.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
+		$defaults["bb_admin"]			= 'This is an important administrative announcement topic.';
+		$defaults["staff_firsttime"]	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
+		$defaults["staff_update"]		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
+
+		if (!isset($strings[$key])) return $defaults[$key];
 		return $strings[$key];
 	}
 	
 	function getOption($key) {
 		global $options;
-		if (!isset($options[$key])) $options[$key] = "";
+		
+		//default options.  override these in your config file by specifying $options variables
+		$defaults["cal_showholidays"]		= true;
+		$defaults["staff_alertnew"]			= false;
+		$defaults["staff_alertdelete"]		= false;
+		$defaults["staff_allowshared"]		= false;
+		$defaults["staff_showdept"]			= true;
+		$defaults["staff_showoffice"]		= true;
+		$defaults["staff_showrank"]			= true;
+		$defaults["staff_showhome"]			= true;
+		$defaults["staff_showemergency"]	= true;
+		
+		if (!isset($options[$key])) return $defaults[$key];
 		return $options[$key];
 	}
 	
@@ -286,15 +303,15 @@ error_debug("done processing include!");
 				t.title,
 				t.description,
 				t.is_admin,
-				t.threadDate,
-				(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topicID AND f.is_active = 1) replies,
+				t.thread_date,
+				(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
 				u.email
 			FROM bb_topics t
 			JOIN users u ON u.id = t.created_user
 			WHERE t.is_active = 1 
-			ORDER BY t.threadDate DESC", 15);
+			ORDER BY t.thread_date DESC", 15);
 		
 		while ($t = db_fetch($topics)) {
 			if ($t["is_admin"]) $t["title"] = "ADMIN: " . $t["title"];
@@ -353,6 +370,9 @@ error_debug("done processing include!");
 			//special exception for modules table -- todo either replace with a different thing, or make them all name
 			$description = ($table == "modules") ? "name" : "description";
 			
+			//another special exception for permissions
+			$where = ($name == "permissions") ? " AND l.is_admin = 1" : "";
+			
 			$rows .= '>
 				<td class="left">' . $desc . '</td>
 				<td>';
@@ -360,7 +380,7 @@ error_debug("done processing include!");
 					$result = db_query("SELECT 
 							t.id, 
 							t.$description description, 
-							(SELECT COUNT(*) FROM $linking_table l WHERE l.$table_col = $id AND l.$link_col = t.id) checked
+							(SELECT COUNT(*) FROM $linking_table l WHERE l.$table_col = $id AND l.$link_col = t.id $where) checked
 						FROM $table t
 						WHERE t.is_active = 1
 						ORDER BY t.$description");

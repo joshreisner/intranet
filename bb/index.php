@@ -34,7 +34,7 @@ if ($posting) {
 		//get addresses & send
 		$users = db_query("SELECT email FROM users WHERE is_active = 1");
 		while ($u = db_fetch($users)) {
-			die("you were about to send email");
+			die("admin topic email temporarily disabled for review.");
 			mail($u["email"], $r["title"], $message, $headers);
 		}
 	}

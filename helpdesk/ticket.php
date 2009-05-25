@@ -19,7 +19,7 @@ $r = db_grab("SELECT
 		t.departmentID,
 		t.priorityID,
 		p.is_admin is_adminPriority,
-		t.closedDate,
+		t.closed_date,
 		y.description type,
 		s.is_active is_activeOwner,
 		ISNULL(s.nickname, s.firstname) ownerFirst,
@@ -29,7 +29,7 @@ $r = db_grab("SELECT
 	JOIN users					u ON t.created_user	= u.id
 	JOIN helpdesk_tickets_priorities	p ON t.priorityID	= p.id
 	JOIN offices				o ON u.officeID		= o.id
-	LEFT JOIN users			s ON t.ownerID		= s.user_id
+	LEFT JOIN users			s ON t.ownerID		= s.id
 	LEFT JOIN helpdesk_tickets_types	y ON t.type_id		= y.id
 	WHERE t.id = " . $_GET["id"]);
 
@@ -259,7 +259,7 @@ while ($t = db_fetch($types)) {
 	</tr> -->
 	<tr height="30">
 		<td class="left">Ticket Age</td>
-		<td><?=format_time_business($r["created_date"], $r["closedDate"]);?></td>
+		<td><?=format_time_business($r["created_date"], $r["closed_date"]);?></td>
 	</tr>
 	<tr height="30">
 		<td class="left">Type</td>
@@ -335,7 +335,7 @@ $result = db_query("SELECT
 				WHERE f.ticketID = " . $_GET['id'] . "
 				ORDER BY f.created_date");
 while ($r = db_fetch($result)) {
-	echo drawThreadComment($r["message"], $r["user_id"], $r["first"] . " " . $r["last"], $r["created_date"], $r["is_admin"]);
+	echo drawThreadComment($r["message"], $r["id"], $r["first"] . " " . $r["last"], $r["created_date"], $r["is_admin"]);
 }
 
 echo drawThreadCommentForm(true);
