@@ -17,12 +17,12 @@ $r = db_grab("SELECT
 		u2.lastname updated_userLast,
 		u3.firstname deleted_userFirst,
 		u3.lastname updated_userLast
-	FROM intranet_jobs j
+	FROM openings j
 	LEFT JOIN organizations c ON j.corporationID = c.id
-	LEFT JOIN intranet_offices o ON j.officeID = o.id
-	LEFT JOIN users u1 ON j.created_user = u1.user_id
-	LEFT JOIN users u2 ON j.updated_user = u2.user_id
-	LEFT JOIN users u3 ON j.deleted_user = u3.user_id
+	LEFT JOIN offices o ON j.officeID = o.id
+	LEFT JOIN users u1 ON j.created_user = u1.id
+	LEFT JOIN users u2 ON j.updated_user = u2.id
+	LEFT JOIN users u3 ON j.deleted_user = u3.id
 	
 	WHERE j.id = " . $_GET["id"]);
 	$r["created_user"] = ($r["created_userFirst"]) ? $r["created_userFirst"] . " " . $r["created_userLast"] : false;

@@ -39,15 +39,15 @@ $month5amt = 0;
 </table>
 <?
 $result = db_query("SELECT 
-						u.user_id,
+						u.id,
 						ISNULL(u.nickname, u.firstname) name,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month1 AND YEAR(t.created_date) = $year1 AND t.departmentID = $departmentID) month1total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month2 AND YEAR(t.created_date) = $year2 AND t.departmentID = $departmentID) month2total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month3 AND YEAR(t.created_date) = $year3 AND t.departmentID = $departmentID) month3total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month4 AND YEAR(t.created_date) = $year4 AND t.departmentID = $departmentID) month4total,
-						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.user_id AND MONTH(t.created_date) = $month5 AND YEAR(t.created_date) = $year5 AND t.departmentID = $departmentID) month5total
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.id AND MONTH(t.created_date) = $month1 AND YEAR(t.created_date) = $year1 AND t.departmentID = $departmentID) month1total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.id AND MONTH(t.created_date) = $month2 AND YEAR(t.created_date) = $year2 AND t.departmentID = $departmentID) month2total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.id AND MONTH(t.created_date) = $month3 AND YEAR(t.created_date) = $year3 AND t.departmentID = $departmentID) month3total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.id AND MONTH(t.created_date) = $month4 AND YEAR(t.created_date) = $year4 AND t.departmentID = $departmentID) month4total,
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.ownerID = u.id AND MONTH(t.created_date) = $month5 AND YEAR(t.created_date) = $year5 AND t.departmentID = $departmentID) month5total
 					FROM users_to_modules a 
-					JOIN users u ON a.user_id = u.user_id
+					JOIN users u ON a.user_id = u.id
 					WHERE a.module_id = 3 AND u.is_active = 1
 					ORDER BY ISNULL(u.nickname, u.firstname)");
 ?>

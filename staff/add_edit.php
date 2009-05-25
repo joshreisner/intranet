@@ -14,7 +14,7 @@ if ($posting) {
 	$_POST["emerCont2Phone"]	= format_phone(@$_POST["emerCont2Phone"]);
 	$_POST["emerCont2Cell"]		= format_phone(@$_POST["emerCont2Cell"]);
 	
-	format_post_nulls("corporationID,departmentID,officeID,rankID");
+	format_post_nulls("organization_id,departmentID,officeID,rankID");
 		
 	if ($module_admin) {
 		$id = db_save("users");
@@ -25,7 +25,7 @@ if ($posting) {
 			if (getOption("staff_alertnew")) emailAdmins("<a href='" . url_base() . "/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet.", "Intranet: New Staff Added");
 
 			//reset pass and delete request
-			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE user_id = " . $id);
+			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE id = " . $id);
 			if (isset($_GET["requestID"])) db_query("DELETE FROM users_requests WHERE id = " . $_GET["requestID"]);
 
 			//send invitation
@@ -36,17 +36,11 @@ if ($posting) {
 		//update permissions
 		db_checkboxes("permissions", "users_to_modules", "user_id", "module_id", $id);
 
-		//handle is_admin
-		if ($_SESSION["is_admin"]) {
-			format_post_bits("is_admin");
-			db_query("UPDATE users SET is_admin = {$_POST["is_admin"]} WHERE user_id = " . $id);
-		}
-		
 		//check long distance code
 		if (($_josh["write_folder"] == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
-			if (!db_grab("SELECT longdistancecode FROM users WHERE user_id = " . $id)) {
+			if (!db_grab("SELECT longdistancecode FROM users WHERE id = " . $id)) {
 				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM users WHERE is_active = 1 AND longdistancecode IS NOT NULL)");
-				db_query("UPDATE users SET longDistanceCode = {$code} WHERE user_id = " . $id);
+				db_query("UPDATE users SET longDistanceCode = {$code} WHERE id = " . $id);
 			}
 		}
 	} else {
@@ -54,7 +48,7 @@ if ($posting) {
 	}
 	
 	if ($id == $_SESSION["user_id"]) {
-		$user = db_grab("SELECT u.updated_date, " . db_datediff("u.updated_date", "GETDATE()") . " update_days FROM users u WHERE u.user_id = " . $_SESSION["user_id"]);
+		$user = db_grab("SELECT u.updated_date, " . db_datediff("u.updated_date", "GETDATE()") . " update_days FROM users u WHERE u.id = " . $_SESSION["user_id"]);
 		$_SESSION["updated_date"]	 = $user["updated_date"];
 		$_SESSION["update_days"] = $user["update_days"];
 	}
@@ -68,7 +62,7 @@ if ($posting) {
 		$image	= format_binary(file_get($_josh["write_folder"] . "/staff/" . $id . ",jpg"));
 
 		//add image to user	
-		db_query("UPDATE users SET image = $image WHERE user_id = " . $id);
+		db_query("UPDATE users SET image = $image WHERE id = " . $id);
 	}
 
 	url_change("view.php?id=" . $id);
@@ -88,7 +82,7 @@ if (isset($_GET["id"])) {
 		u.rankID,
 		u.lastlogin,
 		u.officeID, 
-		u.corporationID,
+		u.organization_id,
 		u.departmentID,
 		u.is_admin,
 		u.homeAddress1,
@@ -114,7 +108,7 @@ if (isset($_GET["id"])) {
 		u.startDate,
 		u.endDate
 		FROM users u
-		WHERE u.user_id = " . $_GET["id"]);
+		WHERE u.id = " . $_GET["id"]);
 		
 	if (($_GET["id"] == $_SESSION["user_id"]) && ($_SESSION["update_days"] > 90)) {
 		echo drawMessage(getString("staff_update"));
@@ -131,7 +125,7 @@ if (isset($_GET["id"])) {
 		u.bio, 
 		u.phone, 
 		u.officeID, 
-		u.corporationID,
+		u.organization_id,
 		u.is_admin,
 		u.departmentID,
 		u.created_date,
@@ -155,9 +149,9 @@ $form->addRow("itext",  "Last Name", "lastname", @$r["lastname"], "", true, 50);
 $form->addRow("itext",  "Email", "email", @$r["email"], "", true, 50);
 
 $form->addRow("itext",  "Title", "title", @$r["title"], "", false, 100);
-$form->addRow("select", "Organization", "corporationID", "SELECT id, description FROM organizations ORDER BY description", @$r["corporationID"], false);
+$form->addRow("select", "Organization", "organization_id", "SELECT id, description FROM organizations ORDER BY description", @$r["organization_id"], false);
 if (getOption("staff_showdept")) $form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
-if (getOption("staff_showoffice")) $form->addRow("select", "Location", "officeID", "SELECT id, name from intranet_offices order by name", @$r["officeID"], true);
+if (getOption("staff_showoffice")) $form->addRow("select", "Location", "officeID", "SELECT id, name from offices order by name", @$r["officeID"], true);
 
 $form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 14);
 $form->addRow("textarea-plain", "Bio", "bio", @$r["bio"]);

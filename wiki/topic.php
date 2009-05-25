@@ -9,12 +9,12 @@ if (isset($_GET["deleteID"])) { //delete topic
 url_query_require();
 
 if ($uploading) { //upload an attachment
-	$type = getDocTypeID($_FILES["userfile"]["name"]);
+	$type = getDoctype_id($_FILES["userfile"]["name"]);
 	$content = format_binary(file_get_contents($_FILES["userfile"]["tmp_name"]));
 	unlink($_FILES["userfile"]["tmp_name"]);
 	db_query("INSERT INTO wiki_topics_attachments (
 		topicID,
-		typeID,
+		type_id,
 		title,
 		content,
 		created_date,
@@ -50,7 +50,7 @@ while ($t = db_fetch($types)) {
 $t = db_grab("SELECT 
 		w.title,
 		w.description,
-		w.typeID,
+		w.type_id,
 		(SELECT COUNT(*) FROM wiki_topics_attachments a WHERE a.topicID = w.id) hasAttachments,
 		t.description type,
 		w.is_active,
@@ -59,8 +59,8 @@ $t = db_grab("SELECT
 		ISNULL(u.nickname, u.firstname) first,
 		u.lastname last
 	FROM wiki_topics w
-	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN users u ON w.created_user = u.user_id
+	JOIN wiki_topics_types t ON w.type_id = t.id
+	JOIN users u ON w.created_user = u.id
 	WHERE w.id = " . $_GET["id"]);
 ?>
 <script language="javascript">
@@ -99,7 +99,7 @@ $t = db_grab("SELECT
 	}?>
 	<tr>
 		<td class="left">Type</td>
-		<td><a href="type.php?id=<?=$t["typeID"]?>"><?=$t["type"]?></a></td>
+		<td><a href="type.php?id=<?=$t["type_id"]?>"><?=$t["type"]?></a></td>
 	</tr>
 	<tr>
 		<td class="left">Tags</td>
@@ -133,7 +133,7 @@ $t = db_grab("SELECT
 				t.icon,
 				t.description type
 			FROM wiki_topics_attachments a
-			JOIN docs_types t ON a.typeID = t.id
+			JOIN docs_types t ON a.type_id = t.id
 			WHERE a.topicID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
@@ -154,7 +154,7 @@ $t = db_grab("SELECT
 				ISNULL(u.nickname, u.firstname) first,
 				u.lastname last
 			FROM wiki_topics_comments c
-			JOIN users u ON c.created_user = u.user_id
+			JOIN users u ON c.created_user = u.id
 			WHERE c.topicID = {$_GET["id"]}
 			ORDER BY c.created_date ASC");
 		while ($c = db_fetch($comments)) {

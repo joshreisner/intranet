@@ -18,9 +18,9 @@ $r = db_grab("SELECT description FROM wiki_topics_types WHERE id = " . $_GET["id
 		u.lastname last,
 		w.created_date
 	FROM wiki_topics w
-	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN users u ON w.created_user = u.user_id
-	WHERE w.is_active = 1 AND w.typeID = " . $_GET["id"]);
+	JOIN wiki_topics_types t ON w.type_id = t.id
+	JOIN users u ON w.created_user = u.id
+	WHERE w.is_active = 1 AND w.type_id = " . $_GET["id"]);
 	if (db_found($topics)) {?>
 	<tr>
 		<th width="16"></th>

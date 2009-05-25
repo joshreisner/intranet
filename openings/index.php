@@ -2,7 +2,7 @@
 include("../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE intranet_jobs SET 
+	db_query("UPDATE openings SET 
 				deleted_date = GETDATE(),
 				deleted_user = {$_SESSION["user_id"]},
 				is_active = 0
@@ -14,7 +14,7 @@ if (url_action("delete")) {
 if ($posting) {
 	$user_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	format_post_html("description");
-    db_query("INSERT INTO intranet_jobs (
+    db_query("INSERT INTO openings (
     	title,
     	description,
 		corporationID,
@@ -57,9 +57,9 @@ drawTop();
 							c.description corporationName,
 							o.name office,
 							ISNULL(j.updated_date, j.created_date) updated_date
-						FROM intranet_jobs j
+						FROM openings j
 						LEFT JOIN organizations c ON j.corporationID = c.id
-						LEFT JOIN intranet_offices o ON j.officeID = o.id
+						LEFT JOIN offices o ON j.officeID = o.id
 						WHERE j.is_active = 1
 						ORDER BY c.description, j.title");
 	$lastCorporation = "";
@@ -84,7 +84,7 @@ drawTop();
 	if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true);
 	$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
-	$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM intranet_offices ORDER BY precedence", "", true);
+	$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM offices ORDER BY precedence", "", true);
 	$form->addRow("textarea", "Description" , "description", "", "", true);
 	$form->addRow("submit"  , "post open position");
 	$form->draw("Add an Open Position");

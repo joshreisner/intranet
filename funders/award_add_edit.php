@@ -10,7 +10,7 @@ if (!empty($_POST)) {
 		db_query("INSERT into resources_awards (
 			funderID,
 			awardAmount,
-			awardTypeID,
+			awardtype_id,
 			awardStatusID,
 			awardStartDate,
 			awardEndDate,
@@ -45,7 +45,7 @@ if (!empty($_POST)) {
 		db_query("UPDATE resources_awards SET
 			funderID          = " . $_POST["cboFunder"] . ",
 			awardAmount       = " . $_POST["txtAmount"] . ",
-			awardTypeID       = " . $_POST["cboAwardType"] . ",
+			awardtype_id       = " . $_POST["cboAwardType"] . ",
 			awardStatusID     = " . $_POST["cboAwardStatus"] . ",
 			awardStartDate    = '$awardStartDate',
 			awardEndDate      = '$awardEndDate',
@@ -88,7 +88,7 @@ if (isset($_GET["funderID"])) { //adding
 					a.awardFilingNumber,
 					a.awardStartDate,
 					a.awardEndDate,
-					a.awardTypeID,
+					a.awardtype_id,
 					a.awardStatusID,
 					a.awardProgramID,
 					a.awardProgramID2,
@@ -183,7 +183,7 @@ if (isset($_GET["funderID"])) { //adding
 	</tr>
 	<tr>
 		<td class="left">Type</td>
-		<td><?=draw_form_select("cboAwardType","SELECT awardTypeID, awardTypeDesc FROM resources_awards_types ORDER BY awardTypeDesc", @$r["awardTypeID"]);?></td>
+		<td><?=draw_form_select("cboAwardType","SELECT awardtype_id, awardTypeDesc FROM resources_awards_types ORDER BY awardTypeDesc", @$r["awardtype_id"]);?></td>
 	</tr>
 	<tr>
 		<td class="left">Status</td>

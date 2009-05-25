@@ -39,8 +39,8 @@ if ($_SESSION["departmentID"] != 8) {
 						u.lastname last,
 						(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT
 					FROM helpdesk_tickets t
-					JOIN users u ON u.user_id    = t.created_user
-					WHERE t.statusID <> 9 AND t.typeID = 1
+					JOIN users u ON u.id    = t.created_user
+					WHERE t.statusID <> 9 AND t.type_id = 1
 					ORDER BY t.created_date DESC");
 if (db_found($result)) {?>
 	<tr>
@@ -102,7 +102,7 @@ if (db_found($result)) {?>
 		FROM IT_Laptops l
 		INNER JOIN IT_Laptops_Statuses s ON s.laptopStatusID = l.laptopStatusID
 		LEFT JOIN IT_Laptops_Checkouts lc ON l.checkoutID = lc.checkoutID
-		LEFT JOIN users u ON u.user_id = lc.checkoutUser
+		LEFT JOIN users u ON u.id = lc.checkoutUser
 		WHERE l.laptopHomeID = {$h["id"]} AND l.is_active = 1
 		ORDER BY laptopName");
 	while ($r = db_fetch($result)) {?>

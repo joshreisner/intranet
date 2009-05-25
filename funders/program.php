@@ -72,7 +72,7 @@ while ($rsa = db_fetch($result_award_statuses)) {
 			a.awardTitle,
 			p.programDesc
 		FROM resources_awards a
-		INNER JOIN resources_awards_types at ON a.awardTypeID = at.awardTypeID
+		INNER JOIN resources_awards_types at ON a.awardtype_id = at.awardtype_id
 		INNER JOIN intranet_programs p on a.awardProgramID = p.programID
 		WHERE a.awardProgramID = " . $_GET["id"] . " 
 		AND a.awardStatusID = " . $rsa["awardStatusID"] . "

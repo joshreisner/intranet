@@ -23,8 +23,8 @@ echo drawTicketFilter();
 	$result = db_query("SELECT 
 							y.id, 
 							y.description,
-							(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.typeID = y.id " . $where . ") tickets,
-							(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE t.typeID = y.id " . $where . ") minutes
+							(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.type_id = y.id " . $where . ") tickets,
+							(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE t.type_id = y.id " . $where . ") minutes
 						FROM helpdesk_tickets_types y
 						WHERE y.departmentID = $departmentID
 						ORDER BY y.description");
@@ -39,7 +39,7 @@ echo drawTicketFilter();
 		<td align="right"><?=@round($r["minutes"] / $total["minutes"] * 100)?></td>
 	</tr>
 	<? }
-	$t = db_grab("SELECT COUNT(*) tickets, SUM(t.timeSpent) minutes FROM helpdesk_tickets t WHERE t.typeID IS NULL" . $where);
+	$t = db_grab("SELECT COUNT(*) tickets, SUM(t.timeSpent) minutes FROM helpdesk_tickets t WHERE t.type_id IS NULL" . $where);
 	if ($t["tickets"]) {
 		$counter++;
 	?>

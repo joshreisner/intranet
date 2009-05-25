@@ -19,14 +19,14 @@ $result = db_query("SELECT
 				u.lastname last,
 				(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT
 			FROM helpdesk_tickets t
-			JOIN users u ON u.user_id = t.created_user
+			JOIN users u ON u.id = t.created_user
 			WHERE u.officeID = {$_GET["id"]} $where
 			ORDER BY t.created_date DESC");
 echo drawTicketFilter();
 ?>
 <table class="left" cellspacing="1">
 	<?
-	echo drawHeaderRow("<a href='offices.php' class='white'>Offices</a> &gt; " . db_grab("SELECT name FROM intranet_offices WHERE id = " . $_GET["id"]) . " (" . db_found($result) . ")", 5);
+	echo drawHeaderRow("<a href='offices.php' class='white'>Offices</a> &gt; " . db_grab("SELECT name FROM offices WHERE id = " . $_GET["id"]) . " (" . db_found($result) . ")", 5);
 	if (db_found($result)) {
 		echo drawTicketHeader();
 		while ($r = db_fetch($result)) echo drawTicketRow($r);

@@ -9,7 +9,7 @@ $errors = db_query("SELECT
 		u.lastname last,
 		e.instances
 	FROM errors e
-	JOIN users u ON e.created_date = u.user_id
+	JOIN users u ON e.created_date = u.id
 	ORDER BY e.created_date DESC");
 while ($e = db_fetch($errors)) {?>
 	<tr>

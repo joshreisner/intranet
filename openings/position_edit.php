@@ -4,7 +4,7 @@ include("../include.php");
 if ($_POST) {
 	$theuser_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
 	$_POST["description"] = format_html($_POST["description"]);
-	db_query("UPDATE intranet_jobs SET
+	db_query("UPDATE openings SET
 			title			= '{$_POST["title"]}',	
 			description		= '{$_POST["description"]}',	
 			corporationID	= {$_POST["corporationID"]},
@@ -23,14 +23,14 @@ $r = db_grab("SELECT
 				j.description,
 				j.corporationID,
 				j.officeID
-			FROM intranet_jobs j
+			FROM openings j
 			WHERE j.id = " . $_GET["id"]);
 
 $form = new intranet_form;
 if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
 $form->addRow("itext",  "Title" , "title", $r["title"], "", true);
 $form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", $r["corporationID"], true);
-$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM intranet_offices ORDER BY precedence", $r["officeID"], true);
+$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM offices ORDER BY precedence", $r["officeID"], true);
 $form->addRow("textarea", "Description" , "description", $r["description"], "", true);
 $form->addRow("submit"  , "update position");
 $form->draw("<a href='positions.php' class='white'>Open Positions</a> &gt; Update Position");

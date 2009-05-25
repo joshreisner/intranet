@@ -14,13 +14,13 @@ echo drawTicketFilter();
 	<? 
 	$counter = 0;
 	$users = db_query("SELECT 
-		u.user_id,
+		u.id,
 		ISNULL(u.nickname, u.firstname) first, 
 		u.lastname last,
-		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE u.user_id = t.ownerID $where) tickets,
-		(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE u.user_id = t.ownerID $where) minutes		
+		(SELECT COUNT(*) FROM helpdesk_tickets t WHERE u.id = t.ownerID $where) tickets,
+		(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE u.id = t.ownerID $where) minutes		
 		FROM users u
-		JOIN users_to_modules a ON u.user_id = a.user_id
+		JOIN users_to_modules a ON u.id = a.user_id
 		WHERE a.module_id = 3 AND u.departmentID = $departmentID
 		ORDER BY last, first");
 	while ($u = db_fetch($users)) {

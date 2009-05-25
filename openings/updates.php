@@ -6,7 +6,7 @@ drawTop();
 $users = db_query("select 
 		ISNULL(u.nickname, u.firstname) first,
 		u.lastname last,
-		u.user_id,
+		u.id,
 		u.title,
 		d.departmentName,
 		u.officeid,

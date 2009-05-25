@@ -6,7 +6,7 @@ $d = db_grab("SELECT
 		t.extension, 
 		a.content 
 	FROM wiki_topics_attachments a 
-	JOIN docs_types t ON a.typeID = t.id
+	JOIN docs_types t ON a.type_id = t.id
 	WHERE a.id = " . $_GET["id"]);
 
 //db_query("INSERT INTO docs_views ( documentID, user_id, viewedOn ) VALUES ( {$_GET["id"]}, {$_SESSION["user_id"]}, GETDATE() )");

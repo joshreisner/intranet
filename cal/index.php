@@ -3,7 +3,7 @@ include("include.php");
 
 if ($posting) {
 	$id = db_save("cal_events");
-	url_query_add(array("month"=>$_POST["startDateMonth"], "year"=>$_POST["startDateYear"]));
+	url_query_add(array("month"=>$_POST["start_dateMonth"], "year"=>$_POST["start_dateYear"]));
 }
 
 if (!isset($_GET["month"]) || !isset($_GET["year"])) url_query_add(array("month"=>$_josh["month"], "year"=>$_josh["year"]));
@@ -15,14 +15,14 @@ echo drawNavigationCal($_GET["month"], $_GET["year"]);
 //get events
 $result = db_query("SELECT 
 			e.id,
-			DAY(e.startDate) startDay,
+			DAY(e.start_date) startDay,
 			e.title,
 			t.color
 		FROM cal_events e
-		JOIN cal_events_types t ON e.typeID = t.id
+		JOIN cal_events_types t ON e.type_id = t.id
 		WHERE e.is_active = 1 AND 
-			MONTH(e.startDate) = {$_GET["month"]} AND
-			YEAR(e.startDate) = " . $_GET["year"]);
+			MONTH(e.start_date) = {$_GET["month"]} AND
+			YEAR(e.start_date) = " . $_GET["year"]);
 while ($r = db_fetch($result)) {
 	$events[$r["startDay"]][$r["id"]]["title"] = $r["title"];
 	$events[$r["startDay"]][$r["id"]]["color"] = $r["color"];
@@ -203,8 +203,8 @@ if (!isset($_GET["year"])) $_GET["year"]   = $year;
 $form = new intranet_form;
 if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Title" , "title", "", "", true);
-$form->addRow("select", "Type", "typeID", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
-$form->addRow("datetime", "Date", "startDate");
+$form->addRow("select", "Type", "type_id", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
+$form->addRow("datetime", "Date", "start_date");
 $form->addRow("textarea", "Notes" , "description", "", "", true);
 $form->addRow("submit"  , "add new event");
 $form->draw("Add a New Event");

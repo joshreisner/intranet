@@ -15,7 +15,7 @@ drawTop();
 	$tags = db_query("SELECT 
 		t.id, 
 		t.description,
-		(SELECT COUNT(*) FROM wiki_topics w WHERE w.typeID = t.id) topics
+		(SELECT COUNT(*) FROM wiki_topics w WHERE w.type_id = t.id) topics
 		FROM wiki_topics_types t 
 		WHERE t.is_active = 1
 		ORDER BY t.description");

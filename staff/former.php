@@ -6,7 +6,7 @@ drawTop();
 	<?=drawHeaderRow("Former Staff", 5);?>
 	<?
 	$staff = db_query("SELECT 
-							u.user_id, 
+							u.id, 
 							u.lastname,
 							ISNULL(u.nickname, u.firstname) firstname, 
 							u.bio, 
@@ -16,7 +16,7 @@ drawTop();
 							d.departmentName
 						FROM users u
 						LEFT  JOIN departments d ON d.departmentID = u.departmentID 
-						LEFT  JOIN intranet_offices f     ON f.id = u.officeID
+						LEFT  JOIN offices f     ON f.id = u.officeID
 						WHERE u.is_active = 0
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	while ($s = db_fetch($staff)) {?>

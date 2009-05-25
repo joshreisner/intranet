@@ -7,7 +7,7 @@ drawTop();
 
 
 
-$r = db_grab("SELECT tt.name, t.typeID, t.tag FROM intranet_tags t INNER JOIN intranet_tags_types tt ON t.typeID = tt.id WHERE t.id = " . $_GET["id"]);
+$r = db_grab("SELECT tt.name, t.type_id, t.tag FROM intranet_tags t INNER JOIN intranet_tags_types tt ON t.type_id = tt.id WHERE t.id = " . $_GET["id"]);
 
 ?>
 <table class="left" cellspacing="1">

@@ -1,7 +1,7 @@
 <?  include("../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE intranet_press_releases SET 
+	db_query("UPDATE press_releases SET 
 				deleted_date = GETDATE(),
 				deleted_user = {$_SESSION["user_id"]},
 				is_active = 0
@@ -9,7 +9,7 @@ if (url_action("delete")) {
 	url_drop();
 } elseif ($posting) {
 	$theuser_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
-	db_query("INSERT INTO intranet_press_releases (
+	db_query("INSERT INTO press_releases (
 		headline,
 		detail,
 		location,
@@ -42,7 +42,7 @@ if (url_id()) {
 			location,
 			text,
 			releaseDate
-		FROM intranet_press_releases
+		FROM press_releases
 		WHERE id = " . $_GET["id"]);
 	?>
 	<table class="left" cellspacing="1">
@@ -81,7 +81,7 @@ if (url_id()) {
 						p.headline,
 						p.releaseDate,
 						c.description corporationName
-						FROM intranet_press_releases p
+						FROM press_releases p
 						JOIN organizations c ON p.corporationID = c.id
 						WHERE p.is_active = 1
 						ORDER BY p.releaseDate DESC");

@@ -6,18 +6,18 @@ if (isset($_josh)) { //included
 	if ($posting) {
 		if (isset($_GET["id"])) {
 			//preserve filetypes if new files aren't uploaded
-			$r = db_grab("SELECT fileTypeID, imageTypeID FROM news_stories WHERE id = " . $_GET["id"]);
+			$r = db_grab("SELECT filetype_id, imagetype_id FROM news_stories WHERE id = " . $_GET["id"]);
 			$_POST = array_merge($r, $_POST);
 		}
-		$_POST["fileTypeID"] = "NULL";
-		$_POST["imageTypeID"] = "NULL";
+		$_POST["filetype_id"] = "NULL";
+		$_POST["imagetype_id"] = "NULL";
 		if (isset($_FILES["content"]["name"]) && !empty($_FILES["content"]["name"])) {
-			$_POST["fileTypeID"]	= getDocTypeID($_FILES["content"]["name"]);
+			$_POST["filetype_id"]	= getDoctype_id($_FILES["content"]["name"]);
 			$_POST["content"]		= file_get($_FILES["content"]["tmp_name"]);
 			@unlink($_FILES["content"]["tmp_name"]);
 		}
 		if (isset($_FILES["image"]["name"]) && !empty($_FILES["image"]["name"])) {
-			$_POST["imageTypeID"]	= getDocTypeID($_FILES["image"]["name"]);
+			$_POST["imagetype_id"]	= getDoctype_id($_FILES["image"]["name"]);
 			$_POST["image"]		= file_get($_FILES["image"]["tmp_name"]);
 			@unlink($_FILES["image"]["tmp_name"]);
 		}

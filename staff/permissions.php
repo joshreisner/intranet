@@ -12,7 +12,7 @@ if ($posting) { //update permissions
 
 drawTop();
 drawNavigation();
-$u = db_grab("SELECT ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.user_id = " . $_GET["id"]);
+$u = db_grab("SELECT ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.id = " . $_GET["id"]);
 ?>
 <table class="left" cellspacing="1">
 	<form method="post" name="permissions" action="<?=$_josh["request"]["path_query"]?>">

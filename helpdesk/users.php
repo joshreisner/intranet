@@ -13,11 +13,11 @@ echo drawTicketFilter();
 	</tr>
 	<?
 	$result = db_query("SELECT
-							u.user_id,
+							u.id,
 							ISNULL(u.nickname, u.firstname) first,
 							u.lastname last,
-							(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.created_user = u.user_id $where) tickets,
-							(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE t.created_user = u.user_id " . $where . ") minutes
+							(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.created_user = u.id $where) tickets,
+							(SELECT SUM(timeSpent) FROM helpdesk_tickets t WHERE t.created_user = u.id " . $where . ") minutes
 						FROM users u
 						WHERE u.is_active = 1
 						ORDER BY last, first");

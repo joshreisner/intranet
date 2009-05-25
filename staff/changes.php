@@ -10,7 +10,7 @@ echo drawJumpToStaff();
 		echo drawHeaderRow("Comings", 2);
 	}
 	$staff = db_query("SELECT
-		u.user_id,
+		u.id,
 		ISNULL(u.nickname, u.firstname) first, 
 		u.lastname last,
 		u.title,
@@ -19,7 +19,7 @@ echo drawJumpToStaff();
 		u.startdate,
 		u.bio
 	FROM users u
-	LEFT JOIN intranet_offices o ON u.officeID = o.id
+	LEFT JOIN offices o ON u.officeID = o.id
 	LEFT JOIN departments d ON u.departmentID = d.departmentID
 	WHERE " . db_datediff("u.startdate", "GETDATE()") . " < 60 AND u.is_active = 1
 	ORDER BY u.startdate DESC");
@@ -27,11 +27,11 @@ echo drawJumpToStaff();
 		while ($s = db_fetch($staff)) {?>
 		<tr>
 			<td width="135" height="60" align="center" style="padding:0px;"><?
-				verifyImage($s["user_id"]);
-				echo draw_img($_josh["write_folder"] . "/staff/" . $s["user_id"] . "-medium.jpg", "/staff/view.php?id=" . $s["user_id"]);
+				verifyImage($s["id"]);
+				echo draw_img($_josh["write_folder"] . "/staff/" . $s["id"] . "-medium.jpg", "/staff/view.php?id=" . $s["id"]);
 				?></td>
 			<td class="text">
-				<b><a href="/staff/view.php?id=<?=$s["user_id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
+				<b><a href="/staff/view.php?id=<?=$s["id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
 				<?=$s["title"]?><br>
 				<? if (getOption("staff_showdept")) echo $s["departmentName"] . "<br>";?>
 				<? if (getOption("staff_office")) echo $s["office"] . "<br>";?>
@@ -46,12 +46,12 @@ echo drawTableEnd();
 
 echo drawTableStart();
 $result = db_query("SELECT 
-			u.user_id,
+			u.id,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
 			u.title,
 			d.departmentName,
-			u.user_id, 
+			u.id, 
 			u.endDate
 			FROM users u
 			LEFT JOIN departments d ON u.departmentID = d.departmentID
@@ -65,11 +65,11 @@ $result = db_query("SELECT
 			<th width="20%" class="r">Day Removed</th>
 		</tr>
 		<? while ($r = db_fetch($result)) {
-			verifyImage($r["user_id"]);
+			verifyImage($r["id"]);
 		?>
 		<tr bgcolor="#FFFFFF" class="helptext" valign="top" height="38">
-			<td align="center"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><img src="<?=$_josh["write_folder"]?>/staff/<?=$r["user_id"]?>.jpg" width="<?=$r["width"]?>" height="<?=$r["height"]?>" border="0"></a></td>
-			<td><a href="/staff/view.php?id=<?=$r["user_id"]?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
+			<td align="center"><?=draw_img($_josh["write_folder"] . '/staff/' . $r["id"] . '-small.jpg', "/staff/view.php?id=" . $r["id"])?></a></td>
+			<td><a href="/staff/view.php?id=<?=$r["id"]?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
 			<td><?=$r["title"]?>, <?=$r["departmentName"]?></td>
 			<td align="right"><?=format_date($r["endDate"]);?></td>
 		</tr>

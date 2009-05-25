@@ -4,24 +4,24 @@ if ($posting) {
 	error_debug("user is posting");
 	if ($uploading) {
 		error_debug("user is uploading a file");
-		$type = getDocTypeID($_FILES["userfile"]["name"]);
-		$content = format_binary(file_get($_FILES["userfile"]["tmp_name"]));
-		@unlink($_FILES["userfile"]["tmp_name"]);
+		$type = getDoctype_id($_FILES["userfile"]["title"]);
+		$content = format_binary(file_get($_FILES["userfile"]["tmp_title"]));
+		@unlink($_FILES["userfile"]["tmp_title"]);
 	}
 
 	if (url_id()) {
 		if ($uploading) {
 			db_query("UPDATE docs SET 
-				name = '{$_POST["name"]}',
+				title = '{$_POST["title"]}',
 				description = '{$_POST["description"]}',
-				typeID = {$type},
+				type_id = {$type},
 				content = $content,
 				updated_date = GETDATE(),
 				updated_user = {$_SESSION["user_id"]}
 				WHERE id = " . $_GET["id"]);
 		} else {
 			db_query("UPDATE docs SET 
-				name = '{$_POST["name"]}',
+				title = '{$_POST["title"]}',
 				description = '{$_POST["description"]}',
 				updated_date = GETDATE(),
 				updated_user = {$_SESSION["user_id"]}
@@ -29,15 +29,15 @@ if ($posting) {
 		}
 	} else {
 		$_GET["id"] = db_query("INSERT into docs (
-			name,
+			title,
 			description,
-			typeID,
+			type_id,
 			content,
 			created_date,
 			created_user,
 			is_active
 		) VALUES (
-			'" . $_POST["name"] . "',
+			'" . $_POST["title"] . "',
 			'" . $_POST["description"] . "',
 			"  . $type . ",
 			"  . $content . ",
@@ -52,7 +52,7 @@ if ($posting) {
 }
 
 if (url_id()) {
-	$d = db_grab("SELECT name, description FROM docs WHERE id = " . $_GET["id"]);
+	$d = db_grab("SELECT title, description FROM docs WHERE id = " . $_GET["id"]);
 	$pageAction = "Edit Document";
 } else {
 	$pageAction = "Add Document";
@@ -75,8 +75,8 @@ echo drawMessage("The maximum size you can upload here is " . file_get_max() . "
 	<!--
 	function validate(form) {
 		tinyMCE.triggerSave();
-		if (!form.name.value.length) {
-			alert("Please enter a name for this document.");
+		if (!form.title.value.length) {
+			alert("Please enter a title for this document.");
 			return false;
 		}
 		if (!form.description.value.length) {
@@ -85,7 +85,7 @@ echo drawMessage("The maximum size you can upload here is " . file_get_max() . "
 		}
 		oneFound = false;
 		for (var i = 0; i < form.elements.length; i++) {
-			var checkParts = form.elements[i].name.split("_");
+			var checkParts = form.elements[i].title.split("_");
 			if ((checkParts[0] == "chk") && (form.elements[i].checked)) oneFound = true;
 		}
 		if (!oneFound) {
@@ -101,7 +101,7 @@ echo drawMessage("The maximum size you can upload here is " . file_get_max() . "
 			var arrFile   = form.userfile.value.split(".");
 			var extension = arrFile[arrFile.length - 1].toLowerCase();
 			if (<?=implode(" && ", $extensions)?>) {
-				alert("Only these filetypes are supported by this system:\n\n <?=implode("\\n", $doctypes)?>\n\nPlease change your selection, or make sure that the \nappropriate extension is at the end of the filename.");
+				alert("Only these filetypes are supported by this system:\n\n <?=implode("\\n", $doctypes)?>\n\nPlease change your selection, or make sure that the \nappropriate extension is at the end of the filetitle.");
 				return false;
 			}
 		}
@@ -112,16 +112,16 @@ echo drawMessage("The maximum size you can upload here is " . file_get_max() . "
 <table class="left">
 	<?=drawHeaderRow($pageAction, 2);?>
 	<form enctype="multipart/form-data" action="<?=$_josh["request"]["path_query"]?>" method="post" onsubmit="javascript:return validate(this);">
-	<input type="hidden" name="MAX_FILE_SIZE" value="<?=file_get_max(false)?>" />
+	<input type="hidden" title="MAX_FILE_SIZE" value="<?=file_get_max(false)?>" />
 	<tr>
-		<td class="left">Name</td>
-		<td><?=draw_form_text("name",  @$d["name"], "text")?></td>
+		<td class="left">title</td>
+		<td><?=draw_form_text("title",  @$d["title"], "text")?></td>
 	</tr>
 	<tr>
 		<td class="left">Description</td>
 		<td><?=draw_form_textarea("description", @$d["description"], "mceEditor")?></td>
 	</tr>
-	<!--<tr> need to add this, but think the problem is the column names are nonstandard?
+	<!--<tr> need to add this, but think the problem is the column titles are nonstandard?
 		<td class="left">Categories</td>
 		<td><?//=draw_form_checkboxes("docs", "docs_to_categories", "documentID", "categoryID", @$_GET["id"])?></td>
 	</tr>-->

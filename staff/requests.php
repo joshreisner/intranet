@@ -4,10 +4,10 @@ if (url_action("deletereq")) {
 	db_query("DELETE FROM users_requests WHERE id = " . $_GET["id"]);
 	url_query_drop("action,id");
 } elseif (url_action("invite")) {
-	$result = db_query("SELECT user_id, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND is_active = 1");
+	$result = db_query("SELECT id, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND is_active = 1");
 	while ($r = db_fetch($result)) {
 		$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
-		email_invite($r["user_id"], $r["email"], $name);
+		email_invite($r["id"], $r["email"], $name);
 	}
 	url_query_drop("action");
 }
@@ -38,7 +38,7 @@ echo drawTableEnd();
 
 echo drawTableStart();
 echo drawHeaderRow("Never Logged In", 3, "invite them all", url_query_add(array("action"=>"invite"), false));
-$result = db_query("SELECT user_id, lastname, firstname, created_date FROM users WHERE lastlogin IS NULL AND is_active = 1 ORDER BY lastname");
+$result = db_query("SELECT id, lastname, firstname, created_date FROM users WHERE lastlogin IS NULL AND is_active = 1 ORDER BY lastname");
 if (db_found($result)) {?>
 	<tr>
 		<th width="70%">Name</th>
@@ -48,9 +48,9 @@ if (db_found($result)) {?>
 	<?
 	while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><a href="view.php?id=<?=$r["user_id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
+		<td><a href="view.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 		<td class="r"><?=format_date_time($r["created_date"])?></td>
-		<?=deleteColumn("Delete user?", $r["user_id"])?>
+		<?=deleteColumn("Delete user?", $r["id"])?>
 	</tr>
 	<?
 	}

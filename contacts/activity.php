@@ -22,7 +22,7 @@ drawTop();
 			o.is_active
 		FROM contacts o
 		INNER JOIN contacts_instances	i ON o.instanceCurrentID = i.id
-		INNER JOIN users		u ON i.created_user = u.user_id
+		INNER JOIN users		u ON i.created_user = u.id
 		ORDER BY i.created_date DESC", 40);
 	while ($r = db_fetch($result)) {?>
 	<tr class="<?if(!$r["is_active"]){?>-deleted<? }?>">

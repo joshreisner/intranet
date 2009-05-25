@@ -31,7 +31,7 @@ $r = db_grab("SELECT
 		u.title,
 		f.name office, 
 		d.departmentName,
-		u.corporationID,
+		u.organization_id,
 		c.description corporationName,
 		u.homeAddress1,
 		u.homeAddress2,
@@ -58,13 +58,13 @@ $r = db_grab("SELECT
 		r.description rank
 	FROM users u
 	LEFT JOIN intranet_ranks r ON u.rankID = r.id
-	LEFT JOIN organizations			c ON u.corporationID = c.id
+	LEFT JOIN organizations			c ON u.organization_id = c.id
 	LEFT JOIN departments		d ON d.departmentID	= u.departmentID 				
-	LEFT JOIN intranet_offices    		f ON f.id			= u.officeID 				
+	LEFT JOIN offices    		f ON f.id			= u.officeID 				
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
-	WHERE u.user_id = " . $_GET["id"]);
+	WHERE u.id = " . $_GET["id"]);
 				
-$r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations.php?id=0">Shared</a>' : '<a href="organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
+$r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations.php?id=0">Shared</a>' : '<a href="organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
 
 if (!isset($r["is_active"])) url_change("./");
 

@@ -65,12 +65,12 @@ if (isset($_GET["ticketID"])) {
 		db_query("UPDATE helpdesk_tickets SET departmentID = {$_GET["newDepartment"]}, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
 	} elseif (isset($_GET["newType"])) {
 		if (empty($_GET["newType"])) $_GET["newType"] = "NULL";
-		db_query("UPDATE helpdesk_tickets SET typeID = {$_GET["newType"]}, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
+		db_query("UPDATE helpdesk_tickets SET type_id = {$_GET["newType"]}, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
 	} elseif (isset($_GET["newTime"])) {
 		if (empty($_GET["newTime"])) $_GET["newTime"] = 0;
 		db_query("UPDATE helpdesk_tickets SET timeSpent = {$_GET["newTime"]}, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
 	} elseif (isset($_GET["newDepartment"])) {
-		db_query("UPDATE helpdesk_tickets SET departmentID = {$_GET["newDepartment"]}, typeID = NULL, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
+		db_query("UPDATE helpdesk_tickets SET departmentID = {$_GET["newDepartment"]}, type_id = NULL, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
 	} elseif (isset($_GET["newUser"])) {
 		db_query("UPDATE helpdesk_tickets SET created_user = {$_GET["newUser"]}, updated_date = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
 	}
@@ -79,17 +79,17 @@ if (isset($_GET["ticketID"])) {
 	//load dropdown values -- owner, status, priority, department, type
 	$ownerOptions = array();
 	$result = db_query("SELECT 
-			u.user_id, 
+			u.id, 
 			ISNULL(u.nickname, u.firstname) first 
 			FROM users u
-			LEFT JOIN users_to_modules a ON a.user_id = u.user_id 
+			LEFT JOIN users_to_modules a ON a.user_id = u.id 
 			WHERE 
 				u.is_active = 1 AND
 				( a.module_id = 3 OR u.is_admin = 1 ) 
 				AND
 				u.departmentID = $departmentID
 			ORDER BY first");
-	while ($r = db_fetch($result)) $ownerOptions[$r["user_id"]] = $r["first"];
+	while ($r = db_fetch($result)) $ownerOptions[$r["id"]] = $r["first"];
 	
 	$statusOptions = array();
 	$result = db_query("SELECT id, description FROM helpdesk_tickets_statuses");
@@ -173,7 +173,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 			<td>' . draw_form_select("", $statusOptions, $r["statusID"], true, "field", "location.href='" . url_query_add($t, false) . "&newStatus=' + this.value") . '</td>
 			<td>' . draw_form_select("", $ownerOptions, $r["ownerID"], false, "field", "location.href='" . url_query_add($t, false) . "&newOwner=' + this.value") . '</td>';
 	} elseif ($mode == "type") {
-		$return .= '<td colspan="3">' . draw_form_select("", $typeOptions, $r["typeID"], false, "field", "location.href='" . url_query_add($t, false) . "&newType=' + this.value") . '</td>';
+		$return .= '<td colspan="3">' . draw_form_select("", $typeOptions, $r["type_id"], false, "field", "location.href='" . url_query_add($t, false) . "&newType=' + this.value") . '</td>';
 	}
 	$return .= '</tr>';
 	return $return;
@@ -184,8 +184,8 @@ function emailITticket($id, $scenario, $admin=false) {
 	$message  = drawEmailHeader();
 	
 	$ticket = db_grab("SELECT
-			u.user_id,
-			(SELECT COUNT(*) FROM users_to_modules a WHERE a.user_id = u.user_id AND a.module_id = 3) isUserAdmin,
+			u.id,
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.user_id = u.id AND a.module_id = 3) isUserAdmin,
 			t.title,
 			t.created_user,
 			t.description,
@@ -197,16 +197,16 @@ function emailITticket($id, $scenario, $admin=false) {
 			t.priorityID,
 			t.statusID,
 			d.shortName department,
-			t.typeID,
+			t.type_id,
 			y.description type,
 			u2.email as ownerEmail,
 			t.ownerID,
 			ISNULL(u2.nickname, u2.firstname) as ownerName
 		FROM helpdesk_tickets t
-		LEFT  JOIN helpdesk_tickets_types y	ON t.typeID		= y.id
-		JOIN users  u	ON t.created_user	= u.user_id
+		LEFT  JOIN helpdesk_tickets_types y	ON t.type_id		= y.id
+		JOIN users  u	ON t.created_user	= u.id
 		JOIN departments d ON t.departmentID = d.departmentID
-		LEFT  JOIN users  u2	ON t.ownerID	= u2.user_id
+		LEFT  JOIN users  u2	ON t.ownerID	= u2.id
 		WHERE t.id = " . $id);
 		
 	//yellow box
@@ -261,16 +261,16 @@ function emailITticket($id, $scenario, $admin=false) {
 	
 	//get followups
 	$followups = db_query("SELECT
-			u.user_id,
+			u.id,
 			f.message,
-			(SELECT COUNT(*) FROM users_to_modules a WHERE a.user_id = u.user_id AND a.module_id = 3) isUserAdmin,
+			(SELECT COUNT(*) FROM users_to_modules a WHERE a.user_id = u.id AND a.module_id = 3) isUserAdmin,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
 			u.email,
 			f.created_date,
 			f.is_admin
 		FROM helpdesk_tickets_followups f
-		INNER JOIN users  u  ON f.created_user	= u.user_id
+		INNER JOIN users  u  ON f.created_user	= u.id
 		WHERE f.ticketID = {$id} ORDER BY f.created_date");
 	while ($f = db_fetch($followups)) {
 		$admin_message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);

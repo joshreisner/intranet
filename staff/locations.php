@@ -6,7 +6,7 @@ drawTop();
 $locations = db_query("SELECT 
 		o.id, 
 		o.name
-	FROM intranet_offices o 
+	FROM offices o 
 	WHERE (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id AND u.is_active = 1) > 0
 	ORDER BY (SELECT COUNT(*) FROM users u WHERE u.officeID = o.id) DESC");
 if (db_found($locations)) {

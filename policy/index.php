@@ -6,7 +6,7 @@ if (url_action("delete")) {
 	db_query("UPDATE policy_docs SET is_active = 0, deleted_date = GETDATE(), deleted_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
 	url_drop("id, action");
 } elseif (url_id()) {
-	$d = db_grab("SELECT d.name, t.extension, d.content FROM policy_docs d JOIN docs_types t ON d.typeID = t.id WHERE d.id = " . $_GET["id"]);
+	$d = db_grab("SELECT d.name, t.extension, d.content FROM policy_docs d JOIN docs_types t ON d.type_id = t.id WHERE d.id = " . $_GET["id"]);
 	//db_query("INSERT INTO docs_views ( documentID, user_id, viewedOn ) VALUES ( {$_GET["id"]}, {$_SESSION["user_id"]}, GETDATE() )");
 	file_download($d["content"], $d["name"], $d["extension"]);
 }
@@ -30,7 +30,7 @@ echo drawNavigationRow($options, "areas", true);
 		echo drawheaderRow("", 3);
 	}	
 
-	$docs = db_query("SELECT d.id, d.name, t.icon, ISNULL(d.updated_date, d.created_date) updated_date FROM policy_docs d JOIN docs_types t ON d.typeID = t.id WHERE d.is_active = 1 AND d.categoryID = " . $_GET["category"] . " ORDER BY d.name");
+	$docs = db_query("SELECT d.id, d.name, t.icon, ISNULL(d.updated_date, d.created_date) updated_date FROM policy_docs d JOIN docs_types t ON d.type_id = t.id WHERE d.is_active = 1 AND d.categoryID = " . $_GET["category"] . " ORDER BY d.name");
 	if (db_found($docs)) {?>
 	<tr>
 		<th width="16"></th>

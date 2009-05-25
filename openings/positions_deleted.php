@@ -15,14 +15,14 @@ drawTop();
 	$offices = db_query("SELECT
 							id,
 							name
-						FROM intranet_offices");
+						FROM offices");
 	while ($o = db_fetch($offices)) {
 		$result = db_query("SELECT 
 								j.id,
 								j.title,
 								d.departmentName,
 								ISNULL(j.updated_date, j.created_date) updated_date
-							FROM intranet_jobs j
+							FROM openings j
 							LEFT JOIN departments d ON j.departmentID = d.departmentID
 							WHERE j.is_active = 0
 							ORDER BY j.title, departmentName");

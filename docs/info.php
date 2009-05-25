@@ -7,13 +7,13 @@ if (url_action("delete")) {
 }
 
 $d = db_grab("SELECT 
-		d.name,
+		d.title,
 		d.description,
 		d.content,
 		i.icon,
 		i.description fileType
 	FROM docs d
-	JOIN docs_types i ON d.typeID = i.id
+	JOIN docs_types i ON d.type_id = i.id
 	WHERE d.id = " . $_GET["id"]);
 
 drawTop();
@@ -29,8 +29,8 @@ drawTop();
     }
     ?>
 	<tr>
-		<td class="left">Name</td>
-		<td><h1><a href="download.php?id=<?=$_GET["id"]?>"><?=$d["name"]?></h1></a></td>
+		<td class="left">title</td>
+		<td><h1><a href="download.php?id=<?=$_GET["id"]?>"><?=$d["title"]?></h1></a></td>
 	</tr>
 	<tr>
 		<td class="left">Type</td>
@@ -60,12 +60,12 @@ drawTop();
 </table>
 <?
 $views = db_query("SELECT 
-			ISNULL(u.nickname, u.firstname) first,
-			u.lastname last,
-			u.user_id,
+			ISNULL(u.nicktitle, u.firsttitle) first,
+			u.lasttitle last,
+			u.id,
 			v.viewedOn
 			FROM docs_views v
-			JOIN users u ON v.user_id = u.user_id
+			JOIN users u ON v.user_id = u.id
 			WHERE v.documentID = " . $_GET["id"] . "
 			ORDER BY v.viewedOn DESC", 5);
 if (db_found($views)) {?>
@@ -74,7 +74,7 @@ if (db_found($views)) {?>
 		<td class="head docs" colspan="2">Recent Views</td>
 	</tr>
 	<tr class="left">
-		<th align="left">Name</th>
+		<th align="left">title</th>
 		<th align="right">Date</th>
 	</tr>
 	<? while($v = db_fetch($views)) {?>

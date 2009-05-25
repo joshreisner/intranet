@@ -13,7 +13,7 @@ $where1 = (isset($_GET["id"])) ? "= " . $_GET["id"] : "IS NULL";
 $tickets = db_query("select
 			t.title,
 			t.statusID,
-			t.typeID,
+			t.type_id,
 			(SELECT COUNT(*) FROM helpdesk_tickets_followups f WHERE f.ticketID = t.id) as ticketfollowups,
 			t.created_user,
 			t.updated_date,
@@ -25,8 +25,8 @@ $tickets = db_query("select
 			u.lastname last,
 			(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) is_adminIT
 		FROM helpdesk_tickets t
-		INNER JOIN users   u ON u.user_id    = t.created_user
-		WHERE t.typeID $where1 $where
+		INNER JOIN users   u ON u.id    = t.created_user
+		WHERE t.type_id $where1 $where
 		ORDER BY t.created_date DESC");
 
 echo drawTicketFilter();

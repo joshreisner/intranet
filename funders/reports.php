@@ -24,12 +24,12 @@ drawTop();
 	a.awardStartDate,
 	a.awardEndDate,
 	(SELECT TOP 1 c.activityAssignedTo FROM resources_activity c WHERE c.awardID = a.awardID AND isActionItem = 1 AND isInternalDeadline = 0 AND isComplete = 0 ORDER BY activityDate ASC) activityAssignedTo,
-	(SELECT TOP 1 ISNULL(u.nickname, u.firstname) + ' ' + u.lastname FROM users u JOIN resources_activity c ON c.activityAssignedTo = u.user_id WHERE c.awardID = a.awardID AND isActionItem = 1 AND isInternalDeadline = 0 ORDER BY activityDate ASC) activityAssignedName,
+	(SELECT TOP 1 ISNULL(u.nickname, u.firstname) + ' ' + u.lastname FROM users u JOIN resources_activity c ON c.activityAssignedTo = u.id WHERE c.awardID = a.awardID AND isActionItem = 1 AND isInternalDeadline = 0 ORDER BY activityDate ASC) activityAssignedName,
 	(SELECT TOP 1 c.activityDate       FROM resources_activity c WHERE c.awardID = a.awardID AND isActionItem = 1 AND isInternalDeadline = 0 AND isComplete = 0 ORDER BY activityDate ASC) activityDate,
 	(SELECT TOP 1 c.activityTitle      FROM resources_activity c WHERE c.awardID = a.awardID AND isActionItem = 1 AND isInternalDeadline = 0 AND isComplete = 0 ORDER BY activityDate ASC) activityTitle
 		FROM resources_funders f
 		JOIN resources_awards a on f.funderID = a.funderID
-		WHERE f.fundertypeID <> 7 and awardstatusID = 1
+		WHERE f.funderTypeID <> 7 and awardstatusID = 1
 		ORDER BY f.name, a.awardTitle");
 	while ($r = db_fetch($result)) {?>
 	<tr>

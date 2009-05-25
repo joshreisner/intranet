@@ -4,18 +4,18 @@ include("include.php");
 $e = db_grab("SELECT 
 		e.title, 
 		e.description, 
-		e.startDate, 
+		e.start_date, 
 		ISNULL(u.nickname, u.firstname) first,
 		u.lastname last,
 		e.created_user,
 		e.created_date,
 		t.color,
 		t.description type,
-		MONTH(e.startDate) month, 
-		YEAR(e.startDate) year
+		MONTH(e.start_date) month, 
+		YEAR(e.start_date) year
 	FROM cal_events e
-	JOIN users u ON e.created_user = u.user_id
-	JOIN cal_events_types t ON e.typeID = t.id
+	JOIN users u ON e.created_user = u.id
+	JOIN cal_events_types t ON e.type_id = t.id
 	WHERE e.id = " . $_GET["id"]);
 	
 if (url_action("delete")) {
@@ -45,7 +45,7 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 	</tr>
 	<tr>
 		<td class="left">Start Date</td>
-		<td><?=format_date_time($e["startDate"])?></td>
+		<td><?=format_date_time($e["start_date"])?></td>
 	</tr>
 	<tr valign="top">
 		<td class="left" height="200">Description</td>

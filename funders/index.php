@@ -45,7 +45,7 @@ while ($rs = db_fetch($result_funder_statuses)) {
 			(SELECT SUM(a.AwardAmount) FROM resources_awards a WHERE a.funderID = f.funderID AND (a.awardStatusID = 1 OR a.awardStatusID = 4)) as awardAmt
 			FROM resources_funders f
 			INNER JOIN resources_funders_types ft ON f.funderTypeID = ft.funderTypeID
-			INNER JOIN users u     ON f.staffID           = u.user_id
+			INNER JOIN users u     ON f.staffID           = u.id
 			WHERE f.funderStatusID = {$rs["funderStatusID"]}
 			ORDER BY f.name");
 	 		

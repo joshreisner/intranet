@@ -5,7 +5,7 @@ drawTop();
 drawNavigation();
 
 $result = db_query("select
-						u.user_id,
+						u.id,
 						u.lastname + ', ' + ISNULL(u.nickname, u.firstname) name,
 						u.title,
 						u.homephone, 

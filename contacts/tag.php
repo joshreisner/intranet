@@ -4,10 +4,10 @@ include("../include.php");
 if (!$module_admin) url_change("tags.php");
 
 if ($_POST) {
-	$t = db_grab("SELECT MAX(precedence) precedence FROM intranet_tags WHERE typeID = " . $_GET["id"]);
+	$t = db_grab("SELECT MAX(precedence) precedence FROM intranet_tags WHERE type_id = " . $_GET["id"]);
 	$t["precedence"]++;
 	db_query("INSERT INTO intranet_tags ( 
-					typeID,
+					type_id,
 					generation,
 					precedence,
 					tag,
@@ -29,22 +29,22 @@ if (isset($_GET["deactivateTagType"])) {
 	db_query("UPDATE intranet_tags SET is_active = 0 WHERE id = " . $_GET["deactivateTag"]);
 	url_query_drop("deactivateTag");
 } elseif (isset($_GET["alphabetize"])) {
-	$tags = db_query("SELECT tag FROM intranet_tags WHERE typeID = " . $_GET["id"]);
+	$tags = db_query("SELECT tag FROM intranet_tags WHERE type_id = " . $_GET["id"]);
 	$values = array();
 	while ($t = db_fetch($tags)) $values[] = $t["tag"];
 	sort($values);
 	$counter = 1;
 	foreach ($values as $value) {
-		db_query("UPDATE intranet_tags SET precedence = {$counter} WHERE typeID = {$_GET["id"]} AND tag = '{$value}'");
+		db_query("UPDATE intranet_tags SET precedence = {$counter} WHERE type_id = {$_GET["id"]} AND tag = '{$value}'");
 		$counter++;
 	}
 	url_query_drop("alphabetize");
 } elseif (isset($_GET["moveTagUp"])) {
 	//code not written yet
-	$tag = db_grab("SELECT typeID, precedence FROM intranet_tags WHERE id = " . $_GET["moveTagUp"]);
+	$tag = db_grab("SELECT type_id, precedence FROM intranet_tags WHERE id = " . $_GET["moveTagUp"]);
 } elseif (isset($_GET["moveTagDown"])) {
 	//code not written yet
-	$tag = db_grab("SELECT typeID, precedence FROM intranet_tags WHERE id = " . $_GET["moveTagDown"]);
+	$tag = db_grab("SELECT type_id, precedence FROM intranet_tags WHERE id = " . $_GET["moveTagDown"]);
 }
 
 drawTop();
@@ -105,9 +105,9 @@ drawTop();
 							(SELECT count(*) FROM contacts o 
 								INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
 								INNER JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
-								WHERE o.typeID = 22 AND i2t.tagID = t.id) contactcount
+								WHERE o.type_id = 22 AND i2t.tagID = t.id) contactcount
 						FROM intranet_tags t 
-						WHERE t.typeID = {$_GET["id"]} AND t.is_active = 1
+						WHERE t.type_id = {$_GET["id"]} AND t.is_active = 1
 						ORDER BY t.precedence");
 		while ($v = db_fetch($values)) {?>
 	<tr class="helptext" bgcolor="#FFFFFF">

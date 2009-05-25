@@ -25,9 +25,9 @@ $r = db_grab("SELECT
 			fs.FunderStatusDesc,
 			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname staffname
 		FROM resources_funders f
-		INNER JOIN resources_funders_types    ft ON ft.FunderTypeID = f.funderTypeID
+		INNER JOIN resources_funders_types    ft ON ft.funderTypeID = f.funderTypeID
 		INNER JOIN resources_funders_statuses fs ON fs.FunderStatusID = f.FunderStatusID
-		INNER JOIN users             u  ON u.user_id = f.staffID
+		INNER JOIN users             u  ON u.id = f.staffID
 		WHERE funderID = " . $_GET["id"]);
 		
 ?>
@@ -139,7 +139,7 @@ while ($rsa = db_fetch($result_award_statuses)) {
 			p.programDesc,
 			(SELECT TOP 1 c.activityDate FROM resources_activity c WHERE c.awardID = a.awardID AND c.isReport = 1 AND c.isComplete = 0 ORDER BY c.activityDate ASC) reportDate
 		FROM resources_awards a
-		INNER JOIN resources_awards_types at ON a.awardTypeID = at.awardTypeID
+		INNER JOIN resources_awards_types at ON a.awardtype_id = at.awardtype_id
 		INNER JOIN intranet_programs p on a.awardProgramID = p.programID
 		WHERE a.funderID = " . $_GET["id"] . " 
 		AND a.awardStatusID = " . $rsa["awardStatusID"] . "

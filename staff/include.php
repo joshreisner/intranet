@@ -3,11 +3,11 @@ include("../include.php");
 
 if (url_action("delete")) {
 	if (!isset($_GET["staffID"]) && isset($_GET["id"])) $_GET["staffID"] = $_GET["id"];
-	$r = db_grab("SELECT firstname, lastname, endDate FROM users WHERE user_id = " . $_GET["staffID"]);
+	$r = db_grab("SELECT firstname, lastname, endDate FROM users WHERE id = " . $_GET["staffID"]);
 	if ($r["endDate"]) {
-		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE user_id = " . $_GET["staffID"]);
+		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE id = " . $_GET["staffID"]);
 	} else {
-		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE(), endDate = GETDATE() WHERE user_id = " . $_GET["staffID"]);
+		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE(), endDate = GETDATE() WHERE id = " . $_GET["staffID"]);
 	}
 	if (getOption("staff_alertdelete")) emailAdmins("<a href='" . url_base() . "/staff/view.php?id=" . $_GET["staffID"] . "'>" . $r["firstname"] . " " . $r["lastname"] . "</a> was just deactivated on the Intranet.", "Intranet: Staff Deleted");
 	url_query_drop("action,staffID");
@@ -38,21 +38,21 @@ function drawStaffList($where, $searchterms=false) {
 	}
 	
 	$result = db_query("SELECT 
-							u.user_id, 
+							u.id, 
 							u.lastname,
 							ISNULL(u.nickname, u.firstname) firstname, 
 							u.bio, 
 							u.phone,
 							c.description corporationName,
-							u.corporationID,
+							u.organization_id,
 							o.name office, 
 							o.isMain,
 							u.title, 
 							d.departmentName
 						FROM users u
 						LEFT JOIN departments d	ON d.departmentID = u.departmentID 
-						LEFT JOIN organizations c			ON u.corporationID = c.id
-						LEFT JOIN intranet_offices o		ON o.id = u.officeID
+						LEFT JOIN organizations c			ON u.organization_id = c.id
+						LEFT JOIN offices o		ON o.id = u.officeID
 						WHERE " . $where . "
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	$count = db_found($result);
@@ -67,7 +67,7 @@ function drawStaffList($where, $searchterms=false) {
 		if (($count == 1) && $searchterms) {
 			$r = db_fetch($result);
 			$_josh["slow"] = true;
-			url_change("view.php?id=" . $r["user_id"]);
+			url_change("view.php?id=" . $r["id"]);
 		} else {
 			while ($r = db_fetch($result)) $return .= drawStaffRow($r, $searchterms);
 		}
@@ -87,16 +87,16 @@ function drawStaffRow($r, $searchterms=false) {
 	}
 
 	$return  = '<tr height="38">';
-	verifyImage($r["user_id"]);
-	$return .= '<td width="50">' . draw_img($_josh["write_folder"] . '/staff/' . $r["user_id"] . '-small.jpg', '/staff/view.php?id=' . $r["user_id"]) . '</td>';
-	$return .= '<td><nobr><a href="view.php?id=' . $r["user_id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
+	verifyImage($r["id"]);
+	$return .= '<td width="50">' . draw_img($_josh["write_folder"] . '/staff/' . $r["id"] . '-small.jpg', '/staff/view.php?id=' . $r["id"]) . '</td>';
+	$return .= '<td><nobr><a href="view.php?id=' . $r["id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
 	if (!$r["isMain"]) $return .= "<br>" . $r["office"];
 	$return .= '</nobr></td><td>';
 	if ($r["title"]) $return .= $r["title"] . '<br>';
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
-	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["corporationID"] . '">' . $r["corporationName"] . '</a>';
+	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
 	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
-	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["user_id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $_josh["write_folder"] . '/images/icons/delete.gif" width="16" height="16" border="0"></td>';
+	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $_josh["write_folder"] . '/images/icons/delete.gif" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

@@ -111,7 +111,7 @@ if (!$pageIsPublic) {
 		url_query_drop("module");
 	} elseif (url_action("help")) {
 		$_SESSION["help"] = abs($_SESSION["help"] - 1);
-		db_query("UPDATE users SET help = {$_SESSION["help"]} WHERE user_id = " . $_SESSION["user_id"]);
+		db_query("UPDATE users SET help = {$_SESSION["help"]} WHERE id = " . $_SESSION["user_id"]);
 		url_query_drop("action");
 	}
 }
@@ -171,12 +171,11 @@ error_debug("done processing include!");
         }
 
  		if ($user = db_grab("SELECT 
-			u.user_id id,
+			u.id,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
 			u.email,
 			" . db_pwdcompare("", "u.password") . " password,
-			p.url homepage,
 			u.departmentID,
 			d.isHelpdesk,
 			u.help,
@@ -185,14 +184,13 @@ error_debug("done processing include!");
 			" . db_datediff("u.updated_date", "GETDATE()") . " update_days
 		FROM users u
 		LEFT JOIN departments d ON u.departmentID = d.departmentID
-		LEFT JOIN pages p				ON u.homePageID = p.id
 		WHERE u.email = '$username' AND u.is_active = 1" . $where)) {
 			//login was good
-			db_query("UPDATE users SET lastlogin = GETDATE() WHERE user_id = " . $user["id"]);
+			db_query("UPDATE users SET lastlogin = GETDATE() WHERE id = " . $user["id"]);
 			$_SESSION["user_id"]		= $user["id"];
 			$_SESSION["is_admin"]		= $user["is_admin"];
 			$_SESSION["email"]			= $user["email"];
-			$_SESSION["homepage"]		= ($user["homepage"]) ? $user["homepage"] : "/bb/";
+			$_SESSION["homepage"]		= "/bb/";
 			$_SESSION["departmentID"]	= $user["departmentID"];
 			$_SESSION["isHelpdesk"]		= $user["isHelpdesk"];
 			$_SESSION["help"]			= $user["help"];
@@ -239,7 +237,7 @@ error_debug("done processing include!");
 	}
 	
 //post functions
-	function getDocTypeID($filename) {
+	function getDoctype_id($filename) {
 		$array = explode(".", $filename);
 		return db_grab("SELECT id FROM docs_types WHERE extension = '" . array_pop($array) . "'");
 	}
@@ -269,7 +267,7 @@ error_debug("done processing include!");
 	}
 
 	function drawCheckboxText($chkname, $description) {
-		return draw_tag("span", array("class"=>"clickme", "onclick"=>"javascript:toggleCheckbox(\'' . $chkname . '\');", $description));
+		return draw_container("span", $description, array("class"=>"clickme", "onclick"=>"javascript:toggleCheckbox('$chkname');"));
 	}
 
 //rss functions (syndication)
@@ -294,7 +292,7 @@ error_debug("done processing include!");
 				u.lastname,
 				u.email
 			FROM bb_topics t
-			JOIN users u ON u.user_id = t.created_user
+			JOIN users u ON u.id = t.created_user
 			WHERE t.is_active = 1 
 			ORDER BY t.threadDate DESC", 15);
 		
@@ -322,7 +320,7 @@ error_debug("done processing include!");
 	class intranet_form {
 		var $rows, $js;
 		
-		function addUser($name="user_id", $desc="User", $default=0, $nullable=false, $admin=false) {
+		function addUser($name="user_id", $desc="User", $default=false, $nullable=false, $admin=false) {
 			global $rows, $location;
 			$class = ($admin) ? "admin " . $location . "-hilite" : false;
 			$rows .= draw_container("tr", 
@@ -331,7 +329,7 @@ error_debug("done processing include!");
 			);
 		}
 		
-		function addCheckbox($name="", $desc="", $default=0, $additionalText="(check if yes)", $admin=false) {
+		function addCheckbox($name="", $desc="", $default=false, $additionalText="(check if yes)", $admin=false) {
 			global $rows, $location;
 			$rows .= '<tr>
 				<td class="left">' . $desc . '</td>
@@ -457,7 +455,7 @@ error_debug("done processing include!");
 					$rows .= '</td>';
 				} elseif ($type == "user") {
 					$result = db_query("SELECT 
-											user_id, 
+											id, 
 											ISNULL(nickname, firstname) first,
 											lastname last 
 										FROM users
@@ -535,6 +533,7 @@ error_debug("done processing include!");
 	}
 
 	function htmlwrap($str, $len=60) {
+		//this should be incorporated into joshlib
 		$words = explode(" ", strip_tags($str));
 		foreach ($words as $word) {
 		  if (strlen($word) > $len) {
@@ -546,12 +545,13 @@ error_debug("done processing include!");
 	}
 
 	function verifyImage($user_id) {
+		//this doesn't appear to be very fast.
 		global $_josh;
 		$large	= $_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg";
 		$medium = $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg";
 		$small	= $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg";
 		if (!file_is($large) || !file_is($medium) || !file_is($small)) {
-			if ($image = db_grab("SELECT image FROM users WHERE user_id = " . $user_id)) {
+			if ($image = db_grab("SELECT image FROM users WHERE id = " . $user_id)) {
 				file_put($large, $image);
 				file_put($medium, format_image_resize($image, 135));
 				file_put($small, format_image_resize($image, 50));
@@ -655,11 +655,11 @@ error_debug("done processing include!");
 //custom functions - form functions
 
 	function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text="", $class=false) { 
-		$result = db_query("SELECT u.user_id, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.is_active = 1 ORDER by last, first");
+		$result = db_query("SELECT u.id, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.is_active = 1 ORDER by last, first");
 		if ($jumpy) $jumpy = "location.href='/staff/view.php?id=' + this.value";
 		$array = array();
 		while ($r = db_fetch($result)) {
-			$array[$r["user_id"]] = ($lname1st) ? $r["last"] . ", " . $r["first"] : $r["first"] . " " . $r["last"];
+			$array[$r["id"]] = ($lname1st) ? $r["last"] . ", " . $r["first"] : $r["first"] . " " . $r["last"];
 		}
 		return draw_form_select($name, $array, $selectedID, !$nullable, $class, $jumpy);
 	}
@@ -739,7 +739,7 @@ error_debug("done processing include!");
 			draw_css_src("/styles/ie.css",		"ie") .
 			draw_javascript_src($_josh["write_folder"] . "/tinymce/jscripts/tiny_mce/tiny_mce.js") .
 			draw_javascript_src("/javascript.js") .
-			draw_javascript_src($_josh["write_folder"] . "/javascript.js") .
+			draw_javascript_src() .
 			draw_javascript("form_tinymce_init('/styles/tinymce.css');")
 		);
 		?>

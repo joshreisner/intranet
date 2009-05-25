@@ -1,7 +1,7 @@
 <?	include("include.php");
 
 $r = db_grab("SELECT
-		u.user_id,
+		u.id,
 		t.title,
 		t.created_user,
 		t.description,
@@ -15,7 +15,7 @@ $r = db_grab("SELECT
 		o.name office,
 		t.created_date,
 		t.statusID,
-		t.typeID,
+		t.type_id,
 		t.departmentID,
 		t.priorityID,
 		p.is_admin is_adminPriority,
@@ -26,11 +26,11 @@ $r = db_grab("SELECT
 		MONTH(t.created_date) createdMonth,
 		YEAR(t.created_date) createdYear
 	FROM helpdesk_tickets t
-	JOIN users					u ON t.created_user	= u.user_id
+	JOIN users					u ON t.created_user	= u.id
 	JOIN helpdesk_tickets_priorities	p ON t.priorityID	= p.id
-	JOIN intranet_offices				o ON u.officeID		= o.id
+	JOIN offices				o ON u.officeID		= o.id
 	LEFT JOIN users			s ON t.ownerID		= s.user_id
-	LEFT JOIN helpdesk_tickets_types	y ON t.typeID		= y.id
+	LEFT JOIN helpdesk_tickets_types	y ON t.type_id		= y.id
 	WHERE t.id = " . $_GET["id"]);
 
 //maybe ticketID is bad?
@@ -38,7 +38,7 @@ if (empty($r)) url_change("/helpdesk/");
 
 if ($r["statusID"] != 9) { //open
 	$typeRequired = false;
-} elseif (!$r["typeID"]) { //closed, no type
+} elseif (!$r["type_id"]) { //closed, no type
 	$typeRequired = false;
 } else {
 	$typeRequired = true;
@@ -47,12 +47,12 @@ if ($r["statusID"] != 9) { //open
 //$module_admin = ($module_admin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
 
 if ($uploading) { //upload an attachment
-	$type = getDocTypeID($_FILES["userfile"]["name"]);
+	$type = getDoctype_id($_FILES["userfile"]["name"]);
 	$content = format_binary(file_get_contents($_FILES["userfile"]["tmp_name"]));
 	unlink($_FILES["userfile"]["tmp_name"]);
 	db_query("INSERT INTO helpdesk_tickets_attachments (
 		ticketID,
-		typeID,
+		type_id,
 		title,
 		content,
 		created_date,
@@ -157,7 +157,7 @@ while ($t = db_fetch($types)) {
 	
 	function newStatus(status) {
 		if (status == 9) {
-		<? if ($r["timeSpent"] && $r["typeID"]) {?>
+		<? if ($r["timeSpent"] && $r["type_id"]) {?>
 			location.href='<?=$request["path_query"]?>&ticketID=<?=$_GET["id"]?>&newStatus=' + status;
 		<? } else { ?>
 			document.all["statusID<?=$r["statusID"]?>"].selected = true;
@@ -221,7 +221,7 @@ while ($t = db_fetch($types)) {
 	<tr class="helpdesk-hilite" height="30">
 		<td class="left">Posted By</td>
 		<td><?
-		$sql = ($_josh["db"]["language"] == "mssql") ? "SELECT u.user_id, u.lastname + ', ' + ISNULL(u.nickname, u.firstname) FROM users u WHERE u.is_active = 1 ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)" : "SELECT u.user_id, CONCAT(u.lastname, ', ', IFNULL(u.nickname, u.firstname)) FROM users u WHERE u.is_active = 1 ORDER BY u.lastname, IFNULL(u.nickname, u.firstname)";
+		$sql = ($_josh["db"]["language"] == "mssql") ? "SELECT u.id, u.lastname + ', ' + ISNULL(u.nickname, u.firstname) FROM users u WHERE u.is_active = 1 ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)" : "SELECT u.id, CONCAT(u.lastname, ', ', IFNULL(u.nickname, u.firstname)) FROM users u WHERE u.is_active = 1 ORDER BY u.lastname, IFNULL(u.nickname, u.firstname)";
 		echo draw_form_select("postedBy", $sql, $r["created_user"], true, "", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newUser=' + this.value");
 		?>
 		<a href="user.php?id=<?=$r["created_user"]?>">view all</a> / <a href="user.php?id=<?=$r["created_user"]?>&month=<?=$r["createdMonth"]?>&year=<?=$r["createdYear"]?>">this month</a>
@@ -263,10 +263,10 @@ while ($t = db_fetch($types)) {
 	</tr>
 	<tr height="30">
 		<td class="left">Type</td>
-		<td><?=draw_form_select("typeID", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = " . $r["departmentID"] . " ORDER BY description", $r["typeID"], $typeRequired, false, "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newType=' + this.value");?>
+		<td><?=draw_form_select("type_id", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = " . $r["departmentID"] . " ORDER BY description", $r["type_id"], $typeRequired, false, "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newType=' + this.value");?>
 			<? if ($module_admin) {
-			 if ($r["typeID"]) {
-			 	echo '<a href="type.php?id=' . $r["typeID"] . '">view all</a> / <a href="type.php?id=' . $r["typeID"] . '&month=' . $r["createdMonth"] . '&year=' . $r["createdYear"] . '">this month</a>';
+			 if ($r["type_id"]) {
+			 	echo '<a href="type.php?id=' . $r["type_id"] . '">view all</a> / <a href="type.php?id=' . $r["type_id"] . '&month=' . $r["createdMonth"] . '&year=' . $r["createdYear"] . '">this month</a>';
 			 } else {
 			 	echo '<a href="types.php">edit types</a>';
 			 }
@@ -306,7 +306,7 @@ while ($t = db_fetch($types)) {
 				t.icon,
 				t.description type
 			FROM helpdesk_tickets_attachments a
-			JOIN docs_types t ON a.typeID = t.id
+			JOIN docs_types t ON a.type_id = t.id
 			WHERE a.ticketID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
@@ -324,14 +324,14 @@ $editurl = ($module_admin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
 echo drawThreadTop($r["title"], $r["description"], $r["created_user"], $r["first"] . " " . $r["last"], $r["created_date"], $editurl);
 
 $result = db_query("SELECT
-					u.user_id,
+					u.id,
 					f.message,
 					ISNULL(u.nickname, u.firstname) first,
 					u.lastname last,
 					f.created_date,
 					f.is_admin
 				FROM helpdesk_tickets_followups	f
-				JOIN users			u ON f.created_user	= u.user_id
+				JOIN users			u ON f.created_user	= u.id
 				WHERE f.ticketID = " . $_GET['id'] . "
 				ORDER BY f.created_date");
 while ($r = db_fetch($result)) {

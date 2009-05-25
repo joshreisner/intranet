@@ -34,7 +34,7 @@ drawNavigation();
 	<?
 		
 	$result = db_query("SELECT 
-							u.user_id, 
+							u.id, 
 							u.lastname,
 							ISNULL(u.nickname, u.firstname) firstname, 
 							u.bio, 
@@ -46,7 +46,7 @@ drawNavigation();
 						FROM users u
 						JOIN intranet_ranks r ON u.rankID = r.id
 						LEFT  JOIN departments d ON d.departmentID = u.departmentID 
-						LEFT  JOIN intranet_offices f     ON f.id = u.officeID
+						LEFT  JOIN offices f     ON f.id = u.officeID
 						WHERE u.is_active = 1 AND r.isPayroll = 0
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	while ($r = db_fetch($result)) {?>

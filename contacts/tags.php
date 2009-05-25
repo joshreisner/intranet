@@ -54,9 +54,9 @@ drawTop();
 							(SELECT count(*) FROM contacts o 
 								INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
 								INNER JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
-								WHERE o.typeID = 22 AND i2t.tagID = t.id AND o.is_active = 1) contactcount
+								WHERE o.type_id = 22 AND i2t.tagID = t.id AND o.is_active = 1) contactcount
 						FROM intranet_tags t 
-						WHERE t.typeID = {$t["id"]} AND t.is_active = 1
+						WHERE t.type_id = {$t["id"]} AND t.is_active = 1
 						ORDER BY t.precedence");
 		while ($v = db_fetch($values)) {?>
 	<tr valign="middle">

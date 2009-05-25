@@ -21,8 +21,8 @@ drawTop();
 		u.lastname last,
 		w.created_date
 	FROM wiki_topics w
-	JOIN wiki_topics_types t ON w.typeID = t.id
-	JOIN users u ON w.created_user = u.user_id
+	JOIN wiki_topics_types t ON w.type_id = t.id
+	JOIN users u ON w.created_user = u.id
 	WHERE w.is_active = 1
 	ORDER BY w.created_date DESC");
 	if (db_found($topics)) {?>
@@ -52,7 +52,7 @@ drawTop();
 	$form = new intranet_form;
 	if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true, 255);
-	$form->addRow("select", "Type" , "typeID", "SELECT id, description FROM wiki_topics_types");
+	$form->addRow("select", "Type" , "type_id", "SELECT id, description FROM wiki_topics_types");
 	$form->addCheckboxes("tags", "Tags", "wiki_tags", "wiki_topics_to_tags");
 	$form->addRow("textarea", "Description" , "description", "", "", true);
 	$form->addRow("submit"  , "post wiki topic");

@@ -20,10 +20,10 @@ echo drawTicketFilter();
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last
 					FROM helpdesk_tickets t
-					JOIN users  u ON u.user_id    = t.created_user
+					JOIN users  u ON u.id    = t.created_user
 					WHERE t.ownerID = {$_GET["id"]} $where
 					ORDER BY t.created_date DESC");
-	$admin = db_grab("SELECT ISNULL(u.nickname, u.firstname) first FROM users u WHERE u.user_id = " . $_GET["id"]);
+	$admin = db_grab("SELECT ISNULL(u.nickname, u.firstname) first FROM users u WHERE u.id = " . $_GET["id"]);
 	echo drawHeaderRow("<a href='admins.php' class='white'>Admins</a> &gt; " . $admin["first"] . " (" . db_found($result) . ")", 5);
 	
 	if (db_found($result)) {

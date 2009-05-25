@@ -23,7 +23,7 @@ drawTop();
 				u.lastname last,
 				(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) AS is_adminIT
 			FROM helpdesk_tickets t
-			JOIN users			u ON u.user_id	= t.created_user
+			JOIN users			u ON u.id	= t.created_user
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND (t.ownerID IS NULL OR t.ownerID = 0) AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
 	if (db_found($result)) {?>
@@ -49,7 +49,7 @@ drawTop();
 				u.lastname last,
 				(SELECT COUNT(*) FROM users_to_modules a where a.module_id = 3 and a.user_id = t.created_user) as is_adminIT
 			FROM helpdesk_tickets t
-			JOIN users   u ON u.user_id    = t.created_user
+			JOIN users   u ON u.id    = t.created_user
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND t.ownerID = " . $_SESSION["user_id"] . " AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
 	if (db_found($result)) {?>
@@ -75,7 +75,7 @@ drawTop();
 				u.lastname last,
 				(SELECT COUNT(*) FROM users_to_modules a WHERE a.module_id = 3 AND a.user_id = t.created_user) AS is_adminIT
 			FROM helpdesk_tickets t
-			JOIN users   u ON u.user_id    = t.created_user
+			JOIN users   u ON u.id    = t.created_user
 			WHERE (t.statusID <> 9 OR t.statusID IS NULL) AND t.ownerID <> 0 AND t.ownerID <> " . $_SESSION["user_id"] . " AND t.departmentID = $departmentID
 			ORDER BY t.priorityID");
 	if (db_found($result)) {?>

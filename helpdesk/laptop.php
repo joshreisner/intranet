@@ -100,12 +100,12 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 	$result = db_query("SELECT
 							ISNULL(u.nickname, u.firstname) first,
 							u.lastname last,
-							u.user_id,
+							u.id,
 							c.checkoutStart, 
 							c.checkoutEnd,
 							c.checkoutNotes
 						FROM IT_Laptops_Checkouts c
-						INNER JOIN users u ON c.checkoutUser = u.user_id
+						INNER JOIN users u ON c.checkoutUser = u.id
 						WHERE checkoutLaptopID = " . $_GET["id"] . "
 						ORDER BY checkoutStart DESC");
 	while ($r = db_fetch($result)) {?>

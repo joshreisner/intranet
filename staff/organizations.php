@@ -36,6 +36,6 @@ if (count($orgs) < 8) {
 }
 
 $where = ($_GET["id"] == 0) ? " IS NULL " : " = " . $_GET["id"];
-echo drawStaffList("u.is_active = 1 AND u.corporationID " . $where);
+echo drawStaffList("u.is_active = 1 AND u.organization_id " . $where);
 
 drawBottom();?>

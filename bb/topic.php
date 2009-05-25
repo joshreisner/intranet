@@ -2,42 +2,42 @@
 
 if ($posting) {
 	$_POST["description"] = $_POST["message"];
-	$_POST["topicID"] = $_GET["id"];
+	$_POST["topic_id"] = $_GET["id"];
 	$_GET["id"] = false; //shameless hack for db_save
 	$id = db_save("bb_followups");
-	db_query("UPDATE bb_topics SET threadDate = GETDATE() WHERE id = " . $_POST["topicID"]);
+	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $_POST["topic_id"]);
 	
 	//send followup email to all topic posters
 	$message = drawEmailHeader() . drawMessage("There has been an update on a bulletin board topic you contributed to.  Click 
-		<a href='" . url_base() . "/bb/topic.php?id=" . $_POST["topicID"] . "'>here to view</a> the topic.");
+		<a href='" . url_base() . "/bb/topic.php?id=" . $_POST["topic_id"] . "'>here to view</a> the topic.");
 	$message .= '<table class="center">';
 	$r = db_grab("SELECT 
 			t.title,
 			t.description,
 			t.created_date,
 			t.is_admin,
-			u.user_id,
+			u.id,
 			u.email,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname
 			FROM bb_topics t
-			JOIN users u ON t.created_user = u.user_id
-			WHERE t.id = " . $_POST["topicID"]);
+			JOIN users u ON t.created_user = u.id
+			WHERE t.id = " . $_POST["topic_id"]);
 	$emails = array($r["email"]);
 	$message .= drawHeaderRow($r["title"], 2);
 	$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
 	$followups = db_query("SELECT
 				f.id,
 				f.description,
-				u.user_id,
+				u.id,
 				u.email,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
 				f.created_date as postedDate,
 				f.created_user as user_id
 			FROM bb_followups f
-			JOIN users u ON u.user_id = f.created_user
-			WHERE f.is_active = 1 AND f.topicID = {$_POST["topicID"]}
+			JOIN users u ON u.id = f.created_user
+			WHERE f.is_active = 1 AND f.topic_id = {$_POST["topic_id"]}
 			ORDER BY f.created_date");
 	while ($f = db_fetch($followups)) { 
 		$emails[] = $f["email"];
@@ -76,11 +76,11 @@ $r = db_grab("SELECT
 		t.description,
 		t.created_date,
 		t.is_admin,
-		u.user_id,
+		u.id user_id,
 		ISNULL(u.nickname, u.firstname) firstname,
 		u.lastname
 		FROM bb_topics t
-		JOIN users u ON t.created_user = u.user_id
+		JOIN users u ON t.created_user = u.id
 		WHERE t.id = " . $_GET["id"]);
 
 //check that it exists
@@ -124,14 +124,14 @@ if ($r["is_admin"] == 1) echo drawMessage(getString("bb_admin"));
 	$followups = db_query("SELECT
 				f.id,
 				f.description,
-				u.user_id,
+				u.id,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
 				f.created_date as postedDate,
 				f.created_user as user_id
 			FROM bb_followups f
-			JOIN users u ON u.user_id = f.created_user
-			WHERE f.is_active = 1 AND f.topicID = {$_GET["id"]}
+			JOIN users u ON u.id = f.created_user
+			WHERE f.is_active = 1 AND f.topic_id = {$_GET["id"]}
 			ORDER BY f.created_date");
 	while ($f = db_fetch($followups)) { 
 		echo drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["postedDate"]);

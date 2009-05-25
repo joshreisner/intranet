@@ -64,7 +64,7 @@ if ($posting) {
 				$r = db_grab("SELECT departmentName FROM departments WHERE departmentID = " . $value);
 				$message .= '<td>' . $r . '</td></tr>';
 			} elseif ($key == "officeID") {
-				$r = db_grab("SELECT name FROM intranet_offices WHERE id = " . $value);
+				$r = db_grab("SELECT name FROM offices WHERE id = " . $value);
 				$message .= '<td>' . $r . '</td></tr>';
 			} elseif ($key == "corporationID") {
 				$message .= '<td>' . db_grab("SELECT description FROM organizations WHERE id = " . $value) . '</td></tr>';
@@ -110,7 +110,7 @@ $form->addRow("itext",			"Email",		"email", '', "", true, 50);
 $form->addRow("itext",			"Title",		"title", '', "", true, 100);
 $form->addRow("select",			"Organization",	"corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
 $form->addRow("department",		"Department",	"departmentID");
-$form->addRow("select",			"Office",		"officeID", "SELECT id, name FROM intranet_offices ORDER BY precedence", "", true);
+$form->addRow("select",			"Office",		"officeID", "SELECT id, name FROM offices ORDER BY precedence", "", true);
 $form->addRow("phone",			"Phone",		"phone", '', "", true, 14);
 $form->addRow("textarea",		"Additional Info", "bio", "", "mceEditor");
 $form->addRow("submit",			"Send Request");

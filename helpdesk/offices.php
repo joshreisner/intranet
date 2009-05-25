@@ -15,9 +15,9 @@ echo drawTicketFilter();
 	$offices = db_query("SELECT 
 		o.id,
 		o.name,
-		(SELECT COUNT(*) FROM helpdesk_tickets t JOIN users u ON t.created_user = u.user_id WHERE o.id = u.officeID $where) tickets,
-		(SELECT SUM(timeSpent) FROM helpdesk_tickets t JOIN users u ON t.created_user = u.user_id WHERE o.id = u.officeID " . $where . ") minutes
-		FROM intranet_offices o
+		(SELECT COUNT(*) FROM helpdesk_tickets t JOIN users u ON t.created_user = u.id WHERE o.id = u.officeID $where) tickets,
+		(SELECT SUM(timeSpent) FROM helpdesk_tickets t JOIN users u ON t.created_user = u.id WHERE o.id = u.officeID " . $where . ") minutes
+		FROM offices o
 		ORDER BY o.precedence");
 	$counter = 0;
 	while ($o = db_fetch($offices)) {

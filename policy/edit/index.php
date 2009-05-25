@@ -3,7 +3,7 @@ include("../../include.php");
 
 if ($posting) {
 	if ($uploading) {
-		$type = getDocTypeID($_FILES["userfile"]["name"]);
+		$type = getDoctype_id($_FILES["userfile"]["name"]);
 		$content = format_binary(file_get($_FILES["userfile"]["tmp_name"]));
 		@unlink($_FILES["userfile"]["tmp_name"]);
 	}
@@ -12,7 +12,7 @@ if ($posting) {
 		if ($uploading) {
 			db_query("UPDATE policy_docs SET 
 				name = '{$_POST["name"]}',
-				typeID = {$type},
+				type_id = {$type},
 				categoryID = {$_POST["categoryID"]},
 				content = $content,
 				updated_date = GETDATE(),
@@ -29,7 +29,7 @@ if ($posting) {
 	} else {
 		$_GET["id"] = db_query("INSERT into policy_docs (
 			name,
-			typeID,
+			type_id,
 			categoryID,
 			content,
 			created_date,
