@@ -4,22 +4,11 @@ if (isset($_josh)) { //included
 } else { //page loaded on its own
 	include("../include.php");
 	if ($posting) {
-		if (isset($_GET["id"])) {
-			//preserve filetypes if new files aren't uploaded
-			$r = db_grab("SELECT filetype_id, imagetype_id FROM news_stories WHERE id = " . $_GET["id"]);
-			$_POST = array_merge($r, $_POST);
-		}
-		$_POST["filetype_id"] = "NULL";
-		$_POST["imagetype_id"] = "NULL";
 		if (isset($_FILES["content"]["name"]) && !empty($_FILES["content"]["name"])) {
-			$_POST["filetype_id"]	= getDoctype_id($_FILES["content"]["name"]);
-			$_POST["content"]		= file_get($_FILES["content"]["tmp_name"]);
-			@unlink($_FILES["content"]["tmp_name"]);
+			list($_POST["content"], $_POST["filetype_id"]) = file_get_uploaded("content");
 		}
 		if (isset($_FILES["image"]["name"]) && !empty($_FILES["image"]["name"])) {
-			$_POST["imagetype_id"]	= getDoctype_id($_FILES["image"]["name"]);
-			$_POST["image"]		= file_get($_FILES["image"]["tmp_name"]);
-			@unlink($_FILES["image"]["tmp_name"]);
+			list($_POST["image"], $_POST["imagetype_id"]) = file_get_uploaded("image");
 		}
 		$id = db_save("news_stories");
 		db_checkboxes("corporationID", "news_stories_to_organizations", "newsID", "organizationID", $id);

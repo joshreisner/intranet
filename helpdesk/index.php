@@ -3,7 +3,7 @@
 if ($posting) {
 	$user_id = ($module_admin) ? $_POST["user_id"] : $_SESSION["user_id"];
 	format_post_nulls("type_id");
-	$r = db_query("INSERT INTO helpdesk_tickets (
+	$id = db_query("INSERT INTO helpdesk_tickets (
     	created_user,
     	type_id,
 		priorityID,
@@ -29,8 +29,8 @@ if ($posting) {
     
     //$r = db_grab("SELECT MAX(id) id FROM helpdesk_tickets");
 	//todo - email mohammed for critical
-	emailITTicket($r, "new"); //special for carla
-	url_change();
+	emailITTicket($id, "new"); //special for carla
+	url_change("ticket.php?id=" . $id);
 }
 
 drawTop();

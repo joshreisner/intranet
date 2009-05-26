@@ -29,7 +29,7 @@ drawTop();
     }
     ?>
 	<tr>
-		<td class="left">title</td>
+		<td class="left">Title</td>
 		<td><h1><a href="download.php?id=<?=$_GET["id"]?>"><?=$d["title"]?></h1></a></td>
 	</tr>
 	<tr>
@@ -60,8 +60,8 @@ drawTop();
 </table>
 <?
 $views = db_query("SELECT 
-			ISNULL(u.nicktitle, u.firsttitle) first,
-			u.lasttitle last,
+			ISNULL(u.nickname, u.firstname) first,
+			u.lastname last,
 			u.id,
 			v.viewedOn
 			FROM docs_views v
@@ -74,7 +74,7 @@ if (db_found($views)) {?>
 		<td class="head docs" colspan="2">Recent Views</td>
 	</tr>
 	<tr class="left">
-		<th align="left">title</th>
+		<th align="left">Title</th>
 		<th align="right">Date</th>
 	</tr>
 	<? while($v = db_fetch($views)) {?>

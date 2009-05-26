@@ -3,8 +3,7 @@
 if ($posting) {
 	$_POST["description"] = $_POST["message"];
 	$_POST["topic_id"] = $_GET["id"];
-	$_GET["id"] = false; //shameless hack for db_save
-	$id = db_save("bb_followups");
+	$id = db_save("bb_followups", false);
 	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $_POST["topic_id"]);
 	
 	//send followup email to all topic posters

@@ -9,7 +9,7 @@ $d = db_grab("SELECT
 	JOIN docs_types t ON d.type_id = t.id
 	WHERE d.id = " . $_GET["id"]);
 
-db_query("INSERT INTO docs_views ( documentID, user_id, viewedOn ) VALUES ( {$_GET["id"]}, {$_SESSION["user_id"]}, GETDATE() )");
+db_query("INSERT INTO docs_views ( documentID, userID, viewedOn ) VALUES ( {$_GET["id"]}, {$_SESSION["user_id"]}, GETDATE() )");
 
 file_download($d["content"], $d["title"], $d["extension"])
 ?>

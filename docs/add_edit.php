@@ -1,54 +1,13 @@
 <?
 include("../include.php");
+
 if ($posting) {
+	//debug();
 	error_debug("user is posting");
-	if ($uploading) {
-		error_debug("user is uploading a file");
-		$type = getDoctype_id($_FILES["userfile"]["title"]);
-		$content = format_binary(file_get($_FILES["userfile"]["tmp_title"]));
-		@unlink($_FILES["userfile"]["tmp_title"]);
-	}
-
-	if (url_id()) {
-		if ($uploading) {
-			db_query("UPDATE docs SET 
-				title = '{$_POST["title"]}',
-				description = '{$_POST["description"]}',
-				type_id = {$type},
-				content = $content,
-				updated_date = GETDATE(),
-				updated_user = {$_SESSION["user_id"]}
-				WHERE id = " . $_GET["id"]);
-		} else {
-			db_query("UPDATE docs SET 
-				title = '{$_POST["title"]}',
-				description = '{$_POST["description"]}',
-				updated_date = GETDATE(),
-				updated_user = {$_SESSION["user_id"]}
-				WHERE id = " . $_GET["id"]);
-		}
-	} else {
-		$_GET["id"] = db_query("INSERT into docs (
-			title,
-			description,
-			type_id,
-			content,
-			created_date,
-			created_user,
-			is_active
-		) VALUES (
-			'" . $_POST["title"] . "',
-			'" . $_POST["description"] . "',
-			"  . $type . ",
-			"  . $content . ",
-			GETDATE(),
-			"  . $_SESSION["user_id"] . ",
-			1
-		)");
-	}
-
-	db_checkboxes("doc", "docs_to_categories", "documentID", "categoryID", $_GET["id"]);
-	url_change("/docs/info.php?id=" . $_GET["id"]);
+	if ($uploading) list($_POST["content"], $_POST["type_id"]) = file_get_uploaded("userfile", "docs_types");
+	$id = db_save("docs");
+	db_checkboxes("docs", "docs_to_categories", "documentID", "categoryID", $id);
+	url_change("/docs/info.php?id=" . $id);
 }
 
 if (url_id()) {
@@ -85,7 +44,7 @@ echo drawMessage("The maximum size you can upload here is " . file_get_max() . "
 		}
 		oneFound = false;
 		for (var i = 0; i < form.elements.length; i++) {
-			var checkParts = form.elements[i].title.split("_");
+			var checkParts = form.elements[i].name.split("_");
 			if ((checkParts[0] == "chk") && (form.elements[i].checked)) oneFound = true;
 		}
 		if (!oneFound) {
@@ -109,48 +68,15 @@ echo drawMessage("The maximum size you can upload here is " . file_get_max() . "
 	}
 	//-->
 </script>
-<table class="left">
-	<?=drawHeaderRow($pageAction, 2);?>
-	<form enctype="multipart/form-data" action="<?=$_josh["request"]["path_query"]?>" method="post" onsubmit="javascript:return validate(this);">
-	<input type="hidden" title="MAX_FILE_SIZE" value="<?=file_get_max(false)?>" />
-	<tr>
-		<td class="left">title</td>
-		<td><?=draw_form_text("title",  @$d["title"], "text")?></td>
-	</tr>
-	<tr>
-		<td class="left">Description</td>
-		<td><?=draw_form_textarea("description", @$d["description"], "mceEditor")?></td>
-	</tr>
-	<!--<tr> need to add this, but think the problem is the column titles are nonstandard?
-		<td class="left">Categories</td>
-		<td><?//=draw_form_checkboxes("docs", "docs_to_categories", "documentID", "categoryID", @$_GET["id"])?></td>
-	</tr>-->
-	<tr>
-		<td class="left">Category</td>
-		<td>
-			<table class="nospacing">
-				<?
-				if (url_id()) {
-					$categories = db_query("SELECT c.id, c.description, (SELECT COUNT(*) FROM docs_to_categories d2c WHERE d2c.categoryID = c.id AND d2c.documentID = {$_GET["id"]}) checked FROM docs_categories c ORDER BY c.precedence");
-				} else {
-					$categories = db_query("SELECT id, description FROM docs_categories ORDER BY precedence");
-				}
-				while ($c = db_fetch($categories)) {?>
-				<tr>
-					<td width="1%"><?=draw_form_checkbox("chk_doc_" . $c["id"], @$c["checked"])?></td>
-					<td width="99%"><?=$c["description"]?></td>
-				</tr>
-				<? }?>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="left">File<? if (url_id()) {?> (optional)<? }?></td>
-		<td><?=draw_form_file("userfile")?></td>
-	</tr>
-	<tr>
-		<td class="bottom" colspan="2"><?=draw_form_submit($pageAction);?></td>
-	</tr>
-	</form>
-</table>
-<? drawBottom();?>
+<?
+$form = new intranet_form;
+$form->addRow("itext",  "Title", "title", @$d["title"], "", true, 50);
+$form->addRow("textarea", "Description", "description", @$d["description"]);
+$form->addCheckboxes("docs", "Categories", "docs_categories", "docs_to_categories", "documentID", "categoryID", @$_GET["id"]);
+$form->addRow("file", "Document", "userfile");
+$form->addRow("submit",   "Save Changes");
+$form->draw($pageAction);
+
+
+drawBottom();
+?>

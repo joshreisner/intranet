@@ -9,34 +9,18 @@ if (isset($_GET["deleteID"])) { //delete topic
 url_query_require();
 
 if ($uploading) { //upload an attachment
-	$type = getDoctype_id($_FILES["userfile"]["name"]);
-	$content = format_binary(file_get_contents($_FILES["userfile"]["tmp_name"]));
-	unlink($_FILES["userfile"]["tmp_name"]);
-	db_query("INSERT INTO wiki_topics_attachments (
-		topicID,
-		type_id,
-		title,
-		content,
-		created_date,
-		created_user
-	) VALUES (
-		{$_GET["id"]},
-		{$type},
-		'{$_POST["title"]}',
-		$content,
-		GETDATE(),
-		{$_SESSION["user_id"]}
-	)");
+	list($_POST["type_id"], $_POST["content"]) = file_get_uploaded("userfile", "docs_types");
+	$_POST["topicID"] = $_GET["id"];
+	$id = db_save("wiki_topics_attachments"], false);
 	url_change();
 } elseif ($posting) { //add a comment
-	$_POST["description"] = format_html($_POST["message"]);
+	$_POST["description"] = $_POST["message"];
 	$_POST["topicID"] = $_GET["id"];
 	$id = db_save("wiki_topics_comments");
 	url_change();
 }
 
 drawTop();
-
 
 //load code for JS
 $extensions = array();

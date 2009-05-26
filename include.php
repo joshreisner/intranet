@@ -9,6 +9,8 @@ $_josh["write_folder"]	= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]);
 $_josh["config"]		= $_josh["write_folder"] . "/config.php";
 extract(joshlib());
 
+//debug();
+
 //apply security
 if (!$pageIsPublic) {
 	error_debug("page is not public");
@@ -254,11 +256,6 @@ error_debug("done processing include!");
 	}
 	
 //post functions
-	function getDoctype_id($filename) {
-		$array = explode(".", $filename);
-		return db_grab("SELECT id FROM docs_types WHERE extension = '" . array_pop($array) . "'");
-	}
-
 	function updateInstanceWords($id, $text) {
 		global $ignored_words;
 		$words = array_diff(split("[^[:alpha:]]+", strtolower(strip_tags($text))), $ignored_words);

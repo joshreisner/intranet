@@ -46,27 +46,14 @@ if ($r["statusID"] != 9) { //open
 
 //$module_admin = ($module_admin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
 
-if ($uploading) { //upload an attachment
-	$type = getDoctype_id($_FILES["userfile"]["name"]);
-	$content = format_binary(file_get_contents($_FILES["userfile"]["tmp_name"]));
-	unlink($_FILES["userfile"]["tmp_name"]);
-	db_query("INSERT INTO helpdesk_tickets_attachments (
-		ticketID,
-		type_id,
-		title,
-		content,
-		created_date,
-		created_user
-	) VALUES (
-		{$_GET["id"]},
-		{$type},
-		'{$_POST["title"]}',
-		$content,
-		GETDATE(),
-		{$_SESSION["user_id"]}
-	)");
+if ($uploading) {
+	//upload an attachment
+	list($_POST["content"], $_POST["typeID"]) = file_get_uploaded("userfile", "docs_types");
+	$_POST["ticketID"] = $_GET["id"];
+	$id = db_save("helpdesk_tickets_attachments", false);
 	url_change();
-} elseif ($posting) { //add a comment
+} elseif ($posting) {
+	//add a comment
 	//auto-assign ticket if unassigned and followup poster is an IT admin
 	$followupAdmin = (isset($_POST["is_admin"])) ? 1 : 0;
 	if ($module_admin && !$followupAdmin && empty($r["ownerID"])) {
@@ -306,7 +293,7 @@ while ($t = db_fetch($types)) {
 				t.icon,
 				t.description type
 			FROM helpdesk_tickets_attachments a
-			JOIN docs_types t ON a.type_id = t.id
+			JOIN docs_types t ON a.typeID = t.id
 			WHERE a.ticketID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">
