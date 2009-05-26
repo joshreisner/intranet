@@ -26,7 +26,7 @@ echo drawTicketFilter();
 ?>
 <table class="left" cellspacing="1">
 	<?
-	$u = db_grab("SELECT ISNULL(nickname, firstname) first, lastname last FROM users WHERE user_id = " . $_GET["id"]);
+	$u = db_grab("SELECT ISNULL(nickname, firstname) first, lastname last FROM users WHERE id = " . $_GET["id"]);
 	echo drawHeaderRow("<a href='users.php' class='white'>Users</a> &gt; " . $u["first"] . " " . $u["last"] . " (" . db_found($result) . ")", 5);
 	if (db_found($result)) {
 		echo drawTicketHeader();

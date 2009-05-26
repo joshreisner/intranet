@@ -65,7 +65,7 @@ $views = db_query("SELECT
 			u.id,
 			v.viewedOn
 			FROM docs_views v
-			JOIN users u ON v.user_id = u.id
+			JOIN users u ON v.userID = u.id
 			WHERE v.documentID = " . $_GET["id"] . "
 			ORDER BY v.viewedOn DESC", 5);
 if (db_found($views)) {?>
@@ -79,7 +79,7 @@ if (db_found($views)) {?>
 	</tr>
 	<? while($v = db_fetch($views)) {?>
 	<tr>
-		<td width="70%"><a href="/staff/view.php?id=<?=$v["user_id"]?>"><?=$v["first"]?> <?=$v["last"]?></a></td>
+		<td width="70%"><a href="/staff/view.php?id=<?=$v["id"]?>"><?=$v["first"]?> <?=$v["last"]?></a></td>
 		<td width="30%" align="right"><?=format_date_time($v["viewedOn"], " ")?></td>
 	</tr>
 	<? }?>

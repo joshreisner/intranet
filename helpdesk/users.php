@@ -27,7 +27,7 @@ echo drawTicketFilter();
 		$counter++;
 	?>
 	<tr>
-		<td><a href="user.php?id=<?=$r["user_id"]?><? if ($filtered) {?>&month=<?=$_GET["month"]?>&year=<?=$_GET["year"]?><? }?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
+		<td><a href="user.php?id=<?=$r["id"]?><? if ($filtered) {?>&month=<?=$_GET["month"]?>&year=<?=$_GET["year"]?><? }?>"><?=$r["first"]?> <?=$r["last"]?></a></td>
 		<td align="right"><?=number_format($r["tickets"])?></td>
 		<td align="right"><?=@round($r["minutes"] / $total["minutes"] * 100)?></td>
 	</tr>

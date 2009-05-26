@@ -3,9 +3,9 @@ include("../include.php");
 
 if ($posting) {
 	if (url_id()) {
-		db_query("UPDATE intranet_programs SET programDesc = '" . $_POST["programDesc"] . "' WHERE programID = " . $_GET["id"]);
+		db_query("UPDATE funders_programs SET programDesc = '" . $_POST["programDesc"] . "' WHERE programID = " . $_GET["id"]);
 	} else {
-		$_GET["id"] = db_query("INSERT INTO intranet_programs ( programDesc ) VALUES ( '{$_POST["programDesc"]}' )");
+		$_GET["id"] = db_query("INSERT INTO funders_programs ( programDesc ) VALUES ( '{$_POST["programDesc"]}' )");
 	}
 	url_change("program.php?id=" . $_GET["id"]);
 }
@@ -13,7 +13,7 @@ if ($posting) {
 drawTop();
 
 if (url_id()) {
-	$program = db_grab("SELECT programDesc FROM intranet_programs WHERE programID = " . $_GET["id"]);
+	$program = db_grab("SELECT programDesc FROM funders_programs WHERE programID = " . $_GET["id"]);
 	$title = "Edit Program";
 } else {
 	$title = "Add New Program";

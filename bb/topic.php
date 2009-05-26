@@ -15,7 +15,7 @@ if ($posting) {
 			t.description,
 			t.created_date,
 			t.is_admin,
-			u.id,
+			u.id user_id,
 			u.email,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname
@@ -28,12 +28,11 @@ if ($posting) {
 	$followups = db_query("SELECT
 				f.id,
 				f.description,
-				u.id,
+				u.id user_id,
 				u.email,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
-				f.created_date as postedDate,
-				f.created_user as user_id
+				f.created_date as postedDate
 			FROM bb_followups f
 			JOIN users u ON u.id = f.created_user
 			WHERE f.is_active = 1 AND f.topic_id = {$_POST["topic_id"]}

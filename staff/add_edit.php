@@ -14,6 +14,9 @@ if ($posting) {
 	$_POST["emerCont2Phone"]	= format_phone(@$_POST["emerCont2Phone"]);
 	$_POST["emerCont2Cell"]		= format_phone(@$_POST["emerCont2Cell"]);
 	if (!isset($_POST["is_admin"])) $_POST["is_admin"] = 0;
+
+	//die(file_get_uploaded("userfile"));
+	if ($uploading) $_POST["image"] = format_image_resize(file_get_uploaded("userfile"), 270);
 			
 	if ($module_admin) {
 		$id = db_save("users");
@@ -63,18 +66,6 @@ if ($posting) {
 		$user = db_grab("SELECT u.updated_date, " . db_datediff("u.updated_date", "GETDATE()") . " update_days FROM users u WHERE u.id = " . $_SESSION["user_id"]);
 		$_SESSION["updated_date"]	 = $user["updated_date"];
 		$_SESSION["update_days"] = $user["update_days"];
-	}
-
-	if ($uploading) { 
-		//upload new staff image, probably should insert this in above update statement
-		//also need to ensure they're uploading a JPG
-		file_image_resize($_FILES["userfile"]["tmp_name"], $_josh["write_folder"] . "/staff/" . $id . ",jpg", 270);
-		file_image_resize($_FILES["userfile"]["tmp_name"], $_josh["write_folder"] . "/staff/" . $id . "-thumbnail,jpg", 40);
-		unlink($_FILES["userfile"]["tmp_name"]);
-		$image	= format_binary(file_get($_josh["write_folder"] . "/staff/" . $id . ",jpg"));
-
-		//add image to user	
-		db_query("UPDATE users SET image = $image WHERE id = " . $id);
 	}
 
 	url_change("view.php?id=" . $id);
@@ -138,11 +129,11 @@ if (isset($_GET["id"])) {
 		u.phone, 
 		u.officeID, 
 		u.organization_id,
-		u.is_admin,
 		u.departmentID,
 		u.created_date,
 		GETDATE() startDate
-		FROM users_requests u WHERE id = " . $_GET["requestID"]);
+		FROM users_requests u 
+		WHERE id = " . $_GET["requestID"]);
 } else {
 	$r["startDate"] = db_grab("SELECT GETDATE()");
 }

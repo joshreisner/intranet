@@ -98,10 +98,10 @@ drawTop();
 if (isset($_GET["id"])) {
 	$i = db_grab("SELECT
 			i.id,
-			(SELECT t1.id FROM intranet_tags t1 INNER JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = i.id) salutation,
+			(SELECT t1.id FROM contacts_tags t1 INNER JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = i.id) salutation,
 			i.varchar_01 first,
 			i.varchar_02 last,
-			(SELECT t2.id FROM intranet_tags t2 INNER JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.type_id = 11 AND i2t2.instanceID = i.id) suffix,
+			(SELECT t2.id FROM contacts_tags t2 INNER JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.type_id = 11 AND i2t2.instanceID = i.id) suffix,
 			i.varchar_03 nickname,
 			i.varchar_04 org,
 			i.varchar_05 title,
@@ -131,7 +131,7 @@ if (isset($_GET["id"])) {
 		if (!form.varchar_06.value.length) errors[errors.length] = "Address 1 is empty";
 		if (!form.numeric_01.value.length) errors[errors.length] = "Postal Code is empty";
 		<?
-			$values = db_query("SELECT id FROM intranet_tags WHERE type_id = 15 AND is_active = 1");
+			$values = db_query("SELECT id FROM contacts_tags WHERE type_id = 15 AND is_active = 1");
 			$checkboxes = array();
 			while ($v = db_fetch($values)) $checkboxes[] = "!form.tag_multiple_" . $v["id"] . ".checked";
 		?>
@@ -148,7 +148,7 @@ if (isset($_GET["id"])) {
 	<tr>
 		<td class="left">Courtesy Title</td>
 		<td>
-			<?=draw_form_select("tag_single_10", "SELECT id, tag FROM intranet_tags WHERE type_id = 10 AND is_active = 1 ORDER BY tag", @$i["salutation"])?>
+			<?=draw_form_select("tag_single_10", "SELECT id, tag FROM contacts_tags WHERE type_id = 10 AND is_active = 1 ORDER BY tag", @$i["salutation"])?>
 		</td>
 	</tr>
 	<tr>
@@ -161,7 +161,7 @@ if (isset($_GET["id"])) {
 	</tr>
 	<tr>
 		<td class="left">Suffix</td>
-		<td><?=draw_form_select("tag_single_11", "SELECT id, tag FROM intranet_tags WHERE type_id = 11 ORDER BY precedence", @$i["suffix"], false, false, true)?></td>
+		<td><?=draw_form_select("tag_single_11", "SELECT id, tag FROM contacts_tags WHERE type_id = 11 ORDER BY precedence", @$i["suffix"], false, false, true)?></td>
 	</tr>
 	<tr>
 		<td class="left">Company</td>
@@ -208,33 +208,31 @@ if (isset($_GET["id"])) {
 	</tr>
 	<?
 	$tags = db_query("select 
-					f.tagtype_id,
+					f.tagTypeID,
 					f.name,
-					f.fieldtype_id,
+					f.fieldTypeID,
 					f.isRequired
 				from contacts_fields f
-				join intranet_tags_types t on f.tagtype_id = t.id
-				where f.objecttype_id = 22 and t.is_active = 1 
+				join contacts_tags_types t on f.tagTypeID = t.id
+				where f.objectTypeID = 22 and t.is_active = 1 
 				order by f.precedence");
 	while ($t = db_fetch($tags)) {?>
 	<tr valign="top">
 		<td bgcolor="#<?if($t["isRequired"]){?>FFDDDD<?}else{?>F6F6F6<?}?>" width="18%"><?=$t["name"]?></td>
 		<td>
-			<? if ($t["fieldtype_id"] == 4) {
-				if (isset($_GET["id"])) $v = db_grab("SELECT i2t.tagID FROM contacts_instances_to_tags i2t JOIN intranet_tags t ON i2t.tagID = t.id WHERE i2t.instanceID = {$i["id"]} and t.type_id = {$t["tagtype_id"]} AND t.is_active = 1");
-				echo draw_form_select("tag_single_" . $t["tagtype_id"], "SELECT id, tag FROM intranet_tags WHERE type_id = {$t["tagtype_id"]} AND is_active = 1 ORDER BY precedence", @$v["tagID"], false, false, !$t["isRequired"]);
-			} elseif ($t["fieldtype_id"] == 5) {?>
-				<table class="nospacing">
-				<tr valign="top">
-					<td width="40%"><table cellpadding="0" cellspacing="0" border="0">
+			<? if ($t["fieldTypeID"] == 4) {
+				if (isset($_GET["id"])) $v = db_grab("SELECT i2t.tagID FROM contacts_instances_to_tags i2t JOIN contacts_tags t ON i2t.tagID = t.id WHERE i2t.instanceID = {$i["id"]} and t.type_id = {$t["tagTypeID"]} AND t.is_active = 1");
+				echo draw_form_select("tag_single_" . $t["tagTypeID"], "SELECT id, tag FROM contacts_tags WHERE type_id = {$t["tagTypeID"]} AND is_active = 1 ORDER BY precedence", @$v["tagID"], false, false, !$t["isRequired"]);
+			} elseif ($t["fieldTypeID"] == 5) {?>
+				<table class="nospacing" cellpadding="0" cellspacing="0" border="0">
 				<?
 				if (isset($_GET["id"])) {
 				$values = db_query("SELECT 
 										t.id, 
 										t.tag, 
 										(SELECT count(*) FROM contacts_instances_to_tags i2t WHERE i2t.tagID = t.id AND i2t.instanceID = {$i["id"]}) selected
-									FROM intranet_tags t
-									WHERE t.type_id = {$t["tagtype_id"]}
+									FROM contacts_tags t
+									WHERE t.type_id = {$t["tagTypeID"]}
 										AND t.is_active = 1
 									ORDER by t.precedence");
 				} else {
@@ -242,29 +240,24 @@ if (isset($_GET["id"])) {
 										t.id, 
 										t.tag,
 										0 selected
-									FROM intranet_tags t
-									WHERE t.type_id = {$t["tagtype_id"]}
+									FROM contacts_tags t
+									WHERE t.type_id = {$t["tagTypeID"]}
 										AND t.is_active = 1
 									ORDER by t.precedence");
 				}
 				$oneFound = false;
 				while ($v = db_fetch($values)) {?>
 					<tr>
-						<td><input type="checkbox" name="tag_multiple_<?=$v["id"]?>"<? if ($v["selected"]) {?> checked<?}?>></td>
-						<td class="input"><?=$v["tag"]?></td>
+						<td width="1%"><input type="checkbox" name="tag_multiple_<?=$v["id"]?>"<? if ($v["selected"]) {?> checked<? }?>></td>
+						<td width="99%"><?=$v["tag"]?></td>
 					</tr>
 					<? if (isset($v["selected"]) && $v["selected"]) $oneFound = true;
 				}?>
 				</table>
-					</td>
-					<td class="input" width="60%"><font color="#D8282D"><? if ($t["isRequired"] && !$oneFound) {?>&nbsp;&#187; new required value!<?}?></td>
-				</tr>
-			</table>
-
-			<?}?>
+			<? }?>
 		</td>
 	</tr>
-	<?}?>
+	<? }?>
 	<tr>
 		<td colspan="2" align="center" class="gray">
 			<? if (isset($_GET["id"])) {

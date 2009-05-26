@@ -6,13 +6,13 @@ url_query_require();
 
 //delete an award
 if (isset($_GET["delAward"])) { 
-	db_query("DELETE FROM resources_awards WHERE awardID = " . $_GET["delAward"]);
+	db_query("DELETE FROM funders_awards WHERE awardID = " . $_GET["delAward"]);
 	url_change("funder_view.php?id=" . $_GET["id"]);
 }
 
 //delete activity (temporary)
 if (isset($_GET["delActivity"])) { 
-	db_query("DELETE FROM resources_activity WHERE activityID = " . $_GET["delActivity"]);
+	db_query("DELETE FROM funders_activity WHERE activityID = " . $_GET["delActivity"]);
 	url_change("funder_view.php?id=" . $_GET["id"]);
 }
 	
@@ -24,9 +24,9 @@ $r = db_grab("SELECT
 			ft.funderTypeDesc, 
 			fs.FunderStatusDesc,
 			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname staffname
-		FROM resources_funders f
-		INNER JOIN resources_funders_types    ft ON ft.funderTypeID = f.funderTypeID
-		INNER JOIN resources_funders_statuses fs ON fs.FunderStatusID = f.FunderStatusID
+		FROM funders f
+		INNER JOIN funders_types    ft ON ft.funderTypeID = f.funderTypeID
+		INNER JOIN funders_statuses fs ON fs.FunderStatusID = f.FunderStatusID
 		INNER JOIN users             u  ON u.id = f.staffID
 		WHERE funderID = " . $_GET["id"]);
 		
@@ -70,8 +70,8 @@ $r = db_grab("SELECT
 			<? 
 			$result_programs = db_query("SELECT 
 				programDesc 
-				FROM intranet_programs p
-				INNER JOIN Resources_Funders_Program_Interests fp on p.programID = fp.programID
+				FROM funders_programs p
+				INNER JOIN funders_program_interests fp on p.programID = fp.programID
 				WHERE fp.funderID = " . $_GET["id"]);
 			while ($rp = db_fetch($result_programs)) {?>
 			&#183; <?=$rp["programDesc"]?><br>
@@ -85,7 +85,7 @@ $r = db_grab("SELECT
 			$result_geographic_areas = db_query("SELECT 
 				geographicAreaDesc 
 				FROM funders_geographic_areas g
-				INNER JOIN Resources_Funders_Geographic_Interests gp on g.geographicAreaID = gp.geographicAreaID
+				INNER JOIN funders_Geographic_Interests gp on g.geographicAreaID = gp.geographicAreaID
 				WHERE gp.funderID = " . $_GET["id"]);
 			while ($rg = db_fetch($result_geographic_areas)) {?>
 			&#183; <?=$rg["geographicAreaDesc"]?><br>
@@ -111,8 +111,8 @@ $r = db_grab("SELECT
 $result_award_statuses = db_query("SELECT 
 					s.awardStatusID, 
 					s.awardStatusDescPlural,
-					(SELECT count(*) FROM resources_awards a WHERE a.awardStatusID = s.awardStatusID AND a.funderID = " . $_GET["id"] . ") as awardCount
-				FROM resources_awards_statuses s");
+					(SELECT count(*) FROM funders_awards a WHERE a.awardStatusID = s.awardStatusID AND a.funderID = " . $_GET["id"] . ") as awardCount
+				FROM funders_awards_statuses s");
 $total_awards = 0;
 while ($rsa = db_fetch($result_award_statuses)) {
 	$total_awards += $rsa["awardCount"];
@@ -137,10 +137,10 @@ while ($rsa = db_fetch($result_award_statuses)) {
 			at.awardTypeDesc,
 			a.awardTitle,
 			p.programDesc,
-			(SELECT TOP 1 c.activityDate FROM resources_activity c WHERE c.awardID = a.awardID AND c.isReport = 1 AND c.isComplete = 0 ORDER BY c.activityDate ASC) reportDate
-		FROM resources_awards a
-		INNER JOIN resources_awards_types at ON a.awardtype_id = at.awardtype_id
-		INNER JOIN intranet_programs p on a.awardProgramID = p.programID
+			(SELECT TOP 1 c.activityDate FROM funders_activity c WHERE c.awardID = a.awardID AND c.isReport = 1 AND c.isComplete = 0 ORDER BY c.activityDate ASC) reportDate
+		FROM funders_awards a
+		INNER JOIN funders_awards_types at ON a.awardTypeID = at.awardTypeID
+		INNER JOIN funders_programs p on a.awardProgramID = p.programID
 		WHERE a.funderID = " . $_GET["id"] . " 
 		AND a.awardStatusID = " . $rsa["awardStatusID"] . "
 		ORDER BY a.awardStartDate DESC");

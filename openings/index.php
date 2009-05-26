@@ -2,36 +2,11 @@
 include("../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE openings SET 
-				deleted_date = GETDATE(),
-				deleted_user = {$_SESSION["user_id"]},
-				is_active = 0
-			WHERE id = " . $_GET["id"]);
+	db_delete("openings");
 	url_drop();
-}
-
-
-if ($posting) {
-	$user_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
-	format_post_html("description");
-    db_query("INSERT INTO openings (
-    	title,
-    	description,
-		corporationID,
-		officeID,
-		created_user,
-		created_date,
-		is_active
-	) VALUES (
-		'" . $_POST["title"] . "',
-		" . $_POST["description"] . ",
-		" . $_POST["corporationID"] . ",
-		" . $_POST["officeID"] . ",
-		" . $user_id . ",
-		GETDATE(),
-		1
-    );");
-    url_change();
+} elseif ($posting) {
+	$id = db_save("openings");
+	url_change("position.php?id=" . $id);
 }
 
 drawTop();
@@ -45,9 +20,9 @@ drawTop();
 		echo drawHeaderRow("Open Positions", $colspan);
 	}?>
 	<tr>
-		<th align="left" width="50%">Title</th>
-		<th align="left" width="30%">Location</th>
-		<th align="right" width="20%"><nobr>Last Update</nobr></th>
+		<th width="50%">Title</th>
+		<th width="30%">Location</th>
+		<th class="r" width="20%"><nobr>Last Update</nobr></th>
 		<? if ($module_admin) {?><th></th><? }?>
 	</tr>
 	<?
@@ -71,7 +46,7 @@ drawTop();
 		<tr>
 			<td><a href="position.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["office"]?></td>
-			<td align="right"><?=format_date($r["updated_date"])?></td>
+			<td class="r"><?=format_date($r["updated_date"])?></td>
 			<?=deleteColumn("Delete this position?", $r["id"])?>
 		</tr>
 		<? }?>
@@ -81,10 +56,10 @@ drawTop();
 
 <? if ($module_admin) {
 	$form = new intranet_form;
-	if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true);
 	$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
 	$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM offices ORDER BY precedence", "", true);
+	$form->addRow("checkbox", "Internship?" , "is_internship", $r["is_internship"]);
 	$form->addRow("textarea", "Description" , "description", "", "", true);
 	$form->addRow("submit"  , "post open position");
 	$form->draw("Add an Open Position");

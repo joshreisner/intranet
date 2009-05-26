@@ -18,12 +18,12 @@ $result = db_query("SELECT
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last,
 						u.id,
-						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.id AND awardStatusID = 1) as active,
-						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.id AND awardStatusID = 2) as proposals,
-						(SELECT COUNT(*) FROM resources_awards a where a.staffID = u.id AND awardStatusID = 5) as strategies,
+						(SELECT COUNT(*) FROM funders_awards a where a.staffID = u.id AND awardStatusID = 1) as active,
+						(SELECT COUNT(*) FROM funders_awards a where a.staffID = u.id AND awardStatusID = 2) as proposals,
+						(SELECT COUNT(*) FROM funders_awards a where a.staffID = u.id AND awardStatusID = 5) as strategies,
 						u.is_active
 					FROM users u
-					WHERE (SELECT COUNT(*) FROM resources_awards a where a.staffID = u.id AND (awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5)) > 0
+					WHERE (SELECT COUNT(*) FROM funders_awards a where a.staffID = u.id AND (awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5)) > 0
 					ORDER BY last, first
 					");
 while ($r = db_fetch($result)) {?>

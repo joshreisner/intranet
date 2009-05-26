@@ -31,10 +31,10 @@ drawTop();
 
 $i = db_grab("SELECT
 		i.id,
-		(SELECT t1.tag FROM intranet_tags t1 INNER JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
+		(SELECT t1.tag FROM contacts_tags t1 INNER JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
 		i.varchar_01 first,
 		i.varchar_02 last,
-		(SELECT t2.tag FROM intranet_tags t2 INNER JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.type_id = 11 AND i2t2.instanceID = o.instanceCurrentID) suffix,
+		(SELECT t2.tag FROM contacts_tags t2 INNER JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.type_id = 11 AND i2t2.instanceID = o.instanceCurrentID) suffix,
 		i.varchar_03 nickname,
 		i.varchar_04 org,
 		i.varchar_05 title,
@@ -138,14 +138,14 @@ if (!$i["id"]) {
 		$found = false;
 		$output = '<tr class="group"><td colspan="3">Tags</td></tr>';
 		$tags = db_query("SELECT 
-						f.tagtype_id,
+						f.tagTypeID,
 						f.name,
-						f.fieldtype_id
+						f.fieldTypeID
 					FROM contacts_fields f
-					JOIN intranet_tags_types t ON f.tagtype_id = t.id
-					WHERE f.objecttype_id = 22 AND f.tagtype_id > 11 AND t.is_active = 1 ORDER BY f.precedence");
+					JOIN contacts_tags_types t ON f.tagTypeID = t.id
+					WHERE f.objectTypeID = 22 AND f.tagTypeID > 11 AND t.is_active = 1 ORDER BY f.precedence");
 		while ($t = db_fetch($tags)) {
-			$values = db_query("SELECT t.id, t.tag FROM intranet_tags t JOIN contacts_instances_to_tags i2t ON t.id = i2t.tagID WHERE t.is_active = 1 AND t.type_id = {$t["tagtype_id"]} AND i2t.instanceID = {$i["id"]} ORDER BY t.precedence");
+			$values = db_query("SELECT t.id, t.tag FROM contacts_tags t JOIN contacts_instances_to_tags i2t ON t.id = i2t.tagID WHERE t.is_active = 1 AND t.type_id = {$t["tagTypeID"]} AND i2t.instanceID = {$i["id"]} ORDER BY t.precedence");
 			if (db_found($values)) {
 				$found = true;
 				$output .= '<tr valign="top"><td class="left">' . $t["name"] . '</td>';

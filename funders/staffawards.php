@@ -6,7 +6,7 @@ if (!isset($_GET["statusID"])) url_change($_josh["request"]["path_query"] . "&st
 drawTop();
 
 	
-$r  = db_grab("SELECT awardStatusDescPlural FROM resources_awards_statuses WHERE awardStatusID = " . $_GET["statusID"]);
+$r  = db_grab("SELECT awardStatusDescPlural FROM funders_awards_statuses WHERE awardStatusID = " . $_GET["statusID"]);
 $r2 = db_grab("SELECT ISNULL(u.nickname, u.firstname) staffname 
 					FROM users u
 					WHERE u.id = " . $_GET["staffID"]);
@@ -16,10 +16,10 @@ $r2 = db_grab("SELECT ISNULL(u.nickname, u.firstname) staffname
 	<?=drawHeaderRow($r2["staffname"] . "'s " . $r["awardStatusDescPlural"], 5)?>
 <?
 $programs = db_query("SELECT p.programID, p.programDesc, (SELECT count(*) 
-		FROM resources_awards a
-		INNER JOIN resources_funders f on a.funderID = f.funderID
+		FROM funders_awards a
+		INNER JOIN funders f on a.funderID = f.funderID
 		WHERE a.awardProgramID = p.programID AND a.awardStatusID  = " . $_GET["statusID"] . " AND a.staffID  = " . $_GET["staffID"] . ") as progAwardCount
-		FROM intranet_programs p ORDER BY programDesc");
+		FROM funders_programs p ORDER BY programDesc");
 while ($rp = db_fetch($programs)) {
 	$lastfunderID = 0;
 	$award_amt    = 0; 
@@ -51,8 +51,8 @@ while ($rp = db_fetch($programs)) {
 			a.awardAmount,
 			a.awardStartDate,
 			a.awardEndDate
-		FROM resources_awards a
-		INNER JOIN resources_funders f on a.funderID = f.funderID
+		FROM funders_awards a
+		INNER JOIN funders f on a.funderID = f.funderID
 		WHERE a.awardProgramID = " . $rp["programID"] . "
 			AND   a.awardStatusID  = " . $_GET["statusID"] . " 
 			AND   a.staffID  = " . $_GET["staffID"] . " 
@@ -65,7 +65,7 @@ while ($rp = db_fetch($programs)) {
 		<tr bgcolor="#FFFFFF" class="helptext" valign="top">
 			<? if ($lastfunderID != $r["funderID"]) { ?>
 			<td width="39%" rowspan="<?
-			$result_rowcount = db_query("SELECT count(*) as 'rowcount' FROM resources_awards WHERE funderID = " . $r["funderID"] . " AND awardprogramID = " . $rp["programID"] . " AND awardStatusID  = " . $_GET["statusID"] . " AND staffID  = " . $_GET["staffID"]);
+			$result_rowcount = db_query("SELECT count(*) as 'rowcount' FROM funders_awards WHERE funderID = " . $r["funderID"] . " AND awardprogramID = " . $rp["programID"] . " AND awardStatusID  = " . $_GET["statusID"] . " AND staffID  = " . $_GET["staffID"]);
 			$rr = db_fetch($result_rowcount);
 			echo $rr["rowcount"];
 			?>"><a href="funder_view.php?id=<?=$r["funderID"]?>"><?=$r["name"]?></a></td>
@@ -79,7 +79,7 @@ while ($rp = db_fetch($programs)) {
 						ISNULL(u.nickname, u.firstname) first,
 						u.lastname last,
 						a.isComplete
-					FROM resources_activity a
+					FROM funders_activity a
 					INNER JOIN users u     ON a.activityAssignedTo = u.id
 					WHERE awardID = " . $r["awardID"] . " AND 
 					((" . db_datediff("GETDATE()", "a.activityDate") . " > -60 AND " . db_datediff("GETDATE()", "a.activityDate") . " < 60) OR

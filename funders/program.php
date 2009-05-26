@@ -4,7 +4,7 @@ include("../include.php");
 drawTop();
 
 
-$r = db_grab("SELECT programDesc FROM intranet_programs WHERE programID = " . $_GET["id"]);
+$r = db_grab("SELECT programDesc FROM funders_programs WHERE programID = " . $_GET["id"]);
 ?>
 
 <table class="left" cellspacing="1">
@@ -28,8 +28,8 @@ $r = db_grab("SELECT programDesc FROM intranet_programs WHERE programID = " . $_
 	$result = db_query("SELECT 
 					f.funderID, 
 					f.name 
-				FROM resources_funders_program_interests fp
-				INNER JOIN resources_funders f ON fp.funderID = f.funderID
+				FROM funders_program_interests fp
+				INNER JOIN funders f ON fp.funderID = f.funderID
 				WHERE fp.programID = {$_GET["id"]}
 				ORDER BY f.name");
 	while ($r = db_fetch($result)) {?>
@@ -55,8 +55,8 @@ $r = db_grab("SELECT programDesc FROM intranet_programs WHERE programID = " . $_
 $result_award_statuses = db_query("SELECT 
 					s.awardStatusID, 
 					s.awardStatusDescPlural,
-					(SELECT count(*) FROM resources_awards a WHERE a.awardStatusID = s.awardStatusID AND a.awardProgramID = " . $_GET["id"] . ") as awardCount
-				FROM resources_awards_statuses s");
+					(SELECT count(*) FROM funders_awards a WHERE a.awardStatusID = s.awardStatusID AND a.awardProgramID = " . $_GET["id"] . ") as awardCount
+				FROM funders_awards_statuses s");
 while ($rsa = db_fetch($result_award_statuses)) {
 	if (!$rsa["awardCount"]) continue;
 	?>
@@ -71,9 +71,9 @@ while ($rsa = db_fetch($result_award_statuses)) {
 			at.awardTypeDesc,
 			a.awardTitle,
 			p.programDesc
-		FROM resources_awards a
-		INNER JOIN resources_awards_types at ON a.awardtype_id = at.awardtype_id
-		INNER JOIN intranet_programs p on a.awardProgramID = p.programID
+		FROM funders_awards a
+		INNER JOIN funders_awards_types at ON a.awardTypeID = at.awardTypeID
+		INNER JOIN funders_programs p on a.awardProgramID = p.programID
 		WHERE a.awardProgramID = " . $_GET["id"] . " 
 		AND a.awardStatusID = " . $rsa["awardStatusID"] . "
 		ORDER BY a.awardStartDate DESC");

@@ -8,10 +8,10 @@ $where = (!isset($_GET["id"])) ? "" : "AND i.id IN (SELECT i2t.instanceID FROM c
 $result = db_query("SELECT
 				o.id,
 				'" . url_base() . "/contacts/contact.php?id=' + cast(o.id as varchar) link,
-				(SELECT t1.tag FROM intranet_tags t1 JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
+				(SELECT t1.tag FROM contacts_tags t1 JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = o.instanceCurrentID) salutation,
 				i.varchar_01 firstname,
 				i.varchar_02 lastname,
-				(SELECT t2.tag FROM intranet_tags t2 JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.type_id = 11 AND i2t2.instanceID = o.instanceCurrentID) suffix,
+				(SELECT t2.tag FROM contacts_tags t2 JOIN contacts_instances_to_tags i2t2 ON t2.id = i2t2.tagID WHERE t2.is_active = 1 AND t2.type_id = 11 AND i2t2.instanceID = o.instanceCurrentID) suffix,
 				i.varchar_04 org,
 				i.varchar_05 title,
 				i.varchar_06 address1,
@@ -23,7 +23,7 @@ $result = db_query("SELECT
 				i.varchar_09 fax,
 				i.varchar_10 cell,
 				i.varchar_11 email,
-				(SELECT count(*) FROM contacts_instances_to_tags i2t JOIN intranet_tags t ON i2t.tagID = t.id JOIN intranet_tags_types tt ON t.type_id = tt.id WHERE tt.is_active = 1 AND t.is_active = 1 AND i2t.instanceID = i.id) tagcount,
+				(SELECT count(*) FROM contacts_instances_to_tags i2t JOIN contacts_tags t ON i2t.tagID = t.id JOIN contacts_tags_types tt ON t.type_id = tt.id WHERE tt.is_active = 1 AND t.is_active = 1 AND i2t.instanceID = i.id) tagcount,
 				(SELECT count(*) FROM contacts_instances_to_tags i2t WHERE i2t.instanceID = i.id AND i2t.tagID = 216) tagAsset,
 				(SELECT count(*) FROM contacts_instances_to_tags i2t WHERE i2t.instanceID = i.id AND i2t.tagID = 217) tagComFin,
 				(SELECT count(*) FROM contacts_instances_to_tags i2t WHERE i2t.instanceID = i.id AND i2t.tagID = 7)   tagEconDev,
@@ -256,5 +256,6 @@ $return = '<?xml version="1.0"?>
  </Worksheet>
 </Workbook>';
 
+//die($return);
 file_download($return, "contact export", "xls");
 ?>

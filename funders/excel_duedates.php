@@ -20,10 +20,10 @@ $return = '
 			a.awardTitle,
 			f.name,
 			f.funderID
-		FROM Resources_Activity an
+		FROM funders_activity an
 		INNER JOIN users     u ON an.activityAssignedTo = u.id
-		INNER JOIN resources_awards   a ON an.awardID = a.awardID
-		INNER JOIN resources_funders  f ON a.funderID = f.funderID
+		INNER JOIN funders_awards   a ON an.awardID = a.awardID
+		INNER JOIN funders  f ON a.funderID = f.funderID
 		WHERE an.isReport = 1 AND an.isComplete = 0
 		ORDER BY activityDate");
 while ($r = db_fetch($result)) {

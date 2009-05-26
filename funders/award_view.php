@@ -3,7 +3,7 @@
 url_query_require();
 
 if (isset($_GET["delActivity"])) { //delete activity note
-	db_query("DELETE FROM resources_activity WHERE activityID = " . $_GET["delActivity"]);
+	db_query("DELETE FROM funders_activity WHERE activityID = " . $_GET["delActivity"]);
 	url_change("award_view.php?id=" . $_GET["id"]);
 }
 
@@ -15,7 +15,7 @@ if (!empty($_POST)) {
 	$isInternal   = ($_POST["isInternal"] == "true") ? 1 : 0;
 	$isComplete   = (!$isActionItem)                 ? 1 : 0;
 		
-	db_query("INSERT INTO resources_activity (
+	db_query("INSERT INTO funders_activity (
 		awardID,
 		activityTitle,
 		activityText,
@@ -60,12 +60,12 @@ $r = db_grab("SELECT
 		p2.programDesc as programDesc2,
 		ras.awardStatusDesc,
 		ISNULL(u.nickname, u.firstname) + ' ' + u.lastname staffname
-	FROM resources_awards a
-	INNER JOIN resources_funders f ON a.funderID = f.funderID
-	INNER JOIN resources_awards_statuses ras ON a.awardStatusID = ras.awardStatusID
-	INNER JOIN intranet_programs p  ON a.awardprogramID  = p.programID
-	LEFT  JOIN intranet_programs p2 ON a.awardprogramID2 = p2.programID
-	INNER JOIN resources_awards_types at ON at.awardtype_id = a. awardtype_id
+	FROM funders_awards a
+	INNER JOIN funders f ON a.funderID = f.funderID
+	INNER JOIN funders_awards_statuses ras ON a.awardStatusID = ras.awardStatusID
+	INNER JOIN funders_programs p  ON a.awardprogramID  = p.programID
+	LEFT  JOIN funders_programs p2 ON a.awardprogramID2 = p2.programID
+	INNER JOIN funders_awards_types at ON at.awardTypeID = a. awardTypeID
 	INNER JOIN users u ON a.staffID = u.id
 	WHERE awardID = " . $_GET["id"]);
 
@@ -175,7 +175,7 @@ $r = db_grab("SELECT
 			a.isReport,
 			a.isActionItem,
 			a.isInternalDeadline
-		FROM Resources_Activity a
+		FROM funders_activity a
 		INNER JOIN users u ON a.activityAssignedTo = u.id
 		WHERE a.awardID = {$_GET["id"]}
 		ORDER BY a.activityDate DESC");

@@ -54,7 +54,7 @@ if (isset($_GET["ticketID"])) {
 	} elseif  (isset($_GET["newStatus"])) {
 		if (empty($_GET["newStatus"])) $_GET["newStatus"] = "NULL";
 		if ($_GET["newStatus"] == 9) {
-			db_query("UPDATE helpdesk_tickets SET closedDate = GETDATE() WHERE id = " . $_GET["ticketID"]);
+			db_query("UPDATE helpdesk_tickets SET closed_date = GETDATE() WHERE id = " . $_GET["ticketID"]);
 	        emailITticket($_GET["ticketID"], "closed");
         }
         db_query("UPDATE helpdesk_tickets SET statusID = {$_GET["newStatus"]}, updated_date  = GETDATE(), updated_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["ticketID"]);
@@ -254,7 +254,7 @@ function emailITticket($id, $scenario, $admin=false) {
 	//add owner if ticket is assigned
 	if ($ticket["ownerEmail"]) $admins[] = $ticket["ownerEmail"]; //owner logically has to be admin
 
-	$message .= drawThreadTop($ticket["title"], $ticket["description"], $ticket["user_id"], $ticket["first"] . " " . $ticket["last"], $ticket["created_date"]);
+	$message .= drawThreadTop($ticket["title"], $ticket["description"], $ticket["id"], $ticket["first"] . " " . $ticket["last"], $ticket["created_date"]);
 	
 	//second message for the admins -- this seems overly complicated!
 	$admin_message = $message;
@@ -273,8 +273,8 @@ function emailITticket($id, $scenario, $admin=false) {
 		INNER JOIN users  u  ON f.created_user	= u.id
 		WHERE f.ticketID = {$id} ORDER BY f.created_date");
 	while ($f = db_fetch($followups)) {
-		$admin_message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
-		if (!$f["is_admin"]) $message .= drawThreadComment($f["message"], $f["user_id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
+		$admin_message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
+		if (!$f["is_admin"]) $message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
 		if ($f["isUserAdmin"]) {
 			$admins[] = $f["email"];
 		} else {

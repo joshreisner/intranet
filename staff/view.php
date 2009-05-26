@@ -3,15 +3,15 @@ include("include.php");
 
 //delete user handled by include
 if (url_action("undelete")) { //undelete user
-	db_query("UPDATE users SET is_active = 1, deleted_user = NULL, deleted_date = NULL, endDate = NULL, updated_user = {$_SESSION["user_id"]}, updated_date = GETDATE() WHERE user_id = " . $_GET["id"]);
+	db_query("UPDATE users SET is_active = 1, deleted_user = NULL, deleted_date = NULL, endDate = NULL, updated_user = {$_SESSION["user_id"]}, updated_date = GETDATE() WHERE id = " . $_GET["id"]);
 	url_query_drop("action");
 } elseif (url_action("passwd")) {
-	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE user_id = " . $_GET["id"]);
-	$r = db_grab("SELECT user_id, email FROM users WHERE user_id = " . $_GET["id"]);
-	email_user($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["firstname"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="http://' . $_josh["request"]["host"] . '/login/password_reset.php?id=' . $r["user_id"] . '">follow this link</a>.'));
+	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE id = " . $_GET["id"]);
+	$r = db_grab("SELECT id, email FROM users WHERE id = " . $_GET["id"]);
+	email_user($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["firstname"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r["user_id"] . '">follow this link</a>.'));
 	url_query_drop("action");
 } elseif (url_action("invite")) {
-	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE user_id = " . $_GET["id"]);
+	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE id = " . $_GET["id"]);
 	$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
 	email_invite($_GET["id"], $r["email"], $name);
 	url_query_drop("action");
@@ -63,7 +63,9 @@ $r = db_grab("SELECT
 	LEFT JOIN offices    		f ON f.id			= u.officeID 				
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
 	WHERE u.id = " . $_GET["id"]);
-				
+	
+$r["nickname"] = trim($r["nickname"]);
+
 $r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations.php?id=0">Shared</a>' : '<a href="organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
 
 if (!isset($r["is_active"])) url_change("./");
@@ -102,7 +104,7 @@ if (!$r["is_active"]) {
 	?>
 	<tr>
 		<td class="left">Name</td>
-		<td width="99%" class="big"><?=$r["firstname"]?> <? if ($r["nickname"]) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
+		<td width="99%" class="big"><?=$r["firstname"]?> <? if (!empty($r["nickname"])) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
 		<td rowspan="<?=$rowspan?>" style="width:271px; text-align:center; vertical-align:middle;"><?=$img?></td>
 	</tr>
 	<tr>
@@ -207,7 +209,7 @@ if (!$r["is_active"]) {
 				FROM modules m 
 				JOIN pages p ON m.homePageID = p.id
 				JOIN users_to_modules a ON m.id = a.module_id
-				WHERE a.user_id = {$_GET["id"]}
+				WHERE a.user_id = {$_GET["id"]} AND a.is_admin = 1
 				ORDER BY m.name");
 			while ($p = db_fetch($permissions)) {
 				$hasPermission = true;
@@ -224,7 +226,7 @@ if (!$r["is_active"]) {
 	</tr>
 	<? }
 	
-	if (getOption("show_home")) {?>
+	if (getOption("staff_showhome")) {?>
 	<tr class="group">
 		<td colspan="3">Home Contact Information [private]</td>
 	</tr>
@@ -248,7 +250,7 @@ if (!$r["is_active"]) {
 		<td colspan="2"><a href="mailto:<?=$r["homeEmail"]?>"><?=$r["homeEmail"]?></a></td>
 	</tr>
 	<? }
-	if (getOption("show_emergency")) {?>
+	if (getOption("staff_showemergency")) {?>
 	<tr class="group">
 		<td colspan="3">Emergency Contact Information [private]</td>
 	</tr>

@@ -130,22 +130,22 @@ drawTop();
 	</tr>
 	<?
 	$tags = db_query("select 
-					f.tagtype_id,
+					f.tagTypeID,
 					f.name,
-					f.fieldtype_id,
+					f.fieldTypeID,
 					f.isRequired
 				from contacts_fields f
-				join intranet_tags_types t on f.tagtype_id = t.id
-				where f.objecttype_id = 22 and t.is_active = 1 
+				join contacts_tags_types t on f.tagTypeID = t.id
+				where f.objectTypeID = 22 and t.is_active = 1 
 				order by f.precedence");
 	while ($t = db_fetch($tags)) {?>
 	<tr>
 		<td bgcolor="#<?if($t["isRequired"]){?>FFDDDD<?}else{?>F6F6F6<?}?>" width="18%"><?=$t["name"]?></td>
 		<td class="input" width="82%">
-			<? if ($t["fieldtype_id"] == 4) {
-				if (isset($_GET["id"])) $v = db_grab("SELECT i2t.tagID FROM contacts_instances_to_tags i2t JOIN intranet_tags t ON i2t.tagID = t.id WHERE i2t.instanceID = {$i["id"]} and t.type_id = {$t["tagtype_id"]} AND t.is_active = 1");
-				echo form_select("tag_single_" . $t["tagtype_id"], "SELECT id, tag FROM intranet_tags WHERE type_id = {$t["tagtype_id"]} AND is_active = 1 ORDER BY precedence", @$v["tagID"], false, "field", false, !$t["isRequired"]);
-			} elseif ($t["fieldtype_id"] == 5) {?>
+			<? if ($t["fieldTypeID"] == 4) {
+				if (isset($_GET["id"])) $v = db_grab("SELECT i2t.tagID FROM contacts_instances_to_tags i2t JOIN contacts_tags t ON i2t.tagID = t.id WHERE i2t.instanceID = {$i["id"]} and t.type_id = {$t["tagTypeID"]} AND t.is_active = 1");
+				echo form_select("tag_single_" . $t["tagTypeID"], "SELECT id, tag FROM contacts_tags WHERE type_id = {$t["tagTypeID"]} AND is_active = 1 ORDER BY precedence", @$v["tagID"], false, "field", false, !$t["isRequired"]);
+			} elseif ($t["fieldTypeID"] == 5) {?>
 				<table cellpadding="0" cellspacing="0" border="0" width="100%">
 				<tr valign="top">
 					<td width="40%"><table cellpadding="0" cellspacing="0" border="0">
@@ -155,8 +155,8 @@ drawTop();
 										t.id, 
 										t.tag, 
 										(SELECT count(*) FROM contacts_instances_to_tags i2t WHERE i2t.tagID = t.id AND i2t.instanceID = {$i["id"]}) selected
-									FROM intranet_tags t
-									WHERE t.type_id = {$t["tagtype_id"]}
+									FROM contacts_tags t
+									WHERE t.type_id = {$t["tagTypeID"]}
 										AND t.is_active = 1
 									ORDER by t.precedence");
 				} else {
@@ -164,8 +164,8 @@ drawTop();
 										t.id, 
 										t.tag,
 										0 selected
-									FROM intranet_tags t
-									WHERE t.type_id = {$t["tagtype_id"]}
+									FROM contacts_tags t
+									WHERE t.type_id = {$t["tagTypeID"]}
 										AND t.is_active = 1
 									ORDER by t.precedence");
 				}

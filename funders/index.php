@@ -2,10 +2,10 @@
 include("../include.php");
 
 if (isset($_GET["deleteID"])) { //delete a funder
-	db_query("DELETE FROM resources_activity                     WHERE funderID = " . $_GET["deleteID"]);
-	db_query("DELETE FROM resources_funders_geographic_interests WHERE funderID = " . $_GET["deleteID"]);
-	db_query("DELETE FROM resources_funders_program_interests    WHERE funderID = " . $_GET["deleteID"]);
-	db_query("DELETE FROM resources_funders                      WHERE funderID = " . $_GET["deleteID"]);
+	db_query("DELETE FROM funders_activity                     WHERE funderID = " . $_GET["deleteID"]);
+	db_query("DELETE FROM funders_geographic_interests WHERE funderID = " . $_GET["deleteID"]);
+	db_query("DELETE FROM funders_program_interests    WHERE funderID = " . $_GET["deleteID"]);
+	db_query("DELETE FROM funders                      WHERE funderID = " . $_GET["deleteID"]);
 	url_drop();
 }
 
@@ -28,7 +28,7 @@ if ($module_admin) {
 		<? if ($module_admin) {?><th width="16"></th><? }?>
 	</tr>
 <?
-$result_funder_statuses = db_query("SELECT funderStatusID, funderStatusDesc FROM resources_funders_statuses");
+$result_funder_statuses = db_query("SELECT funderStatusID, funderStatusDesc FROM funders_statuses");
 while ($rs = db_fetch($result_funder_statuses)) {
 	$awards_amt  = 0;?>
 	<tr class="group">
@@ -42,9 +42,9 @@ while ($rs = db_fetch($result_funder_statuses)) {
 			ft.funderTypeDesc,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
-			(SELECT SUM(a.AwardAmount) FROM resources_awards a WHERE a.funderID = f.funderID AND (a.awardStatusID = 1 OR a.awardStatusID = 4)) as awardAmt
-			FROM resources_funders f
-			INNER JOIN resources_funders_types ft ON f.funderTypeID = ft.funderTypeID
+			(SELECT SUM(a.AwardAmount) FROM funders_awards a WHERE a.funderID = f.funderID AND (a.awardStatusID = 1 OR a.awardStatusID = 4)) as awardAmt
+			FROM funders f
+			INNER JOIN funders_types ft ON f.funderTypeID = ft.funderTypeID
 			INNER JOIN users u     ON f.staffID           = u.id
 			WHERE f.funderStatusID = {$rs["funderStatusID"]}
 			ORDER BY f.name");

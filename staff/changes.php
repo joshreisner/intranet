@@ -34,7 +34,7 @@ echo drawJumpToStaff();
 				<b><a href="/staff/view.php?id=<?=$s["id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
 				<?=$s["title"]?><br>
 				<? if (getOption("staff_showdept")) echo $s["departmentName"] . "<br>";?>
-				<? if (getOption("staff_office")) echo $s["office"] . "<br>";?>
+				<? if (getOption("staff_showoffice")) echo $s["office"] . "<br>";?>
 				<?=$s["bio"]?>
 			</td>
 		</tr>

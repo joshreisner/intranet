@@ -293,7 +293,7 @@ while ($t = db_fetch($types)) {
 				t.icon,
 				t.description type
 			FROM helpdesk_tickets_attachments a
-			JOIN docs_types t ON a.typeID = t.id
+			JOIN docs_types t ON a.type_id = t.id
 			WHERE a.ticketID = " . $_GET["id"]);
 		while ($a = db_fetch($attachments)) {?>
 			<tr height="21">

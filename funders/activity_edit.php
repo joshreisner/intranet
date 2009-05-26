@@ -7,7 +7,7 @@ if (!empty($_POST)) {
 	$isReport     = (isset($_POST["chkReport"]))     ? 1 : 0;
 	$isInternal   = ($_POST["isInternal"] == "true") ? 1 : 0;
 
-	db_query("UPDATE resources_activity SET 
+	db_query("UPDATE funders_activity SET 
 		activityTitle      = '" . $_POST["activityTitle"] . "',
 		activityDate       = '" . format_date_sql($_POST["activityDateMonth"], $_POST["activityDateDay"], $_POST["activityDateYear"]) . "',
 		activityAssignedTo = '" . $_POST["activityAssignedTo"] . "',
@@ -38,9 +38,9 @@ $r = db_grab("SELECT
 				a.isReport, 
 				a.isInternalDeadline, 
 				a.activityPostedOn
-			FROM resources_activity a
-			INNER JOIN resources_awards w  ON a.awardID = w.awardID
-			INNER JOIN resources_funders f ON w.funderID = f.funderID
+			FROM funders_activity a
+			INNER JOIN funders_awards w  ON a.awardID = w.awardID
+			INNER JOIN funders f ON w.funderID = f.funderID
 			WHERE activityID = " . $_GET["id"]);
 	?>
 

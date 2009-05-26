@@ -9,7 +9,7 @@ if ($posting) {
 
 	//create request
 	//todo ~ check whether staff already exists -- forward to password reset
-	if ($id = db_grab("SELECT user_id FROM users WHERE email = '" . $_POST["email"] . "' AND is_active = 1")) {
+	if ($id = db_grab("SELECT id FROM users WHERE email = '" . $_POST["email"] . "' AND is_active = 1")) {
 		url_change("account_exists.php");
 	} elseif ($id = db_grab("SELECT id FROM users_requests WHERE email = '" . $_POST["email"] . "'")) {
 		db_query("UPDATE users_requests SET

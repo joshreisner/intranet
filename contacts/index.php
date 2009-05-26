@@ -37,7 +37,7 @@ if (isset($_GET["q"])) {
 		} else {
 			$terms[] = $searchTerm;
 			$where[] = "w$counter.word = '$searchTerm'";
-			$joins[] = "INNER JOIN contacts_instances_to_words i2w$counter ON i.id = i2w$counter.instanceID INNER JOIN intranet_words w$counter ON i2w$counter.wordID = w$counter.id";
+			$joins[] = "INNER JOIN contacts_instances_to_words i2w$counter ON i.id = i2w$counter.instanceID INNER JOIN words w$counter ON i2w$counter.wordID = w$counter.id";
 			$counter++;
 		}
 	}

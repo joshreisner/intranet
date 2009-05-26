@@ -104,6 +104,7 @@ if (!$pageIsPublic) {
 	//handle side menu pref updates
 	if (isset($_GET["module"])) {
 		if (db_grab("SELECT COUNT(*) FROM users_to_modules WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"])) {
+			$closed = db_grab("SELECT is_closed FROM users_to_modules WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"]);
 			db_query("UPDATE users_to_modules SET is_closed = " . abs($closed - 1) . " WHERE module_id = {$_GET["module"]} AND user_id = " . $_SESSION["user_id"]);
 		} else {
 			db_query("INSERT INTO users_to_modules ( user_id, module_id, is_closed ) VALUES ( {$_SESSION["user_id"]}, {$_GET["module"]}, 1 )");
@@ -321,7 +322,7 @@ error_debug("done processing include!");
 				"title" => $t["title"],
 				"description" => $t["description"],
 				"link" => url_base() . "/bb/topic.php?id=" . $t["id"],
-				"date" => $t["threadDate"],
+				"date" => $t["thread_date"],
 				"author" => $t["email"] . " (" . $t["firstname"] . " " . $t["lastname"] . ")"
 			);
 		}

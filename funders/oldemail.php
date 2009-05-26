@@ -42,10 +42,10 @@ $message  = drawEmailHeader() . '
 			a.isReport,
 			a.isActionItem,
 			a.isInternalDeadline
-		FROM resources_activity a
+		FROM funders_activity a
 		INNER JOIN users     u ON a.activityAssignedTo = u.id
-		INNER JOIN resources_awards  ra ON a.awardID = ra.awardID
-		INNER JOIN resources_funders  f ON ra.funderID = f.funderID
+		INNER JOIN funders_awards  ra ON a.awardID = ra.awardID
+		INNER JOIN funders  f ON ra.funderID = f.funderID
 		WHERE activityDate < GETDATE() AND isComplete = 0
 		ORDER BY u.lastname, a.activityDate");
 		

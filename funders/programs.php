@@ -2,7 +2,7 @@
 include("../include.php");
 
 if (url_action("delete")) {
-	db_query("DELETE FROM intranet_programs WHERE programID = " . $_GET["id"]);
+	db_query("DELETE FROM funders_programs WHERE programID = " . $_GET["id"]);
 	url_drop();
 }
 drawTop();
@@ -22,9 +22,9 @@ drawTop();
 	</tr>
 <?
 $result = db_query("SELECT p.programID, p.programDesc,
-			(SELECT count(*) FROM resources_awards a WHERE a.awardProgramID = p.programID) as awardCount,
-			(SELECT count(*) FROM resources_funders_program_interests f WHERE f.programID = p.programID) as funderCount
-			FROM intranet_programs p ORDER BY programDesc");
+			(SELECT count(*) FROM funders_awards a WHERE a.awardProgramID = p.programID) as awardCount,
+			(SELECT count(*) FROM funders_program_interests f WHERE f.programID = p.programID) as funderCount
+			FROM funders_programs p ORDER BY programDesc");
 while ($r = db_fetch($result)) {?>
 	<tr>
 		<td><a href="program.php?id=<?=$r["programID"]?>"><?=$r["programDesc"]?></td>

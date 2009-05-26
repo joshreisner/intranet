@@ -5,7 +5,7 @@
 	
 	//change activity status
 	if (isset($_GET["toggleStatus"])) {
-		db_query("UPDATE resources_activity SET isComplete = " . $_GET["toggleStatus"] . " WHERE activityID = " . $_GET["id"]);
+		db_query("UPDATE funders_activity SET isComplete = " . $_GET["toggleStatus"] . " WHERE activityID = " . $_GET["id"]);
 		url_change("activity_view.php?id=" . $_GET["id"]);
 	}
 				
@@ -31,11 +31,11 @@ $r = db_grab("SELECT
 				w.awardTitle,
 				a.activityPostedBy,
 				ISNULL(u.nickname, u.firstname) + ' ' + u.lastname postedBy
-			FROM resources_activity a
+			FROM funders_activity a
 			INNER JOIN users     u  ON a.activityPostedBy = u.id
 			INNER JOIN users     u2 ON a.activityAssignedTo = u2.id
-			INNER JOIN resources_awards   w  ON a.awardID  = w.awardID
-			INNER JOIN resources_funders  f  ON f.funderID = w.funderID
+			INNER JOIN funders_awards   w  ON a.awardID  = w.awardID
+			INNER JOIN funders  f  ON f.funderID = w.funderID
 			WHERE a.activityID = " . $_GET["id"]);
 				
 ?>

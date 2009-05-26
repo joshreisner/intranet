@@ -24,11 +24,11 @@ $return = '<table width="100%" border="1">
 							a.awardStartDate,
 							a.awardEndDate,
 							ISNULL(u.nickname, u.firstname) + ' ' + u.lastname contact
-							FROM resources_awards a
-							LEFT JOIN resources_funders f on f.funderID = a.funderID
-							LEFT JOIN resources_awards_types at on a.awardtype_id = at.awardtype_id
-							LEFT JOIN intranet_programs p on a.awardprogramID = p.programID
-							LEFT JOIN resources_awards_statuses s on a.awardStatusID = s.awardStatusID
+							FROM funders_awards a
+							LEFT JOIN funders f on f.funderID = a.funderID
+							LEFT JOIN funders_awards_types at on a.awardTypeID = at.awardTypeID
+							LEFT JOIN funders_programs p on a.awardprogramID = p.programID
+							LEFT JOIN funders_awards_statuses s on a.awardStatusID = s.awardStatusID
 							LEFT JOIN users u ON u.id = a.staffID");
 while ($r = db_fetch($result)) {
 	$return .= '

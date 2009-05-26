@@ -110,7 +110,7 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 						ORDER BY checkoutStart DESC");
 	while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><?=drawName($r["user_id"],$r["first"] . " " . $r["last"])?></td>
+		<td><?=drawName($r["id"],$r["first"] . " " . $r["last"])?></td>
 		<td><?=format_date($r["checkoutStart"]);?></td>
 		<td><?=format_date($r["checkoutEnd"]);?></td>
 		<td><?=nl2br($r["checkoutNotes"])?></td>

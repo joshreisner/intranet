@@ -41,7 +41,7 @@ drawTop();
 	$types = db_query("SELECT
 							t.id, 
 							t.name
-						FROM intranet_tags_types t WHERE t.is_active = 1
+						FROM contacts_tags_types t WHERE t.is_active = 1
 						ORDER BY t.name");
 	while ($t = db_fetch($types)) {?>
 	<tr class="group">
@@ -55,7 +55,7 @@ drawTop();
 								INNER JOIN contacts_instances i ON o.instanceCurrentID = i.id
 								INNER JOIN contacts_instances_to_tags i2t ON i.id = i2t.instanceID
 								WHERE o.type_id = 22 AND i2t.tagID = t.id AND o.is_active = 1) contactcount
-						FROM intranet_tags t 
+						FROM contacts_tags t 
 						WHERE t.type_id = {$t["id"]} AND t.is_active = 1
 						ORDER BY t.precedence");
 		while ($v = db_fetch($values)) {?>

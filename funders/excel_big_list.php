@@ -16,10 +16,10 @@ $grantcycle[5] = "Past Action";
 $return = '<table width="100%" cellpadding="3" cellspacing="1" border="1" bgcolor="#EEEEEE" class="small">';
 
 	$result_programs = db_query("SELECT p.programID, p.programDesc,
-								(SELECT count(*) FROM resources_awards a 
+								(SELECT count(*) FROM funders_awards a 
 								WHERE a.awardProgramID = p.programID AND 
 									(awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5)) as awardCount
-								FROM intranet_programs p ORDER BY programDesc");
+								FROM funders_programs p ORDER BY programDesc");
 	while ($rp = db_fetch($result_programs)) {
 		if (!$rp["awardCount"]) continue;
 	$return .= '
@@ -27,8 +27,8 @@ $return = '<table width="100%" cellpadding="3" cellspacing="1" border="1" bgcolo
 		<td colspan="6" height="40px" valign="bottom"><br><br><b><font size="+1">' . $rp["programDesc"] . '</b></font></td>
 	</tr>';
 	$result_statuses = db_query("SELECT s.awardStatusID, s.awardStatusDescPlural,
-										(SELECT count(*) FROM resources_awards a WHERE (a.awardProgramID = " . $rp["programID"] . " OR a.awardProgramID2 = " . $rp["programID"] . ") AND a.awardStatusID = s.awardStatusID) as awardCount
-										FROM Resources_Awards_Statuses s
+										(SELECT count(*) FROM funders_awards a WHERE (a.awardProgramID = " . $rp["programID"] . " OR a.awardProgramID2 = " . $rp["programID"] . ") AND a.awardStatusID = s.awardStatusID) as awardCount
+										FROM funders_awards_Statuses s
 										WHERE awardStatusID = 1 OR awardStatusID = 2 OR awardStatusID = 5");
 		while ($rs = db_fetch($result_statuses)) {
 			if (!$rs["awardCount"]) continue;
@@ -53,12 +53,12 @@ $return = '<table width="100%" cellpadding="3" cellspacing="1" border="1" bgcolo
 						u.lastname last_name,
 						a.awardStartDate,
 						a.awardEndDate,
-						(select top 1 activityTitle from resources_activity where awardID = a.awardID and isComplete = 0 order by activityDate) as activityTitle,
-						(select top 1 activityDate from resources_activity where awardID = a.awardID and isComplete = 0 order by activityDate) as activityDate,
-						(select top 1 activityTitle from resources_activity where awardID = a.awardID and isComplete = 1 order by activityDate desc) as pastActivityTitle,
-						(select top 1 activityDate from resources_activity where awardID = a.awardID and isComplete = 1 order by activityDate desc) as pastActivityDate
-					FROM resources_awards a 
-					INNER JOIN resources_funders  f ON f.funderID = a.funderID
+						(select top 1 activityTitle from funders_activity where awardID = a.awardID and isComplete = 0 order by activityDate) as activityTitle,
+						(select top 1 activityDate from funders_activity where awardID = a.awardID and isComplete = 0 order by activityDate) as activityDate,
+						(select top 1 activityTitle from funders_activity where awardID = a.awardID and isComplete = 1 order by activityDate desc) as pastActivityTitle,
+						(select top 1 activityDate from funders_activity where awardID = a.awardID and isComplete = 1 order by activityDate desc) as pastActivityDate
+					FROM funders_awards a 
+					INNER JOIN funders  f ON f.funderID = a.funderID
 					INNER JOIN users     u ON u.id = a.staffID
 					WHERE a.awardStatusID = " . $rs["awardStatusID"] . " AND a.awardProgramID = " . $rp["programID"]);
 				while ($r = db_fetch($result)) {
@@ -89,9 +89,9 @@ $return = '<table width="100%" cellpadding="3" cellspacing="1" border="1" bgcolo
 						a.awardID,
 						a.awardTitle,
 						p.programDesc
-					FROM resources_awards a 
-					INNER JOIN resources_funders f ON f.funderID = a.funderID
-					INNER JOIN intranet_programs p ON a.awardProgramID = p.programID
+					FROM funders_awards a 
+					INNER JOIN funders f ON f.funderID = a.funderID
+					INNER JOIN funders_programs p ON a.awardProgramID = p.programID
 					WHERE a.awardStatusID = " . $rs["awardStatusID"] . " AND a.awardProgramID2 = " . $rp["programID"]);
 				while ($r = db_fetch($result)) {
 					$return .= '

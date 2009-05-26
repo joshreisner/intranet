@@ -19,11 +19,11 @@ $result = db_query("SELECT
 		a.awardTitle award,
 		a.awardAmount amount,
 		t.awardStatusDesc status,
-		(SELECT TOP 1 c.activityTitle FROM resources_activity c WHERE c.awardID = a.awardID AND c.isComplete = 0 AND c.isActionItem = 1 ORDER BY activityDate ASC) nextsteps,
+		(SELECT TOP 1 c.activityTitle FROM funders_activity c WHERE c.awardID = a.awardID AND c.isComplete = 0 AND c.isActionItem = 1 ORDER BY activityDate ASC) nextsteps,
 		ISNULL(u.nickname, u.firstname) + ' ' + u.lastname contact
-	FROM resources_awards a
-	JOIN resources_funders f ON a.funderID = f.funderID
-	JOIN resources_awards_statuses t ON a.awardStatusID = t.awardStatusID
+	FROM funders_awards a
+	JOIN funders f ON a.funderID = f.funderID
+	JOIN funders_awards_statuses t ON a.awardStatusID = t.awardStatusID
 	JOIN users u ON a.staffID = u.id
 	WHERE ((a.awardStatusID = 1) OR (a.awardStatusID = 2) OR (a.awardStatusID = 5))
 	ORDER BY funder, award");

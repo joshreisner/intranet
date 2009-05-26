@@ -7,10 +7,10 @@ if (!empty($_POST)) {
 	$_POST["cboProgram2"] = (isset($_POST["noCrossList"])) ? "NULL" : $_POST["cboProgram2"];
 	if (isset($_GET["funderID"])) { //adding
 		//insert award
-		db_query("INSERT into resources_awards (
+		db_query("INSERT into funders_awards (
 			funderID,
 			awardAmount,
-			awardtype_id,
+			awardTypeID,
 			awardStatusID,
 			awardStartDate,
 			awardEndDate,
@@ -40,12 +40,12 @@ if (!empty($_POST)) {
 		);");
 		
 		//determine awardID for redirecting
-		$_GET["id"] = db_grab("SELECT max(awardID) FROM resources_awards");
+		$_GET["id"] = db_grab("SELECT max(awardID) FROM funders_awards");
 	} else { //editing
-		db_query("UPDATE resources_awards SET
+		db_query("UPDATE funders_awards SET
 			funderID          = " . $_POST["cboFunder"] . ",
 			awardAmount       = " . $_POST["txtAmount"] . ",
-			awardtype_id       = " . $_POST["cboAwardType"] . ",
+			awardTypeID       = " . $_POST["cboAwardType"] . ",
 			awardStatusID     = " . $_POST["cboAwardStatus"] . ",
 			awardStartDate    = '$awardStartDate',
 			awardEndDate      = '$awardEndDate',
@@ -72,7 +72,7 @@ if (isset($_GET["funderID"])) { //adding
 	$r = db_grab("SELECT 
 			f.name,
 			f.staffID 
-		FROM resources_funders f 
+		FROM funders f 
 		WHERE f.funderID = " . $_GET["funderID"]);
 	$startMonth = $month;
 	$endMonth   = $month;
@@ -88,15 +88,15 @@ if (isset($_GET["funderID"])) { //adding
 					a.awardFilingNumber,
 					a.awardStartDate,
 					a.awardEndDate,
-					a.awardtype_id,
+					a.awardTypeID,
 					a.awardStatusID,
 					a.awardProgramID,
 					a.awardProgramID2,
 					a.awardAmount,
 					a.awardNotes,
 					a.staffID
-				FROM resources_awards a
-				INNER JOIN resources_funders f on a.funderID = f.funderID
+				FROM funders_awards a
+				INNER JOIN funders f on a.funderID = f.funderID
 				WHERE a.awardID = " . $_GET["id"]);
 	$startMonth = date("n", strToTime(@$r["awardStartDate"]));
 	$endMonth   = date("n", strToTime(@$r["awardEndDate"]));
@@ -143,7 +143,7 @@ if (isset($_GET["funderID"])) { //adding
 				<a href="funder_view.php?id=<?=$_GET["funderID"]?>"><b><?=@$r["name"]?></b></a>
 			<? } else {
 				error_reporting(E_ALL);
-				echo draw_form_select("cboFunder", "SELECT funderID, name from resources_funders order by name", @$r["funderID"], 60);
+				echo draw_form_select("cboFunder", "SELECT funderID, name from funders order by name", @$r["funderID"], 60);
 			}?>
 		</td>
 	</tr>
@@ -183,22 +183,22 @@ if (isset($_GET["funderID"])) { //adding
 	</tr>
 	<tr>
 		<td class="left">Type</td>
-		<td><?=draw_form_select("cboAwardType","SELECT awardtype_id, awardTypeDesc FROM resources_awards_types ORDER BY awardTypeDesc", @$r["awardtype_id"]);?></td>
+		<td><?=draw_form_select("cboAwardType","SELECT awardTypeID, awardTypeDesc FROM funders_awards_types ORDER BY awardTypeDesc", @$r["awardTypeID"]);?></td>
 	</tr>
 	<tr>
 		<td class="left">Status</td>
-		<td><?=draw_form_select("cboAwardStatus","SELECT awardStatusID, awardStatusDesc FROM resources_awards_statuses", @$r["awardStatusID"]);?></td>
+		<td><?=draw_form_select("cboAwardStatus","SELECT awardStatusID, awardStatusDesc FROM funders_awards_statuses", @$r["awardStatusID"]);?></td>
 	</tr>
 	<tr>
 		<td class="left">Program</td>
-		<td><?=draw_form_select("cboProgram","SELECT programID, programDesc FROM intranet_programs ORDER BY programDesc",@$r["awardProgramID"]);?></td>
+		<td><?=draw_form_select("cboProgram","SELECT programID, programDesc FROM funders_programs ORDER BY programDesc",@$r["awardProgramID"]);?></td>
 	</tr>
 	<tr>
 		<td class="left">Cross List</td>
 		<td>
 			<table cellpadding="0" cellspacing="0" border="0" class="small">
 				<tr>
-					<td><?=draw_form_select("cboProgram2","SELECT programID, programDesc FROM intranet_programs ORDER BY programDesc",@$r["awardProgramID2"]);?></td>
+					<td><?=draw_form_select("cboProgram2","SELECT programID, programDesc FROM funders_programs ORDER BY programDesc",@$r["awardProgramID2"]);?></td>
 					<td>&nbsp;<?=draw_form_checkbox("noCrossList", @!@$r["awardProgramID2"]);?></td>
 					<td>&nbsp;(no cross-listing)</td>
 				</tr>
