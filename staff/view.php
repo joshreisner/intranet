@@ -55,6 +55,7 @@ $r = db_grab("SELECT
 		u.longDistanceCode,
 		u.endDate,
 		u.is_active,
+		u.is_admin,
 		r.description rank
 	FROM users u
 	LEFT JOIN intranet_ranks r ON u.rankID = r.id
