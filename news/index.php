@@ -3,7 +3,10 @@ include("../include.php");
 
 drawTop();
 
-if (url_id()) {
+if (url_action("delete")) {
+	db_delete("news_stories");
+	url_drop("action,id");
+} elseif (url_id()) {
 	$r = db_grab("SELECT 
 		n.headline,
 		n.outlet,
@@ -87,6 +90,7 @@ if (url_id()) {
 			s.outlet, 
 			s.pubdate
 		FROM news_stories s
+		WHERE s.is_active = 1
 		ORDER BY s.pubDate DESC");
 	
 	if (db_found($result)) {?>

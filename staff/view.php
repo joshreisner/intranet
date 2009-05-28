@@ -198,7 +198,7 @@ if (!$r["is_active"]) {
 		<td class="left">Permissions</td>
 		<td colspan="2">
 		<?
-		if ($_SESSION["is_admin"]) {
+		if ($r["is_admin"]) {
 			echo "Site Administrator";
 		} else {
 			$hasPermission = false;

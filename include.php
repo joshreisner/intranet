@@ -237,7 +237,10 @@ error_debug("done processing include!");
 		global $options;
 		
 		//default options.  override these in your config file by specifying $options variables
+		$defaults["bb_notifyfollowup"]		= false;
+		
 		$defaults["cal_showholidays"]		= true;
+		
 		$defaults["staff_alertnew"]			= false;
 		$defaults["staff_alertdelete"]		= false;
 		$defaults["staff_allowshared"]		= false;
@@ -487,6 +490,7 @@ error_debug("done processing include!");
 					$rows .= '</td>';
 				} elseif ($type == "department") {
 					$rows .= '<td><select name="' . $name . '">';
+					if (!$required) $rows .= "<option></option>";
 					$result = db_query("SELECT 
 											departmentID,
 											departmentName,

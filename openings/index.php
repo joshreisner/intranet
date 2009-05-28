@@ -5,8 +5,8 @@ if (url_action("delete")) {
 	db_delete("openings");
 	url_drop();
 } elseif ($posting) {
-	$id = db_save("openings");
-	url_change("position.php?id=" . $id);
+	//debug();
+	if ($id = db_save("openings")) url_change("position.php?id=" . $id);
 }
 
 drawTop();

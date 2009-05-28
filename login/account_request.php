@@ -20,7 +20,7 @@ if ($posting) {
 			phone = '" . $_POST["phone"] . "',
 			email = '" . $_POST["email"] . "',
 			departmentID = '" . $_POST["departmentID"] . "',
-			corporationID = '" . $_POST["corporationID"] . "',
+			organization_id = '" . $_POST["organization_id"] . "',
 			officeID = '" . $_POST["officeID"] . "',
 			bio = '" . $_POST["bio"] . "',
 			created_date = GETDATE()
@@ -35,7 +35,7 @@ if ($posting) {
 			phone,
 			email,
 			departmentID,
-			corporationID,
+			organization_id,
 			officeID,
 			bio,
 			created_date
@@ -47,7 +47,7 @@ if ($posting) {
 			'" . $_POST["phone"] . "',
 			'" . $_POST["email"] . "',
 			" . $_POST["departmentID"] . ",
-			" . $_POST["corporationID"] . ",
+			" . $_POST["organization_id"] . ",
 			" . $_POST["officeID"] . ",
 			'" . $_POST["bio"] . "',
 			GETDATE()
@@ -66,7 +66,7 @@ if ($posting) {
 			} elseif ($key == "officeID") {
 				$r = db_grab("SELECT name FROM offices WHERE id = " . $value);
 				$message .= '<td>' . $r . '</td></tr>';
-			} elseif ($key == "corporationID") {
+			} elseif ($key == "organization_id") {
 				$message .= '<td>' . db_grab("SELECT description FROM organizations WHERE id = " . $value) . '</td></tr>';
 			} elseif ($key == "Additional Info") {
 				$message .= '<td>' . nl2br($value) . '</td></tr>';
@@ -108,9 +108,12 @@ $form->addRow("itext",			"Nickname (optional)", "nickname", '', "", false, 20);
 $form->addRow("itext",			"Last Name",	"lastname", '', "", true, 20);
 $form->addRow("itext",			"Email",		"email", '', "", true, 50);
 $form->addRow("itext",			"Title",		"title", '', "", true, 100);
-$form->addRow("select",			"Organization",	"corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
-$form->addRow("department",		"Department",	"departmentID");
-$form->addRow("select",			"Office",		"officeID", "SELECT id, name FROM offices ORDER BY precedence", "", true);
+$form->addRow("select",			"Organization",	"organization_id", "SELECT id, description FROM organizations ORDER BY description", "", false);
+$form->addJavascript("!form.organization_id.value.length", "the 'Organization' field is not selected");
+$form->addRow("department",		"Department",	"departmentID", "", "", false);
+$form->addJavascript("!form.departmentID.value.length", "the 'Department' field is not selected");
+$form->addRow("select",			"Office",		"officeID", "SELECT id, name FROM offices ORDER BY precedence", "", false);
+$form->addJavascript("!form.officeID.value.length", "the 'Office' field is not selected");
 $form->addRow("phone",			"Phone",		"phone", '', "", true, 14);
 $form->addRow("textarea",		"Additional Info", "bio", "", "mceEditor");
 $form->addRow("submit",			"Send Request");

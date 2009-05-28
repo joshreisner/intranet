@@ -7,45 +7,47 @@ if ($posting) {
 	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $_POST["topic_id"]);
 	
 	//send followup email to all topic posters
-	$message = drawEmailHeader() . drawMessage("There has been an update on a bulletin board topic you contributed to.  Click 
-		<a href='" . url_base() . "/bb/topic.php?id=" . $_POST["topic_id"] . "'>here to view</a> the topic.");
-	$message .= '<table class="center">';
-	$r = db_grab("SELECT 
-			t.title,
-			t.description,
-			t.created_date,
-			t.is_admin,
-			u.id user_id,
-			u.email,
-			ISNULL(u.nickname, u.firstname) firstname,
-			u.lastname
-			FROM bb_topics t
-			JOIN users u ON t.created_user = u.id
-			WHERE t.id = " . $_POST["topic_id"]);
-	$emails = array($r["email"]);
-	$message .= drawHeaderRow($r["title"], 2);
-	$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
-	$followups = db_query("SELECT
-				f.id,
-				f.description,
+	if (getOption("bb_notifyfollowup")) {
+		$message = drawEmailHeader() . drawMessage("There has been an update on a bulletin board topic you contributed to.  Click 
+			<a href='" . url_base() . "/bb/topic.php?id=" . $_POST["topic_id"] . "'>here to view</a> the topic.");
+		$message .= '<table class="center">';
+		$r = db_grab("SELECT 
+				t.title,
+				t.description,
+				t.created_date,
+				t.is_admin,
 				u.id user_id,
 				u.email,
 				ISNULL(u.nickname, u.firstname) firstname,
-				u.lastname,
-				f.created_date as postedDate
-			FROM bb_followups f
-			JOIN users u ON u.id = f.created_user
-			WHERE f.is_active = 1 AND f.topic_id = {$_POST["topic_id"]}
-			ORDER BY f.created_date");
-	while ($f = db_fetch($followups)) { 
-		$emails[] = $f["email"];
-		$message .= drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["postedDate"]);
+				u.lastname
+				FROM bb_topics t
+				JOIN users u ON t.created_user = u.id
+				WHERE t.id = " . $_POST["topic_id"]);
+		$emails = array($r["email"]);
+		$message .= drawHeaderRow($r["title"], 2);
+		$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
+		$followups = db_query("SELECT
+					f.id,
+					f.description,
+					u.id user_id,
+					u.email,
+					ISNULL(u.nickname, u.firstname) firstname,
+					u.lastname,
+					f.created_date as postedDate
+				FROM bb_followups f
+				JOIN users u ON u.id = f.created_user
+				WHERE f.is_active = 1 AND f.topic_id = {$_POST["topic_id"]}
+				ORDER BY f.created_date");
+		while ($f = db_fetch($followups)) { 
+			$emails[] = $f["email"];
+			$message .= drawThreadComment($f["description"], $f["user_id"], $f["firstname"] . " " . $f["lastname"], $f["postedDate"]);
+		}
+		$message .= '</table>' . drawEmailFooter();
+		$emails = array_unique($emails);
+		//unset($emails[$_SESSION["email"]]); //don't send email to current user
+		foreach ($emails as $e) email($e, $message, "Followup to Bulletin Board Topic");
 	}
-	$message .= '</table>' . drawEmailFooter();
-	$emails = array_unique($emails);
-	//unset($emails[$_SESSION["email"]]); //don't send email to current user
-	foreach ($emails as $e) email($e, $message, "Followup to Bulletin Board Topic");
-	
+		
 	syndicateBulletinBoard();
 	url_change();
 }
