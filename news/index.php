@@ -18,14 +18,16 @@ if (url_action("delete")) {
 		d.extension imageExt,
 		n.pubDate,
 		n.url,
-		n.description
+		n.description,
+		ISNULL(n.updated_date, n.created_date) updated
 		FROM news_stories n
 		LEFT JOIN docs_types d ON n.imageTypeID = d.id
 		LEFT JOIN docs_types d2 ON n.fileTypeID = d2.id
 		WHERE n.id = " . $_GET["id"]);
 	if ($r["image"]) {
+		//should be has_image, but whatever
 		$filename = $_josh["write_folder"] . "/news/thumbnail-" . $_GET["id"] . "." . $r["imageExt"];
-		if (!file_exists($filename)) file_put($filename, $r["image"]);
+		file_dynamic($filename, $r["updated"], "SELECT image FROM news_stories WHERE id = " . $_GET["id"]);
 	}
 	echo drawTableStart();
 	echo drawHeaderRow("News Item", 2, "edit", "edit.php?id=" . $_GET["id"]);?>

@@ -5,10 +5,11 @@ if (isset($_josh)) { //included
 	include("../include.php");
 	if ($posting) {
 		if (isset($_FILES["content"]["name"]) && !empty($_FILES["content"]["name"])) {
-			list($_POST["content"], $_POST["filetype_id"]) = file_get_uploaded("content");
+			list($_POST["content"], $_POST["fileTypeID"]) = file_get_uploaded("content", "docs_types");
 		}
 		if (isset($_FILES["image"]["name"]) && !empty($_FILES["image"]["name"])) {
-			list($_POST["image"], $_POST["imagetype_id"]) = file_get_uploaded("image");
+			list($_POST["image"], $_POST["imageTypeID"]) = file_get_uploaded("image", "docs_types");
+			//die($_POST["image"]);
 		}
 		$id = db_save("news_stories");
 		db_checkboxes("corporationID", "news_stories_to_organizations", "newsID", "organizationID", $id);
