@@ -24,7 +24,7 @@ if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user
 $form->addRow("itext",  "Headline" , "headline", $r["headline"], "", true, 255);
 $form->addRow("itext",  "Detail" , "detail", $r["detail"], "", false, 255);
 $form->addRow("itext",  "Location" , "location", $r["location"], "", true, 255);
-$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", $r["corporationID"]);
+$form->addRow("select", "Organization" , "corporationID", "SELECT id, title from organizations ORDER BY title", $r["corporationID"]);
 $form->addRow("date",  "Date" , "releaseDate", $r["releaseDate"]);
 $form->addRow("textarea", "Text" , "text", $r["text"], "", true);
 $form->addRow("submit"  , "update press release");

@@ -67,7 +67,7 @@ if (db_found($result)) {?>
 	    <tr>
 	        <td><a href="member.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 	        <td><nobr><?=$r["board_position"]?></nobr></td>
-			<?=deleteColumn("Are you sure you want to delete this board member?", $r["id"])?>
+			<?=drawDeleteColumn("Are you sure you want to delete this board member?", $r["id"])?>
 	    </tr>
 	<? }
 } else {
@@ -82,7 +82,7 @@ echo drawTableEnd();
 	$form = new intranet_form;
 	$form->addRow("itext",  "First Name" , "firstname", "", "", true, 255);
 	$form->addRow("itext",  "Last Name" , "lastname", "", "", true, 255);
-	$form->addRow("select", "Organization", "organization_id", "SELECT id, description FROM organizations ORDER BY description", "", true);
+	$form->addRow("select", "Organization", "organization_id", "SELECT id, title from organizations ORDER BY title", "", true);
 	$form->addRow("itext",  "Position on Board" , "board_position", "", "", false, 255);
 	$form->addRow("itext",  "Employment" , "employment", "", "", false, 255);
 	$form->addRow("textarea", "Bio" , "bio", "", "", false);

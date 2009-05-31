@@ -91,7 +91,7 @@ if (url_id()) {
 		        <td><a href="./?id=<?=$r["id"]?>"><?=$r["headline"]?></a></td>
 		        <td><nobr><?=$r["corporationName"]?></nobr></td>
 		        <td align="right"><nobr><?=format_date($r["releaseDate"], "n/a", "M d, Y", false)?></nobr></td>
-				<?=deleteColumn("Delete this press release?", $r["id"])?>
+				<?=drawDeleteColumn("Delete this press release?", $r["id"])?>
 		    </tr>
 		<? }?>
 	</table>
@@ -104,7 +104,7 @@ if (url_id()) {
 		$form->addRow("itext",  "Headline" , "headline", "", "", true, 255);
 		$form->addRow("itext",  "Detail" , "detail", "", "", false, 255);
 		$form->addRow("itext",  "Location" , "location", "", "", true, 255);
-		$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", "1", true);
+		$form->addRow("select", "Organization" , "corporationID", "SELECT id, title from organizations ORDER BY title", "1", true);
 		$form->addRow("date",  "Date" , "releaseDate", false, false, true);
 		$form->addRow("textarea", "Text" , "text", "", "", true);
 		$form->addRow("submit"  , "post press release");

@@ -53,7 +53,7 @@ if (db_found($categories)) {?>
 			<td width="16"><a href="info.php?id=<?=$d["id"]?>"><img src="<?=$_josh["write_folder"]?><?=$d["icon"]?>" width="16" height="16" border="0" alt="<?=$d["alt"]?>"></a></td>
 			<td class="text2"><a href="info.php?id=<?=$d["id"]?>"><?=$d["title"]?></a></td>
 			<td align="right"><?=format_date($d["updated_date"])?></td>
-			<?=deleteColumn("Delete document?", $d["id"]);?>
+			<?=drawDeleteColumn("Delete document?", $d["id"]);?>
 		</tr>
 	<? }
 	}

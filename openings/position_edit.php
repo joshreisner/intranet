@@ -19,7 +19,7 @@ $r = db_grab("SELECT
 
 $form = new intranet_form;
 $form->addRow("itext",  "Title" , "title", $r["title"], "", true);
-$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", $r["corporationID"], true);
+$form->addRow("select", "Organization" , "corporationID", "SELECT id, title from organizations ORDER BY title", $r["corporationID"], true);
 $form->addRow("select", "Location" , "officeID", "SELECT id, name FROM offices ORDER BY precedence", $r["officeID"], true);
 $form->addRow("checkbox", "Internship?" , "is_internship", $r["is_internship"]);
 $form->addRow("textarea", "Description" , "description", $r["description"], "", true);

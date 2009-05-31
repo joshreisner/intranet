@@ -13,6 +13,13 @@ body {
 #footer		{ float:right; clear:right; font-size:10px; color:#ccc; margin:10px 0px 0px 0px; }
 #subfooter	{ clear:both; height:20px; }
 
+/* tag-global */
+	.title			{ font-size:18px; line-height:22px; font-weight:normal; }
+	.light 		{ color:#aaa; }
+	.light a 	{ color: #8888ff; }
+	.light a:hover 	{ color: #aaaaff; }
+
+
 /* tag-specific */
 	form			{ margin:0px; padding:0px; }
 	a, a.out		{ color:#0000ff;  text-decoration:none; }
@@ -39,7 +46,6 @@ body {
 	textarea.full	{ width:586px; font-size:13px; line-height:20px; color:#444; }
 	h1				{ font-size:18px; line-height:22px; font-weight:normal; }
 	img				{ border-width:0px; }
-	span.light 		{ color:#aaa; }
 	span.clickme:hover	{ cursor:pointer; background-color:#f0f0f0; }
 	
 	/* areas module defaults */
@@ -171,13 +177,12 @@ table.left td.left	{ background-color:#ededed; width:130px; }
 table.left td.right	{ width:414px; overflow-y:hidden; }
 table.left td.bottom { text-align:center; background-color:#ededed; }
 table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
-table.left td.title { font-size:15px; font-weight:bold; }
 
 table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
 table.left td.text { width:500px; padding:10px; font-size:13px; line-height:20px; overflow-x:hidden; }
 table.left tr.thread { height:32px; vertical-align:middle; font-size:13px; }
 table.left tr.admin { background-color:#fffce0; }
-table.left tr.thread:hover { background-color:#f0f0f0; cursor:pointer; }
+table.left tr.thread:hover { background-color:#f4f4f4; cursor:pointer; }
 table.left tr.total { background-color:#f3f3f3; text-align:right; }
 
 table.left img#news-thumbnail { float:left; margin-right:8px; }
@@ -206,6 +211,7 @@ table.right {
 }
 
 table.right tr { background-color:#fff; }
+table.right tr.admin { background-color:#fffce0; }
 table.right td { padding:4px 3px 4px 3px; }
 table.right td.head { padding:2px 2px 0px 3px; vertical-align:middle; height:13px; font-size:12px; color:#fff; line-height:8px; }
 table.right td.head img { margin:2px 2px 0px 0px; }

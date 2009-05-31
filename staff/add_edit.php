@@ -14,6 +14,7 @@ if ($posting) {
 	$_POST["emerCont2Phone"]	= format_phone(@$_POST["emerCont2Phone"]);
 	$_POST["emerCont2Cell"]		= format_phone(@$_POST["emerCont2Cell"]);
 	if (!isset($_POST["is_admin"])) $_POST["is_admin"] = 0;
+	if (!isset($_POST["notify_topics"])) $_POST["notify_topics"] = 0;
 
 	//die(file_get_uploaded("userfile"));
 	if ($uploading) $_POST["image"] = format_image_resize(file_get_uploaded("userfile"), 270);
@@ -32,11 +33,10 @@ if ($posting) {
 
 			//send invitation
 			$name = str_replace("'", "", ($_POST["nickname"] == "NULL") ? $_POST["firstname"] : $_POST["nickname"]);
-			email_invite($id, $_POST["email"], $name);
+			emailInvite($id, $_POST["email"], $name);
 		}
 		
 		//update permissions
-		//db_checkboxes("permissions", "users_to_modules", "user_id", "module_id", $id);
 		db_query("UPDATE users_to_modules SET is_admin = 0 WHERE user_id = " . $id);
 		foreach ($_POST as $key => $value) {
 			@list($control, $field_name, $module_id) = explode("_", $key);
@@ -49,7 +49,6 @@ if ($posting) {
 				}
 			}
 		}
-
 
 		//check long distance code
 		if (($_josh["write_folder"] == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
@@ -91,6 +90,7 @@ if (isset($_GET["id"])) {
 		u.homeAddress1,
 		u.homeAddress2,
 		u.homeCity,
+		u.notify_topics,
 		u.homeStateID,
 		u.homeZIP,
 		u.homePhone,
@@ -140,6 +140,7 @@ if (isset($_GET["id"])) {
 
 //set default rank
 if (!isset($r["rankID"])) $r["rankID"] = db_grab("SELECT id FROM intranet_ranks WHERE isDefault = 1");
+if (!isset($r["notify_topics"])) $r["notify_topics"] = 1;
 
 //this should be an $option
 $isRequired = (isset($_GET["id"]) && ($_GET["id"] == $_SESSION["user_id"]) && ($_josh["write_folder"] == "/_intranet.seedco.org"));
@@ -152,15 +153,16 @@ $form->addRow("itext",  "Last Name", "lastname", @$r["lastname"], "", true, 50);
 $form->addRow("itext",  "Email", "email", @$r["email"], "", true, 50);
 
 $form->addRow("itext",  "Title", "title", @$r["title"], "", false, 100);
-$form->addRow("select", "Organization", "organization_id", "SELECT id, description FROM organizations ORDER BY description", @$r["organization_id"], false);
+$form->addRow("select", "Organization", "organization_id", "SELECT id, title from organizations ORDER BY title", @$r["organization_id"], false);
 if (getOption("staff_showdept")) $form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
 if (getOption("staff_showoffice")) $form->addRow("select", "Location", "officeID", "SELECT id, name from offices order by name", @$r["officeID"], true);
 
 $form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 14);
-$form->addRow("textarea-plain", "Bio", "bio", @$r["bio"]);
+$form->addRow("textarea", "Bio", "bio", @$r["bio"]);
 
 if ($module_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
-	$form->addGroup("Administrative Information [public, but not editable by staff]");
+	$form->addGroup("Administrative Information");
+	$form->addCheckbox("notify_topics", "Notify Topics", @$r["notify_topics"]);
 	if (getOption("staff_showrank")) $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);

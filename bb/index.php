@@ -1,4 +1,5 @@
-<?	include("../include.php");
+<?php
+include("include.php");
 
 if ($posting) {
 	error_debug("handling bb post");
@@ -6,39 +7,16 @@ if ($posting) {
 	$id = db_save("bb_topics");
 	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $id);
 
-	if ($_POST["is_admin"] == "1") { //send admin email
-		//get topic 
-		$r = db_grab("SELECT 
-				t.title,
-				t.description,
-				u.id,
-				ISNULL(u.nickname, u.firstname) firstname,
-				u.lastname,
-				t.created_date
-				FROM bb_topics t
-				JOIN users u ON t.created_user = u.id
-				WHERE t.id = " . $id);
-		
-		//construct email
-		$message  = drawEmailHeader();
-		$message .= drawMessage(getString("bb_admin"));
-		$message .= '<table class="center">';
-		$message .= drawHeaderRow("Email", 2);
-		$message .= drawThreadTop($r["title"], $r["description"], $r["user_id"], $r["firstname"] . " " . $r["lastname"], $r["created_date"]);
-		$message .= '</table>' . drawEmailFooter();
-		
-		$headers  = "MIME-Version: 1.0\r\n";
-		$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-		$headers .= "From: " . $_josh["email_default"] . "\r\n";
-		
-		//get addresses & send
-		$users = db_query("SELECT email FROM users WHERE is_active = 1");
-		while ($u = db_fetch($users)) {
-			die("admin topic email temporarily disabled for review.");
-			mail($u["email"], $r["title"], $message, $headers);
-		}
+	//notification
+	if ($_POST["is_admin"] == "1") {
+		//get addresses of everyone & send with message
+		emailUsers(db_array("SELECT email FROM users WHERE is_active = 1"), $_POST["title"], bbDrawTopic($id), 2, getString("bb_admin"));
+	} elseif (getOption("bb_notifypost")) {
+		//get addresses of everyone with notify_topics checked and send
+		emailUsers(db_array("SELECT email FROM users WHERE is_active = 1 AND notify_topics = 1"), $_POST["title"], bbDrawTopic($id), 2);
 	}
-	syndicateBulletinBoard();
+	
+	bbDrawRss();
 	url_change();
 }
 
@@ -96,6 +74,7 @@ if ($module_admin) {
 	$form->addCheckbox("is_admin",  "Admin Post?", 0, "(check if yes)", true);
 }
 $form->addRow("itext",  "Subject" , "title", "", "", true);
+if (getOption("bb_types")) $form->addRow("select",  "Category" , "type_id", "SELECT id, title FROM bb_topics_types");
 $form->addRow("textarea", "Message" , "description", "", "", true);
 $form->addRow("submit"  , "add new topic");
 $form->draw("Contribute a New Topic");

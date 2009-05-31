@@ -6,7 +6,8 @@ if ($posting) {
 
 	$_POST["email"] = format_email($_POST["email"]);
 	$_POST["phone"] = format_phone($_POST["phone"]);
-
+	format_post_nulls("departmentID, officeID");
+	
 	//create request
 	//todo ~ check whether staff already exists -- forward to password reset
 	if ($id = db_grab("SELECT id FROM users WHERE email = '" . $_POST["email"] . "' AND is_active = 1")) {
@@ -19,13 +20,13 @@ if ($posting) {
 			title = '" . $_POST["title"] . "',
 			phone = '" . $_POST["phone"] . "',
 			email = '" . $_POST["email"] . "',
-			departmentID = '" . $_POST["departmentID"] . "',
+			departmentID = " . $_POST["departmentID"] . ",
 			organization_id = '" . $_POST["organization_id"] . "',
-			officeID = '" . $_POST["officeID"] . "',
+			officeID = " . $_POST["officeID"] . ",
 			bio = '" . $_POST["bio"] . "',
 			created_date = GETDATE()
 		WHERE email = '" . $_POST["email"] . "'");
-		email_user($_josh["email_admin"], "Repeat Account Request", drawEmptyResult($_POST["firstname"] . " " . $_POST["lastname"] . ' is <a href="http://' . $request["host"] . '/staff/add_edit.php?requestID=' . $id . '">re-requesting an account</a>.'));
+		emailAdmins(drawEmptyResult($_POST["firstname"] . " " . $_POST["lastname"] . ' is <a href="http://' . $request["host"] . '/staff/add_edit.php?requestID=' . $id . '">re-requesting an account</a>.', "Repeat Account Request"));
 	} else {
 		$id = db_query("INSERT INTO users_requests (
 			firstname, 
@@ -67,7 +68,7 @@ if ($posting) {
 				$r = db_grab("SELECT name FROM offices WHERE id = " . $value);
 				$message .= '<td>' . $r . '</td></tr>';
 			} elseif ($key == "organization_id") {
-				$message .= '<td>' . db_grab("SELECT description FROM organizations WHERE id = " . $value) . '</td></tr>';
+				$message .= '<td>' . db_grab("SELECT title from organizations WHERE id = " . $value) . '</td></tr>';
 			} elseif ($key == "Additional Info") {
 				$message .= '<td>' . nl2br($value) . '</td></tr>';
 			} else {
@@ -76,7 +77,7 @@ if ($posting) {
 		}
 		$message .= '<tr><td colspan="2" class="bottom"><a href="http://' . $request["host"] . '/staff/add_edit.php?requestID=' . $id . '">click here</a></td></tr>';
 
-		email_user($_josh["email_admin"], "New User Request", $message, 2);
+		emailAdmins($message, "New User Request", 2);
 	}
 		
 	url_change("account_confirm.php");
@@ -108,12 +109,16 @@ $form->addRow("itext",			"Nickname (optional)", "nickname", '', "", false, 20);
 $form->addRow("itext",			"Last Name",	"lastname", '', "", true, 20);
 $form->addRow("itext",			"Email",		"email", '', "", true, 50);
 $form->addRow("itext",			"Title",		"title", '', "", true, 100);
-$form->addRow("select",			"Organization",	"organization_id", "SELECT id, description FROM organizations ORDER BY description", "", false);
+$form->addRow("select",			"Organization",	"organization_id", "SELECT id, title from organizations ORDER BY title", "", false);
 $form->addJavascript("!form.organization_id.value.length", "the 'Organization' field is not selected");
-$form->addRow("department",		"Department",	"departmentID", "", "", false);
-$form->addJavascript("!form.departmentID.value.length", "the 'Department' field is not selected");
-$form->addRow("select",			"Office",		"officeID", "SELECT id, name FROM offices ORDER BY precedence", "", false);
-$form->addJavascript("!form.officeID.value.length", "the 'Office' field is not selected");
+if (getOption("staff_showdept")) {
+	$form->addRow("department",		"Department",	"departmentID", "", "", false);
+	$form->addJavascript("!form.departmentID.value.length", "the 'Department' field is not selected");
+}
+if (getOption("staff_showoffice")) {
+	$form->addRow("select",			"Office",		"officeID", "SELECT id, name FROM offices ORDER BY precedence", "", false);
+	$form->addJavascript("!form.officeID.value.length", "the 'Office' field is not selected");
+}
 $form->addRow("phone",			"Phone",		"phone", '', "", true, 14);
 $form->addRow("textarea",		"Additional Info", "bio", "", "mceEditor");
 $form->addRow("submit",			"Send Request");

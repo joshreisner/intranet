@@ -17,7 +17,7 @@ if (getOption("staff_allowshared")) {
 } else {
 	if (!isset($_GET["id"])) $_GET["id"] = 1;
 }
-$orgs = db_array("SELECT id, description FROM organizations ORDER BY description", $orgs, false, false);
+$orgs = db_array("SELECT id, title from organizations ORDER BY title", $orgs, false, false);
 
 drawTop();
 

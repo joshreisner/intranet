@@ -29,9 +29,9 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 <table class="left" cellspacing="1">
 	<?
 	if ($module_admin) {
-		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", url_query_add(array("action"=>"delete"), false));
+		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
 	} elseif ($_SESSION["user_id"] == $e["created_user"]) {
-		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", url_query_add(array("action"=>"delete"), false));
+		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
 	} else {
 		echo drawHeaderRow("Event Details", 2);
 	}?>

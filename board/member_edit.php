@@ -30,7 +30,7 @@ $r = db_grab("SELECT
 $form = new intranet_form;
 $form->addRow("itext",  "First Name" , "firstname", $r["firstname"], "", true, 255);
 $form->addRow("itext",  "Last Name" , "lastname", $r["lastname"], "", false, 255);
-$form->addRow("select", "Organization" , "organization_id", "SELECT id, description FROM organizations ORDER BY description", $r["organization_id"]);
+$form->addRow("select", "Organization" , "organization_id", "SELECT id, title from organizations ORDER BY title", $r["organization_id"]);
 $form->addRow("itext",  "Position on Board" , "board_position", $r["board_position"], "", false, 255);
 $form->addRow("itext",  "Employment" , "employment", $r["employment"], "", false, 255);
 $form->addRow("textarea", "Bio" , "bio", $r["bio"], "", false);

@@ -11,8 +11,8 @@ $events = db_query("SELECT
 if (db_found($events)) {
 	while ($e = db_fetch($events)) {?>
 	<tr>
-		<td width="70%"><a href="<?=$m["url"]?>event.php?id=<?=$e["id"]?>" class="block" style="background-color:<?=$e["color"]?>;"><?=$e["title"]?></a></td>
-		<td width="30%" align="right"><?=format_date($e["start_date"])?></a></td>
+		<td width="80%"><a href="<?=$m["url"]?>event.php?id=<?=$e["id"]?>" class="block" style="background-color:<?=$e["color"]?>;"><?=$e["title"]?></a></td>
+		<td width="20%" align="right"><?=format_date($e["start_date"], "", "M d")?></a></td>
 	</tr>
 	<? }
 } else {

@@ -113,7 +113,7 @@ drawTop();
 	<tr class="helptext" bgcolor="#FFFFFF">
 		<td width="80%"><a href="value.php?id=<?=$v["id"]?>"><?=$v["tag"]?></a></td>
 		<td align="right"><?=number_format($v["contactcount"])?></td>
-		<td width="16"><a href="javascript:deactivateTag(<?=$v["id"]?>);"><img src="/images/icons/delete.gif" width="16" height="16" border="0"></a></td>
+		<td width="16"><a href="javascript:deactivateTag(<?=$v["id"]?>);"><img src="/images/icons/delete.png" width="16" height="16" border="0"></a></td>
 	</tr>
 	<?}?>
 	</form>

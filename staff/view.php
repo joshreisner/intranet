@@ -8,12 +8,12 @@ if (url_action("undelete")) { //undelete user
 } elseif (url_action("passwd")) {
 	db_query("UPDATE users SET password = PWDENCRYPT('') WHERE id = " . $_GET["id"]);
 	$r = db_grab("SELECT id, email FROM users WHERE id = " . $_GET["id"]);
-	email_user($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["firstname"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r["user_id"] . '">follow this link</a>.'));
+	emailUser($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["firstname"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r["id"] . '">follow this link</a>.'));
 	url_query_drop("action");
 } elseif (url_action("invite")) {
 	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE id = " . $_GET["id"]);
 	$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
-	email_invite($_GET["id"], $r["email"], $name);
+	emailInvite($_GET["id"], $r["email"], $name);
 	url_query_drop("action");
 }
 
@@ -32,7 +32,7 @@ $r = db_grab("SELECT
 		f.name office, 
 		d.departmentName,
 		u.organization_id,
-		c.description corporationName,
+		c.title corporationName,
 		u.homeAddress1,
 		u.homeAddress2,
 		u.homeCity,
@@ -90,9 +90,9 @@ if (!$r["is_active"]) {
 <table class="left" cellspacing="1">
 	<? if ($module_admin) {
 		if ($r["is_active"]) {
-			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "deactivate", deleteLink("Deactivate this staff member?"));
+			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "deactivate", drawDeleteLink("Deactivate this staff member?"));
 		} else {
-			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "re-activate", deleteLink("Re-activate this staff member?", false, "undelete"));
+			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
 		}
 	} elseif ($_GET["id"] == $_SESSION["user_id"]) {
 		echo drawHeaderRow("View Staff Info", 3, "edit your info", "add_edit.php?id=" . $_GET["id"]);
@@ -170,7 +170,7 @@ if (!$r["is_active"]) {
 		?>
 		<tr>
 			<td class="left">Password</td>
-			<td colspan="2"><a href="<?=deleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">change your password</a></td>
+			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">change your password</a></td>
 		</tr>
 		<? } elseif ($module_admin) {?>
 		<tr>
@@ -179,7 +179,7 @@ if (!$r["is_active"]) {
 				<? if ($r["password"]){?>
 					<i>password is reset</i>
 				<? } else {?>
-					<a href="<?=deleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">reset password</a>
+					<a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">reset password</a>
 				<? }?>
 			</td>
 		</tr>
@@ -187,7 +187,7 @@ if (!$r["is_active"]) {
 	<? if ($module_admin) {?>
 	<tr>
 		<td class="left">Invite</td>
-		<td colspan="2"><a href="<?=deleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
+		<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
 	</tr>
 		<? if (getOption("staff_showrank")) {?>
 		<tr>
@@ -204,19 +204,19 @@ if (!$r["is_active"]) {
 		} else {
 			$hasPermission = false;
 			$permissions = db_query("SELECT 
-				m.name,
+				m.title,
 				m.isPublic,
 				p.url
 				FROM modules m 
 				JOIN pages p ON m.homePageID = p.id
 				JOIN users_to_modules a ON m.id = a.module_id
 				WHERE a.user_id = {$_GET["id"]} AND a.is_admin = 1
-				ORDER BY m.name");
+				ORDER BY m.title");
 			while ($p = db_fetch($permissions)) {
 				$hasPermission = true;
 				echo "&#183;&nbsp;";
 				if ($p["isPublic"]) echo "<a href='" . $p["url"] . "'>";
-				echo $p["name"];
+				echo $p["title"];
 				if ($p["isPublic"]) echo "</a>";
 				echo "<br>";
 			}

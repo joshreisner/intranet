@@ -27,7 +27,6 @@ if (isset($_josh)) { //included
 }
 
 $form = new intranet_form;
-//addCheckboxes($name, $desc, $table, $linking_table=false, $table_col=false, $link_col=false, $id=false, $admin=false) {
 $form->addCheckboxes("corporationID", "Organization", "organizations", "news_stories_to_organizations", "newsID", "organizationID", @$_GET["id"]);
 $form->addRow("itext", "Headline", "headline", @$r["headline"], "", true, 255);
 $form->addRow("itext", "News Outlet", "outlet", @$r["outlet"], "", true, 255);

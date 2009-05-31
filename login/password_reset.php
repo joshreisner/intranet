@@ -4,7 +4,7 @@ include("../include.php");
 
 if ($posting) {
 	if ($r = db_grab("SELECT id FROM users WHERE email = '{$_POST["email"]}' AND is_active = 1")) {
-		email_user($_POST["email"], "Reset Your Password", drawEmptyResult('To reset your password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r . '">follow this link</a>.'));
+		emailUser($_POST["email"], "Reset Your Password", drawEmptyResult('To reset your password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r . '">follow this link</a>.'));
 		url_change("password_confirm.php");
 	} else {
 		url_query_add(array("msg"=>"email-not-found", "email"=>$_POST["email"])); //bad email

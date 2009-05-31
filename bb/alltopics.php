@@ -1,4 +1,5 @@
-<?	include("../include.php");
+<?php
+include("include.php");
 
 drawTop();
 echo drawSyndicateLink("bb");

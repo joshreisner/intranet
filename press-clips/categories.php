@@ -27,13 +27,13 @@ if (url_id()) {
 	
 	
 } else {
-	echo drawHeaderRow("Categories", 3);?>
+	echo drawHeaderRow("Categories", 2);?>
 	<tr>
 		<th>Category</th>
 		<th class="r">Clips</th>
 	</tr>
 	<?
-	$categories = db_query("SELECT t.id, t.title, (SELECT COUNT(*) FROM press_clips c WHERE c.type_id = t.id) num_clips FROM press_clips_types t");
+	$categories = db_query("SELECT t.id, t.title, (SELECT COUNT(*) FROM press_clips c WHERE c.type_id = t.id) num_clips FROM press_clips_types t ORDER BY t.precedence");
 	while ($c = db_fetch($categories)) {
 	?>
 	<tr>

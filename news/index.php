@@ -87,7 +87,7 @@ if (url_action("delete")) {
 			s.id,
 			s.headline, 
 			CASE WHEN ((SELECT COUNT(*) FROM news_stories_to_organizations n WHERE n.newsID = s.id) > 1) THEN (SELECT 'Multiple')
-			ELSE (SELECT description FROM organizations o JOIN news_stories_to_organizations n ON o.id = n.organizationID WHERE n.newsID = s.id) END
+			ELSE (SELECT title from organizations o JOIN news_stories_to_organizations n ON o.id = n.organizationID WHERE n.newsID = s.id) END
 			organization,
 			s.outlet, 
 			s.pubdate
@@ -110,7 +110,7 @@ if (url_action("delete")) {
 			<td><?=$r["outlet"]?></td>
 			<td><?=$r["organization"]?></td>
 			<td class="r"><?=format_date($r["pubdate"], "n/a", "M d, Y", false)?></td>
-			<?=deleteColumn("Delete news clip?", $r["id"])?>
+			<?=drawDeleteColumn("Delete news clip?", $r["id"])?>
 		</tr>
 		<? }
 	} else {

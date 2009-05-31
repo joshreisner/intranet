@@ -43,7 +43,7 @@ function drawStaffList($where, $searchterms=false) {
 							ISNULL(u.nickname, u.firstname) firstname, 
 							u.bio, 
 							u.phone,
-							c.description corporationName,
+							c.title corporationName,
 							u.organization_id,
 							o.name office, 
 							o.isMain,
@@ -96,7 +96,7 @@ function drawStaffRow($r, $searchterms=false) {
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
 	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
 	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
-	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $_josh["write_folder"] . '/images/icons/delete.gif" width="16" height="16" border="0"></td>';
+	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $_josh["write_folder"] . '/images/icons/delete.png" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

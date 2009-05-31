@@ -7,7 +7,7 @@
 	foreach ($areas as $a) {
 		if (!$modules[$a]["isPublic"] && !$modules[$a]["is_admin"]) continue;?>
 	<tr>
-		<td><a href="<?=$modules[$a]["url"]?>"><?=$modules[$a]["name"]?></a></td>
+		<td><a href="<?=$modules[$a]["url"]?>"><?=$modules[$a]["title"]?></a></td>
 	</tr>
 	<? }?>
 </table>

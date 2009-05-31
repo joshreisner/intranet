@@ -7,7 +7,7 @@ if (url_action("deletereq")) {
 	$result = db_query("SELECT id, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND is_active = 1");
 	while ($r = db_fetch($result)) {
 		$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
-		email_invite($r["id"], $r["email"], $name);
+		emailInvite($r["id"], $r["email"], $name);
 	}
 	url_query_drop("action");
 }
@@ -27,7 +27,7 @@ if (db_found($result)) {?>
 	<tr>
 		<td><a href="add_edit.php?requestID=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 		<td class="r"><?=format_date_time($r["created_date"])?></td>
-		<td width="16"><?=draw_img($_josh["write_folder"] . "/images/icons/delete.gif", url_query_add(array("action"=>"deletereq", "id"=>$r["id"]), false))?></td>
+		<td width="16"><?=draw_img($_josh["write_folder"] . "/images/icons/delete.png", url_query_add(array("action"=>"deletereq", "id"=>$r["id"]), false))?></td>
 	</tr>
 	<?
 	}
@@ -50,7 +50,7 @@ if (db_found($result)) {?>
 	<tr>
 		<td><a href="view.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 		<td class="r"><?=format_date_time($r["created_date"])?></td>
-		<?=deleteColumn("Delete user?", $r["id"])?>
+		<?=drawDeleteColumn("Delete user?", $r["id"])?>
 	</tr>
 	<?
 	}

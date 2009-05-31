@@ -2,7 +2,7 @@
 
 drawTop();
 
-$fields = array("lastname","firstname","nickname","title","departmentName");
+$fields = array("u.lastname", "u.firstname", "u.nickname", "u.title", "departmentName");
 $terms = explode(" ", str_replace("'", "''", $_GET["q"]));
 $where = array();
 foreach ($terms as $t) {

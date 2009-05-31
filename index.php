@@ -24,7 +24,7 @@ if ($redirect) url_change($redirect);
 ?>
 <html>
 	<head>
-		<title>Intranet</title>
+		<title><?=getString("app_name")?></title>
 		<style type="text/css">
 			<!--
 			body { background-color:#d3d3d3; margin:0px; padding:0px; width:100%; height:100%; font-family:verdana; font-size:11px; color:#444; line-height:19px; }
@@ -102,7 +102,7 @@ if ($redirect) url_change($redirect);
 				<div class="top-right"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/top-right.png" width="10" height"10" border="0"></div>
 				<div class="bottom-left"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/bottom-left.png" width="10" height"10" border="0"></div>
 				<div class="bottom-right"><img src="<?=$_josh["write_folder"]?>/images/corners-grey/bottom-right.png" width="10" height"10" border="0"></div>
-				<?=getString("login")?>
+				<?=getString("app_welcome")?>
 				<ul>
 				<li><a href="/login/password_reset.php">I Forgot My Password</a></li>
 				<li><a href="/login/account_request.php">I Need a New Account</a></li>

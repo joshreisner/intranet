@@ -1,8 +1,8 @@
 <?php
-$orgs = db_query("SELECT id, description FROM external_orgs_types ORDER BY description", 4);
+$orgs = db_query("SELECT id, title FROM external_orgs_types ORDER BY title");
 $types = array();
 while ($o = db_fetch($orgs)) {
-	$types[] = '<a href="' . $m["url"] . '/?type=' . $o["id"] . '">' . $o["description"] . '</a>';
+	$types[] = '<a href="' . $m["url"] . '/?type=' . $o["id"] . '">' . format_string($o["title"], 22) . '</a>';
 }
 	?>
 	<tr>
@@ -12,4 +12,12 @@ while ($o = db_fetch($orgs)) {
 	<tr>
 		<td width="50%"><?=@$types[2]?></td>
 		<td width="50%"><?=@$types[3]?></td>
+	</tr>
+	<tr>
+		<td width="50%"><?=@$types[4]?></td>
+		<td width="50%"><?=@$types[5]?></td>
+	</tr>
+	<tr>
+		<td width="50%"><?=@$types[6]?></td>
+		<td width="50%"></td>
 	</tr>

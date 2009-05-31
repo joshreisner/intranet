@@ -47,7 +47,7 @@ drawTop();
 			<td><a href="position.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["office"]?></td>
 			<td class="r"><?=format_date($r["updated_date"])?></td>
-			<?=deleteColumn("Delete this position?", $r["id"])?>
+			<?=drawDeleteColumn("Delete this position?", $r["id"])?>
 		</tr>
 		<? }?>
 </table>
@@ -57,7 +57,7 @@ drawTop();
 <? if ($module_admin) {
 	$form = new intranet_form;
 	$form->addRow("itext",  "Title" , "title", "", "", true);
-	$form->addRow("select", "Organization" , "corporationID", "SELECT id, description FROM organizations ORDER BY description", "", true);
+	$form->addRow("select", "Organization" , "corporationID", "SELECT id, title from organizations ORDER BY title", "", true);
 	$form->addRow("select", "Location" , "officeID", "SELECT id, name FROM offices ORDER BY precedence", "", true);
 	$form->addRow("checkbox", "Internship?" , "is_internship", $r["is_internship"]);
 	$form->addRow("textarea", "Description" , "description", "", "", true);

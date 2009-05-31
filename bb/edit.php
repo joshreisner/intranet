@@ -1,16 +1,16 @@
 <?
-include("../include.php");
+include("include.php");
 
 if ($posting) {
 	//update topic.  don't update the thread_date, or send any emails
 	db_save("bb_topics");
-	syndicateBulletinBoard();
+	bbDrawRss();
 	url_change("topic.php?id=" . $_GET["id"]);
 }
 
 drawTop();
 
-$t = db_grab("SELECT title, description, is_admin, created_user FROM bb_topics WHERE id = " . $_GET["id"]);
+$t = db_grab("SELECT title, type_id, description, is_admin, created_user FROM bb_topics WHERE id = " . $_GET["id"]);
 
 $form = new intranet_form;
 if ($module_admin) {
@@ -18,6 +18,7 @@ if ($module_admin) {
 	$form->addCheckbox("is_admin",  "Admin Post?", $t["is_admin"], "(check if yes)", "ddeedd");
 }
 $form->addRow("itext",  "Subject" , "title", $t["title"], "", true);
+if (getOption("bb_types")) $form->addRow("select",  "Category" , "type_id", "SELECT id, title FROM bb_topics_types", $t["type_id"]);
 $form->addRow("textarea", "Message" , "description", $t["description"], "", true);
 $form->addRow("submit"  , "edit topic");
 $form->draw("Edit Bulletin Board Topic");

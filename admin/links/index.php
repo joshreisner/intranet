@@ -31,7 +31,7 @@ if ($max = db_found($links)) {
 			<td><a href="<?=$l["url"]?>"><?=$l["url"]?></a></td>
 			<td><? if ($counter != 1) echo draw_img($_josh["write_folder"] . "/images/icons/moveup.gif")?></td>
 			<td><? if ($counter != $max) echo draw_img($_josh["write_folder"] . "/images/icons/movedown.gif")?></td>
-			<?=deleteColumn("are you sure?", $l["id"]);?>
+			<?=drawDeleteColumn("are you sure?", $l["id"]);?>
 		</tr>
 	<? 
 	$counter++;
