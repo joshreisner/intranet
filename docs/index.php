@@ -17,7 +17,7 @@ if ($module_admin) {
 }
 $categories = db_query("SELECT 
 			c.id, 
-			c.description, 
+			c.title, 
 			(SELECT COUNT(*) FROM docs_to_categories d2c JOIN docs d ON d2c.documentID = d.id WHERE d2c.categoryID = c.id AND d.is_active = 1) docs 
 		FROM docs_categories c
 		WHERE (SELECT COUNT(*) FROM docs_to_categories d2c JOIN docs d ON d2c.documentID = d.id WHERE d2c.categoryID = c.id AND d.is_active = 1) > 0
@@ -33,7 +33,7 @@ if (db_found($categories)) {?>
 	<?
 	while ($c = db_fetch($categories)) { ?>
 		<tr class="group">
-			<td colspan="<?=$colspan?>"><?=$c["description"]?></td>
+			<td colspan="<?=$colspan?>"><?=$c["title"]?></td>
 		</tr>
 		<? $docs = db_query("SELECT 
 							d.id, 
