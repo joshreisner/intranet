@@ -16,7 +16,7 @@ $r = db_grab("SELECT
 		u2.firstname updated_userFirst,
 		u2.lastname updated_userLast,
 		u3.firstname deleted_userFirst,
-		u3.lastname updated_userLast
+		u3.lastname deleted_userLast
 	FROM openings j
 	LEFT JOIN organizations c ON j.corporationID = c.id
 	LEFT JOIN offices o ON j.officeID = o.id
