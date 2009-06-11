@@ -442,7 +442,7 @@ function emailUser($address, $title, $content, $colspan=1, $message=false) {
 	$result = email($address, $message, $title);
 	
 	//keep a record
-	db_query("INSERT INTO emails ( address, subject, message, created_on, created_by, was_sent ) VALUES (
+	db_query("INSERT INTO emails ( address, subject, message, created_date, created_user, was_sent ) VALUES (
 		'$address',
 		'" . format_quotes($title) . "',
 		'" . format_quotes($message) . "',

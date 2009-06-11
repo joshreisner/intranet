@@ -1,4 +1,4 @@
-<?
+<?php
 include("../include.php");
 
 //die(htmlentities("'Nuñez", ISO8859-1));
