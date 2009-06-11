@@ -248,8 +248,8 @@ if (isset($_GET["id"])) {
 				$oneFound = false;
 				while ($v = db_fetch($values)) {?>
 					<tr>
-						<td width="1%"><input type="checkbox" name="tag_multiple_<?=$v["id"]?>"<? if ($v["selected"]) {?> checked<? }?>></td>
-						<td width="99%"><?=$v["tag"]?></td>
+						<td width="16"><input type="checkbox" class="checkbox" name="tag_multiple_<?=$v["id"]?>"<? if ($v["selected"]) {?> checked<? }?>></td>
+						<td><?=$v["tag"]?></td>
 					</tr>
 					<? if (isset($v["selected"]) && $v["selected"]) $oneFound = true;
 				}?>

@@ -16,13 +16,11 @@ function formatArrayForText($array) {
 	}
 }
 ?>
-<table class="message">
+<div id="panel">
 	<form method="get" action="./" name="mainsearchform">
-	<tr>
-		<td class="gray">Look for <input type="text" value="<?=@$_GET["q"]?>" name="q" class="field" size="34"></td>
-	</tr>
+	Look for <input type="text" value="<?=@$_GET["q"]?>" name="q" class="field" size="34"></td>
 	</form>
-</table>
+</div>
 <?
 if (isset($_GET["q"])) {
 	//assemble where clause

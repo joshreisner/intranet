@@ -501,7 +501,7 @@ function getString($key) {
 	//default strings.  override these in your config file by specifying $strings variables
 	$defaults["app_name"]			= 'Intranet';
 	$defaults["app_welcome"]		= 'Welcome to the ' . $defaults["app_name"] . '.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
-	$defaults["bb_admin"]			= 'This is an important administrative announcement topic.';
+	$defaults["bb_admin"]			= 'This is an administrative announcement topic.';
 	$defaults["staff_firsttime"]	= 'Welcome to the ' . $defaults["app_name"] . '!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
 	$defaults["staff_update"]		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
 	

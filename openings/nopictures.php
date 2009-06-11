@@ -11,7 +11,7 @@ $result = db_query("SELECT
 					u.title,
 					o.name office
 				FROM users u
-				JOIN offices o on u.officeID = o.officeID
+				JOIN offices o on u.officeID = o.id
 				JOIN intranet_ranks r ON u.rankID = r.id
 				WHERE u.image is null and u.is_active = 1 and r.ispayroll = 1
 				ORDER BY o.name, u.lastname, u.firstname");
@@ -25,7 +25,7 @@ $result = db_query("SELECT
 	</tr>
 	<? while ($r = db_fetch($result)) {?>
 	<tr>
-		<td width="33%"><a href="/staff/view.php?id=<?=$r["user_id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
+		<td width="33%"><a href="/staff/view.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 		<td width="33%"><?=$r["title"]?></td>
 		<td width="33%"><?=$r["office"]?></td>
 	</tr>
