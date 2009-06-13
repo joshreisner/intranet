@@ -7,7 +7,7 @@ if (url_id()) {
 	$title = db_grab("SELECT title FROM press_clips_types WHERE id = " . $_GET["id"]);
 	echo drawHeaderRow("<a href='./'>Categories</a> &gt; " . $title, 3);
 
-	$result = db_query("SELECT c.id, c.title, c.pub_date, t.title type, c.publication, ISNULL(c.created_date, c.updated_date) updated FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id WHERE c.is_active = 1 AND c.type_id = " . $_GET["id"] . " ORDER BY updated DESC", 20);
+	$result = db_query("SELECT c.id, c.title, c.pub_date, t.title type, c.publication, ISNULL(c.created_date, c.updated_date) updated FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id WHERE c.is_active = 1 AND c.type_id = " . $_GET["id"] . " ORDER BY updated DESC");
 	if (db_found($result)) {?>
 		<tr>
 			<th>Title</th>

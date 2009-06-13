@@ -319,7 +319,6 @@ function drawTop() {
 	<?
 	echo draw_container("head",
 		draw_container("title", $title) .
-		'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' . 
 		draw_css_src("/styles/screen.css",	"screen") .
 		draw_css_src("/styles/print.css",	"print") .
 		draw_css_src("/styles/ie.css",		"ie") .
@@ -367,6 +366,9 @@ function drawBottom() {
 					<form name="search" method="get" action="/staff/search.php" onSubmit="javascript:return doSearch(this);">
 		            <input type="text" name="q" value="Search Staff" onfocus="javascript:form_field_default(this, true, 'Search Staff');" onblur="javascript:form_field_default(this, false, 'Search Staff');">
 					</form>
+					
+					<?=draw_form_select("language_id", "SELECT id, title FROM languages ORDER BY title")?>
+					<?=draw_form_select("channel_id", "SELECT id, title FROM channels ORDER BY title")?>
 					
 					<table class="links">
 						<? if ($_SESSION["is_admin"]) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/admin/links/">Edit Links</a></td></tr><? } ?>
@@ -811,6 +813,7 @@ function joshlib() {
 	$possibilities = array(
 		"D:\Sites\joshlib\index.php", //seedco-web-srv
 		"/home/hcfacc/www/joshlib/index.php", //icd 2
+		"/home/sites/www/joshlib/index.php", //icd 3
 		"/Users/josh/Sites/joshlib/index.php",  //dora mac mini
 		"/Users/joshreisner/Sites/joshlib/index.php", //macbook
 		"/home/joshreisner/www/joshlib/joshlib/index.php" //icdsoft
