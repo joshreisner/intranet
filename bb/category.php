@@ -10,6 +10,12 @@ if (url_id()) {
 	echo drawHeaderRow("Uncategorised Topics", 4);
 	$where = "t.type_id IS NULL";
 }
+$join = "";
+if (getOption("channels") && $_SESSION["channel_id"]) {
+	$where .= " AND t2c.channel_id = " . $_SESSION["channel_id"];
+	$join = "JOIN bb_topics_to_channels t2c ON t.id = t2c.topic_id";
+}
+
 $topics = db_query("SELECT 
 		t.id,
 		t.title,
@@ -20,6 +26,7 @@ $topics = db_query("SELECT
 		u.lastname
 	FROM bb_topics t
 	JOIN users u ON u.id = t.created_user
+	$join
 	WHERE t.is_active = 1 AND $where
 	ORDER BY t.thread_date DESC", 15);
 if (db_found($topics)) {?>

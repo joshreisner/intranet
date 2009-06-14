@@ -14,7 +14,7 @@ $result = db_query("SELECT
 	FROM press_clips c 
 	JOIN press_clips_types t ON c.type_id = t.id 
 	WHERE c.is_active = 1
-	ORDER BY updated DESC", 20);
+	ORDER BY t.title, pub_date DESC", 20);
 if (db_found($result)) {?>
 	<tr>
 		<th>Title</th>

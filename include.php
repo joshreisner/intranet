@@ -2,6 +2,8 @@
 //session & env
 session_start();
 if (!isset($_SESSION["user_id"])) $_SESSION["user_id"] = false;
+if (!isset($_SESSION["channel_id"])) $_SESSION["channel_id"] = false;
+if (!isset($_SESSION["language_id"])) $_SESSION["language_id"] = 1;
 if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
 //joshlib & localize
@@ -111,6 +113,14 @@ if (!$pageIsPublic) {
 		$_SESSION["help"] = abs($_SESSION["help"] - 1);
 		db_query("UPDATE users SET help = {$_SESSION["help"]} WHERE id = " . $_SESSION["user_id"]);
 		url_query_drop("action");
+	} elseif(isset($_GET["language_id"])) {
+		$_SESSION["language_id"] = $_GET["language_id"];
+		//update users
+		url_drop("language_id");
+	} elseif(isset($_GET["channel_id"])) {
+		$_SESSION["channel_id"] = $_GET["channel_id"];
+		//update users
+		url_drop("channel_id");
 	}
 }
 
@@ -233,7 +243,12 @@ function drawNavigationRow($pages, $module=false, $pq=false) {
 }
 	
 function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text="", $class=false) { 
-	$result = db_query("SELECT u.id, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.is_active = 1 ORDER by last, first");
+	global $_SESSION;
+	if (getOption("channels") && $_SESSION["channel_id"]) {
+		$result = db_query("SELECT u.id, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u JOIN users_to_channels u2c ON u.id = u2c.user_id WHERE u.is_active = 1 AND u2c.channel_id = {$_SESSION["channel_id"]} ORDER by last, first");
+	} else {
+		$result = db_query("SELECT u.id, ISNULL(u.nickname, u.firstname) first, u.lastname last FROM users u WHERE u.is_active = 1 ORDER by last, first");
+	}
 	if ($jumpy) $jumpy = "location.href='/staff/view.php?id=' + this.value";
 	$array = array();
 	while ($r = db_fetch($result)) {
@@ -271,7 +286,7 @@ function drawThreadCommentForm($showAdmin=false) {
 	global $module_admin, $_josh, $_SESSION;
 	$return = '
 		<a name="bottom"></a>
-		<form method="post" action="' . $_josh["request"]["path_query"] . '" onsubmit="javascript:return validate(this);">
+		<form accept-charset="utf-8" method="post" action="' . $_josh["request"]["path_query"] . '" onsubmit="javascript:return validate(this);">
 		<tr valign="top">
 			<td class="left">' . drawName($_SESSION["user_id"], $_SESSION["full_name"], false, true) . '</td>
 			<td>' . draw_form_textarea("message", "", "mceEditor thread");
@@ -300,13 +315,13 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 			<td height="150" class="left">' . 
 			drawName($user_id, $fullname, $date, true) . 
 			'</td>
-			<td class="text"><h1>' . $title . '</h1>';
+			<td class="text"><div class="text"><h1>' . $title . '</h1>';
 	if ($editurl) {
 		$return .= '<a class="right button floating" href="' . $editurl . '">edit this</a>';
 	}
 	$return .= '' . 
 				str_replace('href="../', 'href="http://' . $_josh["request"]["host"] . '/', $content) . '
-			</td>
+			</div></td>
 		</tr>';
 	return $return;	
 }
@@ -315,9 +330,11 @@ function drawTop() {
 	global $_GET, $_SESSION, $_josh, $page, $module_admin, $location;
 	error_debug("starting top");
 	$title = $page["module"] . " > " . $page["name"];
+	header('Content-Type: text/html; charset=utf-8');	
 ?><html>
 	<?
 	echo draw_container("head",
+		'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . 
 		draw_container("title", $title) .
 		draw_css_src("/styles/screen.css",	"screen") .
 		draw_css_src("/styles/print.css",	"print") .
@@ -363,12 +380,13 @@ function drawBottom() {
 					<a class="right button" href="/index.php?action=logout">Log Out</a>
 					Hello <a href="/staff/view.php?id=<?=$_SESSION["user_id"]?>"><b><?=$_SESSION["full_name"]?></b></a>.
 
-					<form name="search" method="get" action="/staff/search.php" onSubmit="javascript:return doSearch(this);">
+					<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onSubmit="javascript:return doSearch(this);">
 		            <input type="text" name="q" value="Search Staff" onfocus="javascript:form_field_default(this, true, 'Search Staff');" onblur="javascript:form_field_default(this, false, 'Search Staff');">
 					</form>
-					
-					<?=draw_form_select("language_id", "SELECT id, title FROM languages ORDER BY title")?>
-					<?=draw_form_select("channel_id", "SELECT id, title FROM channels ORDER BY title")?>
+					<?
+					if (getOption("channels")) echo draw_form_select("channel_id", "SELECT id, title_en FROM channels ORDER BY title_en", $_SESSION["channel_id"], false, "channels", "url_query_set('channel_id', this.value)", "View All Networks");
+					if (getOption("languages")) echo draw_form_select("language_id", "SELECT id, title FROM languages ORDER BY title", $_SESSION["language_id"], true, "languages", "url_query_set('language_id', this.value)");
+					?>
 					
 					<table class="links">
 						<? if ($_SESSION["is_admin"]) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/admin/links/">Edit Links</a></td></tr><? } ?>
@@ -467,6 +485,9 @@ function getOption($key) {
 	global $options;
 	
 	//default options.  override these in your config file by specifying $options variables
+	$defaults["channels"]				= false;
+	$defaults["languages"]				= false;
+
 	$defaults["bb_notifyfollowup"]		= false;
 	$defaults["bb_notifypost"]			= false;
 	$defaults["bb_types"]				= false;
@@ -546,22 +567,31 @@ class intranet_form {
 		$rows .= '<tr';
 		if ($admin) $rows .= ' class="admin"';
 		
+		$title = "title";
+		$checked = 0;
+		
 		//special addition for permissions
 		$where = ($name == "permissions") ? " AND l.is_admin = 1" : "";
 		
+		//special exception for channels table
+		if ($table == "channels") {
+			$title = "title_en";
+			$checked = 1;
+		}
+
 		$rows .= '>
 			<td class="left">' . $desc . '</td>
 			<td>';
 			if ($id) {
 				$result = db_query("SELECT 
 						t.id, 
-						t.title,
+						t.$title,
 						(SELECT COUNT(*) FROM $linking_table l WHERE l.$table_col = $id AND l.$link_col = t.id $where) checked
 					FROM $table t
 					WHERE t.is_active = 1
-					ORDER BY t.title");
+					ORDER BY t.$title");
 			} else {
-				$result = db_query("SELECT id, title, 0 checked FROM $table WHERE is_active = 1 ORDER BY title");
+				$result = db_query("SELECT id, $title, $checked checked FROM $table WHERE is_active = 1 ORDER BY $title");
 			}
 			if ($total = db_found($result)) {
 				$counter = 0;
@@ -573,7 +603,7 @@ class intranet_form {
 					$rows .= '
 						<tr>
 						<td>' . draw_form_checkbox($chkname, $r["checked"]) . '</td>
-						<td>' . drawCheckboxText($chkname, $r["title"]) . '</td>
+						<td>' . drawCheckboxText($chkname, $r[$title]) . '</td>
 						</tr>';
 					if ($counter == ($max - 1)) {
 						$rows .= '</table></td>';
@@ -721,7 +751,7 @@ class intranet_form {
 			<tr>
 				<td class="head <?=$location?>" colspan="2"><?=$pageTitle?></td>
 			</tr>
-			<form method="post" action="<?=$_josh["request"]["path_query"]?>" enctype="multipart/form-data" onsubmit="javascript:return validate(this);">
+			<form method="post" action="<?=$_josh["request"]["path_query"]?>" enctype="multipart/form-data" accept-charset="utf-8" onsubmit="javascript:return validate(this);">
 			<?
 			if (isset($_josh["referrer"])) {
 				echo draw_form_hidden("return_to", $_josh["referrer"]["url"]);

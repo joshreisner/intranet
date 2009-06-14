@@ -6,7 +6,8 @@ if ($posting) {
 	format_post_bits("is_admin");
 	$id = db_save("bb_topics");
 	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $id);
-
+	if (getOption("channels")) db_checkboxes("channels", "bb_topics_to_channels", "topic_id", "channel_id", $id);
+	
 	//notification
 	if ($_POST["is_admin"] == "1") {
 		//get addresses of everyone & send with message
@@ -27,6 +28,8 @@ echo drawTableStart();
 echo drawHeaderRow("", 4, "new", "#bottom");
 error_debug("get bb topix");
 
+$where = "WHERE t.is_active = 1";
+if (getOption("channels") && $_SESSION["channel_id"]) $where = "JOIN bb_topics_to_channels t2c ON t.id = t2c.topic_id WHERE t.is_active = 1 AND t2c.channel_id = " . $_SESSION["channel_id"];
 $topics = db_query("SELECT 
 		t.id,
 		t.title,
@@ -37,7 +40,7 @@ $topics = db_query("SELECT
 		u.lastname
 	FROM bb_topics t
 	JOIN users u ON u.id = t.created_user
-	WHERE t.is_active = 1 
+	$where
 	ORDER BY t.thread_date DESC", 15);
 if (db_found($topics)) {?>
 	<tr>
@@ -75,6 +78,7 @@ if ($module_admin) {
 }
 $form->addRow("itext",  "Subject" , "title", "", "", true);
 if (getOption("bb_types")) $form->addRow("select",  "Category" , "type_id", "SELECT id, title FROM bb_topics_types");
+if (getOption("channels")) $form->addCheckboxes("channels", "Networks", "channels", "bb_topics_to_channels", "topic_id", "channel_id");
 $form->addRow("textarea", "Message" , "description", "", "", true);
 $form->addRow("submit"  , "add new topic");
 $form->draw("Contribute a New Topic");

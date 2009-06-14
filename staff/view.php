@@ -32,12 +32,14 @@ $r = db_grab("SELECT
 		f.name office, 
 		d.departmentName,
 		u.organization_id,
-		c.title corporationName,
+		o.title corporationName,
 		u.homeAddress1,
 		u.homeAddress2,
 		u.homeCity,
 		s.stateAbbrev,
 		u.homeZIP,
+		u.notify_topics,
+		c.title_en channel,
 		u.homePhone,
 		u.homeCell,
 		u.homeEmail,
@@ -58,8 +60,10 @@ $r = db_grab("SELECT
 		u.is_admin,
 		r.description rank
 	FROM users u
-	LEFT JOIN intranet_ranks r ON u.rankID = r.id
-	LEFT JOIN organizations			c ON u.organization_id = c.id
+	LEFT JOIN users_to_channels u2c ON u.id = u2c.user_id
+	LEFT JOIN channels			c ON u2c.channel_id = c.id
+	LEFT JOIN intranet_ranks	r ON u.rankID = r.id
+	LEFT JOIN organizations		o ON u.organization_id = o.id
 	LEFT JOIN departments		d ON d.departmentID	= u.departmentID 				
 	LEFT JOIN offices    		f ON f.id			= u.officeID 				
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
@@ -146,9 +150,22 @@ if (!$r["is_active"]) {
 	</tr>
 	<? if ($module_admin || ($_GET["id"] == $_SESSION["user_id"])) {?>
 	<tr class="group">
-		<td colspan="3">Intranet</td>
+		<td colspan="3">Administrative Information</td>
 	</tr>
-	<? if ($r["longDistanceCode"]) {?>
+	
+	<? if (getOption("bb_notifypost")) {?>
+	<tr>
+		<td class="left">Notify Posts</td>
+		<td colspan="2" class="bigger"><?=format_boolean($r["notify_topics"])?></td>
+	</tr>
+	<? }
+	if (getOption("channels")) {?>
+	<tr>
+		<td class="left">Network</td>
+		<td colspan="2" class="bigger"><?=$r["channel"]?></td>
+	</tr>
+	<? }
+	if ($r["longDistanceCode"]) {?>
 	<tr>
 		<td class="left">Telephone Code</td>
 		<td colspan="2" class="bigger"><?=$r["longDistanceCode"]?></td>

@@ -9,7 +9,7 @@ echo drawHeaderRow("Categories", 2);?>
 		<th class="r">Topics</th>
 	</tr>
 <?
-$result = db_query("SELECT y.id, y.title, (SELECT COUNT(*) FROM bb_topics t WHERE t.type_id = y.id) count FROM bb_topics_types y ORDER BY y.title");
+$result = db_query("SELECT y.id, y.title, (SELECT COUNT(*) FROM bb_topics t WHERE t.type_id = y.id AND t.is_active = 1) count FROM bb_topics_types y ORDER BY y.title");
 while ($r = db_fetch($result)) {?>
 	<tr>
 		<td><a href="category.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>

@@ -163,6 +163,7 @@ $form->addRow("textarea", "Bio", "bio", @$r["bio"]);
 if ($module_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
 	$form->addGroup("Administrative Information");
 	if (getOption("bb_notifypost")) $form->addCheckbox("notify_topics", "Notify Topics", @$r["notify_topics"]);
+	if (getOption("channels")) $form->addCheckboxes("channels", "Networks", "channels", "users_to_channels", "user_id", "channel_id", $_GET["id"]);
 	if (getOption("staff_showrank")) $form->addRow("select", "Rank", "rankID", "SELECT id, description from intranet_ranks", @$r["rankID"], true);
 	$form->addRow("date", "Start Date", "startDate", @$r["startDate"], "", false);
 	$form->addRow("date", "End Date", "endDate", @$r["endDate"], "", false);

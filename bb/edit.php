@@ -3,7 +3,8 @@ include("include.php");
 
 if ($posting) {
 	//update topic.  don't update the thread_date, or send any emails
-	db_save("bb_topics");
+	$id = db_save("bb_topics");
+	if (getOption("channels")) db_checkboxes("channels", "bb_topics_to_channels", "topic_id", "channel_id", $_GET["id"]);
 	bbDrawRss();
 	url_change("topic.php?id=" . $_GET["id"]);
 }
@@ -19,6 +20,7 @@ if ($module_admin) {
 }
 $form->addRow("itext",  "Subject" , "title", $t["title"], "", true);
 if (getOption("bb_types")) $form->addRow("select",  "Category" , "type_id", "SELECT id, title FROM bb_topics_types", $t["type_id"]);
+if (getOption("channels")) $form->addCheckboxes("channels", "Networks", "channels", "bb_topics_to_channels", "topic_id", "channel_id", $_GET["id"]);
 $form->addRow("textarea", "Message" , "description", $t["description"], "", true);
 $form->addRow("submit"  , "edit topic");
 $form->draw("Edit Bulletin Board Topic");
