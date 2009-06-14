@@ -330,11 +330,11 @@ function drawTop() {
 	global $_GET, $_SESSION, $_josh, $page, $module_admin, $location;
 	error_debug("starting top");
 	$title = $page["module"] . " > " . $page["name"];
-	header('Content-Type: text/html; charset=utf-8');	
+	url_header_utf8();
 ?><html>
 	<?
 	echo draw_container("head",
-		'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . 
+		draw_meta_utf8() . 
 		draw_container("title", $title) .
 		draw_css_src("/styles/screen.css",	"screen") .
 		draw_css_src("/styles/print.css",	"print") .
