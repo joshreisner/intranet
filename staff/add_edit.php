@@ -17,10 +17,19 @@ if ($posting) {
 	if (!isset($_POST["notify_topics"])) $_POST["notify_topics"] = 0;
 
 	//die(file_get_uploaded("userfile"));
-	if ($uploading) $_POST["image"] = format_image_resize(file_get_uploaded("userfile"), 270);
-			
+	if ($uploading) {
+		if ($_POST["image"] = format_image_resize(file_get_uploaded("userfile"), 270)) {
+			if (url_id()) {
+				file_delete($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-large.jpg");
+				file_delete($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-medium.jpg");
+				file_delete($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-small.jpg");
+			}
+		}
+	}
+
 	if ($module_admin) {
 		$id = db_save("users");
+		//die("hi");
 		
 		//if new user, reset password, delete request, and send invite
 		if (!isset($_GET["id"])) {
