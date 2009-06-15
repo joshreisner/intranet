@@ -132,9 +132,6 @@ if (getOption("cal_showholidays")) {
 	}
 }	
 
-
-if (!isset($_GET["month"])) $_GET["month"] = $month;
-if (!isset($_GET["year"])) $_GET["year"]   = $year;
 ?>
 <table class="left" cellspacing="1">
 	<?=drawHeaderRow($_josh["months"][$_GET["month"]-1] . " " . $_GET["year"], 7, "new", "#bottom");?>
