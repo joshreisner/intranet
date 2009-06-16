@@ -51,7 +51,7 @@ if (db_found($topics)) {?>
 	</tr>
 	<?
 	while ($r = db_fetch($topics)) {
-		$r["lastname"] = htmlentities($r["lastname"]); //see http://work.joshreisner.com/request/?id=477
+		$r["lastname"] = format_accents_encode($r["lastname"]); //see http://work.joshreisner.com/request/?id=477
 		?>
 		<tr class="thread<? if ($r["is_admin"] == 1) {?> admin<? }?>"
 			onclick		= "location.href='topic.php?id=<?=$r["id"]?>';"

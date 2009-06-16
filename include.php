@@ -284,10 +284,9 @@ function drawThreadComment($content, $user_id, $fullname, $date, $module_admin=f
 
 function drawThreadCommentForm($showAdmin=false) {
 	global $module_admin, $_josh, $_SESSION;
-	$return = '
-		<a name="bottom"></a>
-		<form accept-charset="utf-8" method="post" action="' . $_josh["request"]["path_query"] . '" onsubmit="javascript:return validate(this);">
-		<tr valign="top">
+	$return = '<a name="bottom"></a><form ';
+	if ($_josh["db"]["language"] == "mysql") $return .= 'accept-charset="utf-8" ';
+	$return .= 'method="post" action="' . $_josh["request"]["path_query"] . '" onsubmit="javascript:return validate(this);"><tr valign="top">
 			<td class="left">' . drawName($_SESSION["user_id"], $_SESSION["full_name"], false, true) . '</td>
 			<td>' . draw_form_textarea("message", "", "mceEditor thread");
 	if ($showAdmin && $module_admin) {
@@ -330,11 +329,11 @@ function drawTop() {
 	global $_GET, $_SESSION, $_josh, $page, $module_admin, $location;
 	error_debug("starting top");
 	$title = $page["module"] . " > " . $page["name"];
-	url_header_utf8();
+	if ($_josh["db"]["language"] == "mysql") url_header_utf8();
 ?><html>
 	<?
 	echo draw_container("head",
-		draw_meta_utf8() . 
+		(($_josh["db"]["language"] == "mysql") ? draw_meta_utf8() : "") . 
 		draw_container("title", $title) .
 		draw_css_src("/styles/screen.css",	"screen") .
 		draw_css_src("/styles/print.css",	"print") .
