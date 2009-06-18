@@ -1,29 +1,33 @@
 <?php
 include("../include.php");
 
+$table = "objects";
+
+if ($posting) {
+	$id = db_save($table);
+	url_change();
+}
+
 echo drawTop();
 
-
-
-
-$result = db_table("SELECT id, title, updated_date FROM objects");
+$result = db_table("SELECT id, title, created_date FROM " . $table);
 
 $t = new table();
+$t->heading("Last 40 Objects");
 $t->col("title");
-$t->col("updated_date");
+$t->col("created_date", "r");
 
 foreach ($result as &$r) {
-	$r["updated_date"] = format_date($r["updated_date"]);
+	$r["title"] = draw_link("./?id=" . $r["id"], $r["title"]);
+	$r["created_date"] = format_date($r["created_date"]);
 }
 
 echo $t->draw($result, "no objects!");
 
-$f = new form("objects");
 
+$f = new form($table, true);
+$f->title();
 echo $f->draw();
-
-
-
 
 echo drawBottom();
 ?>

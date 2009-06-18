@@ -128,25 +128,96 @@ if (!$pageIsPublic) {
 error_debug("done processing include!");
 	
 	
-//custom functions & classes
+//OBSOLETE FUNCTIONS
+	function drawCheckboxText($chkname, $description) {
+		return draw_container("span", $description, array("class"=>"clickme", "onclick"=>"javascript:toggleCheckbox('$chkname');"));
+	}
+	
+	function drawDeleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
+		//if we're going to backend all the table stuff, then this should be incorporated somehow.  perhaps we will need to extend the class
+		global $module_admin, $_josh;
+		if ($adminOnly && !$module_admin) return false;
+		if (!$id) return '<td width="16">&nbsp;</td>';
+		return draw_tag("td", array("width"=>"16"), draw_img($_josh["write_folder"] . "/images/icons/delete.png", drawDeleteLink($prompt, $id, $action)));
+	}
+	
+	function drawDeleteLink($prompt="Are you sure?", $id=false, $action="delete", $index="id") {
+		global $_GET;
+		if (!$id && isset($_GET[$index])) $id = $_GET[$index];
+		$prompt = "'" . str_replace("'", '"', $prompt) . "'";
+		return "javascript:url_prompt('" . url_query_add(array("action"=>$action, $index=>$id), false) . "', " . $prompt . ");";
+	}
+	
+	function drawEmptyResult($text="None found.", $colspan=1) {
+		//todo ~ obsolete.  tables should use joshlib's table class
+		return draw_tag("tr", false, draw_tag("td", array("class"=>"empty", "colspan"=>$colspan), $text));
+	}
 
-function drawCheckboxText($chkname, $description) {
-	return draw_container("span", $description, array("class"=>"clickme", "onclick"=>"javascript:toggleCheckbox('$chkname');"));
-}
+	function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
+		global $_josh, $location, $modules, $page;
+		error_debug("drawing header row");
+		if (!$name) $name = $page["name"];
+		//urls are absolute because it could be used in an email
+		$header ='<tr>
+				<td class="head ' . $location . '" colspan="' . $colspan . '">
+					<div class="head-left">
+					';
+		if ($location != "login") {
+			$header .='<a  href="' . url_base() . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["title"] . '</a>';
+		}
+		if ($name) {
+			$header .=' &gt; ';
+			if ($_josh["request"]["subfolder"]) $header .= '<a href="' . url_base() . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
+			$header .= $name;
+		}
+		$header .= "</div>";
+		if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
+		if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
+		$header .='</td></tr>';
+		return $header;
+	}
+	
+	function drawNavigationRow($pages, $module=false, $pq=false) {
+		global $_josh, $location;
+		if (!$module) $module = $location;
+		$count = count($pages);
+		if ($count < 2) return false;
+		$return = '<table class="navigation ' . $module . '" cellspacing="1">
+			<tr class="' . $module . '-hilite">';
+		$cellwidth = round(100 / $count, 2);
+		$match = ($pq) ? $_josh["request"]["path_query"] : $_josh["request"]["path"];
+		//echo $match;  don't put url_base in match, if you can help it
+		foreach ($pages as $url=>$name) {
+			if (($url == $match) || ($url == url_base() . $match)) {
+				$cell = ' class="selected">' . $name . '';
+			} else {
+				$cell = '><a href="' . $url . '">' . $name . '</a>';
+			}
+			$return .= '<td width="' . $cellwidth . '%"' . $cell . '</td>';
+		}
+		return $return . '</tr>
+			</table>';
+	}
+		
+	function drawTableEnd() {
+		//todo ~ obsolete.  tables should use joshlib's table class
+		return '</table>';
+	}
+	
+	function drawTableStart() {
+		//todo ~ obsolete.  tables should use joshlib's table class
+		return '<table cellspacing="1" class="left">';
+	}
+	
 
-function drawDeleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
-	//if we're going to backend all the table stuff, then this should be incorporated somehow.  perhaps we will need to extend the class
-	global $module_admin, $_josh;
-	if ($adminOnly && !$module_admin) return false;
-	if (!$id) return '<td width="16">&nbsp;</td>';
-	return draw_tag("td", array("width"=>"16"), draw_img($_josh["write_folder"] . "/images/icons/delete.png", drawDeleteLink($prompt, $id, $action)));
-}
+//DRAW FUNCTIONS
 
-function drawDeleteLink($prompt="Are you sure?", $id=false, $action="delete", $index="id") {
-	global $_GET;
-	if (!$id && isset($_GET[$index])) $id = $_GET[$index];
-	$prompt = "'" . str_replace("'", '"', $prompt) . "'";
-	return "javascript:url_prompt('" . url_query_add(array("action"=>$action, $index=>$id), false) . "', " . $prompt . ");";
+function drawHeader($options=false) {
+	//this is the inner text in the colored 'headers' above each table
+	//the left side (module > page) is set through the page info
+	global $page, $location, $_josh;
+	$link = ($_josh["request"]["folder"] == "areas") ? "/areas/" . $_josh["request"]["subfolder"] . "/" : "/" . $_josh["request"]["folder"] . "/";
+	return draw_link($link, $page["module"]) . " > " . $page["name"];;
 }
 
 function drawEmailFooter() {
@@ -156,35 +227,6 @@ function drawEmailFooter() {
 
 function drawEmailHeader() {
 	return '<html><head>' . draw_css(file_get("/styles/screen.css")) . '</head><body class="email">';
-}
-
-function drawEmptyResult($text="None found.", $colspan=1) {
-	//todo ~ obsolete.  tables should use joshlib's table class
-	return draw_tag("tr", false, draw_tag("td", array("class"=>"empty", "colspan"=>$colspan), $text));
-}
-
-function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
-	global $_josh, $location, $modules, $page;
-	error_debug("drawing header row");
-	if (!$name) $name = $page["name"];
-	//urls are absolute because it could be used in an email
-	$header ='<tr>
-			<td class="head ' . $location . '" colspan="' . $colspan . '">
-				<div class="head-left">
-				';
-	if ($location != "login") {
-		$header .='<a  href="' . url_base() . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["title"] . '</a>';
-	}
-	if ($name) {
-		$header .=' &gt; ';
-		if ($_josh["request"]["subfolder"]) $header .= '<a href="' . url_base() . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
-		$header .= $name;
-	}
-	$header .= "</div>";
-	if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
-	if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
-	$header .='</td></tr>';
-	return $header;
 }
 
 function drawMessage($str, $align="left") {
@@ -207,41 +249,6 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator="<br
 	</table>';
 }
 
-function drawNavigation() {
-	global $_SESSION, $module_admin, $page, $location;
-	if (!$page["module_id"]) return false;
-	$pages	= array();
-	$admin	= ($module_admin) ? "" : "AND is_admin = 0";
-	$result	= db_query("SELECT name, url FROM pages WHERE module_id = {$page["module_id"]} {$admin} AND isInstancePage = 0 ORDER BY precedence");
-	while ($r = db_fetch($result)) {
-		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
-		if ($r["url"] != "/helpdesk/") $pages[$r["url"]] = $r["name"];
-	}
-	return drawNavigationRow($pages, $location);
-}
-
-function drawNavigationRow($pages, $module=false, $pq=false) {
-	global $_josh, $location;
-	if (!$module) $module = $location;
-	$count = count($pages);
-	if ($count < 2) return false;
-	$return = '<table class="navigation ' . $module . '" cellspacing="1">
-		<tr class="' . $module . '-hilite">';
-	$cellwidth = round(100 / $count, 2);
-	$match = ($pq) ? $_josh["request"]["path_query"] : $_josh["request"]["path"];
-	//echo $match;  don't put url_base in match, if you can help it
-	foreach ($pages as $url=>$name) {
-		if (($url == $match) || ($url == url_base() . $match)) {
-			$cell = ' class="selected">' . $name . '';
-		} else {
-			$cell = '><a href="' . $url . '">' . $name . '</a>';
-		}
-		$return .= '<td width="' . $cellwidth . '%"' . $cell . '</td>';
-	}
-	return $return . '</tr>
-		</table>';
-}
-	
 function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text="", $class=false) { 
 	global $_SESSION;
 	if (getOption("channels") && $_SESSION["channel_id"]) {
@@ -262,14 +269,17 @@ function drawSyndicateLink($name) {
 	return draw_rss_link($_josh["write_folder"] . '/syndicate/' . $name . '.xml');
 }
 
-function drawTableEnd() {
-	//todo ~ obsolete.  tables should use joshlib's table class
-	return '</table>';
-}
-
-function drawTableStart() {
-	//todo ~ obsolete.  tables should use joshlib's table class
-	return '<table cellspacing="1" class="left">';
+function drawNavigation() {
+	global $_SESSION, $module_admin, $page, $location;
+	if (!$page["module_id"]) return false;
+	$pages	= array();
+	$admin	= ($module_admin) ? "" : "AND is_admin = 0";
+	$result	= db_query("SELECT name, url FROM pages WHERE module_id = {$page["module_id"]} {$admin} AND isInstancePage = 0 ORDER BY precedence");
+	while ($r = db_fetch($result)) {
+		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
+		if ($r["url"] != "/helpdesk/") $pages[$r["url"]] = $r["name"];
+	}
+	return drawNavigationRow($pages, $location);
 }
 
 function drawThreadComment($content, $user_id, $fullname, $date, $module_admin=false) {
@@ -343,11 +353,12 @@ function drawTop() {
 		draw_javascript_src() .
 		draw_javascript("form_tinymce_init('/styles/tinymce.css');")
 	);
+	$class = ($page["module"]) ? $page["module"] : "unassigned";
 	?>
 	<body>
 		<div id="container">
 			<?=draw_div("banner", draw_img($_josh["write_folder"] . "/images/banner.png", $_SESSION["homepage"]))?>
-			<div id="left">
+			<div id="left" class="<?=$location?>">
 				<div id="help">
 				<a class="button left" href="<?=$_SESSION["homepage"]?>">Home</a>
 				<a class="button right" href="<?=url_query_add(array("action"=>"help"), false)?>">Show Help</a>
@@ -356,9 +367,9 @@ function drawTop() {
 					<a class="button right" href="/admin/pages/?id=<?=$page["id"]?>">Edit Page Info</a>
 				<? }?>
 				<div class="text">
-				<?
-				echo ($page["helpText"]) ? $page["helpText"] : "No help is available for this page.";
-				?>
+					<?
+					echo ($page["helpText"]) ? $page["helpText"] : "No help is available for this page.";
+					?>
 				</div>
 			<? }?>
 				</div>
@@ -508,7 +519,7 @@ function getOption($key) {
 
 function getPage() {
 	global $_josh;
-	if ($return = db_grab("SELECT p.id, p.name, p.helpText, p.is_admin, p.isSecure, m.id module_id, m.title module FROM pages p LEFT JOIN modules m ON p.module_id = m.id WHERE p.url = '{$_josh["request"]["path"]}'")) {
+	if ($return = db_grab("SELECT p.id, p.name, p.helpText, p.is_admin, m.id module_id, m.title module FROM pages p LEFT JOIN modules m ON p.module_id = m.id WHERE p.url = '{$_josh["request"]["path"]}'")) {
 		return $return;
 	} else {
 		error_debug("creating page");
