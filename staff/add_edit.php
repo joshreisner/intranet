@@ -59,6 +59,9 @@ if ($posting) {
 			}
 		}
 
+		//channels
+		if (getOption("channels")) db_checkboxes("channels", "users_to_channels", "user_id", "channel_id", $id);
+		
 		//check long distance code
 		if (($_josh["write_folder"] == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
 			if (!db_grab("SELECT longdistancecode FROM users WHERE id = " . $id)) {
@@ -166,7 +169,7 @@ $form->addRow("select", "Organization", "organization_id", "SELECT id, title fro
 if (getOption("staff_showdept")) $form->addRow("department", "Department", "departmentID", "", @$r["departmentID"]);
 if (getOption("staff_showoffice")) $form->addRow("select", "Location", "officeID", "SELECT id, name from offices order by name", @$r["officeID"], true);
 
-$form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 14);
+$form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 50);
 $form->addRow("textarea", "Bio", "bio", @$r["bio"]);
 
 if ($module_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)

@@ -13,9 +13,9 @@ echo drawTop();
 $result = db_table("SELECT id, title, created_date FROM " . $table);
 
 $t = new table();
-$t->heading("Last 40 Objects");
-$t->col("title");
-$t->col("created_date", "r");
+$t->set_title("Last 40 Objects");
+$t->set_column("title");
+$t->set_column("created_date", "r");
 
 foreach ($result as &$r) {
 	$r["title"] = draw_link("./?id=" . $r["id"], $r["title"]);
