@@ -69,7 +69,6 @@ if (db_found($topics)) {?>
 
 ?>
 </table>
-<a name="bottom"></a>
 <?
 $form = new intranet_form;
 if ($module_admin) {
