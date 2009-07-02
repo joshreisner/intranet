@@ -26,7 +26,7 @@ $categories = db_query("SELECT
 if (db_found($categories)) {?>
 	<tr>
 		<th></th>
-		<th>title</th>
+		<th>Document</th>
 		<th class="r">Updated</th>
 		<? if ($module_admin) {?><th></th><? }?>
 	</tr>

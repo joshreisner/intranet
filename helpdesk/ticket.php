@@ -91,7 +91,7 @@ drawTop();
 echo drawMessage($helpdeskStatus, "center");
 
 //populate dropdowns
-$timeSpentOptions = array(0=>0, 15=>15, 30=>30, 45=>45, 60=>60, 75=>75, 90=>90, 105=>105, 120=>"Two Hours", 180=>"Three Hours", 240=>"Four Hours", 300=>"Five Hours", 360=>"Six Hours", 420=>"Seven Hours", 480=>"Eight Hours", 540=>"Nine Hours", 600=>"10 Hours");
+$timeSpentOptions = array(0=>0, 15=>15, 30=>30, 45=>45, 60=>60, 75=>75, 90=>90, 105=>105, 120=>"Two Hours", 180=>"Three Hours", 240=>"Four Hours", 300=>"Five Hours", 360=>"Six Hours", 420=>"Seven Hours", 480=>"Eight Hours", 540=>"Nine Hours", 600=>"10 Hours", 660=>"11 Hours", 720=>"12 Hours", 780=>"13 Hours", 940=>"14 Hours", 1000=>"15 Hours", 1060=>"16 Hours");
 if (!$r["timeSpent"]) $r["timeSpent"] = 0;
 if (!isset($timeSpentOptions[$r["timeSpent"]])) {
 	$timeSpentOptions[$r["timeSpent"]] = $r["timeSpent"];

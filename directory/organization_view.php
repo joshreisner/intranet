@@ -1,4 +1,4 @@
-<?
+<?php
 include("../include.php");
 drawTop();
 
@@ -12,10 +12,10 @@ if (isset($_GET["id"])) {
 			o.phone,
 			o.hours,
 			o.zip,
-			o.lastupdatedOn,
-			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname lastupdated_user
+			o.updated_date,
+			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname updated_user
 		FROM web_organizations o
-		INNER JOIN users u ON o.lastUpdatedBy = u.id
+		JOIN users u ON o.updated_user = u.id
 		WHERE o.id = " . $_GET["id"]);
 } else {
 	$_GET["id"] = 0;
@@ -79,7 +79,7 @@ if (isset($_GET["id"])) {
 	</tr>
 	<tr valign="top">
 		<td class="left">Last Update</td>
-		<td><?=format_date($r["lastupdatedOn"])?> by <?=$r["lastupdated_user"]?></td>
+		<td><?=format_date($r["updated_date"])?> by <?=$r["updated_user"]?></td>
 	</tr>
 	</form>
 </table>

@@ -1,5 +1,5 @@
 body { background-color:#fff; margin:0px; text-align:center; }
-body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; }
+body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; }
 
 /*layout*/
 #container 		{ width:900px; margin:3px auto 30px auto; text-align:left; }
@@ -24,12 +24,18 @@ input.text				{ width:500px; height:26px; vertical-align:middle; }
 input.button   {
 	border:none;
 	background-color:#999;
-	color:#fff; width:200px;
-	padding:3px 20px 3px 20px;
+	color:#fff;
+	min-width:200px;
+	padding:0px 20px 2px 20px;
+	height:24px;
+	line-height:10px;
+	margin:0px;
 	font-size:12px;
 	text-transform:uppercase;
 	cursor:pointer;
 }
+input.button:hover { background-color:#bbb; }
+
 input.checkbox	{ border:none; padding:0px; margin:0px; background-color:transparent; }
 input.file		{ border:none; }
 textarea		{ width:500px; height:300px; }
@@ -289,21 +295,34 @@ table.table td.empty {
 	font-size:13px; 
 	color:#666; 
 }
+table.table ul.header { margin:0px; padding:0px; font-size:10px; line-height:18px; list-style-type:none; text-transform:uppercase; float:right; }
+table.table ul.header li { float:left; margin:0px 5px 0px 5px; }
 
+table.table th.title { font-size:28px; }
 table.table th.title a { color:#fff; }
-table.table th.title span { float:left; text-transform:uppercase; }
+table.table th.title span { float:left; }
 
 
 /*future form*/
 dl.form { line-height:28px; padding:0px; margin:1px 0px 14px 0px; width:600px; }
 
+
 dl.form dt { height:26px; background-color:#f0f0f0; width:80px; margin:-1px 0px 0px 0px; border:1px solid #ddd; float:left; clear:left; padding:3px; }
 dl.form dd { height:26px; background-color:#fff; width:499px; margin:-1px 0px 0px -1px; border:1px solid #ddd; float:left; padding:3px; }
+dl.form dd.title a { color:#fff; }
 
+dl.form dd.text { line-height:10px; }
 dl.form dt.textarea { height:307px; }
 dl.form dd.textarea { height:307px; }
+dl.form dt.checkboxes { height:307px; }
+dl.form dd.checkboxes { height:307px; }
+dl.form dd.checkboxes ul { margin:0px; padding:0px; list-style-type:none; }
+dl.form dd.checkboxes ul li { float:left; width:110px; }
+dl.form dd.checkboxes ul li span { font-size:10px; margin-left:3px; cursor:pointer; }
+dl.form dd.checkboxes ul li span:hover { background-color:#eee; }
+
 dl.form dd.title { width:585px; margin:-1px 0px 0px 0px; }
-dl.form dd.submit	{ width:586px; margin:-1px 0px 0px 0px; text-align:center; background-color:#f0f0f0; }
+dl.form dd.submit	{ line-height:26px; width:586px; margin:-1px 0px 0px 0px; text-align:center; background-color:#f0f0f0; }
 
 dl.form dd.title, table.table th.title { font-size:13px; height:19px; color:#fff; line-height:19px; padding-left:4px; }
 

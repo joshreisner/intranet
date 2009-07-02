@@ -215,9 +215,19 @@ error_debug("done processing include!");
 function drawHeader($options=false) {
 	//this is the inner text in the colored 'headers' above each table
 	//the left side (module > page) is set through the page info
+	//use within class table->set_title()
 	global $page, $location, $_josh;
+	
+	//big part to left
 	$link = ($_josh["request"]["folder"] == "areas") ? "/areas/" . $_josh["request"]["subfolder"] . "/" : "/" . $_josh["request"]["folder"] . "/";
-	return draw_link($link, $page["module"]) . " > " . $page["name"];;
+	$return = draw_container("span", draw_link($link, $page["module"]) . " > " . $page["name"]);
+
+	//$options must be an associative array
+	if ($options) $return .= draw_navigation($options, true, "text", "header");
+
+	return $return;	
+	
+	
 }
 
 function drawEmailFooter() {
@@ -858,6 +868,7 @@ function joshlib() {
 		"/Users/joshreisner/Sites/joshlib/index.php", //macbook
 		"/home/joshreisner/www/joshlib/joshlib/index.php" //icdsoft
 	);
+	if ($_SERVER["HTTP_HOST"] == "dev-intranet.seedco.org") $possibilities = array("D:\Sites\joshlib-dev\index.php");
 	foreach ($possibilities as $p) if (@include($p)) return $_josh;
 	die("Can't locate library! " . $_SERVER["DOCUMENT_ROOT"]);
 }
