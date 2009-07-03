@@ -44,12 +44,12 @@ drawTop();
 		<td class="left">Categories</td>
 		<td>
 			<? $categories = db_query("SELECT
-				c.description
+				c.title
 			FROM docs_to_categories d2c
 			JOIN docs_categories c ON d2c.categoryID = c.id
 			WHERE d2c.documentID = " . $_GET["id"]);
 				while ($c = db_fetch($categories)) {?>
-				 &#183; <?=$c["description"]?></a><br>
+				 &#183; <?=$c["title"]?></a><br>
 			<? }?>
 		</td>
 	</tr>
