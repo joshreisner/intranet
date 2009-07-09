@@ -55,7 +55,7 @@ $result = db_query("SELECT
 			u.endDate
 			FROM users u
 			LEFT JOIN departments d ON u.departmentID = d.departmentID
-			WHERE " . db_datediff("u.endDate", "GETDATE()") . " < 32 ORDER BY endDate DESC");
+			WHERE u.is_active = 0 AND " . db_datediff("u.endDate", "GETDATE()") . " < 32 ORDER BY endDate DESC");
 	echo drawHeaderRow("Goings", 4);
 	if (db_found($result)) {?>
 		<tr>
