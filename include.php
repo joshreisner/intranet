@@ -6,9 +6,6 @@ if (!isset($_SESSION["channel_id"])) $_SESSION["channel_id"] = false;
 if (!isset($_SESSION["language_id"])) $_SESSION["language_id"] = 1;
 if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
-//joshlib & localize
-$_josh["write_folder"]	= "/_" . str_replace("www.", "", $_SERVER["HTTP_HOST"]);
-$_josh["config"]		= $_josh["write_folder"] . "/config.php";
 extract(joshlib());
 
 //debug();
