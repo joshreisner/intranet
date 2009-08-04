@@ -34,7 +34,7 @@ if ($posting) {
 		//if new user, reset password, delete request, and send invite
 		if (!isset($_GET["id"])) {
 			//optional new staff alert message
-			if (getOption("staff_alertnew")) emailAdmins("<a href='" . url_base() . "/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet.", "Intranet: New Staff Added");
+			if (getOption("staff_alertnew")) emailAdmins(drawEmptyResult("<a href='" . url_base() . "/staff/view.php?id=" . $id . "'>" . $_POST["firstname"] . " " . $_POST["lastname"] . "</a> was just added to the Seedco Intranet."), "Intranet: New Staff Added");
 
 			//reset pass and delete request
 			db_query("UPDATE users SET password = PWDENCRYPT('') WHERE id = " . $id);

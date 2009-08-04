@@ -18,7 +18,7 @@ if (url_action("undelete")) { //undelete user
 	url_query_drop("action");
 }
 
-//url_query_require();
+url_query_require();
 
 $r = db_grab("SELECT 
 		u.firstname,

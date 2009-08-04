@@ -26,7 +26,7 @@ if ($posting) {
 			bio = '" . $_POST["bio"] . "',
 			created_date = GETDATE()
 		WHERE email = '" . $_POST["email"] . "'");
-		emailAdmins(drawEmptyResult($_POST["firstname"] . " " . $_POST["lastname"] . ' is <a href="http://' . $request["host"] . '/staff/add_edit.php?requestID=' . $id . '">re-requesting an account</a>.', "Repeat Account Request"));
+		emailAdmins(drawEmptyResult($_POST["firstname"] . " " . $_POST["lastname"] . ' is <a href="' . url_base() . '/staff/add_edit.php?requestID=' . $id . '">re-requesting an account</a>.'), "Repeat Account Request");
 	} else {
 		$id = db_query("INSERT INTO users_requests (
 			firstname, 
@@ -75,7 +75,7 @@ if ($posting) {
 				$message .= '<td>' . $value . '</td></tr>';
 			}
 		}
-		$message .= '<tr><td colspan="2" class="bottom"><a href="http://' . $request["host"] . '/staff/add_edit.php?requestID=' . $id . '">click here</a></td></tr>';
+		$message .= '<tr><td colspan="2" class="bottom"><a href="' . url_base() . '/staff/add_edit.php?requestID=' . $id . '">click here</a></td></tr>';
 
 		emailAdmins($message, "New User Request", 2);
 	}
