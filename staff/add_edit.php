@@ -16,14 +16,11 @@ if ($posting) {
 	if (!isset($_POST["is_admin"])) $_POST["is_admin"] = 0;
 	if (!isset($_POST["notify_topics"])) $_POST["notify_topics"] = 0;
 
-	//die(file_get_uploaded("userfile"));
 	if ($uploading) {
-		if ($_POST["image"] = format_image_resize(file_get_uploaded("userfile"), 270)) {
-			if (url_id()) {
-				file_delete($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-large.jpg");
-				file_delete($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-medium.jpg");
-				file_delete($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-small.jpg");
-			}
+		if ($content = file_get_uploaded("userfile")) {
+			$_POST["image_large"] = format_image_resize($content, 270);
+			$_POST["image_medium"] = format_image_resize($content, 135);
+			$_POST["image_small"] = format_image_resize($content, 50);
 		}
 	}
 
@@ -79,6 +76,11 @@ if ($posting) {
 		$_SESSION["update_days"] = $user["update_days"];
 	}
 
+	//overwrite images
+	file_dynamic('users', 'image_large', $id, 'jpg');
+	file_dynamic('users', 'image_medium', $id, 'jpg');
+	file_dynamic('users', 'image_small', $id, 'jpg');
+	
 	url_change("view.php?id=" . $id);
 }
 

@@ -11,10 +11,10 @@ if ($posting) {
 	//notification
 	if ($_POST["is_admin"] == "1") {
 		//get addresses of everyone & send with message
-		emailUsers(db_array("SELECT email FROM users WHERE is_active = 1"), $_POST["title"], bbDrawTopic($id), 2, getString("bb_admin"));
+		//emailUsers(db_array("SELECT email FROM users WHERE is_active = 1"), $_POST["title"], bbDrawTopic($id), 2, getString("bb_admin"));
 	} elseif (getOption("bb_notifypost")) {
 		//get addresses of everyone with notify_topics checked and send
-		emailUsers(db_array("SELECT email FROM users WHERE is_active = 1 AND notify_topics = 1"), $_POST["title"], bbDrawTopic($id), 2);
+		//emailUsers(db_array("SELECT email FROM users WHERE is_active = 1 AND notify_topics = 1"), $_POST["title"], bbDrawTopic($id), 2);
 	}
 	
 	bbDrawRss();

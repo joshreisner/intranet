@@ -77,9 +77,8 @@ $r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations
 if (!isset($r["is_active"])) url_change("./");
 
 drawTop();
-verifyImage($_GET["id"]);
 
-if (!$img = draw_img($_josh["write_folder"] . "/staff/" . $_GET["id"] . "-large.jpg")) $img = draw_img($_josh["write_folder"] . "/images/to-be-taken.png");
+if (!$img = draw_img($_josh["write_folder"] . "/dynamic/users-image_large-" . $_GET["id"] . ".jpg")) $img = draw_img($_josh["write_folder"] . "/images/to-be-taken.png");
 
 echo drawJumpToStaff($_GET["id"]);
 

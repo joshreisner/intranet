@@ -16,7 +16,7 @@ if ($posting) {
 		//get followup poster emails
 		$emails = array_merge($emails, db_array("SELECT u.email FROM bb_followups f JOIN users u ON u.id = f.created_user WHERE f.is_active = 1 AND f.topic_id = " . $_POST["topic_id"]));
 
-		emailUsers($emails, "Followup on Bulletin Board Post", bbDrawTopic($_GET["id"]), 2, $message);
+		//emailUsers($emails, "Followup on Bulletin Board Post", bbDrawTopic($_GET["id"]), 2, $message);
 	}
 		
 	bbDrawRss();

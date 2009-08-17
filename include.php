@@ -8,6 +8,9 @@ if (!isset($pageIsPublic)) $pageIsPublic = false;
 	
 extract(joshlib());
 
+//include options file if it exists
+@include($_josh['root'] . $_josh['write_folder'] . '/options.php');
+
 //debug();
 
 //apply security
@@ -135,7 +138,7 @@ error_debug("done processing include!");
 		global $module_admin, $_josh;
 		if ($adminOnly && !$module_admin) return false;
 		if (!$id) return '<td width="16">&nbsp;</td>';
-		return draw_tag("td", array("width"=>"16"), draw_img($_josh["write_folder"] . "/images/icons/delete.png", drawDeleteLink($prompt, $id, $action)));
+		return draw_tag("td", array("width"=>"16"), draw_img("/images/icons/delete.png", drawDeleteLink($prompt, $id, $action)));
 	}
 	
 	function drawDeleteLink($prompt="Are you sure?", $id=false, $action="delete", $index="id") {
@@ -245,8 +248,7 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator="<br
 	global $_josh;
 	$base = url_base();
 	$date = ($date) ? format_date_time($date, "", $separator) : false;
-	$img  = draw_img($_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg", $base . "/staff/view.php?id=" . $user_id);		
-	verifyImage($user_id);
+	$img  = draw_img($_josh["write_folder"] . "/dynamic/users-image_small-" . $user_id . ".jpg", $base . "/staff/view.php?id=" . $user_id);		
 	return '
 	<table cellpadding="0" cellspacing="0" border="0" width="144">
 		<tr valign="top" style="background-color:transparent;">
@@ -273,7 +275,7 @@ function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $l
 
 function drawSyndicateLink($name) {
 	global $_josh;
-	return draw_rss_link($_josh["write_folder"] . '/syndicate/' . $name . '.xml');
+	return draw_rss_link($_josh["write_folder"] . '/rss/' . $name . '.xml');
 }
 
 function drawNavigation() {
@@ -355,7 +357,7 @@ function drawTop() {
 		draw_css_src("/styles/screen.css",	"screen") .
 		draw_css_src("/styles/print.css",	"print") .
 		draw_css_src("/styles/ie.css",		"ie") .
-		draw_javascript_src($_josh["write_folder"] . "/tinymce/jscripts/tiny_mce/tiny_mce.js") .
+		draw_javascript_src($_josh["write_folder"] . "/lib/tiny_mce/tiny_mce.js") .
 		draw_javascript_src("/javascript.js") .
 		draw_javascript_src() .
 		draw_javascript("form_tinymce_init('/styles/tinymce.css');")
@@ -364,7 +366,7 @@ function drawTop() {
 	?>
 	<body>
 		<div id="container">
-			<?=draw_div("banner", draw_img($_josh["write_folder"] . "/images/banner.png", $_SESSION["homepage"]))?>
+			<?=draw_div("banner", draw_img($_josh["write_folder"] . "/banner.png", $_SESSION["homepage"]))?>
 			<div id="left" class="<?=$location?>">
 				<div id="help">
 				<a class="button left" href="<?=$_SESSION["homepage"]?>">Home</a>
@@ -820,7 +822,7 @@ function login($username, $password, $skippass=false) {
 		$_SESSION["updated_date"]	= $user["updated_date"];
 		$_SESSION["password"]		= $user["password"];
 		$_SESSION["full_name"]		= $user["firstname"] . " " . $user["lastname"];
-		
+		$_SESSION['isLoggedIn']		= true;
 		cookie("last_login", $user["email"]);
 		cookie("last_email", $user["email"]);
 		
@@ -836,21 +838,6 @@ function updateInstanceWords($id, $text) {
 	if (count($words)) {
 		$text = implode("|", $words);
 		db_query("index_intranet_instance $id, '$text'");
-	}
-}
-
-function verifyImage($user_id) {
-	//this doesn't appear to be very fast.
-	global $_josh;
-	$large	= $_josh["write_folder"] . "/staff/" . $user_id . "-large.jpg";
-	$medium = $_josh["write_folder"] . "/staff/" . $user_id . "-medium.jpg";
-	$small	= $_josh["write_folder"] . "/staff/" . $user_id . "-small.jpg";
-	if (!file_is($large) || !file_is($medium) || !file_is($small)) {
-		if ($image = db_grab("SELECT image FROM users WHERE id = " . $user_id)) {
-			file_put($large, $image);
-			file_put($medium, format_image_resize($image, 135));
-			file_put($small, format_image_resize($image, 50));
-		}
 	}
 }
 

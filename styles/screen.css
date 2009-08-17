@@ -213,8 +213,10 @@ table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
 table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
 
 table.left td.text { width:500px; padding:10px; font-size:12px; line-height:20px; }
-table.left td.text div.text { position:relative; min-height:160px; height:auto; }
+table.left td.text div.text { position:relative; min-height:160px; height:auto; padding-bottom:60px; }
 table.left td.text span.caption { position:absolute; margin-top:20px; bottom:0px; left:0px; display:block; font-size:12px; line-height:17px; }
+.light { color:#999; }
+.light a { color:#6699cc; }
 
 table.left tr.admin { background-color:#fffce0; }
 table.left tr.thread { height:32px; vertical-align:middle; font-size:13px; }

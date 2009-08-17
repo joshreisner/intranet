@@ -164,7 +164,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 	<tr>
 		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["created_date"], true) . '</td>
 		<td colspan="3"><a href="ticket.php?id=' . $r["id"] . '"><b>' . $r["title"] . '</b></a></td>
-		<td rowspan="2">' . draw_img($_josh["write_folder"] . "images/icons/delete.png", drawDeleteLink("Delete this ticket?", $r["id"], "delete", "ticketID")) . '</td>
+		<td rowspan="2">' . draw_img("/images/icons/delete.png", drawDeleteLink("Delete this ticket?", $r["id"], "delete", "ticketID")) . '</td>
 	</tr>
 	<tr>';
 	$t = array("ticketID"=>$r["id"]);

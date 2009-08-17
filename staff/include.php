@@ -90,7 +90,6 @@ function drawStaffRow($r, $searchterms=false) {
 	}
 
 	$return  = '<tr height="38">';
-	verifyImage($r["id"]);
 	$return .= '<td width="50">' . draw_img($_josh["write_folder"] . '/staff/' . $r["id"] . '-small.jpg', '/staff/view.php?id=' . $r["id"]) . '</td>';
 	$return .= '<td><nobr><a href="view.php?id=' . $r["id"] . '">' . $r["lastname"] . ', ' . $r["firstname"] . '</a>';
 	if (!$r["isMain"]) $return .= "<br>" . $r["office"];
@@ -99,7 +98,7 @@ function drawStaffRow($r, $searchterms=false) {
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
 	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
 	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
-	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="' . $_josh["write_folder"] . '/images/icons/delete.png" width="16" height="16" border="0"></td>';
+	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="/images/icons/delete.png" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

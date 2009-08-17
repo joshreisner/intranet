@@ -27,7 +27,6 @@ echo drawJumpToStaff();
 		while ($s = db_fetch($staff)) {?>
 		<tr>
 			<td width="135" height="60" align="center" style="padding:0px;"><?
-				verifyImage($s["id"]);
 				echo draw_img($_josh["write_folder"] . "/staff/" . $s["id"] . "-medium.jpg", "/staff/view.php?id=" . $s["id"]);
 				?></td>
 			<td class="text">
@@ -64,9 +63,7 @@ $result = db_query("SELECT
 			<th width="50%">Title, Department</th>
 			<th width="20%" class="r">Day Removed</th>
 		</tr>
-		<? while ($r = db_fetch($result)) {
-			verifyImage($r["id"]);
-		?>
+		<? while ($r = db_fetch($result)) {?>
 		<tr bgcolor="#FFFFFF" class="helptext" valign="top" height="38">
 			<td align="center"><?=draw_img($_josh["write_folder"] . '/staff/' . $r["id"] . '-small.jpg', "/staff/view.php?id=" . $r["id"])?></a></td>
 			<td><a href="/staff/view.php?id=<?=$r["id"]?>"><?=$r["first"]?> <?=$r["last"]?></a></td>

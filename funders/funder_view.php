@@ -153,7 +153,7 @@ while ($rsa = db_fetch($result_award_statuses)) {
 		<td><nobr><?=$ra["awardTypeDesc"]?></nobr></td>
 		<td align="right"><?=format_date($ra["reportDate"], false, "", "")?></td>
 		<td align="right">$<?=number_format($ra["awardAmount"])?></td>
-		<td width="16"><a href="javascript:deleteAward(<?=$ra["awardID"]?>);"><img src="<?=$_josh["write_folder"]?>/images/icons/delete.png" width="16" height="16" border="0"></a></td>
+		<td width="16"><a href="javascript:deleteAward(<?=$ra["awardID"]?>);"><img src="/images/icons/delete.png" width="16" height="16" border="0"></a></td>
 	</tr>
 	<? }?>
 	<tr class="total">
