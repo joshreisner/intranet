@@ -1,3 +1,22 @@
+function showHelp(id, value) {
+	ajax_set('users', 'help', id, value);
+}
+
+function set_users_help(value) {
+	//value has already been set to this
+	if (value == 0) {
+		new Effect.BlindUp("helptext");
+		document.getElementById("showhelp").innerHTML = 'Show Help';
+		document.getElementById("showhelp").href = "javascript:ajax_set('users','help','session',1);";
+	} else if (value == 1) {
+		new Effect.BlindDown("helptext");
+		document.getElementById("showhelp").innerHTML = 'Hide Help';
+		document.getElementById("showhelp").href = "javascript:ajax_set('users','help','session',0);";
+	} else {
+		alert(value);
+	}
+}
+
 function aOver(objID) {
 	document.getElementById(objID).className = 'over';
 }

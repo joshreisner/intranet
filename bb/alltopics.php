@@ -21,10 +21,10 @@ $topics = db_query("SELECT
 	ORDER BY t.thread_date DESC");
 if (db_found($topics)) {?>
 	<tr>
-		<th align="left" width="320">Topic</td>
-		<th align="left" width="120">Starter</td>
-		<th>Replies</td>
-		<th align="right">Last Post</td>
+		<th width="320">Topic</th>
+		<th width="120">Starter</th>
+		<th class="c">Replies</th>
+		<th class="r">Last Post</th>
 	</tr>
 	<?
 	while ($r = db_fetch($topics)) {?>

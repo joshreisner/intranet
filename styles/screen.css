@@ -55,14 +55,20 @@ a:hover, a.over	{ color:#d8282d;  text-decoration:underline; }
 		border:1px solid #bbb;
 		background-color:#ededed;
 		width:570px;
-		min-height:18px;
-		font-size:12px;
-		line-height:20px;
-		padding:9px 11px 6px 11px;
+		min-height:22px;
+		padding:9px 11px 0px 11px;
 		margin-bottom:14px;
 	}
-	#help div.text { padding:13px 0px 16px 0px; clear:both;  }
-	a.floating { top:-20px; margin:-42px -8px 0px 0px;  }
+	
+	#helptext {
+		
+		font-size:12px;
+		line-height:20px;
+		clear:both;
+	}
+	
+	#helptext p { padding:0px; margin:0px 0px 10px 0px; }
+	#help a { margin-bottom:14px; }
 	
 	a.left { float:left; margin-right:5px; }
 	a.right { float:right; margin-left:5px; }
