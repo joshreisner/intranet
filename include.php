@@ -15,24 +15,24 @@ extract(joshlib());
 
 //apply security
 if (!isset($pageIsPublic) || !$pageIsPublic) {
-	error_debug('page is not public');
+	error_debug('page is not public', __file__, __line__);
 	if (!$_SESSION['user_id']) {
-		error_debug('user_id session not set');
+		error_debug('user_id session not set', __file__, __line__);
 		if (!login(@$_COOKIE['last_login'], '', true)) {
-			error_debug('could not log in with ' . @$_COOKIE['last_login'] . ', redirecting');
+			error_debug('could not log in with ' . @$_COOKIE['last_login'] . ', redirecting', __file__, __line__);
 			url_change('/?goto=' . urlencode($_josh['request']['path_query']));
 		}
 	} 
 	
 	//determine location & scenario
-	error_debug('user is logged in, determining location & scenario');
+	error_debug('user is logged in, determining location & scenario', __file__, __line__);
 	$page		= getPage();
 	$location	= (($request['folder'] == 'bb') || ($request['folder'] == 'cal') || ($request['folder'] == 'docs') || ($request['folder'] == 'staff') || ($request['folder'] == 'helpdesk') || ($request['folder'] == 'contacts') || ($request['folder'] == 'external-orgs') || ($request['folder'] == 'press-clips')) ? $request['folder'] : 'areas';
 
 	$user = db_grab('SELECT id, help FROM users WHERE id = ' . $_SESSION['user_id']);
 
 	//get modules info
-	error_debug('getting modules');
+	error_debug('getting modules', __file__, __line__);
 	$result = db_query('SELECT 
 			m.id,
 			p.url,
@@ -71,19 +71,19 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	}
 	
 	//check to see if user needs update ~ todo make this a preference
-	error_debug('checking if user needs update');
+	error_debug('checking if user needs update', __file__, __line__);
 	if (($_SESSION['update_days'] > 90 || empty($_SESSION['updated_date'])) && ($_josh['request']['path'] != '/staff/add_edit.php')) {
-		error_debug('user needs address update');
+		error_debug('user needs address update', __file__, __line__);
 		url_change('/staff/add_edit.php?id=' . $_SESSION['user_id']);
 	} elseif ($_SESSION['password'] && ($_josh['request']['path'] != '/login/password_update.php') && ($_josh['request']['path'] != '/staff/add_edit.php')) {
-		error_debug('user needs password update');
+		error_debug('user needs password update', __file__, __line__);
 		url_change('/login/password_update.php');
 	}		
 
 	//special pages that don't belong to a module still need info
 	if (!isset($page['module_id'])) $page['module_id'] = 0;
 	if (!isset($modules[$page['module_id']])) {
-		error_debug('unspecified module');
+		error_debug('unspecified module', __file__, __line__);
 		$modules[$page['module_id']]['pallet']		= false;
 		$modules[$page['module_id']]['isPublic']	= false;
 		$modules[$page['module_id']]['pallet']		= false;
@@ -92,7 +92,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	}
 
 	//get helpdesk pallet info
-	error_debug('getting helpdesk pallet info');
+	error_debug('getting helpdesk pallet info', __file__, __line__);
 	$helpdeskOptions = db_table('SELECT 
 			d.departmentID id, 
 			d.shortName name, 
@@ -123,7 +123,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 }
 
 //done!
-error_debug('done processing include!');
+error_debug('done processing include!', __file__, __line__);
 	
 
 //obsolete functions
@@ -264,7 +264,7 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 
 function drawTop() {
 	global $_GET, $_SESSION, $_josh, $page, $module_admin, $location, $user;
-	error_debug('starting top');
+	error_debug('starting top', __file__, __line__);
 	$title = $page['module'] . ' > ' . $page['name'];
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
 ?><html>
@@ -300,7 +300,7 @@ function drawTop() {
 	if ($location == 'helpdesk') echo drawNavigationHelpdesk();
 	echo drawNavigation();
 	$_josh['drawn']['top'] = true;
-	error_debug('finished drawing top');
+	error_debug('finished drawing top', __file__, __line__);
 }
 
 //it's convention to put this right below drawTop()
@@ -448,7 +448,7 @@ function getPage() {
 	if ($return = db_grab('SELECT p.id, p.name, p.helpText, p.is_admin, m.id module_id, m.title module FROM pages p LEFT JOIN modules m ON p.module_id = m.id WHERE p.url = \'' . $_josh['request']['path'] . '\'')) {
 		return $return;
 	} else {
-		error_debug('creating page');
+		error_debug('creating page', __file__, __line__);
 		db_query('INSERT INTO pages ( url, name ) VALUES ( \'' . $_josh['request']['path'] . '\', \'Untitled Page\' )');
 		return getPage();
 	}
@@ -474,10 +474,10 @@ function login($username, $password, $skippass=false) {
 	//need id, fullname, email departmentid, ishelpdesk, homepage, update_days, updated_on, first
 	if ($skippass) {
 		$where = '';
-		error_debug('<b>login</b> running without password');
+		error_debug('<b>login</b> running without password', __file__, __line__);
     } else {
 		$where = ' AND ' . db_pwdcompare($password, 'u.password') . ' = 1';
-		error_debug('<b>login</b> running with password');
+		error_debug('<b>login</b> running with password', __file__, __line__);
     }
 
 		if ($user = db_grab('SELECT 

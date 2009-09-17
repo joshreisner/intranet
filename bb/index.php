@@ -2,7 +2,7 @@
 include("include.php");
 
 if ($posting) {
-	error_debug("handling bb post");
+	error_debug("handling bb post", __file__, __line__);
 	format_post_bits("is_admin");
 	$id = db_save("bb_topics");
 	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $id);
@@ -26,7 +26,7 @@ echo draw_autorefresh(5);
 echo drawSyndicateLink("bb");
 echo drawTableStart();
 echo drawHeaderRow("", 4, "new", "#bottom");
-error_debug("get bb topix");
+error_debug("get bb topix", __file__, __line__);
 
 $where = "WHERE t.is_active = 1";
 if (getOption("channels") && $_SESSION["channel_id"]) $where = "JOIN bb_topics_to_channels t2c ON t.id = t2c.topic_id WHERE t.is_active = 1 AND t2c.channel_id = " . $_SESSION["channel_id"];

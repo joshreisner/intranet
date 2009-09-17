@@ -3,20 +3,20 @@ $pageIsPublic = true;
 include("include.php");
 $redirect = false;
 if (url_action("logout")) {
-	error_debug("<b>index.php</b> Logging Out");
+	error_debug("<b>index.php</b> Logging Out", __file__, __line__);
 	cookie("last_login");
 	$_SESSION["user_id"] = false;
 	$redirect = "/";
 } elseif (login(@$_COOKIE["last_login"], "", true)) { //log in with last login
-	error_debug("<b>index.php</b> Cookie Found (good)");
+	error_debug("<b>index.php</b> Cookie Found (good)", __file__, __line__);
 	$redirect = (empty($_GET["goto"])) ? $_SESSION["homepage"] : $_GET["goto"];
 } elseif ($posting) { //logging in
-	error_debug("<b>index.php</b> Posting");
+	error_debug("<b>index.php</b> Posting", __file__, __line__);
 	if (login($_POST["email"], $_POST["password"])) {
-		error_debug("<b>index.php</b> Login successful");
+		error_debug("<b>index.php</b> Login successful", __file__, __line__);
 		$redirect = (empty($_POST["goto"])) ? $_SESSION["homepage"] : $_POST["goto"];
    	} else {
-		error_debug("<b>index.php</b> Login unsuccessful");
+		error_debug("<b>index.php</b> Login unsuccessful", __file__, __line__);
 		$redirect = "/";
     }
 }

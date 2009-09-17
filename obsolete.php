@@ -25,7 +25,7 @@ function drawEmptyResult($text="None found.", $colspan=1) {
 
 function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
 	global $_josh, $location, $modules, $page;
-	error_debug("drawing header row");
+	error_debug("drawing header row", __file__, __line__);
 	if (!$name) $name = $page["name"];
 	//urls are absolute because it could be used in an email
 	$header ='<tr>

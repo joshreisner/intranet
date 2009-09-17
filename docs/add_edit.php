@@ -3,7 +3,7 @@ include("../include.php");
 
 if ($posting) {
 	//debug();
-	error_debug("user is posting");
+	error_debug("user is posting", __file__, __line__);
 	if ($uploading) list($_POST["content"], $_POST["type_id"]) = file_get_uploaded("userfile", "docs_types");
 	$id = db_save("docs");
 	db_checkboxes("docs", "docs_to_categories", "documentID", "categoryID", $id);
