@@ -8,7 +8,7 @@ if (url_action('delete')) {
 
 echo drawTop();
 
-$t = new table('jr_members_inst', 'Institutional Members');
+$t = new table('jr_members_inst', 'Institutional Members<a class="right s" href="edit/">add new</a>');
 $t->set_column('is_selected', 'd', '&nbsp;');
 $t->set_column('name');
 $t->set_column('updated', 'r');
