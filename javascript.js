@@ -1,3 +1,9 @@
+function confirmDelete(id) {
+	if (confirm('Are you sure?')) {
+		location.href = location.href + '?action=delete&id=' + id;
+	}
+}
+
 function showHelp(id, value) {
 	ajax_set('users', 'help', id, value);
 }

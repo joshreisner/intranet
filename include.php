@@ -362,6 +362,10 @@ function drawBottom() {
 
 //email functions
 
+function deleteColumn($id) {
+	return '<a href="javascript:confirmDelete(' . $id . ');"><img src="/images/icons/delete.png" alt="delete" width="16" height="16" border="0"/></a>';
+}
+
 function emailAdmins($message, $subject, $colspan=1) {
 	return emailUsers(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message, $colspan);
 }
