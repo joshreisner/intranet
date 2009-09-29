@@ -134,7 +134,7 @@ if (isset($_GET["id"])) {
 				<td width="25"><?=draw_form_checkbox("chkl_" . $_GET["id"] . "_" . $l["id"], $l["checked"])?></td>
 				<td><?=$l["name"]?></td>
 			</tr>
-			<?}?>
+			<? }?>
 			</table>
 		</td>
 	</tr>
