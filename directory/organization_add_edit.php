@@ -10,8 +10,8 @@ if ($posting) {
 						phone = '{$_POST["phone"]}',
 						hours = '{$_POST["hours"]}',
 						zip = '{$_POST["zip"]}',
-						lastupdated_date = GETDATE(),
-						lastupdated_user = {$_SESSION["user_id"]}
+						updated_date = GETDATE(),
+						updated_user = {$_SESSION["user_id"]}
 				  WHERE id = " . $_GET["id"]);
 		db_query("DELETE FROM web_organizations_2_services  WHERE organizationID = " . $_GET["id"]);
 		db_query("DELETE FROM web_organizations_2_languages WHERE organizationID = " . $_GET["id"]);
@@ -23,8 +23,8 @@ if ($posting) {
 						phone,
 						hours,
 						zip,
-						lastupdated_date,
-						lastupdated_user
+						updated_date,
+						updated_user
 					) VALUES (
 						'{$_POST["name"]}',
 						'{$_POST["address1"]}',
