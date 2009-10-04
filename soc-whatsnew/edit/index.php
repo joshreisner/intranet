@@ -8,8 +8,8 @@ if ($posting) {
 
 echo drawTop();
 
-$f = new form('soc_whatsnew', @$_GET['id'], 'Edit News Item');
-$f->set_title_prefix(draw_link('../', 'What\'s New') . ' &gt; ');
+$f = new form('soc_whatsnew', @$_GET['id'], $page['name']);
+$f->set_title_prefix(drawPageName(' '));
 echo $f->draw();
 
 echo drawBottom();

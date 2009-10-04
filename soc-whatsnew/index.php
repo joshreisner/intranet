@@ -8,7 +8,7 @@ if (url_action('delete')) {
 
 echo drawTop();
 
-$t = new table('soc_whatsnew', 'What\'s New<a class="right s" href="edit/">add new</a>');
+$t = new table('soc_whatsnew', drawPageName() . '<a class="right s" href="edit/">add new</a>');
 $t->set_column('draggy', 'd', '&nbsp;');
 $t->set_column('title');
 $t->set_column('updated', 'r');

@@ -87,7 +87,7 @@ div.message {
 }
 
 
-/* colors */
+/* main colors */
 #left.areas table.table th.title, #left.areas form fieldset legend, #left.areas table.navigation, #right table.areas td.head									{ background-color:#d8282d; }
 #left.bb table.table th.title, #left.bb form fieldset legend, #left.bb table.navigation, #right table.bb td.head												{ background-color:#336633; }
 #left.cal table.table th.title, #left.cal form fieldset legend, #left.cal table.navigation, #right table.cal td.head											{ background-color:#336699; }
@@ -98,15 +98,17 @@ div.message {
 #left.press-clips table.table th.title, #left.press-clips form fieldset legend, #left.press-clips table.navigation, #right table.press-clips td.head			{ background-color:#3398bb; }
 #left.staff table.table th.title, #left.staff form fieldset legend, #left.staff table.navigation, #right table.staff td.head									{ background-color:#666666; }
 
-#left.areas table.navigation tr			{ background-color:#ffdddd; }
-#left.bb table.navigation tr			{ background-color:#ddeedd; }
-#left.docs table.navigation tr			{ background-color:#e8dae8; }
-#left.staff table.navigation tr			{ background-color:#e6e6e6; }
-#left.cal table.navigation tr			{ background-color:#ddeeff; }
-#left.press-clips table.navigation tr	{ background-color:#c3d8e5; }
-#left.contacts table.navigation tr		{ background-color:#e6e6e6; }
-#left.helpdesk table.navigation tr		{ background-color:#efdfcf; }
-#left.external-orgs table.navigation tr	{ background-color:#efdfcf; }
+
+/* hilite colors */
+#left.areas table.navigation tr, #left.contacts form fieldset div.admin			{ background-color:#ffdddd; }
+#left.bb table.navigation tr, #left.bb form fieldset div.admin			{ background-color:#ddeedd; }
+#left.docs table.navigation tr, #left.docs form fieldset div.admin			{ background-color:#e8dae8; }
+#left.staff table.navigation tr, #left.staff form fieldset div.admin			{ background-color:#e6e6e6; }
+#left.cal table.navigation tr, #left.cal form fieldset div.admin			{ background-color:#ddeeff; }
+#left.press-clips table.navigation tr, #left.press-clips form fieldset div.admin	{ background-color:#c3d8e5; }
+#left.contacts table.navigation tr, #left.contacts form fieldset div.admin		{ background-color:#e6e6e6; }
+#left.helpdesk table.navigation tr, #left.helpdesk form fieldset div.admin		{ background-color:#efdfcf; }
+#left.external-orgs table.navigation, #left.external-orgs form fieldset div.admin tr	{ background-color:#efdfcf; }
 
 
 /* navigation */
@@ -138,7 +140,9 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #left table.table tr.thread:hover { background-color:#f4f4f4; cursor:pointer; }
 #left table.table tr.thread:hover a { text-decoration:underline; color:#d8282d; }
 
-#left table.table div.dropmarker {
+#left table.table tr.total { background-color:#f0f0f0; color:#999; }
+	
+div.dropmarker {
 	height:2px;
 	background-color:black;
 	width:594px;
@@ -157,9 +161,12 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #left form fieldset div.field label { line-height:26px; width:100px; display:block; float:left; }
 #left form fieldset div.field input.text { width:486px; }
 #left form fieldset div.field input.checkbox { margin-right:7px; }
-#left form fieldset div.checkbox { padding-top:10px; }
+#left form fieldset div.checkbox { height:18px; line-height:18px; overflow-y:hidden; }
 #left form fieldset div.checkbox span.additional:hover { cursor:pointer; }
-#left form fieldset div.field textarea { width:486px; height:300px; }
+#left form fieldset div.checkboxes ul { overflow:auto; margin:0px; padding:0px; }
+#left form fieldset div.checkboxes li { display:block; width:140px; float:left; margin:2px; }
+#left form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
+#left form fieldset div.field textarea { width:486px; height:280px; }
 #left form fieldset div.field select { background-color:#fff; border:1px solid #ccc; height:26px; }
 #left form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
@@ -188,7 +195,7 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #right table tr { background-color:#fff; }
 #right table tr.admin { background-color:#fffce0; }
 #right table td { padding:4px 3px 4px 3px; }
-#right table td.head { vertical-align:middle; height:13px; font-size:13px; color:#fff; line-height:15px; }
+#right table td.head { vertical-align:middle; height:13px; font-size:12px; color:#fff; line-height:18px; }
 #right table td.head a { color:#fff; }
 #right table td.head img { float:right; margin:2px; }
 #right table td.empty { text-align:center; background-color:#eee; height:50px; color:#777; }

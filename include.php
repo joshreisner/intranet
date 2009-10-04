@@ -206,6 +206,13 @@ function drawNavigation() {
 		</table>';
 }
 
+function drawPageName($title=false) {
+	//get the page for the header
+	global $page;
+	if (!$title) $title = $page['name'];
+	return draw_link($page['url'], $page['module']) . ' &gt; ' . $title;	
+}
+
 function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text='', $class=false) { 
 	global $_SESSION;
 	if (getOption('channels') && $_SESSION['channel_id']) {
@@ -465,7 +472,18 @@ function getOption($key) {
 
 function getPage() {
 	global $_josh;
-	if ($return = db_grab('SELECT p.id, p.name, p.helpText, p.is_admin, m.id module_id, m.title module FROM pages p LEFT JOIN modules m ON p.module_id = m.id WHERE p.url = \'' . $_josh['request']['path'] . '\'')) {
+	if ($return = db_grab('SELECT 
+			p.id, 
+			p.name, 
+			p.helpText, 
+			p.is_admin, 
+			m.id module_id, 
+			m.title module, 
+			p2.url 
+		FROM pages p 
+		LEFT JOIN modules m ON p.module_id = m.id 
+		LEFT JOIN pages p2 ON m.homePageID = p2.id
+		WHERE p.url = \'' . $_josh['request']['path'] . '\'')) {
 		return $return;
 	} else {
 		error_debug('creating page', __file__, __line__);

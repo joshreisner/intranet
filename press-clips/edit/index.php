@@ -1,5 +1,6 @@
 <?
 $included = !@include("../../include.php");
+$r = false;
 if ($posting) {
 	$id = db_save("press_clips");
 	url_change_post("/press-clips/clip.php?id=" . $id);
@@ -40,23 +41,8 @@ if ($posting) {
 //to control return_to redirects.  i'm not sure how i should handle this generally.  it's a problem mainly when the page is included
 if ($referrer && ($referrer["host"] == $request["host"])) $_josh["referrer"] = false;
 
-$form = new intranet_form;
-$form->addRow("itext",  "Title", "title", @$r["title"], "", true, 255);
-$form->addRow("itext",  "URL", "url", @$r["url"], "", true, 255);
-$form->addJavascript("form.url.value == 'http://'", "the 'URL' field is empty");
-$form->addRow("itext",  "Publication", "publication", @$r["publication"], "", true, 255);
-$form->addRow("select",  "Type", "type_id", "SELECT id, title FROM press_clips_types", @$r["type_id"], true);
-$form->addRow("date",  "Date", "pub_date", @$r["pub_date"], "", true);
-$form->addRow("textarea", "Description", "description", @$r["description"], "", true);
-if ($included) {
-	//we are on the index page
-	$form->addRow("submit", "Add Clip");
-	$form->draw("Add New Press Clip");
-} else {
-	//we are on this here page
-	$form->addRow("submit", "Save Changes");
-	$form->draw("Edit Press Clip");
-}
+$f = new form('press_clips');
+echo $f->draw(@$r);
 
 if (!$included) drawBottom();
 ?>

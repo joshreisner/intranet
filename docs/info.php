@@ -2,7 +2,7 @@
 include("../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE docs SET is_active = 0, deleted_date = GETDATE(), deleted_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
+	db_delete('docs');
 	url_change("/docs/");
 }
 
