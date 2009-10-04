@@ -23,14 +23,6 @@ function set_users_help(value) {
 	}
 }
 
-function aOver(objID) {
-	document.getElementById(objID).className = 'over';
-}
-
-function aOut(objID) {
-	document.getElementById(objID).className = 'out';
-}
-
 function browser() {
 	var browser = (window.navigator.userAgent);
 	if (browser.indexOf("MSIE")) {

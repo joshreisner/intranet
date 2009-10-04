@@ -40,11 +40,8 @@ if (db_found($topics)) {?>
 	while ($r = db_fetch($topics)) {
 		$r["lastname"] = htmlentities($r["lastname"]); //see http://work.joshreisner.com/request/?id=477
 		?>
-		<tr class="thread<? if ($r["is_admin"] == 1) {?> admin<? }?>"
-			onclick		= "location.href='topic.php?id=<?=$r["id"]?>';"
-			onmouseover	= "javascript:aOver('id<?=$r["id"]?>')"
-			onmouseout	= "javascript:aOut('id<?=$r["id"]?>')">
-			<td class="input"><a href="topic.php?id=<?=$r["id"]?>" id="id<?=$r["id"]?>"><?=$r["title"]?></a></td>
+		<tr class="thread<? if ($r["is_admin"] == 1) {?> admin<? }?>" onclick="location.href='topic.php?id=<?=$r["id"]?>';">
+			<td class="input"><a href="topic.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["firstname"]?> <?=$r["lastname"]?></td>
 			<td align="center"><?=$r["replies"]?></td>
 			<td align="right"><nobr><?=format_date($r["thread_date"])?></nobr></td>

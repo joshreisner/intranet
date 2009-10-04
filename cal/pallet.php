@@ -15,6 +15,7 @@ if (db_found($events)) {
 		<td width="20%" align="right"><?=format_date($e["start_date"], "", "M d")?></a></td>
 	</tr>
 	<? }
-} else {
-	echo drawEmptyResult("No upcoming events.", 2);
+} else {?>
+	<tr><td colspan="2" class='empty'>No upcoming events.</td></tr>
+	<?
 }

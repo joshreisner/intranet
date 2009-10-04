@@ -18,7 +18,7 @@ $result = db_table('SELECT m.id, m.name, m.is_selected, c.en "group", ' . db_upd
 
 foreach ($result as &$r) {
 	$r['is_selected']	= draw_form_checkbox('foo', $r['is_selected'], false, 'ajax_set(\'jr_members_inst\', \'is_selected\', ' . $r['id'] . ', ' . abs($r['is_selected'] - 1) . ');');
-	$r['name']		= draw_link('edit/?id=' . $r['id'], $r['name']);
+	$r['name']		= draw_link('edit/?id=' . $r['id'], format_string($r['name'], 70));
 	$r['updated']	= format_date($r['updated']);
 	$r['delete']	= deleteColumn($r['id']);
 }

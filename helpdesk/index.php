@@ -121,11 +121,8 @@ echo drawMessage($helpdeskStatus, "center");
 			<td align="center"><?=$r["owner"]?></td>
 		</tr>
 		<? } else { ?>
-		<tr height="32" class="thread"
-			onclick		= "location.href='ticket.php?id=<?=$r["id"]?>';"
-			onmouseover	= "javascript:aOver('id<?=$r["id"]?>');"
-			onmouseout	= "javascript:aOut('id<?=$r["id"]?>');">
-			<td class="input"><a href="ticket.php?id=<?=$r["id"]?>" id="id<?=$r["id"]?>"><?=$r["title"]?></a></td>
+		<tr height="32" class="thread" onclick="location.href='ticket.php?id=<?=$r["id"]?>';">
+			<td class="input"><a href="ticket.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><nobr><?=$r["firstname"]?> <?=substr($r["lastname"], 0, 1)?>.</nobr></td>
 			<td><?=$r["description"]?></td>
 			<td align="center"><?=$r["owner"]?></td>

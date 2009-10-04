@@ -13,7 +13,7 @@ $result = db_query("SELECT
 if (db_found($result)) {
 	while ($r = db_fetch($result)) { ?>
 		<tr height="20"<? if ($r["is_admin"] == 1) {?> class="admin"<? }?>>
-			<td width="90%"><a href="<?=$m["url"]?>topic.php?id=<?=$r["id"]?>"><?=format_text_shorten($r["title"], 39)?></a></td>
+			<td width="90%"><a href="<?=$m["url"]?>topic.php?id=<?=$r["id"]?>"><?=format_string($r["title"], 39)?></a></td>
 			<td width="10%" align="center"><?=$r["replies"]?></td>
 		</tr>
 	<? }

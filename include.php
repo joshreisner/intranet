@@ -127,7 +127,7 @@ error_debug('done processing include!', __file__, __line__);
 	
 
 //obsolete functions
-include($_josh['root'] . '/obsolete.php');
+//include($_josh['root'] . '/obsolete.php');
 
 
 //draw functions
@@ -178,8 +178,8 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br
 }
 
 function drawNavigation() {
-	global $_SESSION, $module_admin, $page, $location;
-	if (!$page['module_id']) return false;
+	global $_SESSION, $module_admin, $_josh, $page;
+	if (!$page['module_id']) return false; //not in module
 	$pages	= array();
 	$admin	= ($module_admin) ? '' : 'AND is_admin = 0';
 	$result	= db_query('SELECT name, url FROM pages WHERE module_id = ' . $page['module_id'] . ' ' . $admin . ' AND isInstancePage = 0 ORDER BY precedence');
@@ -187,7 +187,23 @@ function drawNavigation() {
 		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
 		if ($r['url'] != '/helpdesk/') $pages[$r['url']] = $r['name'];
 	}
-	return drawNavigationRow($pages, $location);
+
+	$count = count($pages);
+	if ($count < 2) return false;
+	$return = '<table class="navigation" cellspacing="1">
+		<tr>';
+	$cellwidth = round(100 / $count, 2);
+
+	foreach ($pages as $url=>$name) {
+		if (($url == $_josh["request"]["path_query"]) || ($url == url_base() . $_josh["request"]["path_query"])) {
+			$cell = ' class="selected">' . $name . '';
+		} else {
+			$cell = '><a href="' . $url . '">' . $name . '</a>';
+		}
+		$return .= '<td width="' . $cellwidth . '%"' . $cell . '</td>';
+	}
+	return $return . '</tr>
+		</table>';
 }
 
 function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text='', $class=false) { 
@@ -339,10 +355,10 @@ function drawBottom() {
 		            
 	foreach ($modules as $m) {
 		if ($m['pallet']) { ?>
-		<table class="right" cellspacing="1">
+		<table class="right <?=str_replace('/', '', $m['url'])?>" cellspacing="1">
 			<tr>
-				<td colspan="2" class="head <?=str_replace('/', '', $m['url'])?>">
-					<div class="head-left"><a href="<?=$m['url']?>"><?=$m['title']?></a></div>
+				<td colspan="2" class="head">
+					<a href="<?=$m['url']?>"><?=$m['title']?></a>
 					<?=draw_img($m['url'] . 'arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false))?>
 				</td>
 			</tr>
