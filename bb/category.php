@@ -1,55 +1,43 @@
 <?php
-include("include.php");
+include('include.php');
 drawTop();
-echo drawTableStart();
+
 if (url_id()) {
 	//get a particular topic
-	echo drawHeaderRow(db_grab("SELECT title FROM bb_topics_types WHERE id = " . $_GET["id"]), 4);
-	$where = "t.type_id = " . $_GET["id"];
+	$title = db_grab('SELECT title FROM bb_topics_types WHERE id = ' . $_GET['id']);
+	$where = 't.type_id = ' . $_GET['id'];
 } else {
-	echo drawHeaderRow("Uncategorised Topics", 4);
-	$where = "t.type_id IS NULL";
-}
-$join = "";
-if (getOption("channels") && $_SESSION["channel_id"]) {
-	$where .= " AND t2c.channel_id = " . $_SESSION["channel_id"];
-	$join = "JOIN bb_topics_to_channels t2c ON t.id = t2c.topic_id";
+	$title = 'Uncategorised Topics';
+	$where = 't.type_id IS NULL';
 }
 
-$topics = db_query("SELECT 
+$result = db_table('SELECT 
 		t.id,
-		t.title,
+		t.title topic,
 		t.is_admin,
-		t.thread_date,
+		t.thread_date last_post,
 		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
 		ISNULL(u.nickname, u.firstname) firstname,
 		u.lastname
 	FROM bb_topics t
 	JOIN users u ON u.id = t.created_user
-	$join
-	WHERE t.is_active = 1 AND $where
-	ORDER BY t.thread_date DESC", 15);
-if (db_found($topics)) {?>
-	<tr>
-		<th width="320">Topic</th>
-		<th width="120">Starter</th>
-		<th class="c">Replies</th>
-		<th class="r">Last Post</th>
-	</tr>
-	<?
-	while ($r = db_fetch($topics)) {
-		$r["lastname"] = htmlentities($r["lastname"]); //see http://work.joshreisner.com/request/?id=477
-		?>
-		<tr class="thread<? if ($r["is_admin"] == 1) {?> admin<? }?>" onclick="location.href='topic.php?id=<?=$r["id"]?>';">
-			<td class="input"><a href="topic.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
-			<td><?=$r["firstname"]?> <?=$r["lastname"]?></td>
-			<td align="center"><?=$r["replies"]?></td>
-			<td align="right"><nobr><?=format_date($r["thread_date"])?></nobr></td>
-		</tr>
-	<? }
-} else {
-	echo drawEmptyResult("No topics have been added to this category yet.<br>Why not <a href='/bb/#bottom'>be the first</a>?", 4);
+	' . getChannelsWhere('bb_topics', 't', 'topic_id') . ' AND ' . $where . '
+	ORDER BY t.thread_date DESC', 15);
+$t = new table('bb_topics', drawPageName($title));
+$t->col('topic');
+$t->col('starter');
+$t->col('replies', 'c');
+$t->col('last_post', 'r');
+
+foreach($result as &$r) {
+	$r['link'] = 'topic.php?id=' . $r['id'];
+	$r['class'] = 'thread';
+	if ($r['is_admin']) $r['class'] .= ' admin';
+	$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];
+	$r['last_post'] = format_date($r['last_post']);
+	$r['topic'] = draw_link($r['link'], $r['topic']);
 }
-echo drawTableEnd();
+echo $t->draw($result, 'No topics have been added to this category yet.<br>Why not <a href="./#bottom">be the first</a>');
+
 drawBottom();
 ?>

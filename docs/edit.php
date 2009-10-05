@@ -1,15 +1,13 @@
-<?
+<?php
 include('../include.php');
 
 if ($posting) {
-	//debug();
 	error_debug('user is posting', __file__, __line__);
 	if ($uploading) list($_POST['content'], $_POST['type_id']) = file_get_uploaded('userfile', 'docs_types');
 	$id = db_save('docs');
-	debug();
+	//debug();
 	db_checkboxes('docs', 'docs_to_categories', 'documentID', 'categoryID', $id);
 	if (getOption('channels')) db_checkboxes('channels', 'docs_to_channels', 'doc_id', 'channel_id', $id);
-	exit;
 	url_change('/docs/info.php?id=' . $id);
 }
 

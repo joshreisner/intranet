@@ -12,7 +12,7 @@ $result = db_table('SELECT d.id, d.title, d.description, ' . db_updated('d') . '
 						JOIN docs_to_categories d2c ON d.id = d2c.documentID
 						JOIN docs_categories c ON d2c.categoryID = c.id
 						JOIN docs_types i ON d.type_id = i.id
-						WHERE d.is_active = 1
+						' . getChannelsWhere('docs', 'd', 'doc_id') . '
 						ORDER BY c.precedence, d.title;');
 $t = new table('docs', drawPageName());
 $t->set_column('icon', 'd', '&nbsp;');

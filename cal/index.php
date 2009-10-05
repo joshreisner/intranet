@@ -3,6 +3,7 @@ include("include.php");
 
 if ($posting) {
 	$id = db_save("cal_events");
+	db_checkboxes('cal_events', 'cal_events_to_channels', 'event_id', 'channel_id', $id);	
 	url_query_add(array("month"=>$_POST["start_dateMonth"], "year"=>$_POST["start_dateYear"]));
 }
 
@@ -13,16 +14,17 @@ drawTop();
 echo drawNavigationCal($_GET["month"], $_GET["year"]);
 
 //get events
-$result = db_query("SELECT 
+$result = db_query('SELECT 
 			e.id,
 			DAY(e.start_date) startDay,
 			e.title,
 			t.color
 		FROM cal_events e
 		JOIN cal_events_types t ON e.type_id = t.id
-		WHERE e.is_active = 1 AND 
-			MONTH(e.start_date) = {$_GET["month"]} AND
-			YEAR(e.start_date) = " . $_GET["year"]);
+	' . getChannelsWhere('cal_events', 'e', 'event_id') . '
+			AND 
+			MONTH(e.start_date) = ' . $_GET["month"] . ' AND
+			YEAR(e.start_date) = ' . $_GET["year"]);
 while ($r = db_fetch($result)) {
 	$events[$r["startDay"]][$r["id"]]["title"] = $r["title"];
 	$events[$r["startDay"]][$r["id"]]["color"] = $r["color"];
@@ -197,14 +199,19 @@ if (getOption("cal_showholidays")) {
 </table>
 <a name="bottom"></a>
 <?
+/*
+$f = new form('cal_events');
+$f->set_field(array('type'=>'select', 'name'=>'type_id', 'sql'=>'SELECT id, description FROM cal_events_types ORDER BY description', 'required'=>true, 'label'=>'Type'));
+echo $f->draw();
+*/
 $form = new intranet_form;
 if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Title" , "title", "", "", true);
 $form->addRow("select", "Type", "type_id", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
+if (getOption('channels')) $form->addCheckboxes('channels', 'Networks', 'channels', 'events_to_channels', 'event_id', 'channel_id', @$_GET['id']);
 $form->addRow("datetime", "Date", "start_date");
 $form->addRow("textarea", "Notes" , "description", "", "", true);
 $form->addRow("submit"  , "add new event");
 $form->draw("Add a New Event");
-
 drawBottom(); 
 ?>

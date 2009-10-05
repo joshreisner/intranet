@@ -137,6 +137,7 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #left table.table td.draggy:hover { cursor:move; }
 
 #left table.table tr.thread { height:36px; vertical-align:middle; font-size:12px; }
+#left table.table tr.admin { background-color:#fffce0; }
 #left table.table tr.thread:hover { background-color:#f4f4f4; cursor:pointer; }
 #left table.table tr.thread:hover a { text-decoration:underline; color:#d8282d; }
 
@@ -206,3 +207,56 @@ div.dropmarker {
 	color:#999;
 }
 #right table td.helpdesk-status:hover { cursor:pointer; }
+
+/*deprecated*/
+.head a { padding:0px; color:#fff; }
+.head a:hover { color:#fff; }
+
+.head a.right { font-size:9px; margin:0px; padding:0px 3px; line-height:22px; text-transform: uppercase;}
+.head a.right:hover { text-decoration:underline; }
+
+
+.head div.head-left { float:left; height:23px; line-height:20px; }
+.head div.head-right { float:left; height:12px; line-height:14px;}
+
+#left.areas table.left td.head								{ background-color:#d8282d; }
+#left.bb table.left td.head								{ background-color:#336633; }
+#left.cal table.left td.head												{ background-color:#336699; }
+#left.contacts table.left td.head							{ background-color:#12253c; }
+#left.docs table.left td.head											{ background-color:#6a476a; }
+#left.external-orgs table.left td.head		{ background-color:#996633; }
+#left.helpdesk table.left td.head							{ background-color:#996633; }
+#left.press-clips table.left td.head				{ background-color:#3398bb; }
+#left.staff table.left td.head										{ background-color:#666666; }
+
+table.left { 
+	width:594px; 
+	overflow-x:hidden;
+	background-color:#ddd;
+	border-width:0px; 
+	border-spacing:1px; 
+	margin:0px 0px 14px 0px;
+}
+table.left tr { background-color:#fff; vertical-align:top; }
+table.left td { padding:4px 3px 4px 3px; }
+table.left td.head	{ padding:1px 2px 1px 4px; height:24px; font-size:13px; color:#fff; vertical-align:middle; }
+table.left td.left	{ background-color:#ededed; width:130px; }
+table.left td.right	{ width:414px; overflow-y:hidden; }
+table.left td.bottom { text-align:center; background-color:#ededed; }
+table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
+
+table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
+
+table.left td.text { width:500px; padding:10px; font-size:12px; line-height:20px; }
+table.left td.text div.text { position:relative; min-height:160px; height:auto; padding-bottom:60px; }
+table.left td.text span.caption { position:absolute; margin-top:20px; bottom:0px; left:0px; display:block; font-size:12px; line-height:17px; }
+table.left tr.admin { background-color:#fffce0; }
+table.left tr.thread { height:32px; vertical-align:middle; font-size:13px; }
+table.left tr.thread:hover { background-color:#f4f4f4; cursor:pointer; }
+table.left tr.thread:hover a { text-decoration:underline; color:#d8282d; }
+table.left tr.total { background-color:#f3f3f3; text-align:right; }
+.light { color:#999; }
+.light a { color:#6699cc; }
+table.left td.bottom { background-color:#eee; }
+table.left td.bottom input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
+table.left td.bottom input.submit:hover { cursor:pointer; }

@@ -1,12 +1,12 @@
 <?
-$result = db_query("SELECT
+$result = db_query('SELECT
 		d.id, d.title, 
 		ISNULL(d.updated_date, d.created_date) updated_date,
 		i.icon, i.description, (SELECT COUNT(*) FROM docs_views v WHERE v.documentID = d.id) downloads
 		FROM docs d
 	JOIN docs_types i ON d.type_id = i.id
-	WHERE is_active = 1
-	ORDER BY downloads DESC", 4);
+	' . getChannelsWhere('docs', 'd', 'doc_id') . '
+	ORDER BY downloads DESC', 4);
 if (db_found($result)) {
 	while ($r = db_fetch($result)) {?>
 	<tr>

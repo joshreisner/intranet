@@ -5,9 +5,6 @@ drawTop();
 
 echo drawSyndicateLink('bb');
 
-$where = 'WHERE t.is_active = 1';
-if (getOption('channels') && $_SESSION['channel_id']) $where = 'JOIN bb_topics_to_channels t2c ON t.id = t2c.topic_id WHERE t.is_active = 1 AND t2c.channel_id = ' . $_SESSION['channel_id'];
-
 $t = new table('bb_topics', drawPageName());
 $t->set_column('topic');
 $t->set_column('starter');
@@ -24,12 +21,13 @@ $result = db_table('SELECT
 		u.lastname
 	FROM bb_topics t
 	JOIN users u ON u.id = t.created_user
-	' . $where . '
+	' . getChannelsWhere('bb_topics', 't', 'topic_id') . '
 	ORDER BY t.thread_date DESC');
 
 foreach ($result as &$r) {
 	$r['class'] = 'thread';
-		$r['link'] = 'topic.php?id=' . $r['id'];
+	if ($r['is_admin']) $r['class'] .= ' admin';
+	$r['link'] = 'topic.php?id=' . $r['id'];
 	$r['topic'] = draw_link($r['link'], $r['topic']);
 	$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];
 	$r['last_post'] = format_date($r['last_post']);

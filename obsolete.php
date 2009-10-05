@@ -23,30 +23,6 @@ function drawEmptyResult($text="None found.", $colspan=1) {
 	return draw_tag("tr", false, draw_tag("td", array("class"=>"empty", "colspan"=>$colspan), $text));
 }
 
-function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
-	global $_josh, $location, $modules, $page;
-	error_debug("drawing header row", __file__, __line__);
-	if (!$name) $name = $page["name"];
-	//urls are absolute because it could be used in an email
-	$header ='<tr>
-			<td class="head ' . $location . '" colspan="' . $colspan . '">
-				<div class="head-left">
-				';
-	if ($location != "login") {
-		$header .='<a  href="' . url_base() . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["title"] . '</a>';
-	}
-	if ($name) {
-		$header .=' &gt; ';
-		if ($_josh["request"]["subfolder"]) $header .= '<a href="' . url_base() . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
-		$header .= $name;
-	}
-	$header .= "</div>";
-	if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
-	if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
-	$header .='</td></tr>';
-	return $header;
-}
-
 function drawNavigationRow($pages, $module=false, $pq=false) {
 	global $_josh, $location;
 	if (!$module) $module = $location;
@@ -69,6 +45,29 @@ function drawNavigationRow($pages, $module=false, $pq=false) {
 		</table>';
 }
 	
+function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
+	global $_josh, $location, $modules, $page;
+	if (!$name) $name = $page["name"];
+	//urls are absolute because it could be used in an email
+	$header ='<tr>
+			<td class="head ' . $location . '" colspan="' . $colspan . '">
+				<div class="head-left">
+				';
+	if ($location != "login") {
+		$header .='<a  href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["title"] . '</a>';
+	}
+	if ($name) {
+		$header .=' &gt; ';
+		if ($_josh["request"]["subfolder"]) $header .= '<a href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
+		$header .= $name;
+	}
+	$header .= "</div>";
+	if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
+	if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
+	$header .='</td></tr>';
+	return $header;
+}
+
 function drawTableEnd() {
 	//todo ~ obsolete.  tables should use joshlib's table class
 	return '</table>';
@@ -145,7 +144,7 @@ class intranet_form {
 				$rows .= '<table class="nospacing" width="100%"><tr>';
 				while ($r = db_fetch($result)) {
 					if ($counter == 0) $rows .= '<td width="33%" style="vertical-align:top;"><table class="nospacing">';
-					$chkname = "chk_" . $name . "_" . $r["id"];
+					$chkname = "chk-" . $name . "-" . $r["id"];
 					$rows .= '
 						<tr>
 						<td>' . draw_form_checkbox($chkname, $r["checked"]) . '</td>

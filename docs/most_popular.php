@@ -3,7 +3,7 @@ include("../include.php");
 drawTop();
 
 
-$result = db_table("SELECT 
+$result = db_table('SELECT 
 		d.id,
 		d.title,
 		(SELECT COUNT(*) FROM docs_views v WHERE v.documentID = d.id) downloads,
@@ -11,8 +11,8 @@ $result = db_table("SELECT
 		i.description alt
 	FROM docs d
 	JOIN docs_types i ON d.type_id = i.id
-	WHERE d.is_active = 1
-	ORDER BY downloads DESC", 20);
+	' . getChannelsWhere('docs', 'd', 'doc_id') . '
+	ORDER BY downloads DESC', 20);
 	
 $t = new table('docs', drawPageName());
 $t->set_column('icon', 'd', '&nbsp;');

@@ -68,7 +68,6 @@ echo draw_javascript('
 ');
 
 echo drawTableStart();
-
 if ($module_admin || $isPoster) {
 	echo drawHeaderRow($r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 } else {
@@ -76,7 +75,5 @@ if ($module_admin || $isPoster) {
 }
 echo bbDrawTopic($_GET["id"]);
 echo drawThreadCommentForm(false);
-
 echo drawTableEnd();
-
 drawBottom();?>

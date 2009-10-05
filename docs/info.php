@@ -23,7 +23,7 @@ drawTop();
 <table class="left" cellspacing="1">
     <?
     if ($module_admin) {
-    	echo drawHeaderRow("Document Info", 2, "edit","add_edit.php?id=" . $_GET["id"], "delete", drawDeleteLink("Delete document?"));
+    	echo drawHeaderRow("Document Info", 2, "edit","edit.php?id=" . $_GET["id"], "delete", drawDeleteLink("Delete document?"));
     } else {
     	echo drawHeaderRow("Document Info", 2);
     }
@@ -53,6 +53,21 @@ drawTop();
 			<? }?>
 		</td>
 	</tr>
+	<? if (getOption('channels')) {?>
+	<tr>
+		<td class="left">Networks</td>
+		<td>
+			<? $channels = db_query("SELECT
+				c.title_en
+			FROM docs_to_channels d2c
+			JOIN channels c ON d2c.channel_id = c.id
+			WHERE d2c.doc_id = " . $_GET["id"]);
+				while ($c = db_fetch($channels)) {?>
+				 &#183; <?=$c["title_en"]?></a><br>
+			<? }?>
+		</td>
+	</tr>
+	<? }?>
 	<tr height="120">
 		<td class="left">Description</td>
 		<td class="text"><?=nl2br($d["description"])?></td>

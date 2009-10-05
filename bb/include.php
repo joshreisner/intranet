@@ -50,6 +50,22 @@ function bbDrawTopic($topic_id) {
 	return $return;
 }
 
+function drawTopicForm() {
+	global $_GET, $module_admin;
+	$f = new form('bb_topics', @$_GET['id'], 'Contribute a New Topic');
+	if ($module_admin) {
+		$f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>'Posted By'));
+		$f->set_field(array('name'=>'is_admin', 'class'=>'admin', 'type'=>'checkbox'));
+	} else {
+		$f->unset_fields('is_admin');
+	}
+	if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'bb_topics_to_channels', 'object_id'=>'topic_id', 'option_id'=>'channel_id'));
+	if (getOption('bb_types')) $f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM bb_topics_types', 'label'=>'Category'));
+	$f->set_order('created_user,is_admin,title,type_id,channels,description');
+	$f->unset_fields('thread_date');
+	return $f->draw(false, false);
+}
+
 function bbDrawRss() {
 	global $_josh;
 	
