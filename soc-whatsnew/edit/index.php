@@ -9,7 +9,7 @@ if ($posting) {
 echo drawTop();
 
 $f = new form('soc_whatsnew', @$_GET['id'], $page['name']);
-$f->set_title_prefix(drawPageName(' '));
+$f->set_title_prefix(drawHeader(false, ' '));
 echo $f->draw();
 
 echo drawBottom();

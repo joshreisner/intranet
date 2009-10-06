@@ -14,7 +14,7 @@ $result = db_table('SELECT
 	' . getChannelsWhere('docs', 'd', 'doc_id') . '
 	ORDER BY downloads DESC', 20);
 	
-$t = new table('docs', drawPageName());
+$t = new table('docs', drawHeader());
 $t->set_column('icon', 'd', '&nbsp;');
 $t->set_column('title');
 $t->set_column('downloads', 'r');

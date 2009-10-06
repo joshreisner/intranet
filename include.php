@@ -116,7 +116,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		//update users
 		url_drop('language_id');
 	} elseif(isset($_GET['channel_id'])) {
-		$_SESSION['channel_id'] = $_GET['channel_id'];
+		$_SESSION['channel_id'] = (empty($_GET['channel_id'])) ? false : $_GET['channel_id'];
 		//update users
 		url_drop('channel_id');
 	}
@@ -188,11 +188,13 @@ function drawNavigation() {
 		</table>';
 }
 
-function drawPageName($title=false) {
+function drawHeader($options=false, $title=false) {
 	//get the page for the header
 	global $page;
 	if (!$title) $title = $page['name'];
-	return draw_link($page['url'], $page['module']) . ' &gt; ' . $title;	
+	$return = draw_link($page['url'], $page['module']) . ' &gt; ' . $title;	
+	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
+	return $return;
 }
 
 function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text='', $class=false) { 
@@ -395,7 +397,7 @@ function emailUser($address, $title, $content, $colspan=1, $message=false) {
 	$message = drawEmailHeader() . 
 		(($message) ? drawMessage($message) : '') . 
 		drawTableStart() . 
-		drawHeaderRow($title, $colspan) . 
+		drawHeaderRow($title, $colspan) .
 		$content . 
 		drawTableEnd() . 
 		drawEmailFooter();
@@ -433,7 +435,10 @@ function getChannelsWhere($table, $short, $column) {
 
 function getOption($key) {
 	global $options;
-	
+
+	//already set, either by options.php or previous run
+	if (isset($options[$key])) return $options[$key];
+
 	//default options.  override these in your config file by specifying $options variables
 	$defaults['channels']				= false;
 	$defaults['languages']				= false;
@@ -453,8 +458,10 @@ function getOption($key) {
 	$defaults['staff_showhome']			= true;
 	$defaults['staff_showemergency']	= true;
 	
-	if (!isset($options[$key])) return $defaults[$key];
-	return $options[$key];
+	//don't run through this again for this key
+	$options[$key] = $defaults[$key];
+	
+	return $defaults[$key];
 }
 
 function getPage() {

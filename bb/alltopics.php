@@ -5,7 +5,7 @@ drawTop();
 
 echo drawSyndicateLink('bb');
 
-$t = new table('bb_topics', drawPageName());
+$t = new table('bb_topics', drawHeader());
 $t->set_column('topic');
 $t->set_column('starter');
 $t->set_column('replies', 'c');

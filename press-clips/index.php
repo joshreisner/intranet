@@ -15,7 +15,7 @@ $result = db_table('SELECT
 	WHERE c.is_active = 1
 	ORDER BY t.title, pub_date DESC', 20);
 
-$t = new table('press-clips', drawPageName());
+$t = new table('press-clips', drawHeader());
 $t->col('title');
 foreach ($result as &$r) {
 	$r['title'] = draw_link("clip.php?id=" . $r["id"], format_string($r["title"], 80)) . '<br>' . 

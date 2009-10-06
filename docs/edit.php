@@ -3,10 +3,10 @@ include('../include.php');
 
 if ($posting) {
 	error_debug('user is posting', __file__, __line__);
-	if ($uploading) list($_POST['content'], $_POST['type_id']) = file_get_uploaded('userfile', 'docs_types');
+	if ($uploading) list($_POST['content'], $_POST['type_id']) = file_get_uploaded('content', 'docs_types');
 	$id = db_save('docs');
 	//debug();
-	db_checkboxes('docs', 'docs_to_categories', 'documentID', 'categoryID', $id);
+	db_checkboxes('categories', 'docs_to_categories', 'documentID', 'categoryID', $id);
 	if (getOption('channels')) db_checkboxes('channels', 'docs_to_channels', 'doc_id', 'channel_id', $id);
 	url_change('/docs/info.php?id=' . $id);
 }
@@ -70,15 +70,11 @@ echo drawMessage('The maximum size you can upload here is ' . file_get_max() . '
 	//-->
 </script>
 <?
-$form = new intranet_form;
-$form->addRow('itext',  'Title', 'title', @$d['title'], '', true, 65);
-$form->addRow('textarea', 'Description', 'description', @$d['description']);
-$form->addCheckboxes('docs', 'Categories', 'docs_categories', 'docs_to_categories', 'documentID', 'categoryID', @$_GET['id']);
-if (getOption('channels')) $form->addCheckboxes('channels', 'Networks', 'channels', 'docs_to_channels', 'doc_id', 'channel_id', $_GET['id']);
-$form->addRow('file', 'Document', 'userfile');
-$form->addRow('submit',   'Save Changes');
-$form->draw($pageAction);
-
+$f = new form('docs', @$_GET['id'], $page['name']);
+$f->set_title_prefix(drawHeader(false, ' '));
+if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'docs_to_channels', 'object_id'=>'doc_id', 'option_id'=>'channel_id'));
+$f->set_field(array('name'=>'categories', 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
+echo $f->draw(); 
 
 drawBottom();
 ?>

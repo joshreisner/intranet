@@ -25,7 +25,7 @@ drawTop();
 echo draw_autorefresh(5); //todo eliminate
 echo drawSyndicateLink('bb');
 
-$t = new table('bb_topics', drawPageName() . '<a class="right" href="#bottom">add new</a>');
+$t = new table('bb_topics', drawHeader(array('#bottom'=>'add new')));
 $t->set_column('topic');
 $t->set_column('starter');
 $t->set_column('replies', 'c');
