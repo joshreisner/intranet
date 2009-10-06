@@ -12,7 +12,7 @@ $result = db_table('SELECT
 		' . db_updated('c') . '
 	FROM press_clips c 
 	JOIN press_clips_types t ON c.type_id = t.id 
-	WHERE c.is_active = 1
+	' . getChannelsWhere('press_clips', 'c', 'clip_id') . '
 	ORDER BY t.title, pub_date DESC', 20);
 
 $t = new table('press-clips', drawHeader());

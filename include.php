@@ -223,7 +223,7 @@ function drawThreadComment($content, $user_id, $fullname, $date, $module_admin=f
 	$return .= drawName($user_id, $fullname, $date, true) . '</td>';
 	$return .= '<td class="right text ';
 	if ($module_admin) $return .= $location . '-hilite';
-	$return .= '" height="80">' . $content . '</td></tr>';
+	$return .= '" height="80"><div class="text">' . $content . '</div></td></tr>';
 	return $return;
 }
 
@@ -259,7 +259,7 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 			<td height="150" class="left">' . 
 			drawName($user_id, $fullname, $date, true) . 
 			'</td>
-			<td class="text"><div class="text"><h1>' . $title . '</h1>';
+			<td class="text"><div class="text top"><h1>' . $title . '</h1>';
 	if ($editurl) {
 		$return .= '<a class="right button floating" href="' . $editurl . '">edit this</a>';
 	}

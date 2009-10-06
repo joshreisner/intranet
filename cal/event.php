@@ -29,9 +29,9 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 <table class="left" cellspacing="1">
 	<?
 	if ($module_admin) {
-		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
+		echo drawHeaderRow("Event Details", 2, "edit", "edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
 	} elseif ($_SESSION["user_id"] == $e["created_user"]) {
-		echo drawHeaderRow("Event Details", 2, "edit", "event_edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
+		echo drawHeaderRow("Event Details", 2, "edit", "edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
 	} else {
 		echo drawHeaderRow("Event Details", 2);
 	}?>
@@ -51,6 +51,21 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 		<td class="left" height="200">Description</td>
 		<td class="text"><?=$e["description"]?></td>
 	</tr>
+	<? if (getOption('channels')) {?>
+	<tr>
+		<td class="left">Networks</td>
+		<td>
+			<? $channels = db_query("SELECT
+				c.title_en
+			FROM cal_events_to_channels e2c
+			JOIN channels c ON e2c.channel_id = c.id
+			WHERE e2c.event_id = " . $_GET["id"]);
+				while ($c = db_fetch($channels)) {?>
+				 &#183; <?=$c["title_en"]?></a><br>
+			<? }?>
+		</td>
+	</tr>
+	<? }?>
 	<tr valign="top">
 		<td class="left">Created</td>
 		<td><?=drawName($e["created_user"], $e["first"] . " " . $e["last"], $e["created_date"], true);?></td>

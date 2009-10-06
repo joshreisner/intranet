@@ -33,5 +33,20 @@ $r = db_grab("SELECT c.title, c.url, c.pub_date, c.publication, c.type_id, c.des
 		<td class="left">Description</td>
 		<td class="text"><?=$r["description"]?></td>
 	</tr>
+	<? if (getOption('channels')) {?>
+	<tr>
+		<td class="left">Networks</td>
+		<td>
+			<? $channels = db_query("SELECT
+				c.title_en
+			FROM press_clips_to_channels d2c
+			JOIN channels c ON d2c.channel_id = c.id
+			WHERE d2c.clip_id = " . $_GET["id"]);
+				while ($c = db_fetch($channels)) {?>
+				 &#183; <?=$c["title_en"]?></a><br>
+			<? }?>
+		</td>
+	</tr>
+	<? }?>	
 </table>
 <?=drawBottom();?>

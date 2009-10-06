@@ -23,4 +23,15 @@ function drawNavigationCal($month, $year, $linked=false) {
 	</table>';
 	return $return;
 }
+
+function drawEventForm() {
+	global $page, $module_admin;
+	$f = new form('cal_events', @$_GET['id'], $page['name']);
+	if (url_id()) $f->set_title_prefix(drawHeader(false, ' '));
+	if ($module_admin) $f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>'Posted By'));
+	$f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, description FROM cal_events_types ORDER BY description', 'label'=>'Category'));
+	if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'cal_events_to_channels', 'object_id'=>'event_id', 'option_id'=>'channel_id'));
+	$f->set_order('created_user,title, start_date, end_date, type_id, description, channels');
+	return $f->draw();
+}
 ?>

@@ -3,6 +3,7 @@ $included = !@include("../../include.php");
 $r = false;
 if ($posting) {
 	$id = db_save("press_clips");
+	if (getOption('channels')) db_checkboxes('channels', 'press_clips_to_channels', 'clip_id', 'channel_id', $id);
 	url_change_post("/press-clips/clip.php?id=" . $id);
 } elseif ($included) {
 	$_josh["request"]["path_query"] = "/" . $location . "/edit/"; //shoddy way of setting the form target
@@ -41,7 +42,9 @@ if ($posting) {
 //to control return_to redirects.  i'm not sure how i should handle this generally.  it's a problem mainly when the page is included
 if ($referrer && ($referrer["host"] == $request["host"])) $_josh["referrer"] = false;
 
-$f = new form('press_clips');
+$f = new form('press_clips', @$_GET['id']);
+$f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM press_clips_types ORDER BY precedence', 'required'=>true));
+if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'press_clips_to_channels', 'object_id'=>'clip_id', 'option_id'=>'channel_id'));
 echo $f->draw(@$r);
 
 if (!$included) drawBottom();

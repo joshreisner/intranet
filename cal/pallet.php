@@ -1,13 +1,13 @@
 <?
-$events = db_query("SELECT
+$events = db_query('SELECT
 			e.id, 
 			e.title, 
 			e.start_date,
 			t.color
 		FROM cal_events e
 		LEFT JOIN cal_events_types t ON e.type_id = t.id
-		WHERE e.start_date > GETDATE() AND e.is_active = 1 
-		ORDER BY e.start_date ASC", 4);
+		' . getChannelsWhere('cal_events', 'e', 'event_id') . ' AND e.start_date > GETDATE()
+		ORDER BY e.start_date ASC', 4);
 if (db_found($events)) {
 	while ($e = db_fetch($events)) {?>
 	<tr>

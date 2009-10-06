@@ -2,8 +2,8 @@
 include("include.php");
 
 if ($posting) {
-	$id = db_save("cal_events");
-	db_checkboxes('cal_events', 'cal_events_to_channels', 'event_id', 'channel_id', $id);	
+	$id = db_save('cal_events');
+	if (getOption('channels')) db_checkboxes('channels', 'cal_events_to_channels', 'event_id', 'channel_id', $id);
 	url_query_add(array("month"=>$_POST["start_dateMonth"], "year"=>$_POST["start_dateYear"]));
 }
 
@@ -192,26 +192,13 @@ if (getOption("cal_showholidays")) {
 			?></tr><?
 		}?>
 		<tr style="background-color:#f3f3f3">
-			<td>&lt; <a href="/cal/?month=<?=$prevmonth?>&year=<?=$prevyear?>"><?=$_josh["months"][$prevmonth-1]?></a></td>
+			<td><a href="/cal/?month=<?=$prevmonth?>&year=<?=$prevyear?>"><?=$_josh["months"][$prevmonth-1]?></a></td>
 			<td colspan="5"></td>
-			<td align="right"><a href="/cal/?month=<?=$nextmonth?>&year=<?=$nextyear?>"><?=$_josh["months"][$nextmonth-1]?></a> &gt;</td>
+			<td align="right"><a href="/cal/?month=<?=$nextmonth?>&year=<?=$nextyear?>"><?=$_josh["months"][$nextmonth-1]?></a></td>
 		</tr>
 </table>
 <a name="bottom"></a>
 <?
-/*
-$f = new form('cal_events');
-$f->set_field(array('type'=>'select', 'name'=>'type_id', 'sql'=>'SELECT id, description FROM cal_events_types ORDER BY description', 'required'=>true, 'label'=>'Type'));
-echo $f->draw();
-*/
-$form = new intranet_form;
-if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false);
-$form->addRow("itext",  "Title" , "title", "", "", true);
-$form->addRow("select", "Type", "type_id", "SELECT id, description FROM cal_events_types ORDER BY description", 1, true);
-if (getOption('channels')) $form->addCheckboxes('channels', 'Networks', 'channels', 'events_to_channels', 'event_id', 'channel_id', @$_GET['id']);
-$form->addRow("datetime", "Date", "start_date");
-$form->addRow("textarea", "Notes" , "description", "", "", true);
-$form->addRow("submit"  , "add new event");
-$form->draw("Add a New Event");
+echo drawEventForm();
 drawBottom(); 
 ?>

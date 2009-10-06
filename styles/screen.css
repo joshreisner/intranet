@@ -14,7 +14,8 @@ body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#4
 a, input, textarea { outline:none; }
 h1				{ font-size:18px; line-height:22px; font-weight:normal; margin:0px; }
 img				{ border-width:0px; }
-
+p				{ margin:4px 0px 14px 0px; }
+table.left td.title, a.title, span.title { font-size:18px; }
 
 /* general form elements */
 form					{ margin:0px; padding:0px; }
@@ -140,7 +141,6 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #left table.table tr.admin { background-color:#fffce0; }
 #left table.table tr.thread:hover { background-color:#f4f4f4; cursor:pointer; }
 #left table.table tr.thread:hover a { text-decoration:underline; color:#d8282d; }
-
 #left table.table tr.total { background-color:#f0f0f0; color:#999; }
 	
 div.dropmarker {
@@ -175,6 +175,9 @@ div.dropmarker {
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
 #left form fieldset div.submit input.submit:hover { cursor:pointer; }
 
+/* layout, eg press clips export */
+div.press_export { width:552px; border:1px solid #ddd; background-color:#f7f7f7; padding:20px; height:400px; overflow-y:scroll; margin-bottom:14px; }
+textarea.press_export { width:594px; height:120px; }
 
 /* right column */
 /* tools */
@@ -246,11 +249,13 @@ table.left td.left	{ background-color:#ededed; width:130px; }
 table.left td.right	{ width:414px; overflow-y:hidden; }
 table.left td.bottom { text-align:center; background-color:#ededed; }
 table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
+table.left td.empty { background-color:#f0f0f0; vertical-align:middle; height:120px; text-align:center; line-height:20px; font-size:13px; color:#666; }
 
 table.left th { font-weight:normal; color:#999; background-color:#ededed; height:16px; padding:5px 2px 3px 2px; }
 
-table.left td.text { width:500px; padding:10px; font-size:12px; line-height:20px; }
-table.left td.text div.text { position:relative; min-height:160px; height:auto; padding-bottom:60px; }
+table.left td.text { width:500px; padding:10px; font-size:12px; line-height:20px; height:140px; }
+table.left td.text div.text { width:420px; position:relative; min-height:160px; height:auto; }
+table.left td.text div.top { padding-bottom:60px; }
 table.left td.text span.caption { position:absolute; margin-top:20px; bottom:0px; left:0px; display:block; font-size:12px; line-height:17px; }
 table.left tr.admin { background-color:#fffce0; }
 table.left tr.thread { height:32px; vertical-align:middle; font-size:13px; }
