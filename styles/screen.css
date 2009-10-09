@@ -175,6 +175,10 @@ div.dropmarker {
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
 #left form fieldset div.submit input.submit:hover { cursor:pointer; }
 
+/*google translate test*/
+#left form.foobar fieldset div.field { overflow:visible; }
+
+
 /* layout, eg press clips export */
 div.press_export { width:552px; border:1px solid #ddd; background-color:#f7f7f7; padding:20px; height:400px; overflow-y:scroll; margin-bottom:14px; }
 textarea.press_export { width:594px; height:120px; }

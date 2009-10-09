@@ -26,14 +26,14 @@ echo draw_autorefresh(5); //todo eliminate
 echo drawSyndicateLink('bb');
 
 $t = new table('bb_topics', drawHeader(array('#bottom'=>'add new')));
-$t->set_column('topic');
-$t->set_column('starter');
-$t->set_column('replies', 'c');
-$t->set_column('last_post', 'r');
+$t->set_column('topic', 'l', getString('topic'));
+$t->set_column('starter', 'l', getString('starter'));
+$t->set_column('replies', 'c', getString('replies'));
+$t->set_column('last_post', 'r', getString('last_post'));
 
 $result = db_table('SELECT 
 		t.id,
-		t.title topic,
+		t.title_' . $_SESSION['language'] . ' topic,
 		t.is_admin,
 		t.thread_date last_post,
 		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
@@ -53,7 +53,7 @@ foreach ($result as &$r) {
 	$r['last_post'] = format_date($r['last_post']);
 }
 
-echo $t->draw($result, 'No topics have been added yet.  Why not <a href="#bottom">be the first</a>?');
+echo $t->draw($result, getString('no_topics'));
 
 //add new topic
 echo '<a name="bottom"></a>';

@@ -8,8 +8,12 @@ if (!isset($_SESSION['language_id']))	$_SESSION['language_id'] = 1;
 //session & env
 extract(joshlib());
 
+//set language code
+if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_SESSION['language_id']);
+
 //include options file if it exists
 @include($_josh['root'] . $_josh['write_folder'] . '/options.php');
+@include($_josh['root'] . $_josh['write_folder'] . '/strings.php');
 
 //debug();
 
@@ -113,6 +117,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		url_query_drop('module');
 	} elseif(isset($_GET['language_id'])) {
 		$_SESSION['language_id'] = $_GET['language_id'];
+		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_GET['language_id']);
 		//update users
 		url_drop('language_id');
 	} elseif(isset($_GET['channel_id'])) {
@@ -466,6 +471,7 @@ function getOption($key) {
 
 function getPage() {
 	global $_josh;
+	
 	if ($return = db_grab('SELECT 
 			p.id, 
 			p.name, 
@@ -486,19 +492,108 @@ function getPage() {
 	}
 }
 
+function getPostTranslations($key) {
+	if (!getOption('languages')) return false;
+	global $_POST;
+	$str = $_POST[$key . '_' . $_SESSION['language']];
+	$result = db_query('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
+	while ($r = db_fetch($result)) {
+		$_POST[$key . '_' . $r['code']] = language_translate($str, $src, $r['code']);
+	}
+}
+
+function formFieldTranslate($handle, $name) {
+	if (!getOption('languages')) return false;
+	$languages = db_array('SELECT id, code FROM languages WHERE id <> ' . $_SESSION['language_id'], false, false, $name . '_');
+	$handle->unset_fields(implode(',', $languages));
+}
+
+function formFieldTranslateCheckbox($handle) {
+	if (!getOption('languages')) return false;
+	$handle->set_field(array('name'=>'do_translations', 'type'=>'checkbox', 'value'=>1));
+}
+
 function getString($key) {
 	global $strings;
 	
+	if (isset($strings[$key][$_SESSION['language']])) return $strings[$key][$_SESSION['language']];
+
 	//default strings.  override these in your config file by specifying $strings variables
-	$defaults['app_name']			= 'Intranet';
-	$defaults['app_welcome']		= 'Welcome to the ' . $defaults['app_name'] . '.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
-	$defaults['bb_admin']			= 'This is an administrative announcement topic.';
-	$defaults['staff_firsttime']	= 'Welcome to the ' . $defaults['app_name'] . '!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
-	$defaults['staff_update']		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
+	$defaults['app_name']['en']			= 'Intranet';
+	$defaults['app_welcome']['en']		= 'Welcome to the ' . $defaults['app_name'] . '.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
+	$defaults['bb_admin']['en']			= 'This is an administrative announcement topic.';
+	$defaults['staff_firsttime']['en']	= 'Welcome to the ' . $defaults['app_name'] . '!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
+	$defaults['staff_update']['en']		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
 	
+	$defaults['topic']['en']			= 'Topic';
+	$defaults['topic']['es']			= 'Tema';
+	$defaults['topic']['fr']			= 'Sujet';
+	$defaults['topic']['ru']			= 'Рубрики';
 	
-	if (!isset($strings[$key])) return $defaults[$key];
-	return $strings[$key];
+	$defaults['starter']['en']			= 'Started By';
+	$defaults['starter']['es']			= 'Iniciado por';
+	$defaults['starter']['fr']			= 'Commencé par';
+	$defaults['starter']['ru']			= 'К работе';
+	
+	$defaults['replies']['en']			= 'Replies';
+	$defaults['replies']['es']			= 'Respuestas';
+	$defaults['replies']['fr']			= 'Réponses';
+	$defaults['replies']['ru']			= 'Ответы';
+	
+	$defaults['last_post']['en']			= 'Last Post';
+	$defaults['last_post']['es']			= 'Último';
+	$defaults['last_post']['fr']			= 'Dernier';
+	$defaults['last_post']['ru']			= 'Последнее сообщение';
+	
+	$defaults['no_topics']['en']			= 'No topics have been added yet.  Why not <a href="#bottom">be the first</a>?';
+	$defaults['no_topics']['es']			= 'No hay temas se han añadido todavía. ¿Por qué no <a href="#bottom">no ser el primero</a>?';
+	$defaults['no_topics']['fr']			= 'Aucun sujet n\'a encore été enregistré. Pourquoi <a href="#bottom">être pas le premier</a>?';
+	$defaults['no_topics']['ru']			= 'Нет тем еще не было добавлено. Почему бы не <a href="#bottom">не быть первой</a>?';
+	
+	$defaults['category']['en']			= 'Category';
+	$defaults['category']['es']			= 'Categoría';
+	$defaults['category']['fr']			= 'Catégorie';
+	$defaults['category']['ru']			= 'Категории';
+	
+	$defaults['new_topic']['en']			= 'Contribute a New Topic';
+	$defaults['new_topic']['es']			= 'Contribuir con un nuevo tema';
+	$defaults['new_topic']['fr']			= 'Contribuer par un nouveau thème';
+	$defaults['new_topic']['ru']			= 'Добавить новую тему';
+
+	$defaults['posted_by']['en']			= 'POsted By';
+	$defaults['posted_by']['es']			= 'Publicado por';
+	$defaults['posted_by']['fr']			= 'Signalé près';
+	$defaults['posted_by']['ru']			= 'вывешено мимо';
+	
+	$defaults['is_admin']['en']			= 'Is Admin';
+	$defaults['is_admin']['es']			= 'Es administrativo';
+	$defaults['is_admin']['fr']			= 'Est administratif';
+	$defaults['is_admin']['ru']			= 'административно';
+	
+	$defaults['title']['en']			= 'Title';
+	$defaults['title']['es']			= 'Título';
+	$defaults['title']['fr']			= 'Titre';
+	$defaults['title']['ru']			= 'Название';
+	
+	$defaults['networks']['en']			= 'Networks';
+	$defaults['networks']['es']			= 'Redes';
+	$defaults['networks']['fr']			= 'Réseaux';
+	$defaults['networks']['ru']			= 'Сети';
+
+	$defaults['description']['en']		= 'Description';
+	$defaults['description']['es']		= 'Descripción';
+	$defaults['description']['fr']		= 'Description';
+	$defaults['description']['ru']		= 'Описание';
+	
+	if (isset($defaults[$key][$_SESSION['language']])) return $defaults[$key][$_SESSION['language']];
+	
+	if (isset($defaults[$key]['en']) || isset($strings[$key]['en'])) {
+		$str = (isset($strings[$key]['en'])) ? $strings[$key]['en'] : $defaults[$key]['en'];
+		error_handle('string not set', 'The string ' . $key . ' is not set for language ' . $_SESSION['language'] . '.  Suggested translation:<p style="font-style:italic;">' . language_translate($str, 'en', $_SESSION['language'])) . '</p>';
+	}
+
+	error_handle('string not defined', 'The string ' . $key . ' is not defined yet.');
+	
 }
 
 function login($username, $password, $skippass=false) {

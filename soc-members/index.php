@@ -2,19 +2,19 @@
 include('../include.php');
 
 if (url_action('delete')) {
-	db_delete('jr_members_inst');
+	db_delete('soc_members');
 	url_drop('action,id');
 }
 
 echo drawTop();
 
-$t = new table('jr_members_inst', 'Institutional Members<a class="right s" href="edit/">add new</a>');
+$t = new table('soc_members', 'Institutional Members<a class="right s" href="edit/">add new</a>');
 $t->set_column('is_selected', 'd', '&nbsp;');
 $t->set_column('name');
 $t->set_column('updated', 'r');
 $t->set_column('delete', 'd', '&nbsp;');
 
-$result = db_table('SELECT m.id, m.name, m.is_selected, c.en "group", ' . db_updated('m') . ' FROM jr_members_inst m JOIN jr_countries c ON m.country = c.id WHERE m.is_active = 1 ORDER BY c.en, m.name');
+$result = db_table('SELECT m.id, m.name, m.is_selected, c.en "group", ' . db_updated('m') . ' FROM soc_members m JOIN jr_countries c ON m.country = c.id WHERE m.is_active = 1 ORDER BY c.en, m.name');
 
 foreach ($result as &$r) {
 	$r['is_selected']	= draw_form_checkbox('foo', $r['is_selected'], false, 'ajax_set(\'jr_members_inst\', \'is_selected\', ' . $r['id'] . ', ' . abs($r['is_selected'] - 1) . ');');
