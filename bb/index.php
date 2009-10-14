@@ -33,7 +33,7 @@ $t->set_column('last_post', 'r', getString('last_post'));
 
 $result = db_table('SELECT 
 		t.id,
-		t.title_' . $_SESSION['language'] . ' topic,
+		t.title' . langExt() . ' topic,
 		t.is_admin,
 		t.thread_date last_post,
 		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,

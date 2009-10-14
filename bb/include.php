@@ -4,8 +4,8 @@ include('../include.php');
 function bbDrawTopic($topic_id) {
 	//get topic 
 	$r = db_grab('SELECT 
-			t.title_' . $_SESSION['language'] . ',
-			t.description_' . $_SESSION['language'] . ',
+			t.title' . langExt() . ',
+			t.description' . langExt() . ',
 			u.id,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
@@ -23,12 +23,12 @@ function bbDrawTopic($topic_id) {
 		$caption .= getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']) . '<br>';
 	}
 	if (getOption('channels')) {
-		$channels = db_array('SELECT c.title_en FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = $topic_id ORDER BY title_en');
+		$channels = db_array('SELECT c.title_en FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $topic_id . ' ORDER BY title_en');
 		if ($channels) $caption .= 'Networks: ' . implode(', ', $channels);
 	}
-	if ($caption) $r['description'] .= '<span class="light caption">' . $caption . '</span>';
+	if ($caption) $r['description' . langExt()] .= '<span class="light caption">' . $caption . '</span>';
 	
-	$return = drawThreadTop($r['title'], $r['description'], $r['id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date']);
+	$return = drawThreadTop($r['title' . langExt()], $r['description' . langExt()], $r['id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date']);
 
 	//append followups
 	$followups = db_query('SELECT
@@ -41,7 +41,7 @@ function bbDrawTopic($topic_id) {
 				f.created_user as user_id
 			FROM bb_followups f
 			JOIN users u ON u.id = f.created_user
-			WHERE f.is_active = 1 AND f.topic_id = $topic_id
+			WHERE f.is_active = 1 AND f.topic_id = ' . $topic_id . '
 			ORDER BY f.created_date');
 	while ($f = db_fetch($followups)) { 
 		$return .= drawThreadComment($f['description'], $f['user_id'], $f['firstname'] . ' ' . $f['lastname'], $f['postedDate']);
@@ -59,14 +59,14 @@ function drawTopicForm() {
 	} else {
 		$f->unset_fields('is_admin');
 	}
-	$f->set_field(array('name'=>'title_' . $_SESSION['language'], 'type'=>'text', 'label'=>getString('title')));
+	$f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getString('title')));
 	if (getOption('bb_types')) $f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM bb_topics_types', 'label'=>getString('category')));
 	if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'linking_table'=>'bb_topics_to_channels', 'object_id'=>'topic_id', 'option_id'=>'channel_id'));
-	$f->set_field(array('name'=>'description_' . $_SESSION['language'], 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'mceEditor'));
-	$f->set_order('created_user,is_admin,title_' . $_SESSION['language'] . ',type_id,channels,description');
+	$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'mceEditor'));
+	$f->set_order('created_user,is_admin,title' . langExt() . ',type_id,channels,description' . langExt());
 	$f->unset_fields('thread_date');
-	formFieldTranslate($f, 'title');
-	formFieldTranslate($f, 'description');
+	langUnsetFields($f, 'title');
+	langUnsetFields($f, 'description');
 	return $f->draw(false, false);
 }
 

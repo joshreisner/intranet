@@ -1,7 +1,7 @@
 <?
 $result = db_query('SELECT
 		t.id,
-		t.title_' . $_SESSION['language'] . ' title,
+		t.title' . langExt() . ' title,
 		t.is_admin,
 		t.thread_date,
 		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,

@@ -4,7 +4,7 @@ include('../include.php');
 drawTop();
 
 if ($posting) {
-	getPostTranslations('string');
+	langTranslatePost('string');
 	die(draw_array($_POST));
 }
 

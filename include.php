@@ -492,27 +492,6 @@ function getPage() {
 	}
 }
 
-function getPostTranslations($key) {
-	if (!getOption('languages')) return false;
-	global $_POST;
-	$str = $_POST[$key . '_' . $_SESSION['language']];
-	$result = db_query('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
-	while ($r = db_fetch($result)) {
-		$_POST[$key . '_' . $r['code']] = language_translate($str, $src, $r['code']);
-	}
-}
-
-function formFieldTranslate($handle, $name) {
-	if (!getOption('languages')) return false;
-	$languages = db_array('SELECT id, code FROM languages WHERE id <> ' . $_SESSION['language_id'], false, false, $name . '_');
-	$handle->unset_fields(implode(',', $languages));
-}
-
-function formFieldTranslateCheckbox($handle) {
-	if (!getOption('languages')) return false;
-	$handle->set_field(array('name'=>'do_translations', 'type'=>'checkbox', 'value'=>1));
-}
-
 function getString($key) {
 	global $strings;
 	
@@ -560,7 +539,7 @@ function getString($key) {
 	$defaults['new_topic']['fr']			= 'Contribuer par un nouveau thème';
 	$defaults['new_topic']['ru']			= 'Добавить новую тему';
 
-	$defaults['posted_by']['en']			= 'POsted By';
+	$defaults['posted_by']['en']			= 'Posted By';
 	$defaults['posted_by']['es']			= 'Publicado por';
 	$defaults['posted_by']['fr']			= 'Signalé près';
 	$defaults['posted_by']['ru']			= 'вывешено мимо';
@@ -594,6 +573,39 @@ function getString($key) {
 
 	error_handle('string not defined', 'The string ' . $key . ' is not defined yet.');
 	
+}
+
+function langExt($code=false) {
+	//return field name appendage
+	if (!$code) $code = $_SESSION['language'];
+	if ($code == 'en') return '';
+	return '_' . $code;
+}
+
+function langTranslatePost($keys) {
+	//set incoming POST values for languages
+	//todo - take multiple keys
+	if (!getOption('languages')) return false;
+	global $_POST;
+	$str = $_POST[$keys . langExt()];
+	$result = db_query('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
+	while ($r = db_fetch($result)) {
+		$_POST[$keys . langExt($r['code'])] = language_translate($str, $_SESSION['language'], $r['code']);
+	}
+}
+
+function langUnsetFields($form, $name) {
+	//unset fields for other languages
+	//todo - take multiple names
+	if (!getOption('languages')) return false;
+	$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
+	foreach ($languages as &$l) $l = $name . langExt($l);
+	$form->unset_fields(implode(',', $languages));
+}
+
+function langTranslateCheckbox($handle) {
+	if (!getOption('languages')) return false;
+	$handle->set_field(array('name'=>'do_translations', 'type'=>'checkbox', 'value'=>1));
 }
 
 function login($username, $password, $skippass=false) {
