@@ -499,9 +499,11 @@ function getString($key) {
 
 	//default strings.  override these in your config file by specifying $strings variables
 	$defaults['app_name']['en']			= 'Intranet';
-	$defaults['app_welcome']['en']		= 'Welcome to the ' . $defaults['app_name'] . '.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
-	$defaults['bb_admin']['en']			= 'This is an administrative announcement topic.';
-	$defaults['staff_firsttime']['en']	= 'Welcome to the ' . $defaults['app_name'] . '!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
+	
+	$defaults['app_welcome']['en']		= 'Welcome to the Intranet.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
+	
+	$defaults['staff_firsttime']['en']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
+	
 	$defaults['staff_update']['en']		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
 	
 	$defaults['topic']['en']			= 'Topic';
@@ -563,6 +565,11 @@ function getString($key) {
 	$defaults['description']['es']		= 'Descripción';
 	$defaults['description']['fr']		= 'Description';
 	$defaults['description']['ru']		= 'Описание';
+
+	$defaults['bb_admin']['en']			= 'This is an administrative announcement topic.  For more information, please contact the topic poster.';
+	$defaults['bb_admin']['es']			= 'Este es un tema anuncio administrativos. Para obtener más información, póngase en contacto con el anunciante tema.';
+	$defaults['bb_admin']['fr']			= 'C\'est un sujet annonce administratives. Pour de plus amples renseignements, s\'il vous plaît contacter l\'affiche sujet.';
+	$defaults['bb_admin']['ru']			= 'Это административная тема объявления. За дополнительной информацией просьба обращаться к тем авторам.';
 	
 	if (isset($defaults[$key][$_SESSION['language']])) return $defaults[$key][$_SESSION['language']];
 	

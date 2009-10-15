@@ -50,7 +50,7 @@ foreach ($result as &$r) {
 	$r['link'] = 'topic.php?id=' . $r['id'];
 	$r['topic'] = draw_link($r['link'], $r['topic']);
 	$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];
-	$r['last_post'] = format_date($r['last_post']);
+	$r['last_post'] = format_nobr(format_date($r['last_post']));
 }
 
 echo $t->draw($result, getString('no_topics'));
