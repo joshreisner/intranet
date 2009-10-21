@@ -4,6 +4,7 @@ include('include.php');
 if ($posting) {
 	error_debug('handling bb post', __file__, __line__);
 	format_post_bits('is_admin');
+	langTranslatePost('title,description');
 	$id = db_save('bb_topics');
 	db_query('UPDATE bb_topics SET thread_date = GETDATE() WHERE id = ' . $id);
 	if (getOption('channels')) db_checkboxes('channels', 'bb_topics_to_channels', 'topic_id', 'channel_id', $id);

@@ -1,9 +1,10 @@
 <?
 $left = true;
-foreach ($areas as $a) {
-	if (!$_SESSION["is_admin"] && !$modules[$a]["isPublic"] && !$modules[$a]["is_admin"]) continue;
+
+foreach($modulettes as $m) {
+	if (!$_SESSION["is_admin"] && !$m["is_public"] && !$m["is_admin"]) continue;
 	if ($left) echo "<tr>";
-	echo '<td width="50%"><a href="' . $modules[$a]["url"] . '">' . $modules[$a]["title"] . '</a></td>';
+	echo '<td width="50%"><a href="/' . $m["folder"] . '/">' . $m["title"] . '</a></td>';
 	if (!$left) echo "</tr>";
 	$left = ($left) ? false : true;
 }

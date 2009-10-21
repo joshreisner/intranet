@@ -37,42 +37,22 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 
 	//get modules info
 	error_debug('getting modules', __file__, __line__);
-	$result = db_query('SELECT 
+	$modules = db_table('SELECT 
 			m.id,
-			p.url,
 			m.title,
-			m.pallet,
-			m.isPublic,
+			m.folder,
 			(SELECT u.is_closed FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_closed,
 			(SELECT u.is_admin FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_admin
 		FROM modules m
-		JOIN pages p ON p.id = m.homePageID
 		WHERE m.is_active = 1
 		ORDER BY m.precedence');
-
-	$modules	= array();
-	$areas		= array();
-
-	while ($r = db_fetch($result)) {
-		$modules[$r['id']] = array(
-			'id'		=> $r['id'],
-			'title'		=> $r['title'],
-			'url'		=> $r['url'],
-			'isPublic'	=> $r['isPublic'],
-			'pallet'	=> $r['pallet'],
-			'is_closed'	=> $r['is_closed'],
-			'is_admin'	=> $r['is_admin']
-		);
-		if (!$r['pallet']) $areas[$r['title']] = $r['id'];
-	}
-	ksort($areas);
 	
 	//indicate admin privileges for the current module
-	if (!$_SESSION['is_admin']) {
-		$module_admin = (isset($modules[$page['module_id']])) ? $modules[$page['module_id']]['is_admin'] : false;
-	} else {
-		$module_admin = true;
-	}
+	$module_admin = (isset($modules[$page['module_id']])) ? $modules[$page['module_id']]['is_admin'] : false;
+	if ($_SESSION['is_admin']) $module_admin = true;
+	
+	//get sub-list of modulettes -- always used
+	$modulettes = db_table('SELECT m.title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title');
 	
 	//check to see if user needs update ~ todo make this a preference
 	error_debug('checking if user needs update', __file__, __line__);
@@ -197,7 +177,7 @@ function drawHeader($options=false, $title=false) {
 	//get the page for the header
 	global $page;
 	if (!$title) $title = $page['name'];
-	$return = draw_link($page['url'], $page['module']) . ' &gt; ' . $title;	
+	$return = draw_link('/' . $page['folder'] . '/', $page['module']) . ' &gt; ' . $title;	
 	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
 	return $return;
 }
@@ -317,7 +297,7 @@ function drawTop() {
 
 //it's convention to put this right below drawTop()
 function drawBottom() {
-	global $_SESSION, $_GET, $_josh, $modules, $areas, $helpdeskOptions, $helpdeskStatus;
+	global $_SESSION, $_GET, $_josh, $modules, $areas, $helpdeskOptions, $helpdeskStatus, $modulettes;
 	?>
 			</div>
 			<div id='right'>
@@ -349,19 +329,17 @@ function drawBottom() {
 				</div>
 	<? 
 		            
-	foreach ($modules as $m) {
-		if ($m['pallet']) { ?>
-		<table class="right <?=str_replace('/', '', $m['url'])?>" cellspacing="1">
+	foreach ($modules as $m) {?>
+		<table class="right <?=$m['folder']?>" cellspacing="1">
 			<tr>
 				<td colspan="2" class="head">
-					<a href="<?=$m['url']?>"><?=$m['title']?></a>
-					<?=draw_img($m['url'] . 'arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false))?>
+					<a href="/<?=$m['folder']?>/"><?=$m['title']?></a>
+					<?=draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false))?>
 				</td>
 			</tr>
-			<? if (!$m['is_closed']) include($_josh['root'] . $m['pallet']);?>
+			<? if (!$m['is_closed']) include($_josh['root'] . '/' . $m['folder'] . '/pallet.php');?>
 		</table>
-		<? }
-	}?>
+	<? }?>
 			</div>
 			<div id="footer">page rendered in <?=format_time_exec()?></div>
 		</div>
@@ -479,10 +457,9 @@ function getPage() {
 			p.is_admin, 
 			m.id module_id, 
 			m.title module, 
-			p2.url 
+			m.folder
 		FROM pages p 
 		LEFT JOIN modules m ON p.module_id = m.id 
-		LEFT JOIN pages p2 ON m.homePageID = p2.id
 		WHERE p.url = \'' . $_josh['request']['path'] . '\'')) {
 		return $return;
 	} else {
@@ -591,28 +568,40 @@ function langExt($code=false) {
 
 function langTranslatePost($keys) {
 	//set incoming POST values for languages
-	//todo - take multiple keys
 	if (!getOption('languages')) return false;
 	global $_POST;
-	$str = $_POST[$keys . langExt()];
-	$result = db_query('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
-	while ($r = db_fetch($result)) {
-		$_POST[$keys . langExt($r['code'])] = language_translate($str, $_SESSION['language'], $r['code']);
+	
+	//make sure do translations checkbox is checked
+	if (!isset($_POST['do_translations'])) return false;
+
+	//list of fields to translate
+	$keys = array_post_fields($keys);
+
+	//get list of languages to translate to
+	$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
+	
+	foreach ($keys as $key) {
+		foreach ($languages as $language) {
+			$_POST[$key . langExt($language)] = language_translate($_POST[$key . langExt()], $_SESSION['language'], $language);
+		}
 	}
 }
 
-function langUnsetFields($form, $name) {
+function langUnsetFields($form, $names) {
 	//unset fields for other languages
 	//todo - take multiple names
 	if (!getOption('languages')) return false;
-	$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
-	foreach ($languages as &$l) $l = $name . langExt($l);
-	$form->unset_fields(implode(',', $languages));
+	$names = array_post_fields($names);
+	foreach ($names as $name) {
+		$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
+		foreach ($languages as &$l) $l = $name . langExt($l);
+		$form->unset_fields(implode(',', $languages));
+	}
 }
 
-function langTranslateCheckbox($handle) {
+function langTranslateCheckbox($form, $show=true) {
 	if (!getOption('languages')) return false;
-	$handle->set_field(array('name'=>'do_translations', 'type'=>'checkbox', 'value'=>1));
+	$form->set_field(array('name'=>'do_translations', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'value'=>1));
 }
 
 function login($username, $password, $skippass=false) {
