@@ -76,7 +76,7 @@ $r = db_grab("SELECT
 		<td class="gray" valign="top" height="80">Notes:</td>
 		<td valign="top"><?=nl2br($r["activityText"])?></td>
 	</tr>
-	<? if ($module_admin) {?>
+	<? if ($page['is_admin']) {?>
 	<tr class="gray">
 		<td colspan="2" align="center"><?=draw_form_button("edit activity note","activity_edit.php?id=" . $_GET["id"])?></td>
 	</tr>

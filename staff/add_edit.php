@@ -1,7 +1,7 @@
 <?
 include("include.php");
 
-//$module_admin = false; //debugging
+//$page['is_admin'] = false; //debugging
 
 if ($posting) {
 	//make checkboxes into bits
@@ -24,7 +24,7 @@ if ($posting) {
 		}
 	}
 
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		$id = db_save("users");
 		//die("hi");
 		
@@ -174,7 +174,7 @@ if (getOption("staff_showoffice")) $form->addRow("select", "Location", "officeID
 $form->addRow("phone",  "Phone", "phone", @format_phone($r["phone"]), "", true, 50);
 $form->addRow("textarea", "Bio", "bio", @$r["bio"]);
 
-if ($module_admin) { //some fields are admin-only (we don't want people editing the staff page on the website)
+if ($page['is_admin']) { //some fields are admin-only (we don't want people editing the staff page on the website)
 	$form->addGroup("Administrative Information");
 	if (getOption("bb_notifypost")) $form->addCheckbox("notify_topics", "Notify Topics", @$r["notify_topics"]);
 	if (getOption("channels")) $form->addCheckboxes("channels", "Networks", "channels", "users_to_channels", "user_id", "channel_id", $_GET["id"]);

@@ -4,7 +4,7 @@ echo drawJumpToStaff();
 ?>
 <table class="left" cellspacing="1">
 	<?
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		echo drawHeaderRow("Comings", 2, "new", "add_edit.php");
 	} else {
 		echo drawHeaderRow("Comings", 2);

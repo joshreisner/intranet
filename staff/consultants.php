@@ -16,7 +16,7 @@ drawNavigation();
 
 ?>
 <table class="left" cellspacing="1">
-	<? if ($module_admin) {
+	<? if ($page['is_admin']) {
 		echo drawHeaderRow("Consultants", 6, "add new staff member", "add_edit.php");
 	} else {
 		echo drawHeaderRow("Consultants", 5);
@@ -27,7 +27,7 @@ drawNavigation();
 		<th align="left">Title</th>
 		<th align="left">Location</th>
 		<th align="left">Phone</th>
-	<? if ($module_admin) {?>
+	<? if ($page['is_admin']) {?>
 		<th></th>
 	<? } ?>
 	</tr>
