@@ -11,7 +11,7 @@ if (isset($_SERVER['HTTP_COOKIE']) && !empty($_SERVER['HTTP_COOKIE'])) {
         setcookie($name, '', time()-1000, "/", str_replace("intranet", "", $_SERVER["HTTP_HOST"]));
         $return .= "<li>" . $name . "</li>";
     }
-	$return .= "</ol><a href='./'>please refresh now</a>";
+	$return .= "</ol><a href='cookies.php'>please refresh now</a>";
 	echo $return;
 } else {
 	echo "You are all clear.  Go <a href='/'>Log in</a>.";
