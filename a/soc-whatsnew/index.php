@@ -1,5 +1,5 @@
 <?php
-include('../include.php');
+include('../../include.php');
 
 if (url_action('delete')) {
 	db_delete('soc_whatsnew');

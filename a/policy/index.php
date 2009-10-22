@@ -24,7 +24,7 @@ echo drawNavigationRow($options, "areas", true);
 ?>
 <table class="left">
 	<?
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		echo drawheaderRow("", 4, "add", "edit/");
 	} else {
 		echo drawheaderRow("", 3);
@@ -36,7 +36,7 @@ echo drawNavigationRow($options, "areas", true);
 		<th width="16"></th>
 		<th>Name</th>
 		<th class="r">Updated</th>
-		<? if ($module_admin) {?><th width="16"></th><? }?>
+		<? if ($page['is_admin']) {?><th width="16"></th><? }?>
 	</tr>
 	<? while ($d = db_fetch($docs)) {
 		$link = "./?id=" . $d["id"];

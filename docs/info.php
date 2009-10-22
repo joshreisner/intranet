@@ -22,7 +22,7 @@ drawTop();
 
 <table class="left" cellspacing="1">
     <?
-    if ($module_admin) {
+    if ($page['is_admin']) {
     	echo drawHeaderRow("Document Info", 2, "edit","edit.php?id=" . $_GET["id"], "delete", drawDeleteLink("Delete document?"));
     } else {
     	echo drawHeaderRow("Document Info", 2);
