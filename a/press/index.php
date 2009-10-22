@@ -8,7 +8,7 @@ if (url_action("delete")) {
 			WHERE id = " . $_GET["id"]);
 	url_drop();
 } elseif ($posting) {
-	$theuser_id = ($module_admin) ? $_POST["created_user"] : $_SESSION["user_id"];
+	$theuser_id = ($page['is_admin']) ? $_POST["created_user"] : $_SESSION["user_id"];
 	db_query("INSERT INTO press_releases (
 		headline,
 		detail,
@@ -46,7 +46,7 @@ if (url_id()) {
 		WHERE id = " . $_GET["id"]);
 	?>
 	<table class="left" cellspacing="1">
-		<? if ($module_admin) {
+		<? if ($page['is_admin']) {
 			echo drawHeaderRow("Press Release", 1, "edit", "edit/?id=" . $_GET["id"]);
 		} else {
 			echo drawHeaderRow("Press Release", 1);
@@ -64,7 +64,7 @@ if (url_id()) {
 <? } else {?>
 	
 	<table class="left" cellspacing="1">
-		<? if ($module_admin) {
+		<? if ($page['is_admin']) {
 			echo drawHeaderRow("Press Releases", 4, "new", "#bottom");
 		} else {
 			echo drawHeaderRow("Press Releases", 3);
@@ -73,7 +73,7 @@ if (url_id()) {
 			<th align="left" width="62%">Headline</th>
 			<th align="left" width="18%">Organization</th>
 			<th align="right">Date</th>
-			 <? if ($module_admin) echo "<th></th>"; ?>
+			 <? if ($page['is_admin']) echo "<th></th>"; ?>
 		</tr>
 		<?
 		$result = db_query("SELECT
@@ -98,9 +98,9 @@ if (url_id()) {
 	
 	<a name="bottom"></a>
 	
-	<? if ($module_admin) {
+	<? if ($page['is_admin']) {
 		$form = new intranet_form;
-		if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
+		if ($page['is_admin']) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, "EEDDCC");
 		$form->addRow("itext",  "Headline" , "headline", "", "", true, 255);
 		$form->addRow("itext",  "Detail" , "detail", "", "", false, 255);
 		$form->addRow("itext",  "Location" , "location", "", "", true, 255);

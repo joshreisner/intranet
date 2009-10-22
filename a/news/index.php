@@ -80,7 +80,7 @@ if (url_action("delete")) {
 
 } else {
 	echo drawTableStart();
-	$colspan = ($module_admin) ? 5 : 4;
+	$colspan = ($page['is_admin']) ? 5 : 4;
 	echo drawHeaderRow("", $colspan, "new", "#bottom");
 	
 	$result = db_query("SELECT 
@@ -101,7 +101,7 @@ if (url_action("delete")) {
 			<th>Outlet</th>
 			<th>Organization</th>
 			<th class="r">Date</th>
-			<? if ($module_admin) {?><th class="x"></th><? }?>
+			<? if ($page['is_admin']) {?><th class="x"></th><? }?>
 		</tr>
 		<?
 		while ($r = db_fetch($result)) {?>

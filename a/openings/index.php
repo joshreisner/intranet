@@ -12,7 +12,7 @@ if (url_action("delete")) {
 drawTop();
 ?>
 <table class="left" cellspacing="1">
-	<? if ($module_admin) {
+	<? if ($page['is_admin']) {
 		$colspan = 4;
 		echo drawHeaderRow("Open Positions", $colspan, "new", "#bottom");
 	} else {
@@ -23,7 +23,7 @@ drawTop();
 		<th width="50%">Title</th>
 		<th width="30%">Location</th>
 		<th class="r" width="20%"><nobr>Last Update</nobr></th>
-		<? if ($module_admin) {?><th></th><? }?>
+		<? if ($page['is_admin']) {?><th></th><? }?>
 	</tr>
 	<?
 	$result = db_query("SELECT 
@@ -54,7 +54,7 @@ drawTop();
 
 <a name="bottom"></a>
 
-<? if ($module_admin) {
+<? if ($page['is_admin']) {
 	$form = new intranet_form;
 	$form->addRow("itext",  "Title" , "title", "", "", true);
 	$form->addRow("select", "Organization" , "corporationID", "SELECT id, title from organizations ORDER BY title", "", true);

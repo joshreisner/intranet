@@ -14,7 +14,7 @@ $result = db_table('SELECT d.id, d.title, d.description, ' . db_updated('d') . '
 						JOIN docs_types i ON d.type_id = i.id
 						' . getChannelsWhere('docs', 'd', 'doc_id') . '
 						ORDER BY c.precedence, d.title;');
-$links = ($module_admin) ? array('edit.php'=>'add new') : false;
+$links = ($page['is_admin']) ? array('edit.php'=>'add new') : false;
 $t = new table('docs', drawHeader($links));
 $t->set_column('icon', 'd', '&nbsp;');
 $t->set_column('title');

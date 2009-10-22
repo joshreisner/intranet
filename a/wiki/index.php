@@ -48,9 +48,9 @@ drawTop();
 
 <a name="bottom"></a>
 
-<? if ($module_admin) {
+<? if ($page['is_admin']) {
 	$form = new intranet_form;
-	if ($module_admin) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
+	if ($page['is_admin']) $form->addUser("created_user",  "Posted By" , $_SESSION["user_id"], false, true);
 	$form->addRow("itext",  "Title" , "title", "", "", true, 255);
 	$form->addRow("select", "Type" , "type_id", "SELECT id, description FROM wiki_topics_types");
 	$form->addCheckboxes("tags", "Tags", "wiki_tags", "wiki_topics_to_tags");
