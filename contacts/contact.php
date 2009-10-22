@@ -76,9 +76,9 @@ if (!$i["id"]) {
 	</script>
 	<table class="left" cellspacing="1">
 		<?
-		if ($module_admin && $i["is_active"]) {
+		if ($page['is_admin'] && $i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");
-		} elseif ($module_admin && !$i["is_active"]) {
+		} elseif ($page['is_admin'] && !$i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"), "expunge", "javascript:confirmExpunge({$_GET["id"]});");
 		} elseif ($i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");

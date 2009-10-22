@@ -28,7 +28,7 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 ?>
 <table class="left" cellspacing="1">
 	<?
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		echo drawHeaderRow("Event Details", 2, "edit", "edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
 	} elseif ($_SESSION["user_id"] == $e["created_user"]) {
 		echo drawHeaderRow("Event Details", 2, "edit", "edit.php?id=" . $_GET["id"], "delete", drawDeleteLink());
