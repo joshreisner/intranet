@@ -288,7 +288,7 @@ function drawTop() {
 				<a class="button left" href="<?=$_SESSION['homepage']?>">Home</a>
 				<?=draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), (($user['help']) ? 'Hide' : 'Show') . ' Help', array('class'=>'button right', 'id'=>'showhelp'))?>
 			<? if ($_SESSION['is_admin']) {?>
-					<a class='button right' href='/admin/pages/?id=<?=$page['id']?>'>Edit Page Info</a>
+					<a class='button right' href='/a/admin/pages.php?id=<?=$page['id']?>'>Edit Page Info</a>
 			<? }?>
 				<div id="helptext"<? if (!$user['help']) {?> style="display:none;"<? }?>>
 					<?
@@ -305,7 +305,7 @@ function drawTop() {
 
 //it's convention to put this right below drawTop()
 function drawBottom() {
-	global $_SESSION, $_GET, $_josh, $modules, $areas, $helpdeskOptions, $helpdeskStatus, $modulettes;
+	global $_SESSION, $_GET, $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes;
 	?>
 			</div>
 			<div id='right'>
