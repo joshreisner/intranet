@@ -5,10 +5,10 @@ if ($posting) {
 	$id = db_save('external_orgs');
 	db_checkboxes('types', 'external_orgs_to_types', 'org_id', 'type_id', $id);
 	if (getOption('channels')) db_checkboxes('channels', 'external_orgs_to_channels', 'org_id', 'channel_id', $id);
-	url_change_post('/' . $location . '/type.php?id=' . db_grab('SELECT type_id FROM external_orgs_to_types WHERE org_id = ' . $id)); //pure hackery
+	url_change_post('./type.php?id=' . db_grab('SELECT type_id FROM external_orgs_to_types WHERE org_id = ' . $id)); //pure hackery
 } elseif ($included) {
 	$_josh['referrer'] = false;
-	$_josh['request']['path_query'] = '/' . $location . '/edit/'; //shoddy way of setting the form target
+	$_josh['request']['path_query'] = 'edit.php'; //shoddy way of setting the form target
 	$r['url'] = 'http://';
 } else {
 	url_query_require();
