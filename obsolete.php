@@ -5,8 +5,8 @@ function drawCheckboxText($chkname, $description) {
 
 function drawDeleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
 	//if we're going to backend all the table stuff, then this should be incorporated somehow.  perhaps we will need to extend the class
-	global $module_admin, $_josh;
-	if ($adminOnly && !$module_admin) return false;
+	global $page, $_josh;
+	if ($adminOnly && !$page['is_admin']) return false;
 	if (!$id) return '<td width="16">&nbsp;</td>';
 	return draw_tag("td", array("width"=>"16"), draw_img("/images/icons/delete.png", drawDeleteLink($prompt, $id, $action)));
 }
@@ -45,21 +45,26 @@ function drawNavigationRow($pages, $module=false, $pq=false) {
 }
 	
 function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
-	global $_josh, $modules, $page;
+	global $_josh, $modules, $modulettes, $page;
 	if (!$name) $name = $page["name"];
 	//urls are absolute because it could be used in an email
 	$header ='<tr>
 			<td class="head" colspan="' . $colspan . '">
 				<div class="head-left">
 				';
-	if ($_josh['request']['folder'] != "login") {
-		$header .='<a  href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["title"] . '</a>';
+	//find module
+	$title = false;
+	foreach ($modules as $m) {
+		if ($_josh['request']['folder'] == $m['folder']) $header .='<a href="' . url_base() . '/' . $_josh['request']['folder'] . '/">' . $m['title'] . '</a> &gt; ';
 	}
-	if ($name) {
-		$header .=' &gt; ';
-		if ($_josh["request"]["subfolder"]) $header .= '<a href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/' . $_josh["request"]["subfolder"] . '/">' . format_text_human($_josh["request"]["subfolder"]) . '</a> &gt; ';
-		$header .= $name;
+	
+	//find modulette
+	if (($_josh['request']['folder'] == 'a') && $_josh['request']['subfolder']) {
+		foreach ($modulettes as $m) {
+			if ($_josh['request']['subfolder'] == $m['folder']) $header .='<a href="' . url_base() . '/' . $_josh['request']['folder'] . '/' . $_josh['request']['subfolder'] . '/">' . $m['title'] . '</a> &gt; ';
+		}
 	}
+	$header .= $name;
 	$header .= "</div>";
 	if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
 	if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
