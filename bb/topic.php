@@ -68,7 +68,7 @@ echo draw_javascript('
 ');
 
 echo drawTableStart();
-if ($module_admin || $isPoster) {
+if ($page['is_admin'] || $isPoster) {
 	echo drawHeaderRow($r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 } else {
 	echo drawHeaderRow($r["title"], 2, "add a followup", "#bottom");

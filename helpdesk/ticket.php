@@ -44,7 +44,7 @@ if ($r["statusID"] != 9) { //open
 	$typeRequired = true;
 }
 
-//$module_admin = ($module_admin && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
+//$page['is_admin'] = ($page['is_admin'] && ($r["departmentID"] == $_SESSION["departmentID"])) ? true : false;
 
 if ($uploading) {
 	//upload an attachment
@@ -56,7 +56,7 @@ if ($uploading) {
 	//add a comment
 	//auto-assign ticket if unassigned and followup poster is an IT admin
 	$followupAdmin = (isset($_POST["is_admin"])) ? 1 : 0;
-	if ($module_admin && !$followupAdmin && empty($r["ownerID"])) {
+	if ($page['is_admin'] && !$followupAdmin && empty($r["ownerID"])) {
 		//set to it staff assigned if no status
 		if ($r["statusID"] == 1) $r["statusID"] = 2;
 		db_query("UPDATE helpdesk_tickets SET ownerID = {$_SESSION["user_id"]}, statusID = {$r["statusID"]}, updated_date = GETDATE() WHERE id = " . $_GET["id"]);
@@ -182,7 +182,7 @@ while ($t = db_fetch($types)) {
 		}
 		$title = "View Open Ticket (" . $ticketCount . " of " . $counter . ")";
 
-		if ($module_admin) {
+		if ($page['is_admin']) {
 			if ($lastTicketID && $nextTicketID) {
 				echo drawHeaderRow($title, 2, "prev", "ticket.php?id=" . $lastTicketID, "next", "ticket.php?id=" . $nextTicketID);
 			} elseif ($lastTicketID) {
@@ -199,7 +199,7 @@ while ($t = db_fetch($types)) {
 		echo drawHeaderRow("View Ticket", 2, "add a followup message","#bottom");
 	}
 	
-	if ($module_admin) {?>
+	if ($page['is_admin']) {?>
 	<form name="ticketForm">
 	<tr class="helpdesk-hilite" height="30">
 		<td class="left">Status</td>
@@ -251,7 +251,7 @@ while ($t = db_fetch($types)) {
 	<tr height="30">
 		<td class="left">Type</td>
 		<td><?=draw_form_select("type_id", "SELECT id, description FROM helpdesk_tickets_types WHERE departmentID = " . $r["departmentID"] . " ORDER BY description", $r["type_id"], $typeRequired, false, "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newType=' + this.value");?>
-			<? if ($module_admin) {
+			<? if ($page['is_admin']) {
 			 if ($r["type_id"]) {
 			 	echo '<a href="type.php?id=' . $r["type_id"] . '">view all</a> / <a href="type.php?id=' . $r["type_id"] . '&month=' . $r["createdMonth"] . '&year=' . $r["createdYear"] . '">this month</a>';
 			 } else {
@@ -267,7 +267,7 @@ while ($t = db_fetch($types)) {
 	<tr height="30">
 		<td class="left">Priority</td>
 		<td><?
-		if ($module_admin || $r["is_adminPriority"]) {
+		if ($page['is_admin'] || $r["is_adminPriority"]) {
 			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
 		} else {
 			echo draw_form_select("priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE is_admin = 0", $r["priorityID"], true, "field", "location.href='" . $request["path_query"] . "&ticketID=" . $_GET["id"] . "&newPriority=' + this.value");
@@ -307,7 +307,7 @@ while ($t = db_fetch($types)) {
 	<? } ?>
 	</form>
 	<? 
-$editurl = ($module_admin) ? "ticket-edit.php?id=" . $_GET["id"] : false;
+$editurl = ($page['is_admin']) ? "ticket-edit.php?id=" . $_GET["id"] : false;
 echo drawThreadTop($r["title"], $r["description"], $r["created_user"], $r["first"] . " " . $r["last"], $r["created_date"], $editurl);
 
 $result = db_query("SELECT

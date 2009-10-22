@@ -9,7 +9,7 @@ drawTop();
 ?>
 
 <table class="left" cellspacing="1">
-<? if ($module_admin) {
+<? if ($page['is_admin']) {
 	echo drawHeaderRow("Programs", 4, "new program", "program_add_edit.php");
 } else {
 	echo drawHeaderRow("Programs", 4);

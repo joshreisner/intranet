@@ -30,7 +30,7 @@ $r = db_grab("SELECT
 	$r["deleted_user"] = ($r["deleted_userFirst"]) ? $r["deleted_userFirst"] . " " . $r["deleted_userLast"] : false;
 ?>
 <table class="left" cellspacing="1">
-	<? if ($module_admin) {
+	<? if ($page['is_admin']) {
 		echo drawHeaderRow("View Position", 2, "edit", "position_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Position", 2);

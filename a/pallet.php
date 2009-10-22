@@ -1,10 +1,10 @@
 <?
 $left = true;
 
-foreach($modulettes as $m) {
-	if (!$_SESSION["is_admin"] && !$m["is_public"] && !$m["is_admin"]) continue;
+foreach($modulettes as $o) {
+	if (!$_SESSION["is_admin"] && !$o["is_public"] && !$o["is_admin"]) continue;
 	if ($left) echo "<tr>";
-	echo '<td width="50%"><a href="/' . $m["folder"] . '/">' . $m["title"] . '</a></td>';
+	echo '<td width="50%"><a href="/' . $m['folder'] . '/' . $o["folder"] . '/">' . $o["title"] . '</a></td>';
 	if (!$left) echo "</tr>";
 	$left = ($left) ? false : true;
 }

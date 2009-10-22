@@ -12,7 +12,7 @@ if (url_action('delete')) {
 
 //main table
 echo drawTableStart();
-if ($module_admin) {
+if ($page['is_admin']) {
 	echo drawHeaderRow(db_grab('SELECT title FROM external_orgs_types WHERE id = ' . $_GET['id']), 1, 'add new', '#bottom');
 } else {
 	echo drawHeaderRow();
@@ -27,7 +27,7 @@ if (db_found($orgs)) {
 	while ($o = db_fetch($orgs)) {?>
 	<tr>
 		<td class='text'>
-			<? if ($module_admin) {?>
+			<? if ($page['is_admin']) {?>
 			<a href='<?=drawDeleteLink('delete this org?', $o['id'], 'delete', 'org_id')?>' class='button-light right'>del</a>
 			<a href='edit/?id=<?=$o['id']?>' class='button-light right'>edit</a>
 			<? }?>

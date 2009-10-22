@@ -92,7 +92,7 @@ if (!$r["is_active"]) {
 }
 ?>
 <table class="left" cellspacing="1">
-	<? if ($module_admin) {
+	<? if ($page['is_admin']) {
 		if ($r["is_active"]) {
 			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "deactivate", drawDeleteLink("Deactivate this staff member?"));
 		} else {
@@ -148,7 +148,7 @@ if (!$r["is_active"]) {
 		<td class="left">Bio</td>
 		<td colspan="2" height="167" class="text"><?=nl2br($r["bio"])?></td>
 	</tr>
-	<? if ($module_admin || ($_GET["id"] == $_SESSION["user_id"])) {?>
+	<? if ($page['is_admin'] || ($_GET["id"] == $_SESSION["user_id"])) {?>
 	<tr class="group">
 		<td colspan="3">Administrative Information</td>
 	</tr>
@@ -189,7 +189,7 @@ if (!$r["is_active"]) {
 			<td class="left">Password</td>
 			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">change your password</a></td>
 		</tr>
-		<? } elseif ($module_admin) {?>
+		<? } elseif ($page['is_admin']) {?>
 		<tr>
 			<td class="left">Password</td>
 			<td colspan="2">
@@ -201,7 +201,7 @@ if (!$r["is_active"]) {
 			</td>
 		</tr>
 	<? }?>
-	<? if ($module_admin) {?>
+	<? if ($page['is_admin']) {?>
 	<tr>
 		<td class="left">Invite</td>
 		<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>

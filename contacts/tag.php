@@ -1,7 +1,7 @@
 <?
 include("../include.php");
 
-if (!$module_admin) url_change("tags.php");
+if (!$page['is_admin']) url_change("tags.php");
 
 if ($_POST) {
 	$t = db_grab("SELECT MAX(precedence) precedence FROM contacts_tags WHERE type_id = " . $_GET["id"]);
