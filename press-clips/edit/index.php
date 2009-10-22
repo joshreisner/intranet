@@ -6,7 +6,7 @@ if ($posting) {
 	if (getOption('channels')) db_checkboxes('channels', 'press_clips_to_channels', 'clip_id', 'channel_id', $id);
 	url_change_post("/press-clips/clip.php?id=" . $id);
 } elseif ($included) {
-	$_josh["request"]["path_query"] = "/" . $location . "/edit/"; //shoddy way of setting the form target
+	$_josh["request"]["path_query"] = "edit.php"; //shoddy way of setting the form target
 	$r["url"] = "http://";
 } elseif (url_id()) {
 	drawTop();
