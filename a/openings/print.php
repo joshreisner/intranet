@@ -1,4 +1,4 @@
-<? include("../include.php");
+<? include("../../include.php");
 
 $jobs = db_query("SELECT title, description FROM openings order by created_date");
 

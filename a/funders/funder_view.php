@@ -1,5 +1,5 @@
 <?  
-include("../include.php");
+include("../../include.php");
 
 //if no id, go to funders
 url_query_require();

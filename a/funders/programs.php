@@ -1,5 +1,5 @@
 <?  
-include("../include.php");
+include("../../include.php");
 
 if (url_action("delete")) {
 	db_query("DELETE FROM funders_programs WHERE programID = " . $_GET["id"]);

@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 
 if (url_id() && url_action('delete')) {
 	db_delete('web_news_blurbs', $_GET['id']);

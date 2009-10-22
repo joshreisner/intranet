@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 
 if (isset($_GET["deleteID"])) { //delete topic
 	db_query("UPDATE wiki_topics SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE id = " . $_GET["deleteID"]);

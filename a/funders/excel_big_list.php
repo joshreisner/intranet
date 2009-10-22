@@ -1,5 +1,5 @@
 <?  
-include("../include.php");
+include("../../include.php");
 
 $bgcolors[1] = "#FF99CC";
 $bgcolors[2] = "#FFFF99";

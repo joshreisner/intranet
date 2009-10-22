@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 
 //download
 if (url_action("delete")) {

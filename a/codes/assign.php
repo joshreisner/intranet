@@ -1,5 +1,5 @@
 <?
-include("../include.php");
+include("../../include.php");
 drawTop();
 $result = db_query("SELECT code FROM ldcodes");
 while ($r = db_fetch($result)) {

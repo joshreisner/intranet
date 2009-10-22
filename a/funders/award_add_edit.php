@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 
 if (!empty($_POST)) { 
 	//format variables

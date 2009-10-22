@@ -1,5 +1,5 @@
 <?
-include("../include.php");
+include("../../include.php");
 
 if ($posting) {
 	$id = db_save("queries");

@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 
 if (url_action("delete")) {
 	db_query("DELETE FROM queries WHERE id = " . $_GET["id"]);

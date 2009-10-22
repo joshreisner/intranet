@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 
 if ($posting) {
 	if (isset($_GET["id"])) { //edit a funder			

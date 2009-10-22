@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 
 if (url_action("delete")) {
 	db_query("UPDATE press_releases SET 

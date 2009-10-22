@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 
 //default to active awards
 if (!isset($_GET["statusID"])) url_change($_josh["request"]["path_query"] . "&statusID=1");

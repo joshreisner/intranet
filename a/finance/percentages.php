@@ -1,4 +1,4 @@
-<?php include("../include.php");
+<?php include("../../include.php");
 
 error_reporting(E_ALL);
 

@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 	drawTop();
 ?>
 <table class="left" cellspacing="1">

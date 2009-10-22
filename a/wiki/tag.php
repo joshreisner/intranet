@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 url_query_require("tags.php");
 
 drawTop();

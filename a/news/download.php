@@ -1,5 +1,5 @@
 <?
-include("../include.php");
+include("../../include.php");
 
 $d = db_grab("SELECT 
 		n.headline, 

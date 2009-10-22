@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 
 $return = '
 <table width="100%" border="1" style="font-family:verdana; font-size:11px; padding:1px; border:1px solid #cccccc;">

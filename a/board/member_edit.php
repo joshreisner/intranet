@@ -1,5 +1,5 @@
 <?
-include("../include.php");
+include("../../include.php");
 
 if (!empty($_POST)) {
 	db_query("UPDATE board_members SET

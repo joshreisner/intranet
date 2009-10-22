@@ -1,5 +1,5 @@
 <?
-include("../include.php");
+include("../../include.php");
 drawTop();
 
 $service = db_grab("SELECT name FROM web_services WHERE id = " . $_GET["id"]);

@@ -1,4 +1,4 @@
-<? include("../include.php");
+<? include("../../include.php");
 
 $return = '<table width="100%" border="1">
 	<tr bgcolor="#EEEEEE">

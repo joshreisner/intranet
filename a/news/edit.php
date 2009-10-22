@@ -2,7 +2,7 @@
 if (isset($_josh)) { //included
 	$_josh["request"]["path_query"] = "/news/edit.php";
 } else { //page loaded on its own
-	include("../include.php");
+	include("../../include.php");
 	if ($posting) {
 		if (isset($_FILES["content"]["name"]) && !empty($_FILES["content"]["name"])) {
 			list($_POST["content"], $_POST["fileTypeID"]) = file_get_uploaded("content", "docs_types");

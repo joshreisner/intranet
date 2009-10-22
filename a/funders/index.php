@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 
 if (isset($_GET["deleteID"])) { //delete a funder
 	db_query("DELETE FROM funders_activity                     WHERE funderID = " . $_GET["deleteID"]);

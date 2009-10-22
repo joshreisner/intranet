@@ -1,4 +1,4 @@
-<?  include("../include.php");
+<?  include("../../include.php");
 
 if (url_action("delete")) {
 	db_query("UPDATE board_members SET 

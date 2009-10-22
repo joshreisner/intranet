@@ -1,4 +1,4 @@
-<?	include("../include.php");
+<?	include("../../include.php");
 
 	//bail if no 
 	if (!isset($_GET["id"])) url_change("funders.php");

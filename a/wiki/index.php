@@ -1,5 +1,5 @@
 <?php
-include("../include.php");
+include("../../include.php");
 
 if ($posting) {
 	$id = db_save("wiki_topics");
