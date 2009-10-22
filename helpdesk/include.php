@@ -1,7 +1,7 @@
 <?php include("../include.php");
 
 //kick out user if not administrator ~ should be done with page info
-if (!$module_admin && $page["is_admin"]) url_change("/helpdesk/");
+if (!$page['is_admin'] && $page["is_admin"]) url_change("/helpdesk/");
 
 //department may become settable
 if (url_id("dept")) {
@@ -180,7 +180,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 }
 
 function emailITticket($id, $scenario, $admin=false) {
-	global $_SESSION, $_josh, $module_admin;
+	global $_SESSION, $_josh, $page['is_admin'];
 	$message  = drawEmailHeader();
 	
 	$ticket = db_grab("SELECT
@@ -245,7 +245,7 @@ function emailITticket($id, $scenario, $admin=false) {
 		$users[] = $ticket["email"];
 	}
 	
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		$admins[] = $_SESSION["email"];
 	} else {
 		$users[] = $_SESSION["email"];

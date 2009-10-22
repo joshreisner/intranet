@@ -30,7 +30,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	
 	//determine location & scenario
 	error_debug('user is logged in, determining location & scenario', __file__, __line__);
-	$page		= getPage();
 
 	$user = db_grab('SELECT id, help FROM users WHERE id = ' . $_SESSION['user_id']);
 
@@ -48,14 +47,78 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		WHERE m.is_active = 1
 		ORDER BY m.precedence');
 		
-	//indicate admin privileges for the current module
-	$module_admin = (isset($modules[$page['module_id']])) ? $modules[$page['module_id']]['is_admin'] : false;
-	if ($_SESSION['is_admin']) $module_admin = true;
+	//get sub-list of modulettes
+	$modulettes = db_table('SELECT m.id, m.title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title');
+
+	//get page
+	$page = array('title'=>'Untitled Page', 'module_id'=>false, 'modulette_id'=>false, 'color'=>'666', 'hilite'=>'eee');
+	if ($request['folder']) {
+		//in a folder, look for module
+		foreach ($modules as $m) {
+			//override module admin privileges if user is site admin
+			if ($_SESSION['is_admin']) $m['is_admin'] = true;		
+		
+			//start breadcrumbs and title, set module_id, is_admin
+			if ($request['folder'] == $m['folder']) {
+				$page['title'] = $m['title'] . ' > ';
+				$page['breadcrumbs'] = draw_link(url_base() . '/' . $request['folder'] . '/', $m['title']) . ' &gt; ';
+				$page['module_id'] = $m['id'];
+				$page['is_admin'] = $m['is_admin'];
+				$page['color'] = $m['color'];
+				$page['hilite'] = $m['hilite'];
+			}
+			
+			//get helpdesk info, because we should here
+			if ($m['folder'] == 'helpdesk') {
+				//helpdesk is activated
+				error_debug('getting helpdesk pallet info', __file__, __line__);
+				$helpdeskOptions = db_table('SELECT 
+						d.departmentID id, 
+						d.shortName name, 
+						(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.departmentID = d.departmentID AND t.statusID <> 9) num_open
+					FROM departments d
+					WHERE isHelpdesk = 1
+					ORDER BY d.shortName');
+				$helpdeskStatus = db_grab('SELECT message FROM it_system_status');
+			}			
+		}
+		
+		if (($request['folder'] == 'a') && $request['subfolder']) {
+			foreach ($modulettes as $m) {
+				//override modulette admin privileges if user is site admin
+				if ($_SESSION['is_admin']) $m['is_admin'] = true;		
+
+				if ($request['subfolder'] == $m['folder']) {
+					$page['title'] .= $m['title'] . ' > ';
+					$page['breadcrumbs'] .= draw_link(url_base() . '/' . $request['folder'] . '/' . $request['subfolder'] . '/', $m['title']) . ' &gt; ';
+					$page['modulette_id'] = $m['id'];
+					$page['is_admin'] = $m['is_admin']; //overriding module privilege with that of modulette
+				}
+			}
+		}
+		
+		//get actual page from database now, just need the title
+		if ($page['modulette_id'] && $page['module_id']) {
+			$m = db_grab('SELECT id, name, helpText FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id'] . ' AND modulette_id = ' . $page['modulette_id']);
+		} elseif ($page['module_id']) {
+			$m = db_grab('SELECT id, name, helpText FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id']);
+		} else {
+			error_handle('Something is wrong!', 'Page is not set for ' . $request['url']);
+		}
+		
+		if ($m) {
+			$page['id'] = $m['id'];
+			$page['title'] .= $m['name'];
+			$page['breadcrumbs'] .= $m['name'];
+			$page['helpText'] = $m['helpText'];
+		} else {
+			//set info if page isn't in module
+			error_handle('Need to create page', 'here');
+		}
+	}
+		
 	
-	//get sub-list of modulettes -- always used
-	$modulettes = db_table('SELECT m.title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title');
-	
-	//check to see if user needs update ~ todo make this a preference
+	//check to see if user needs update ~ todo make this a site preference
 	error_debug('checking if user needs update', __file__, __line__);
 	if (($_SESSION['update_days'] > 90 || empty($_SESSION['updated_date'])) && ($_josh['request']['path'] != '/staff/add_edit.php')) {
 		error_debug('user needs address update', __file__, __line__);
@@ -64,28 +127,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		error_debug('user needs password update', __file__, __line__);
 		url_change('/login/password_update.php');
 	}		
-
-	//special pages that don't belong to a module still need info
-	if (!isset($page['module_id'])) $page['module_id'] = 0;
-	if (!isset($modules[$page['module_id']])) {
-		error_debug('unspecified module', __file__, __line__);
-		$modules[$page['module_id']]['pallet']		= false;
-		$modules[$page['module_id']]['isPublic']	= false;
-		$modules[$page['module_id']]['pallet']		= false;
-		$modules[$page['module_id']]['title']		= getString('app_name');
-		$modules[$page['module_id']]['is_admin']	= false;
-	}
-
-	//get helpdesk pallet info
-	error_debug('getting helpdesk pallet info', __file__, __line__);
-	$helpdeskOptions = db_table('SELECT 
-			d.departmentID id, 
-			d.shortName name, 
-			(SELECT COUNT(*) FROM helpdesk_tickets t WHERE t.departmentID = d.departmentID AND t.statusID <> 9) num_open
-		FROM departments d
-		WHERE isHelpdesk = 1
-		ORDER BY d.shortName');
-	$helpdeskStatus = db_grab('SELECT message FROM it_system_status');
 
 	//handle side menu pref updates
 	if (isset($_GET['module'])) {
@@ -146,10 +187,10 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br
 }
 
 function drawNavigation() {
-	global $_SESSION, $module_admin, $_josh, $page;
+	global $_SESSION, $_josh, $page;
 	if (!$page['module_id']) return false; //not in module
 	$pages	= array();
-	$admin	= ($module_admin) ? '' : 'AND is_admin = 0';
+	$admin	= ($page['is_admin']) ? '' : 'AND is_admin = 0';
 	$result	= db_query('SELECT name, url FROM pages WHERE module_id = ' . $page['module_id'] . ' ' . $admin . ' AND isInstancePage = 0 ORDER BY precedence');
 	while ($r = db_fetch($result)) {
 		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
@@ -176,9 +217,8 @@ function drawNavigation() {
 
 function drawHeader($options=false, $title=false) {
 	//get the page for the header
-	global $page;
-	if (!$title) $title = $page['name'];
-	$return = draw_link('/' . $page['folder'] . '/', $page['module']) . ' &gt; ' . $title;	
+	global $_josh, $page, $modules, $modulettes;
+	$return = ($title) ? $title : $page['breadcrumbs'];	
 	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
 	return $return;
 }
@@ -203,23 +243,23 @@ function drawSyndicateLink($name) {
 	return draw_rss_link($_josh['write_folder'] . '/rss/' . $name . '.xml');
 }
 
-function drawThreadComment($content, $user_id, $fullname, $date, $module_admin=false) {
+function drawThreadComment($content, $user_id, $fullname, $date, $admin=false) {
 	$return  = '<tr><td class="left">';
 	$return .= drawName($user_id, $fullname, $date, true) . '</td>';
 	$return .= '<td class="right text ';
-	if ($module_admin) $return .= ' hilite';
+	if ($admin) $return .= ' hilite';
 	$return .= '" height="80"><div class="text">' . $content . '</div></td></tr>';
 	return $return;
 }
 
 function drawThreadCommentForm($showAdmin=false) {
-	global $module_admin, $_josh, $_SESSION;
+	global $page, $_josh, $_SESSION;
 	$return = '<a name="bottom"></a><form ';
 	if ($_josh['db']['language'] == 'mysql') $return .= 'accept-charset="utf-8" ';
 	$return .= 'method="post" action="' . $_josh['request']['path_query'] . '" onsubmit="javascript:return validate(this);"><tr valign="top">
 			<td class="left">' . drawName($_SESSION['user_id'], $_SESSION['full_name'], false, true) . '</td>
 			<td>' . draw_form_textarea('message', '', 'mceEditor thread');
-	if ($showAdmin && $module_admin) {
+	if ($showAdmin && $page['is_admin']) {
 		$return .= '
 			<table class="nospacing">
 				<tr>
@@ -255,29 +295,23 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 }
 
 function drawTop() {
-	global $_GET, $_SESSION, $_josh, $page, $module_admin, $user;
+	global $_GET, $_SESSION, $_josh, $page, $user;
 	error_debug('starting top', __file__, __line__);
-	$title = $page['module'] . ' > ' . $page['name'];
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
-?><html>
-	<?
-	$css = '';
-	if ($page['color']) {
-		$css = draw_css('
-			#left table.left td.head { background-color:#' . $page['color'] . '; }
-			#left table.table th.title, #left form fieldset legend, #left table.navigation { background-color:#' . $page['color'] . '; }
-			#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
-		');
-	}
+	echo '<html>';
 	echo draw_container('head',
 		(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
-		draw_container('title', $title) .
+		draw_container('title', $page['title']) .
 		draw_css_src('/styles/screen.css',	'screen') .
 		draw_css_src('/styles/print.css',	'print') .
 		draw_css_src('/styles/ie.css',		'ie') .
 		draw_javascript_src('/javascript.js') .
 		draw_javascript_lib() .
-		$css
+		draw_css('
+			#left table.left td.head { background-color:#' . $page['color'] . '; }
+			#left table.table th.title, #left form fieldset legend, #left table.navigation { background-color:#' . $page['color'] . '; }
+			#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
+		')
 	);
 	?>
 	<body>
@@ -453,30 +487,6 @@ function getOption($key) {
 	$options[$key] = $defaults[$key];
 	
 	return $defaults[$key];
-}
-
-function getPage() {
-	global $_josh;
-	
-	if ($return = db_grab('SELECT 
-			p.id, 
-			p.name, 
-			p.helpText, 
-			p.is_admin, 
-			m.id module_id, 
-			m.title module, 
-			m.folder,
-			m.color,
-			m.hilite
-		FROM pages p 
-		LEFT JOIN modules m ON p.module_id = m.id 
-		WHERE p.url = \'' . $_josh['request']['path'] . '\'')) {
-		return $return;
-	} else {
-		error_debug('creating page', __file__, __line__);
-		db_query('INSERT INTO pages ( url, name ) VALUES ( \'' . $_josh['request']['path'] . '\', \'Untitled Page\' )');
-		return getPage();
-	}
 }
 
 function getString($key) {

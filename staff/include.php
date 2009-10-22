@@ -14,10 +14,10 @@ if (url_action("delete")) {
 }
 
 function drawJumpToStaff($selectedID=false) {
-	global $module_admin;
+	global $page['is_admin'];
 	$nullable = ($selectedID === false);
 	$return = draw_div("panel", 'Jump to ' . drawSelectUser("", $selectedID, $nullable, 0, true, true, "Staff Member:"));
-	if ($module_admin) { 
+	if ($page['is_admin']) { 
 		if ($r = db_grab("SELECT COUNT(*) FROM users_requests")) {
 			$return = drawMessage("There are pending <a href='requests.php'>account requests</a> for you to review.") . $return;
 		}
@@ -27,9 +27,9 @@ function drawJumpToStaff($selectedID=false) {
 }
 
 function drawStaffList($where, $searchterms=false) {
-	global $module_admin, $_josh;
+	global $page['is_admin'], $_josh;
 	$return = drawJumpToStaff() . '<table class="left" cellspacing="1">';
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		$colspan = 5;
 		$return .= drawHeaderRow(false, $colspan, "new", "add_edit.php");
 	} else {
@@ -65,7 +65,7 @@ function drawStaffList($where, $searchterms=false) {
 			<th style="text-align:left">Name / Office</th>
 			<th style="text-align:left">Title / Department</th>
 			<th style="text-align:left">Phone</th>';
-		if ($module_admin) $return .= '<th></th>';
+		if ($page['is_admin']) $return .= '<th></th>';
 		$return .= '</tr>';
 		if (($count == 1) && $searchterms) {
 			$r = db_fetch($result);
@@ -81,7 +81,7 @@ function drawStaffList($where, $searchterms=false) {
 }
 
 function drawStaffRow($r, $searchterms=false) {
-	global $module_admin, $_josh;
+	global $page['is_admin'], $_josh;
 	if ($searchterms) {
 		global $fields;
 		foreach ($fields as $f) {
@@ -98,7 +98,7 @@ function drawStaffRow($r, $searchterms=false) {
 	if ($r["departmentName"]) $return .= '<i>' . $r["departmentName"] . '</i><br>';
 	if ($r["corporationName"]) $return .= '<a href="/staff/organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
 	$return .= '</td><td><nobr>' . format_phone($r["phone"]) . '</nobr></td>';
-	if ($module_admin) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="/images/icons/delete.png" width="16" height="16" border="0"></td>';
+	if ($page['is_admin']) $return .= '<td width="16"><a href="javascript:url_prompt(\'' . url_query_add(array("action"=>"delete", "staffID"=>$r["id"]), false) . '\', \'Delete this staff member?\');"><img src="/images/icons/delete.png" width="16" height="16" border="0"></td>';
 	return $return . '</tr>';
 }
 

@@ -43,7 +43,7 @@ $r = db_grab("SELECT
 	//-->
 </script>
 <table class="left" cellspacing="1">
-	<? if ($module_admin) {
+	<? if ($page['is_admin']) {
 		echo drawHeaderRow("View Funder", 2, "edit", "funder_add_edit.php?id=" . $_GET["id"]);
 	} else {
 		echo drawHeaderRow("View Funder", 2);
@@ -101,7 +101,7 @@ $r = db_grab("SELECT
 				<tr>
 					<td class="bold">Awards, Proposals, Strategies, etc.</td>
 					<td class="small" align="right">
-						<? if ($module_admin) {?>[ <a href="award_add_edit.php?funderID=<?=$_GET["id"]?>" class="black">add award / proposal</a> ]<?}?></td>
+						<? if ($page['is_admin']) {?>[ <a href="award_add_edit.php?funderID=<?=$_GET["id"]?>" class="black">add award / proposal</a> ]<?}?></td>
 					</td>
 				</tr>
 			</table>

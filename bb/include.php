@@ -51,9 +51,9 @@ function bbDrawTopic($topic_id) {
 }
 
 function drawTopicForm() {
-	global $_GET, $module_admin;
+	global $_GET, $page;
 	$f = new form('bb_topics', @$_GET['id'], getString('new_topic'));
-	if ($module_admin) {
+	if ($page['is_admin']) {
 		$f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>getString('posted_by')));
 		$f->set_field(array('name'=>'is_admin', 'class'=>'admin', 'type'=>'checkbox', 'label'=>getString('is_admin')));
 	} else {

@@ -1,7 +1,7 @@
 <?php include("include.php");
 
 if ($posting) {
-	$user_id = ($module_admin) ? $_POST["user_id"] : $_SESSION["user_id"];
+	$user_id = ($page['is_admin']) ? $_POST["user_id"] : $_SESSION["user_id"];
 	format_post_nulls("type_id");
 	$id = db_query("INSERT INTO helpdesk_tickets (
     	created_user,
@@ -111,7 +111,7 @@ echo drawMessage($helpdeskStatus, "center");
 			<td colspan="4"><?=$lastDept?> Tickets (<?=$count ?>)</td>
 		</tr>
 		<? }
-		if (($r["departmentID"] == 2) && !$module_admin && ($r["created_user"] != $_SESSION["user_id"])) {
+		if (($r["departmentID"] == 2) && !$page['is_admin'] && ($r["created_user"] != $_SESSION["user_id"])) {
 			//ticket not clickable in this scenario
 			?>
 		<tr height="32" class="thread">
@@ -138,9 +138,9 @@ echo drawMessage($helpdeskStatus, "center");
 <a name="bottom"></a>
 <?
 $form = new intranet_form;
-if ($module_admin) $form->addUser("user_id",  "Posted By" , $_SESSION["user_id"], false);
+if ($page['is_admin']) $form->addUser("user_id",  "Posted By" , $_SESSION["user_id"], false);
 $form->addRow("itext",  "Problem" , "title", "", "", true);
-if ($module_admin) {
+if ($page['is_admin']) {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities", 3);
 } else {
 	$form->addRow("select", "Priority" , "priorityID", "SELECT id, description FROM helpdesk_tickets_priorities WHERE is_admin <> 1", 3);
