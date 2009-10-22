@@ -88,30 +88,6 @@ div.message {
 }
 
 
-/* main colors */
-#left.areas table.table th.title, #left.areas form fieldset legend, #left.areas table.navigation, #right table.areas td.head									{ background-color:#d8282d; }
-#left.bb table.table th.title, #left.bb form fieldset legend, #left.bb table.navigation, #right table.bb td.head												{ background-color:#336633; }
-#left.cal table.table th.title, #left.cal form fieldset legend, #left.cal table.navigation, #right table.cal td.head											{ background-color:#336699; }
-#left.contacts table.table th.title, #left.contacts form fieldset legend, #left.contacts table.navigation, #right table.contacts td.head						{ background-color:#12253c; }
-#left.docs table.table th.title, #left.docs form fieldset legend, #left.docs table.navigation, #right table.docs td.head										{ background-color:#6a476a; }
-#left.external-orgs table.table th.title, #left.external-orgs form fieldset legend, #left.external-orgs table.navigation, #right table.external-orgs td.head	{ background-color:#996633; }
-#left.helpdesk table.table th.title, #left.helpdesk form fieldset legend, #left.helpdesk table.navigation, #right table.helpdesk td.head						{ background-color:#996633; }
-#left.press-clips table.table th.title, #left.press-clips form fieldset legend, #left.press-clips table.navigation, #right table.press-clips td.head			{ background-color:#3398bb; }
-#left.staff table.table th.title, #left.staff form fieldset legend, #left.staff table.navigation, #right table.staff td.head									{ background-color:#666666; }
-
-
-/* hilite colors */
-#left.areas table.navigation tr, #left.contacts form fieldset div.admin			{ background-color:#ffdddd; }
-#left.bb table.navigation tr, #left.bb form fieldset div.admin			{ background-color:#ddeedd; }
-#left.docs table.navigation tr, #left.docs form fieldset div.admin			{ background-color:#e8dae8; }
-#left.staff table.navigation tr, #left.staff form fieldset div.admin			{ background-color:#e6e6e6; }
-#left.cal table.navigation tr, #left.cal form fieldset div.admin			{ background-color:#ddeeff; }
-#left.press-clips table.navigation tr, #left.press-clips form fieldset div.admin	{ background-color:#c3d8e5; }
-#left.contacts table.navigation tr, #left.contacts form fieldset div.admin		{ background-color:#e6e6e6; }
-#left.helpdesk table.navigation tr, #left.helpdesk form fieldset div.admin		{ background-color:#efdfcf; }
-#left.external-orgs table.navigation, #left.external-orgs form fieldset div.admin tr	{ background-color:#efdfcf; }
-
-
 /* navigation */
 table.navigation { list-style:none; margin:0px 0px 15px 0px; width:594px; border:none; height:22px; text-align:center; }
 table.navigation td { padding:3px; }
@@ -224,19 +200,8 @@ textarea.press_export { width:594px; height:120px; }
 .head a.right { font-size:9px; margin:0px; padding:0px 3px; line-height:22px; text-transform: uppercase;}
 .head a.right:hover { text-decoration:underline; }
 
-
 .head div.head-left { float:left; height:23px; line-height:20px; }
 .head div.head-right { float:left; height:12px; line-height:14px;}
-
-#left.areas table.left td.head								{ background-color:#d8282d; }
-#left.bb table.left td.head								{ background-color:#336633; }
-#left.cal table.left td.head												{ background-color:#336699; }
-#left.contacts table.left td.head							{ background-color:#12253c; }
-#left.docs table.left td.head											{ background-color:#6a476a; }
-#left.external-orgs table.left td.head		{ background-color:#996633; }
-#left.helpdesk table.left td.head							{ background-color:#996633; }
-#left.press-clips table.left td.head				{ background-color:#3398bb; }
-#left.staff table.left td.head										{ background-color:#666666; }
 
 table.left { 
 	width:594px; 
