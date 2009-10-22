@@ -189,9 +189,10 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br
 function drawNavigation() {
 	global $_SESSION, $_josh, $page;
 	if (!$page['module_id']) return false; //not in module
-	$pages	= array();
-	$admin	= ($page['is_admin']) ? '' : 'AND is_admin = 0';
-	$result	= db_query('SELECT name, url FROM pages WHERE module_id = ' . $page['module_id'] . ' ' . $admin . ' AND isInstancePage = 0 ORDER BY precedence');
+	$pages		= array();
+	$admin		= ($page['is_admin']) ? ' ' : ' AND is_admin = 0 ';
+	$modulette	= (empty($page['modulette_id'])) ? ' AND modulette_id IS NULL ' : ' AND modulette_id = ' . $page['modulette_id'];
+	$result	= db_query('SELECT name, url FROM pages WHERE module_id = ' . $page['module_id'] . $modulette . $admin . ' AND isInstancePage = 0 ORDER BY precedence');
 	while ($r = db_fetch($result)) {
 		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
 		if ($r['url'] != '/helpdesk/') $pages[$r['url']] = $r['name'];
@@ -356,7 +357,7 @@ function drawBottom() {
 					?>
 					
 					<table class="links">
-						<? if ($_SESSION['is_admin']) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/admin/links/">Edit Links</a></td></tr><? } ?>
+						<? if ($_SESSION['is_admin']) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/a/admin/links.php">Edit Links</a></td></tr><? } ?>
 	<?
 	$side = 'left';
 	$links = db_query('SELECT url, text FROM links WHERE is_active = 1 ORDER BY precedence');

@@ -46,26 +46,11 @@ function drawNavigationRow($pages, $module=false, $pq=false) {
 	
 function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
 	global $_josh, $modules, $modulettes, $page;
-	if (!$name) $name = $page["name"];
+	if (!$name) $name = $page['breadcrumbs'];
 	//urls are absolute because it could be used in an email
 	$header ='<tr>
 			<td class="head" colspan="' . $colspan . '">
-				<div class="head-left">
-				';
-	//find module
-	$title = false;
-	foreach ($modules as $m) {
-		if ($_josh['request']['folder'] == $m['folder']) $header .='<a href="' . url_base() . '/' . $_josh['request']['folder'] . '/">' . $m['title'] . '</a> &gt; ';
-	}
-	
-	//find modulette
-	if (($_josh['request']['folder'] == 'a') && $_josh['request']['subfolder']) {
-		foreach ($modulettes as $m) {
-			if ($_josh['request']['subfolder'] == $m['folder']) $header .='<a href="' . url_base() . '/' . $_josh['request']['folder'] . '/' . $_josh['request']['subfolder'] . '/">' . $m['title'] . '</a> &gt; ';
-		}
-	}
-	$header .= $name;
-	$header .= "</div>";
+				<div class="head-left">' . $name . '</div>';
 	if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
 	if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
 	$header .='</td></tr>';
