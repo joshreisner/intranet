@@ -24,12 +24,11 @@ function drawEmptyResult($text="None found.", $colspan=1) {
 }
 
 function drawNavigationRow($pages, $module=false, $pq=false) {
-	global $_josh, $location;
-	if (!$module) $module = $location;
+	global $_josh;
 	$count = count($pages);
 	if ($count < 2) return false;
-	$return = '<table class="navigation ' . $module . '" cellspacing="1">
-		<tr class="' . $module . '-hilite">';
+	$return = '<table class="navigation" cellspacing="1">
+		<tr class="hilite">';
 	$cellwidth = round(100 / $count, 2);
 	$match = ($pq) ? $_josh["request"]["path_query"] : $_josh["request"]["path"];
 	//echo $match;  don't put url_base in match, if you can help it
@@ -46,14 +45,14 @@ function drawNavigationRow($pages, $module=false, $pq=false) {
 }
 	
 function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
-	global $_josh, $location, $modules, $page;
+	global $_josh, $modules, $page;
 	if (!$name) $name = $page["name"];
 	//urls are absolute because it could be used in an email
 	$header ='<tr>
-			<td class="head ' . $location . '" colspan="' . $colspan . '">
+			<td class="head" colspan="' . $colspan . '">
 				<div class="head-left">
 				';
-	if ($location != "login") {
+	if ($_josh['request']['folder'] != "login") {
 		$header .='<a  href="http://' . $_josh["request"]["host"] . '/' . $_josh["request"]["folder"] . '/">' . $modules[$page["module_id"]]["title"] . '</a>';
 	}
 	if ($name) {
@@ -83,8 +82,8 @@ class intranet_form {
 	var $rows, $js;
 	
 	function addUser($name="user_id", $desc="User", $default=false, $nullable=false, $admin=false) {
-		global $rows, $location;
-		$class = ($admin) ? "admin " . $location . "-hilite" : false;
+		global $rows;
+		$class = ($admin) ? "admin hilite" : false;
 		$rows .= draw_container("tr", 
 			draw_container("td", $desc, array("class"=>"left")) . 
 			draw_container("td", drawSelectUser($name, $default, $nullable), array("class"=>$class))
@@ -92,11 +91,11 @@ class intranet_form {
 	}
 	
 	function addCheckbox($name="", $desc="", $default=false, $additionalText="(check if yes)", $admin=false) {
-		global $rows, $location;
+		global $rows;
 		$rows .= '<tr>
 			<td class="left">' . $desc . '</td>
 			<td';
-		if ($admin) $rows .= ' class="admin ' . $location . '-hilite"';
+		if ($admin) $rows .= ' class="admin hilite"';
 		$rows .= '><table class="nospacing">
 					<tr>
 						<td>' . draw_form_checkbox($name, $default) . '</td>
@@ -283,7 +282,7 @@ class intranet_form {
 	}	
 	
 	function draw($pageTitle) {
-		global $rows, $_josh, $js, $location;
+		global $rows, $_josh, $js;
 		if ($js) {
 		echo draw_javascript("function validate(form) {
 				var errors = new Array();
@@ -294,7 +293,7 @@ class intranet_form {
 		<a name="bottom"></a>
 		<table class="left" cellspacing="1">
 			<tr>
-				<td class="head <?=$location?>" colspan="2"><?=$pageTitle?></td>
+				<td class="head" colspan="2"><?=$pageTitle?></td>
 			</tr>
 			<form method="post" action="<?=$_josh["request"]["path_query"]?>" enctype="multipart/form-data" accept-charset="utf-8" onsubmit="javascript:return validate(this);">
 			<?
