@@ -19,7 +19,7 @@ if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code
 
 //apply security
 if (!isset($pageIsPublic) || !$pageIsPublic) {
-	error_debug('page is not public', __file__, __line__);
+	//page is not public
 	if (!$_SESSION['user_id']) {
 		error_debug('user_id session not set', __file__, __line__);
 		if (!login(@$_COOKIE['last_login'], '', true)) {
@@ -31,7 +31,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	//determine location & scenario
 	error_debug('user is logged in, determining location & scenario', __file__, __line__);
 	$page		= getPage();
-	$location	= (($request['folder'] == 'bb') || ($request['folder'] == 'cal') || ($request['folder'] == 'docs') || ($request['folder'] == 'staff') || ($request['folder'] == 'helpdesk') || ($request['folder'] == 'contacts') || ($request['folder'] == 'external-orgs') || ($request['folder'] == 'press-clips')) ? $request['folder'] : 'areas';
 
 	$user = db_grab('SELECT id, help FROM users WHERE id = ' . $_SESSION['user_id']);
 
@@ -41,12 +40,14 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 			m.id,
 			m.title,
 			m.folder,
+			m.color,
+			m.hilite,
 			(SELECT u.is_closed FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_closed,
 			(SELECT u.is_admin FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_admin
 		FROM modules m
 		WHERE m.is_active = 1
 		ORDER BY m.precedence');
-	
+		
 	//indicate admin privileges for the current module
 	$module_admin = (isset($modules[$page['module_id']])) ? $modules[$page['module_id']]['is_admin'] : false;
 	if ($_SESSION['is_admin']) $module_admin = true;
@@ -203,11 +204,10 @@ function drawSyndicateLink($name) {
 }
 
 function drawThreadComment($content, $user_id, $fullname, $date, $module_admin=false) {
-	global $location;
 	$return  = '<tr><td class="left">';
 	$return .= drawName($user_id, $fullname, $date, true) . '</td>';
 	$return .= '<td class="right text ';
-	if ($module_admin) $return .= $location . '-hilite';
+	if ($module_admin) $return .= ' hilite';
 	$return .= '" height="80"><div class="text">' . $content . '</div></td></tr>';
 	return $return;
 }
@@ -255,12 +255,20 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 }
 
 function drawTop() {
-	global $_GET, $_SESSION, $_josh, $page, $module_admin, $location, $user;
+	global $_GET, $_SESSION, $_josh, $page, $module_admin, $user;
 	error_debug('starting top', __file__, __line__);
 	$title = $page['module'] . ' > ' . $page['name'];
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
 ?><html>
 	<?
+	$css = '';
+	if ($page['color']) {
+		$css = draw_css('
+			#left table.left td.head { background-color:#' . $page['color'] . '; }
+			#left table.table th.title, #left form fieldset legend, #left table.navigation { background-color:#' . $page['color'] . '; }
+			#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
+		');
+	}
 	echo draw_container('head',
 		(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
 		draw_container('title', $title) .
@@ -268,14 +276,14 @@ function drawTop() {
 		draw_css_src('/styles/print.css',	'print') .
 		draw_css_src('/styles/ie.css',		'ie') .
 		draw_javascript_src('/javascript.js') .
-		draw_javascript_lib()
+		draw_javascript_lib() .
+		$css
 	);
-	$class = ($page['module']) ? $page['module'] : 'unassigned';
 	?>
 	<body>
 		<div id="container">
 			<?=draw_div('banner', draw_img($_josh['write_folder'] . '/banner.png', $_SESSION['homepage']))?>
-			<div id="left" class="<?=$location?>">
+			<div id="left">
 				<div id="help">
 				<a class="button left" href="<?=$_SESSION['homepage']?>">Home</a>
 				<?=draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), (($user['help']) ? 'Hide' : 'Show') . ' Help', array('class'=>'button right', 'id'=>'showhelp'))?>
@@ -289,7 +297,7 @@ function drawTop() {
 				</div>
 				</div>
 	<? 
-	if ($location == 'helpdesk') echo drawNavigationHelpdesk();
+	if ($_josh['request']['folder'] == 'helpdesk') echo drawNavigationHelpdesk();
 	echo drawNavigation();
 	$_josh['drawn']['top'] = true;
 	error_debug('finished drawing top', __file__, __line__);
@@ -332,7 +340,7 @@ function drawBottom() {
 	foreach ($modules as $m) {?>
 		<table class="right <?=$m['folder']?>" cellspacing="1">
 			<tr>
-				<td colspan="2" class="head">
+				<td colspan="2" class="head" style="background-color:#<?=$m['color']?>;">
 					<a href="/<?=$m['folder']?>/"><?=$m['title']?></a>
 					<?=draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false))?>
 				</td>
@@ -457,7 +465,9 @@ function getPage() {
 			p.is_admin, 
 			m.id module_id, 
 			m.title module, 
-			m.folder
+			m.folder,
+			m.color,
+			m.hilite
 		FROM pages p 
 		LEFT JOIN modules m ON p.module_id = m.id 
 		WHERE p.url = \'' . $_josh['request']['path'] . '\'')) {
