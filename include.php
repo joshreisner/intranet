@@ -37,7 +37,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	error_debug('getting modules', __file__, __line__);
 	$modules = db_table('SELECT 
 			m.id,
-			m.title,
+			m.title' . langExt() . ' title,
 			m.folder,
 			m.color,
 			m.hilite,
@@ -48,10 +48,10 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		ORDER BY m.precedence');
 		
 	//get sub-list of modulettes
-	$modulettes = db_table('SELECT m.id, m.title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title');
+	$modulettes = db_table('SELECT m.id, m.title' . langExt() . ' title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title');
 
 	//get page
-	$page = array('title'=>'Untitled Page', 'module_id'=>false, 'modulette_id'=>false, 'color'=>'666', 'hilite'=>'eee');
+	$page = array('id'=>false, 'title'=>'Untitled Page', 'module_id'=>false, 'modulette_id'=>false, 'color'=>'666', 'hilite'=>'eee', 'helptext'=>'<p>No description has been written yet for this page.</a>');
 	if ($request['folder']) {
 		//in a folder, look for module
 		foreach ($modules as $m) {
@@ -99,21 +99,21 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		
 		//get actual page from database now, just need the title
 		if ($page['modulette_id'] && $page['module_id']) {
-			$m = db_grab('SELECT id, name, helpText FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id'] . ' AND modulette_id = ' . $page['modulette_id']);
+			$m = db_grab('SELECT id, title' . langExt() . ' title, description' . langExt() . ' description FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id'] . ' AND modulette_id = ' . $page['modulette_id']);
 		} elseif ($page['module_id']) {
-			$m = db_grab('SELECT id, name, helpText FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id']);
+			$m = db_grab('SELECT id, title' . langExt() . ' title, description' . langExt() . ' description FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id']);
 		} else {
 			error_handle('Something is wrong!', 'Page is not set for ' . $request['url']);
 		}
 		
 		if ($m) {
 			$page['id'] = $m['id'];
-			$page['title'] .= $m['name'];
-			$page['breadcrumbs'] .= $m['name'];
-			$page['helpText'] = $m['helpText'];
+			$page['title'] .= $m['title'];
+			$page['breadcrumbs'] .= $m['title'];
+			$page['helptext'] = $m['description'];
 		} else {
-			//set info if page isn't in module
-			error_handle('Need to create page', 'here');
+			$page['title'] .= 'Untitled Page';
+			$page['breadcrumbs'] .= 'Untitled Page';
 		}
 	}
 		
@@ -192,10 +192,10 @@ function drawNavigation() {
 	$pages		= array();
 	$admin		= ($page['is_admin']) ? ' ' : ' AND is_admin = 0 ';
 	$modulette	= (empty($page['modulette_id'])) ? ' AND modulette_id IS NULL ' : ' AND modulette_id = ' . $page['modulette_id'];
-	$result	= db_query('SELECT name, url FROM pages WHERE module_id = ' . $page['module_id'] . $modulette . $admin . ' AND isInstancePage = 0 ORDER BY precedence');
+	$result	= db_query('SELECT id, title' . langExt() . ' title, url FROM pages WHERE module_id = ' . $page['module_id'] . $modulette . $admin . ' AND is_hidden = 0 ORDER BY precedence');
 	while ($r = db_fetch($result)) {
 		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
-		if ($r['url'] != '/helpdesk/') $pages[$r['url']] = $r['name'];
+		if ($r['url'] != '/helpdesk/') $pages[$r['url']] = $r['title'];
 	}
 
 	$count = count($pages);
@@ -205,8 +205,10 @@ function drawNavigation() {
 	$cellwidth = round(100 / $count, 2);
 
 	foreach ($pages as $url=>$name) {
-		if (($url == $_josh["request"]["path_query"]) || ($url == url_base() . $_josh["request"]["path_query"])) {
-			$cell = ' class="selected">' . $name . '';
+		$pageurl = (empty($_josh['request']['page'])) ? './' : $_josh['request']['page'];
+		if (empty($url)) $url = './';
+		if ($url == $pageurl) {
+			$cell = ' class="selected">' . $name;
 		} else {
 			$cell = '><a href="' . $url . '">' . $name . '</a>';
 		}
@@ -310,26 +312,26 @@ function drawTop() {
 		draw_javascript_lib() .
 		draw_css('
 			#left table.left td.head { background-color:#' . $page['color'] . '; }
-			#left table.table th.title, #left form fieldset legend, #left table.navigation { background-color:#' . $page['color'] . '; }
+			#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
 			#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
 		')
 	);
 	?>
 	<body>
 		<div id="container">
-			<?=draw_div('banner', draw_img($_josh['write_folder'] . '/banner.png', $_SESSION['homepage']))?>
+			<?=draw_div('banner', draw_img($_josh['write_folder'] . '/banner' . langExt() . '.png', $_SESSION['homepage']))?>
 			<div id="left">
 				<div id="help">
 				<a class="button left" href="<?=$_SESSION['homepage']?>">Home</a>
 				<?=draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), (($user['help']) ? 'Hide' : 'Show') . ' Help', array('class'=>'button right', 'id'=>'showhelp'))?>
-			<? if ($_SESSION['is_admin']) {?>
-					<a class='button right' href='/a/admin/pages.php?id=<?=$page['id']?>'>Edit Page Info</a>
-			<? }?>
-				<div id="helptext"<? if (!$user['help']) {?> style="display:none;"<? }?>>
-					<?
-					echo ($page['helpText']) ? $page['helpText'] : 'No help is available for this page.';
-					?>
-				</div>
+			<? if ($_SESSION['is_admin']) {
+				if ($page['id']) {?>
+					<a class='button right' href='/a/admin/page.php?id=<?=$page['id']?>'>Edit Page Info</a>
+				<? } else {?>
+					<a class='button right' href='/a/admin/page.php?module_id=<?=$page['module_id']?>&modulette_id=<?=$page['modulette_id']?>&url=<?=urlencode($_josh['request']['page'])?>'>Create Page Here</a>
+				<? }
+			}?>
+				<div id="helptext"<? if (!$user['help']) {?> style="display:none;"<? }?>><?=$page['helptext']?></div>
 				</div>
 	<? 
 	if ($_josh['request']['folder'] == 'helpdesk') echo drawNavigationHelpdesk();

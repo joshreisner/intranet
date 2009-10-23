@@ -14,7 +14,7 @@ if (url_action("delete")) {
 }
 
 function drawJumpToStaff($selectedID=false) {
-	global $page['is_admin'];
+	global $page;
 	$nullable = ($selectedID === false);
 	$return = draw_div("panel", 'Jump to ' . drawSelectUser("", $selectedID, $nullable, 0, true, true, "Staff Member:"));
 	if ($page['is_admin']) { 
@@ -27,7 +27,7 @@ function drawJumpToStaff($selectedID=false) {
 }
 
 function drawStaffList($where, $searchterms=false) {
-	global $page['is_admin'], $_josh;
+	global $page, $_josh;
 	$return = drawJumpToStaff() . '<table class="left" cellspacing="1">';
 	if ($page['is_admin']) {
 		$colspan = 5;
@@ -81,7 +81,7 @@ function drawStaffList($where, $searchterms=false) {
 }
 
 function drawStaffRow($r, $searchterms=false) {
-	global $page['is_admin'], $_josh;
+	global $page, $_josh;
 	if ($searchterms) {
 		global $fields;
 		foreach ($fields as $f) {

@@ -25,8 +25,8 @@ function drawNavigationCal($month, $year, $linked=false) {
 }
 
 function drawEventForm() {
-	global $page, $page['is_admin'];
-	$f = new form('cal_events', @$_GET['id'], $page['name']);
+	global $page;
+	$f = new form('cal_events', @$_GET['id'], $page['title']);
 	if (url_id()) $f->set_title_prefix(drawHeader(false, ' '));
 	if ($page['is_admin']) $f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>'Posted By'));
 	$f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, description FROM cal_events_types ORDER BY description', 'label'=>'Category'));

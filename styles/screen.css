@@ -39,7 +39,7 @@ input.button:hover { background-color:#bbb; }
 
 input.checkbox	{ border:none; padding:0px; margin:0px; background-color:transparent; }
 input.file		{ border:none; }
-textarea		{ width:500px; height:300px; }
+/* textarea		{ width:500px; height:300px; }*/
 textarea.thread { border-width:0px; width:435px; }
 
 
@@ -130,8 +130,10 @@ div.dropmarker {
 
 
 /* form */
-#left form fieldset { padding:25px 0px 0px 0px; margin:0px 0px 14px 0px; border:1px solid #ccc; position:relative; width:592px; }
-#left form fieldset legend { font-size:13px; height:25px; color:#fff; padding-left:4px; width:586px; line-height:24px; color:#fff; margin:none; position:absolute; top:0px; }
+#left form div.fieldset { padding:26px 0px 0px 0px; margin:0px 0px 14px 0px; border:1px solid #ccc; position:relative; width:592px; }
+#left form fieldset { padding:0px; margin:0px; border:0px; }
+#left form fieldset legend {  }
+#left form fieldset legend span { border-bottom:1px solid #ccc; display:block; position:absolute; top:0px; left:0px; font-size:13px; height:25px; padding-left:4px; width:588px; line-height:24px; color:#fff; }
 #left form fieldset legend a { color:#fff; }
 
 #left form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; overflow-y:auto; background-color:#eee; }
