@@ -5,7 +5,7 @@ if (url_action("delete")) {
 	url_drop();
 }
 
-drawTop();
+echo drawTop();
 ?>	
 <table class="left" cellspacing="1">
 	<? if ($page['is_admin']) {
@@ -58,4 +58,4 @@ drawTop();
 	</tr>
 	<? }?>
 </table>
-<? drawBottom() ?>
+<?=drawBottom() ?>

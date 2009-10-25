@@ -33,7 +33,7 @@ if (url_action("delete")) {
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 
 if (url_id()) {
 	$r = db_grab("SELECT
@@ -111,4 +111,4 @@ if (url_id()) {
 		$form->draw("Add a Press Release");
 	}
 }
-drawBottom(); ?>
+echo drawBottom(); ?>

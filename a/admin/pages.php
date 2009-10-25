@@ -9,7 +9,7 @@ if (url_id('module_id')) {
 	url_change('./');
 }
 
-drawTop();
+echo drawTop();
 
 //pages list
 $t = new table('pages', drawHeader());
@@ -28,5 +28,5 @@ foreach ($result as &$r) {
 
 echo $t->draw($result, 'No pages');
 
-drawBottom();
+echo drawBottom();
 ?>

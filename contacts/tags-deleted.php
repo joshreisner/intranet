@@ -1,8 +1,7 @@
 <?
 include("../include.php");
 
-drawTop();
-
+echo drawTop();
 ?>
 <script language="javascript">
 	<!--
@@ -69,4 +68,4 @@ drawTop();
 	}?>
 	</form>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

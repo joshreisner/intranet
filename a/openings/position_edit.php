@@ -6,7 +6,7 @@ if ($posting) {
 	url_change("position.php?id=" . $id);
 }
 
-drawTop();
+echo drawTop();
 
 $r = db_grab("SELECT 
 				j.title,
@@ -26,4 +26,4 @@ $form->addRow("textarea", "Description" , "description", $r["description"], "", 
 $form->addRow("submit"  , "update position");
 $form->draw("<a href='positions.php' class='white'>Open Positions</a> &gt; Update Position");
 
-drawBottom();?>
+echo drawBottom();?>

@@ -10,7 +10,7 @@ if ($posting) {
 	url_change("program.php?id=" . $_GET["id"]);
 }
 
-drawTop();
+echo drawTop();
 
 if (url_id()) {
 	$program = db_grab("SELECT programDesc FROM funders_programs WHERE programID = " . $_GET["id"]);
@@ -31,4 +31,4 @@ if (url_id()) {
 	</tr>
 	</form>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

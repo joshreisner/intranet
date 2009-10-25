@@ -92,7 +92,7 @@ if ($_POST) {
 	file_download($file, $reportname, "xls");
 }
 
-drawTop();
+echo drawTop();
 ?>
 <table class="left" cellspacing="1">
 	<?=drawHeaderRow("Percentages Report (without Vacation)", 2);?>
@@ -110,4 +110,4 @@ drawTop();
 	</tr>
 	</form>
 </table>	
-<? drawBottom();?>
+<?=drawBottom();?>

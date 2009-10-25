@@ -15,7 +15,7 @@ if ($posting) {
 	url_change("../?id=" . $_GET["id"]);
 }
 
-drawTop();
+echo drawTop();
 
 $r = db_grab("SELECT id, headline, detail, location, releaseDate, corporationID, text FROM press_releases WHERE id = " . $_GET["id"]);
 	
@@ -30,4 +30,5 @@ $form->addRow("textarea", "Text" , "text", $r["text"], "", true);
 $form->addRow("submit"  , "update press release");
 $form->draw("Update Release");
 
-drawBottom();?>
+echo drawBottom();
+?>

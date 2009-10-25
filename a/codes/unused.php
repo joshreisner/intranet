@@ -1,6 +1,6 @@
 <? include("../../include.php");
 
-drawTop();
+echo drawTop();
 ?>
 <table class="left">
 	<?=drawHeaderRow("Long Distance Codes", 1)?>
@@ -17,4 +17,4 @@ ORDER BY NEWID()");
 	<? }?>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

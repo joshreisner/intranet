@@ -1,6 +1,6 @@
 <?
 include("../../include.php");
-drawTop();
+echo drawTop();
 $result = db_query("SELECT code FROM ldcodes");
 while ($r = db_fetch($result)) {
 	$codes[] = $r["code"];
@@ -11,5 +11,5 @@ while ($r = db_fetch($result)) {
 	db_query("UPDATE users SET longdistancecode = " . $codes[$counter] . " WHERE user_id = " . $r["user_id"]);
 	$counter++;
 }
-drawBottom();
+echo drawBottom();
 ?>

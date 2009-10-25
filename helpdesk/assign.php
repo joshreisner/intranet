@@ -1,5 +1,5 @@
 <?php include("include.php");
-drawTop();
+echo drawTop();
 ?>
 
 <table class="left" cellspacing="1">
@@ -86,4 +86,4 @@ drawTop();
 		while ($r = db_fetch($result)) echo drawTicketRow($r);
 	}?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

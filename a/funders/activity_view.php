@@ -9,8 +9,7 @@
 		url_change("activity_view.php?id=" . $_GET["id"]);
 	}
 				
-drawTop();
-
+echo drawTop();
 
 $r = db_grab("SELECT 
 				a.activityID, 
@@ -82,4 +81,4 @@ $r = db_grab("SELECT
 	</tr>
 	<? }?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

@@ -11,7 +11,7 @@ if ($posting) {
 	url_change("./");
 }
 
-drawTop();
+echo drawTop();
 
 ?>
 <script language="javascript">

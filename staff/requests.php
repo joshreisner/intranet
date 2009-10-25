@@ -12,7 +12,7 @@ if (url_action("deletereq")) {
 	url_query_drop("action");
 }
 
-drawTop();
+echo drawTop();
 echo drawJumpToStaff();
 echo drawTableStart();
 echo drawHeaderRow("", 3);
@@ -59,5 +59,5 @@ if (db_found($result)) {?>
 }
 echo drawTableEnd();
 
-drawBottom();
+echo drawBottom();
 ?>

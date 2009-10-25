@@ -42,10 +42,8 @@ if (!empty($_POST)) {
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 
-
-	
 $r = db_grab("SELECT 
 		a.awardTitle,
 		a.awardFilingNumber,
@@ -279,4 +277,4 @@ $r = db_grab("SELECT
 	</tr>
 	</form>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

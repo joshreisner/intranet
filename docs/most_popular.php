@@ -1,7 +1,6 @@
 <?
 include("../include.php");
-drawTop();
-
+echo drawTop();
 
 $result = db_table('SELECT 
 		d.id,
@@ -27,4 +26,4 @@ foreach ($result as &$r) {
 
 echo $t->draw($result);
 
-drawBottom();?>
+echo drawBottom();?>

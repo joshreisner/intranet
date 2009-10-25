@@ -1,7 +1,7 @@
 <?php
 include('../include.php');
 
-drawTop();
+echo drawTop();
 
 $clips = db_query('SELECT c.id, c.title, c.url, c.publication, c.pub_date, c.description, t.title type FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id WHERE c.is_active = 1 ORDER BY t.precedence, c.pub_date');
 
@@ -23,5 +23,5 @@ echo draw_div_class('press_export', $return);
 
 echo '<textarea class="press_export">' . htmlentities($return, ENT_QUOTES, 'UTF-8') . '</textarea>';
 
-drawBottom();
+echo drawBottom();
 ?>

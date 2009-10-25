@@ -64,9 +64,8 @@ if (!empty($_POST)) {
 	url_change("award_view.php?id=" . $_GET["id"]);
 }
 	
-drawTop();
+echo drawTop();
 
-	
 if (isset($_GET["funderID"])) { //adding
 	$adding = true;
 	$r = db_grab("SELECT 
@@ -224,4 +223,4 @@ if (isset($_GET["funderID"])) { //adding
 	</tr>
 	</form>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

@@ -2,7 +2,7 @@
 
 if (!isset($_GET["id"])) $_GET["id"] = 1;
 
-drawTop();
+echo drawTop();
 $locations = db_query("SELECT 
 		o.id, 
 		o.name
@@ -28,4 +28,4 @@ if ($_GET["id"] == "other") {
 	echo drawStaffList("u.is_active = 1 and u.officeID = " . $_GET["id"]);
 }
 
-drawBottom();?>
+echo drawBottom();?>

@@ -2,8 +2,7 @@
 
 url_query_require("users.php");
 
-drawTop();
-
+echo drawTop();
 
 $result = db_query("select
 				t.title,
@@ -39,4 +38,4 @@ echo drawTicketFilter();
 		}
 	}?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

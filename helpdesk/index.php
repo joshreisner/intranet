@@ -33,7 +33,7 @@ if ($posting) {
 	url_change("ticket.php?id=" . $id);
 }
 
-drawTop();
+echo drawTop();
 
 echo drawMessage($helpdeskStatus, "center");
 ?>
@@ -151,5 +151,5 @@ $form->addRow("textarea", "Description" , "description", "", "", true);
 $form->addRow("submit"  , "report problem");
 $form->draw("Add a New Ticket");
 
-drawBottom(); 
+echo drawBottom(); 
 ?>

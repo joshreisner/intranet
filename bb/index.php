@@ -12,7 +12,7 @@ if ($posting) {
 	//notification
 	if ($_POST['is_admin'] == '1') {
 		//get addresses of everyone & send with message
-		//emailUsers(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id), 2, getString('bb_admin'));
+		//emailUsers(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id), 2, getString('topic_admin'));
 	} elseif (getOption('bb_notifypost')) {
 		//get addresses of everyone with notify_topics checked and send
 		//emailUsers(db_array('SELECT email FROM users WHERE is_active = 1 AND notify_topics = 1'), $_POST['title'], bbDrawTopic($id), 2);
@@ -22,11 +22,11 @@ if ($posting) {
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 echo draw_autorefresh(5); //todo eliminate
 echo drawSyndicateLink('bb');
 
-$t = new table('bb_topics', drawHeader(array('#bottom'=>'add new')));
+$t = new table('bb_topics', drawHeader(array('#bottom'=>getString('add_new'))));
 $t->set_column('topic', 'l', getString('topic'));
 $t->set_column('starter', 'l', getString('starter'));
 $t->set_column('replies', 'c', getString('replies'));
@@ -54,11 +54,11 @@ foreach ($result as &$r) {
 	$r['last_post'] = format_nobr(format_date($r['last_post']));
 }
 
-echo $t->draw($result, getString('no_topics'));
+echo $t->draw($result, getString('topics_empty'));
 
 //add new topic
 echo '<a name="bottom"></a>';
 echo drawTopicForm();
 
-drawBottom(); 
+echo drawBottom(); 
 ?>

@@ -11,8 +11,8 @@ if (isset($_GET["deleteID"])) {
 	url_query_drop("deleteID");
 }
 
-drawTop();
-drawNavigation();
+echo drawTop();
+echo drawNavigation();
 
 ?>
 <table class="left" cellspacing="1">
@@ -60,4 +60,4 @@ drawNavigation();
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

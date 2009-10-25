@@ -9,7 +9,7 @@ if (isset($_GET["deleteID"])) { //delete a funder
 	url_drop();
 }
 
-drawTop();
+echo drawTop();
 	
 ?>
 <table class="left" cellspacing="1">
@@ -65,4 +65,4 @@ while ($rs = db_fetch($result_funder_statuses)) {
 	</tr>
 <? }?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

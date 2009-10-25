@@ -11,9 +11,9 @@ if ($posting) {
 	url_change("topic.php?id=" . $_GET["id"]);
 }
 
-drawTop();
+echo drawTop();
 
 echo drawTopicForm();
 
-drawBottom();
+echo drawBottom();
 ?>

@@ -1,6 +1,6 @@
 <?php
 include("../../include.php");
-drawTop();
+echo drawTop();
 
 
 if (isset($_GET["id"])) {
@@ -83,4 +83,4 @@ if (isset($_GET["id"])) {
 	</tr>
 	</form>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

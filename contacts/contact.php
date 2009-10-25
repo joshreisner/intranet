@@ -26,7 +26,7 @@ if (url_action("delete")) {
 }
 
 url_query_require();
-drawTop();
+echo drawTop();
 
 
 $i = db_grab("SELECT
@@ -236,4 +236,4 @@ if (!$i["id"]) {
 		echo $output;
 		echo "</table>";
 	}
-drawBottom();?>
+echo drawBottom();?>

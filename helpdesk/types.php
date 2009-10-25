@@ -7,7 +7,7 @@ if ($posting) {
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 
 echo drawTicketFilter();
 ?>
@@ -64,4 +64,4 @@ $form->addRow("itext", "Name" , "description", @$r["description"]);
 $form->addRow("submit"  , "Add Type");
 $form->draw("Add New Type");
 
-drawBottom(); ?>
+echo drawBottom(); ?>

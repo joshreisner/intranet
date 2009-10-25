@@ -1,8 +1,6 @@
 <? include("../../include.php");
 
-drawTop();
-
-
+echo drawTop();
 ?>
 <table class="left" cellspacing="1">
 	<?=drawHeaderRow("Reports", 4)?>
@@ -40,6 +38,6 @@ drawTop();
 		<td><?=$r["activityTitle"]?></td>
 		<td align="right"><?=format_date($r["activityDate"], false, "", "");?></td>
 	</tr>
-	<?}?>
+	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

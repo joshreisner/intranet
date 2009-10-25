@@ -9,7 +9,7 @@ if ($posting) {
 
 if (!isset($_GET["month"]) || !isset($_GET["year"])) url_query_add(array("month"=>$_josh["month"], "year"=>$_josh["year"]));
 
-drawTop();
+echo drawTop();
 
 echo drawNavigationCal($_GET["month"], $_GET["year"]);
 
@@ -200,5 +200,5 @@ if (getOption("cal_showholidays")) {
 <a name="bottom"></a>
 <?
 echo drawEventForm();
-drawBottom(); 
+echo drawBottom(); 
 ?>

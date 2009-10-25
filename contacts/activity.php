@@ -1,5 +1,5 @@
 <? include("../include.php");
-drawTop();
+echo drawTop();
 ?>
 <table class="left" cellspacing="1">
 	<?=drawHeaderRow("Recent Activity", 4);?>
@@ -33,4 +33,4 @@ drawTop();
 	</tr>
 	<? } ?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

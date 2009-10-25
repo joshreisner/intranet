@@ -3,7 +3,7 @@ include('../include.php');
 
 //need a type
 url_query_require('./');
-drawTop();
+echo drawTop();
 
 if (url_action('delete')) {
 	db_delete('external_orgs', $_GET['org_id']);
@@ -42,4 +42,4 @@ echo drawTableEnd();
 
 //add new
 include('edit/index.php');
-drawBottom();?>
+echo drawBottom();?>

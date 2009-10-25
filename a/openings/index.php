@@ -9,7 +9,7 @@ if (url_action("delete")) {
 	if ($id = db_save("openings")) url_change("position.php?id=" . $id);
 }
 
-drawTop();
+echo drawTop();
 ?>
 <table class="left" cellspacing="1">
 	<? if ($page['is_admin']) {
@@ -65,4 +65,4 @@ drawTop();
 	$form->draw("Add an Open Position");
 }
 
-drawBottom(); ?>
+echo drawBottom(); ?>

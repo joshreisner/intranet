@@ -1,7 +1,7 @@
 <?php
 include("../../include.php");
 
-drawTop();
+echo drawTop();
 
 if (url_action("delete")) {
 	db_delete("news_stories");
@@ -122,5 +122,5 @@ if (url_action("delete")) {
 }
 
 
-drawBottom();	
+echo drawBottom();	
 ?>

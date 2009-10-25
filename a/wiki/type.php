@@ -2,8 +2,7 @@
 include("../../include.php");
 url_query_require("types.php");
 
-drawTop();
-
+echo drawTop();
 
 $r = db_grab("SELECT description FROM wiki_topics_types WHERE id = " . $_GET["id"]);
 ?>
@@ -42,4 +41,4 @@ $r = db_grab("SELECT description FROM wiki_topics_types WHERE id = " . $_GET["id
 	}?>
 </table>
 
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

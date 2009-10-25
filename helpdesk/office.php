@@ -2,8 +2,7 @@
 
 url_query_require("offices.php");
 
-drawTop();
-
+echo drawTop();
 
 $result = db_query("SELECT
 				t.title,
@@ -38,4 +37,4 @@ echo drawTicketFilter();
 		}
 	}?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

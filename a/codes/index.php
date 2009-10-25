@@ -1,6 +1,6 @@
 <? include("../../include.php");
 
-drawtop();?>
+echo drawtop();?>
 
 <table class="left">
 	<?=drawHeaderRow("Long Distance Codes", 2)?>
@@ -13,4 +13,4 @@ drawtop();?>
 	</tr>
 	<?}?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

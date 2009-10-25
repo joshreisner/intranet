@@ -5,7 +5,7 @@ if ($posting) {
 	url_change("type.php?id=" . $id);
 }
 
-drawTop();
+echo drawTop();
 
 
 if (isset($_GET["id"])) {
@@ -23,5 +23,5 @@ if (isset($_GET["id"])) {
 	$form->draw("Add New Ticket Type");
 }
 
-drawBottom();
+echo drawBottom();
 ?>

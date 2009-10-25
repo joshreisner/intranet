@@ -16,8 +16,7 @@ $d = db_grab("SELECT
 	JOIN docs_types i ON d.type_id = i.id
 	WHERE d.id = " . $_GET["id"]);
 
-drawTop();
-
+echo drawTop();
 ?>
 
 <table class="left" cellspacing="1">
@@ -101,4 +100,4 @@ if (db_found($views)) {?>
 </table>
 <? 
 }
-drawBottom();?>
+echo drawBottom();?>

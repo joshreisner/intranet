@@ -23,7 +23,7 @@ if (url_action("delete")) {
 	url_change("/cal/?month="  . $e["month"] . "&year=" . $e["year"]);
 }
 
-drawTop();
+echo drawTop();
 echo drawNavigationCal($e["month"], $e["year"], true)
 ?>
 <table class="left" cellspacing="1">
@@ -71,4 +71,4 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 		<td><?=drawName($e["created_user"], $e["first"] . " " . $e["last"], $e["created_date"], true);?></td>
 	</tr>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

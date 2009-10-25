@@ -6,7 +6,7 @@ if (isset($_GET["deleteType"])) {
 	url_change("types.php");
 }
 
-drawTop();	
+echo drawTop();	
 
 $where1 = (isset($_GET["id"])) ? "= " . $_GET["id"] : "IS NULL";
 
@@ -64,4 +64,4 @@ echo drawTicketFilter();
 	}
 	?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

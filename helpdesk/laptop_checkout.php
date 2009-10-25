@@ -21,7 +21,7 @@ if ($posting) {
 	url_change("laptops.php");
 }
 		
-drawTop();
+echo drawTop();
 ?>
 <table class="left" cellspacing="1">
 	<?=drawHeaderRow("Check Laptop Out", 2);?>	
@@ -59,4 +59,4 @@ drawTop();
 	</tr>
 	</form>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

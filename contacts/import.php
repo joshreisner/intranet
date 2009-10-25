@@ -106,9 +106,7 @@ if ($_POST) {
 	url_change("import.php");
 }
 
-drawTop();
-
-
+echo drawTop();
 ?>
 
 <table class="left" cellspacing="1">
@@ -195,4 +193,4 @@ drawTop();
 	</form>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

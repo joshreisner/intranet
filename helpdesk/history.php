@@ -9,7 +9,7 @@ if (isset($_GET["id"])) {
 	}
 }
 
-drawTop();
+echo drawTop();
 
 $month1 = $month;
 $year1  = $year;
@@ -85,4 +85,4 @@ $result = db_query("SELECT
 		<td><?=$month5amt?></td>
 	</tr>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

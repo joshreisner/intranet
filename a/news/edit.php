@@ -15,7 +15,7 @@ if (isset($_josh)) { //included
 		db_checkboxes("corporationID", "news_stories_to_organizations", "newsID", "organizationID", $id);
 		url_change("./?id=" . $id);
 	}	
-	drawTop();
+	echo drawTop();
 	$r = db_grab("SELECT 
 		n.headline,
 		n.outlet,
@@ -39,7 +39,7 @@ $form->addRow("submit", "Save Changes");
 
 if (url_id()) {
 	$form->draw("<a href='/news/'>In the News</a> &gt; Edit Story");
-	drawBottom();
+	echo drawBottom();
 } else {
 	$form->draw("Add New Story");
 }

@@ -1,6 +1,6 @@
 <?php
 include("../../include.php");
-drawTop();
+echo drawTop();
 	
 $r = db_grab("SELECT
 		m.firstname,
@@ -40,4 +40,4 @@ $r = db_grab("SELECT
 		<td class="text"><?=$r["bio"]?></td>
 	</tr>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

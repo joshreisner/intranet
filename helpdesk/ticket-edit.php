@@ -32,5 +32,5 @@ $form->addRow("select", "Type" , "type_id", "SELECT id, description FROM helpdes
 $form->addRow("textarea", "Description" , "description", $t["description"], "", true);
 $form->addRow("submit"  , "save changes");
 $form->draw("Edit Ticket");
-drawBottom();
+echo drawBottom();
 ?>

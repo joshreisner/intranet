@@ -12,7 +12,7 @@ if ($posting) {
 	$r['url'] = 'http://';
 } else {
 	url_query_require();
-	drawTop();
+	echo drawTop();
 	$r = db_grab('SELECT id, title, url, description from external_orgs WHERE id = ' . $_GET['id']);
 }
 
@@ -43,5 +43,5 @@ if ($included) {
 }
 */
 
-if (!$included) drawBottom();
+if (!$included) echo drawBottom();
 ?>

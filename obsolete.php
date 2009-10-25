@@ -46,7 +46,7 @@ function drawNavigationRow($pages, $module=false, $pq=false) {
 	
 function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=false, $link2text=false, $link2link=false) {
 	global $_josh, $modules, $modulettes, $page;
-	if (!$name) $name = $page['breadcrumbs'];
+	if (!$name) $name = $page['breadcrumbs'] . $page['title'];
 	//urls are absolute because it could be used in an email
 	$header ='<tr>
 			<td class="head" colspan="' . $colspan . '">

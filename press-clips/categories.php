@@ -1,6 +1,6 @@
 <?php
 include("../include.php");
-drawTop();
+echo drawTop();
 
 if (url_id()) {
 	$title = db_grab("SELECT title FROM press_clips_types WHERE id = " . $_GET["id"]);

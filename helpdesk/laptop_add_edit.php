@@ -66,9 +66,7 @@ if ($posting) {
 	url_change("laptop.php?id=" . $_GET["id"]);
 }
 
-drawTop();
-
-
+echo drawTop();
 
 if (isset($_GET["id"])) {
 	$r = db_grab("SELECT 
@@ -177,4 +175,4 @@ if (isset($_GET["id"])) {
 	</tr>
 	</form>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

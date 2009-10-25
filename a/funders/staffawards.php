@@ -3,9 +3,8 @@
 //default to active awards
 if (!isset($_GET["statusID"])) url_change($_josh["request"]["path_query"] . "&statusID=1");
 	
-drawTop();
+echo drawTop();
 
-	
 $r  = db_grab("SELECT awardStatusDescPlural FROM funders_awards_statuses WHERE awardStatusID = " . $_GET["statusID"]);
 $r2 = db_grab("SELECT ISNULL(u.nickname, u.firstname) staffname 
 					FROM users u
@@ -107,4 +106,4 @@ while ($rp = db_fetch($programs)) {
 	}?>
 </table>
 <br><br>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

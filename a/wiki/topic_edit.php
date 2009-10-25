@@ -8,7 +8,7 @@ if ($posting) {
 	url_change("topic.php?id=" . $id);
 }
 
-drawTop();
+echo drawTop();
 
 
 
@@ -23,5 +23,5 @@ $form->addRow("textarea", "Description" , "description", $r["description"], "", 
 $form->addRow("submit"  , "post wiki topic");
 $form->draw("Add a Wiki Topic");
 
-drawBottom();
+echo drawBottom();
 ?>

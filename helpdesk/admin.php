@@ -1,6 +1,6 @@
 <?php include("include.php");
 url_query_require("admins.php");
-drawTop();
+echo drawTop();
 
 echo drawTicketFilter();
 ?>
@@ -38,4 +38,4 @@ echo drawTicketFilter();
 	}
 	?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

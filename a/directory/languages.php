@@ -1,7 +1,7 @@
 <?
 include("../../include.php");
 
-drawTop();
+echo drawTop();
 
 
 ?>
@@ -21,4 +21,4 @@ drawTop();
 	<?}?>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

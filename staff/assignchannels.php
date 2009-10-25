@@ -1,7 +1,7 @@
 <?php
 include("../include.php");
 
-drawTop();
+echo drawTop();
 
 db_query("DELETE FROM users_to_channels");
 $users = db_query("SELECT id, organization_id FROM users");
@@ -15,4 +15,4 @@ while ($u = db_fetch($users)) {
 	}
 }
 
-drawBottom();?>
+echo drawBottom();?>

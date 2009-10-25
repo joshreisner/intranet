@@ -1,7 +1,7 @@
 <?php
 include('include.php');
 
-drawTop();
+echo drawTop();
 
 echo drawSyndicateLink('bb');
 
@@ -35,5 +35,5 @@ foreach ($result as &$r) {
 
 echo $t->draw($result, 'No topics have been added yet.  Why not <a href="./#bottom">be the first</a>?');
 
-drawBottom(); 
+echo drawBottom(); 
 ?>

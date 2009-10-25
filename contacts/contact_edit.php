@@ -92,8 +92,7 @@ if ($_POST) {
 	url_change("contact.php?id=" . $_GET["id"]);
 }
 
-drawTop();
-
+echo drawTop();
 
 if (isset($_GET["id"])) {
 	$i = db_grab("SELECT
@@ -269,4 +268,4 @@ if (isset($_GET["id"])) {
 	</form>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

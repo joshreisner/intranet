@@ -15,7 +15,7 @@ if (!empty($_POST)) {
 	url_change("member.php?id=" . $_GET["id"]);
 }
 
-drawTop();
+echo drawTop();
 
 $r = db_grab("SELECT 
 				firstname,
@@ -37,4 +37,5 @@ $form->addRow("textarea", "Bio" , "bio", $r["bio"], "", false);
 $form->addRow("submit"  , "update board member");
 $form->draw("<a href='index.php' class='white'>Board Members</a> &gt; Update Member");
 
-drawBottom();?>
+echo drawBottom();
+?>

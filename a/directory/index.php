@@ -1,6 +1,6 @@
 <?php
 include("../../include.php");
-drawTop();
+echo drawTop();
 
 $t = new table();
 $t->set_column("organization");

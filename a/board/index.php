@@ -32,7 +32,7 @@ if (url_action("delete")) {
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 echo drawTableStart();
 if ($page['is_admin']) {
 	$colspan = 2;
@@ -89,4 +89,5 @@ echo drawTableEnd();
 	$form->addRow("submit"  , "add board member");
 	$form->draw("Add a Board Member");
 }
-drawBottom(); ?>
+echo drawBottom();
+?>

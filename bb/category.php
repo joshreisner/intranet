@@ -1,6 +1,7 @@
 <?php
 include('include.php');
-drawTop();
+
+echo drawTop();
 
 if (url_id()) {
 	//get a particular topic
@@ -24,10 +25,10 @@ $result = db_table('SELECT
 	' . getChannelsWhere('bb_topics', 't', 'topic_id') . ' AND ' . $where . '
 	ORDER BY t.thread_date DESC', 15);
 $t = new table('bb_topics', drawHeader(false, $title));
-$t->col('topic');
-$t->col('starter');
-$t->col('replies', 'c');
-$t->col('last_post', 'r');
+$t->col('topic', 'l', getString('topic'));
+$t->col('starter', 'l', getString('starter'));
+$t->col('replies', 'c', getString('replies'));
+$t->col('last_post', 'r', getString('last_post'));
 
 foreach($result as &$r) {
 	$r['link'] = 'topic.php?id=' . $r['id'];
@@ -39,5 +40,5 @@ foreach($result as &$r) {
 }
 echo $t->draw($result, 'No topics have been added to this category yet.<br>Why not <a href="./#bottom">be the first</a>');
 
-drawBottom();
+echo drawBottom();
 ?>

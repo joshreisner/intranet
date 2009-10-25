@@ -3,9 +3,7 @@ include("../include.php");
 
 if (!isset($_GET["id"])) $_GET["id"] = "a";
 	
-drawTop();
-
-
+echo drawTop();
 
 if (!isset($_GET["print"])) {?>
 <table class="navigation contacts" cellspacing="1">
@@ -69,4 +67,4 @@ if (!isset($_GET["print"])) {?>
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

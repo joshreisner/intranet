@@ -1,7 +1,6 @@
 <?
 include("../include.php");
-drawTop();
-
+echo drawTop();
 
 $users = db_query("select 
 		ISNULL(u.nickname, u.firstname) first,
@@ -37,4 +36,4 @@ $users = db_query("select
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

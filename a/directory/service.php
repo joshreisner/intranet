@@ -1,6 +1,6 @@
 <?
 include("../../include.php");
-drawTop();
+echo drawTop();
 
 $service = db_grab("SELECT name FROM web_services WHERE id = " . $_GET["id"]);
 ?>
@@ -21,4 +21,4 @@ $service = db_grab("SELECT name FROM web_services WHERE id = " . $_GET["id"]);
 	<? }?>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

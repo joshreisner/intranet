@@ -1,8 +1,7 @@
 <?  
 include("../../include.php");
 
-drawTop();
-
+echo drawTop();
 
 $r = db_grab("SELECT programDesc FROM funders_programs WHERE programID = " . $_GET["id"]);
 ?>
@@ -94,4 +93,4 @@ while ($rsa = db_fetch($result_award_statuses)) {
 <? }?>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

@@ -5,7 +5,7 @@ if (url_action("delete")) {
 	db_query("DELETE FROM funders_programs WHERE programID = " . $_GET["id"]);
 	url_drop();
 }
-drawTop();
+echo drawTop();
 ?>
 
 <table class="left" cellspacing="1">
@@ -38,4 +38,4 @@ while ($r = db_fetch($result)) {?>
 	</tr>
 <? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

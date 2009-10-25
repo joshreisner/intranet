@@ -7,7 +7,7 @@ if ($posting) {
 	url_change_post('./');
 }
 
-drawTop();
+echo drawTop();
 
 $f = new form('pages', @$_GET['id']);
 $f->set_field(array('type'=>'text', 'name'=>'title' . langExt(), 'label'=>getString('title')));
@@ -20,5 +20,5 @@ langUnsetFields($f, 'title,description');
 langTranslateCheckbox($f);
 echo $f->draw();
 
-drawBottom();
+echo drawBottom();
 ?>

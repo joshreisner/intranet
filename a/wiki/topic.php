@@ -20,7 +20,7 @@ if ($uploading) { //upload an attachment
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 
 //load code for JS
 $extensions = array();
@@ -165,4 +165,4 @@ if ($page['is_admin']) {?>
 	</form>
 </table>
 <? }
-drawBottom();?>
+echo drawBottom();?>

@@ -86,7 +86,7 @@ if ($uploading) {
 	url_change();
 }
 
-drawTop();
+echo drawTop();
 
 echo drawMessage($helpdeskStatus, "center");
 
@@ -347,4 +347,4 @@ echo '</table>';
 	</form>
 </table>
 <? 
-drawBottom(); ?>
+echo drawBottom(); ?>

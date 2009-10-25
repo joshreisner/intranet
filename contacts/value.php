@@ -3,9 +3,7 @@ include("../include.php");
 
 if (!isset($_GET["id"])) $_GET["id"] = "a";
 	
-drawTop();
-
-
+echo drawTop();
 
 $r = db_grab("SELECT tt.name, t.type_id, t.tag FROM contacts_tags t INNER JOIN contacts_tags_types tt ON t.type_id = tt.id WHERE t.id = " . $_GET["id"]);
 
@@ -43,4 +41,4 @@ $r = db_grab("SELECT tt.name, t.type_id, t.tag FROM contacts_tags t INNER JOIN c
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

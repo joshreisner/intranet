@@ -8,7 +8,7 @@ if ($posting) {
 }
 
 
-drawTop();
+echo drawTop();
 
 $types = db_query("SELECT description, extension FROM docs_types ORDER BY description");
 $extensions = $doctypes = $array = array();
@@ -49,5 +49,5 @@ if (isset($_GET["id"])) {
 	$form->draw("<a href='/policy/?category=1'>Policy</a> > Add New Policy Document");
 }
 
-drawBottom();
+echo drawBottom();
 ?>

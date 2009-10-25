@@ -2,54 +2,36 @@
 include("../../include.php");
 
 if ($posting) {
-	db_save("links");
-	url_change();
-} elseif (url_action("delete")) {
-	db_query("UPDATE links SET is_active = 0, deleted_date = NOW(), deleted_user = {$_SESSION["user_id"]} WHERE id = " . $_GET["id"]);
-	url_drop("id, action");
+	langTranslatePost('title');
+	$id = db_save('links');
+	url_drop('id');
 }
 
-drawTop();
+echo drawTop();
 
-echo drawTableStart();
-echo drawHeaderRow(false, 5, "new", "#bottom");?>
-<?
-$links = db_query("SELECT id, text, url FROM links WHERE is_active = 1 ORDER BY precedence");
-if ($max = db_found($links)) {
-	$counter = 1;?>
-	<tr>
-		<th style="text-align:left;">Link</th>
-		<th style="text-align:left;">Address</th>
-		<th style="width:16px;"></th>
-		<th style="width:16px;"></th>
-		<th style="width:16px;"></th>
-	</tr>
-	<?
-	while ($l = db_fetch($links)) {?>
-		<tr>
-			<td><?=$l["text"]?></td>
-			<td><a href="<?=$l["url"]?>"><?=$l["url"]?></a></td>
-			<td><? if ($counter != 1) echo draw_img($_josh["write_folder"] . "/images/icons/moveup.gif")?></td>
-			<td><? if ($counter != $max) echo draw_img($_josh["write_folder"] . "/images/icons/movedown.gif")?></td>
-			<?=drawDeleteColumn("are you sure?", $l["id"]);?>
-		</tr>
-	<? 
-	$counter++;
-	}
+if (url_id()) {
+	//form
+	$f = new form('links', @$_GET['id']);
+	$f->set_field(array('type'=>'text', 'name'=>'title' . langExt(), 'label'=>getString('title')));
+	langUnsetFields($f, 'title');
+	langTranslateCheckbox($f);
+	echo $f->draw();
 } else {
-	echo drawEmptyResult("No links entered in the system yet!", 5);
+	//modules list
+	$t = new table('links', drawHeader());
+	$t->set_column('draggy', 'd', '&nbsp;');
+	$t->set_column('title', 'l', getString('title'));
+	
+	$result = db_table('SELECT l.id, l.title' . langExt() . ' title FROM links l WHERE l.is_active = 1 ORDER BY l.precedence');
+	$t->set_draggable('draggy');
+	
+	foreach ($result as &$r) {
+		$r['draggy']		= draw_img('/images/icons/move.png');
+		$r['title']			= draw_link('links.php?id=' . $r['id'], $r['title']);
+	}
+	
+	echo $t->draw($result, 'No modules');
 }
-echo drawTableEnd();
 
-echo '<a name="bottom"></a>';
-$form = new intranet_form;
-$form->addRow("hidden", "", "precedence", ($max + 1));
-$form->addRow("itext",  "Link" , "text", "", "", true);
-$form->addRow("itext",  "Address" , "url", "http://", "", true, 255);
-$form->addRow("submit"  , "add new link");
-$form->draw("Add a New Link");
-
-drawBottom(); 
+echo drawBottom();
 ?>
-
-drawBottom();?>

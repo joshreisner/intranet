@@ -12,8 +12,7 @@ if (isset($_GET["checkin"])) {
 	url_drop();
 }
 
-drawTop();
-
+echo drawTop();
 
 if ($_SESSION["departmentID"] != 8) {
 	echo drawMessage("This page is specific to IT.");
@@ -123,4 +122,4 @@ if (db_found($result)) {?>
 		}
 	}?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

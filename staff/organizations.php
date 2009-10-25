@@ -19,7 +19,7 @@ if (getOption("staff_allowshared")) {
 }
 $orgs = db_array("SELECT id, title from organizations ORDER BY title", $orgs, false, false);
 
-drawTop();
+echo drawTop();
 
 if (count($orgs) < 8) {
 ?>
@@ -38,4 +38,4 @@ if (count($orgs) < 8) {
 $where = ($_GET["id"] == 0) ? " IS NULL " : " = " . $_GET["id"];
 echo drawStaffList("u.is_active = 1 AND u.organization_id " . $where);
 
-drawBottom();?>
+echo drawBottom();?>

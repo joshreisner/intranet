@@ -10,9 +10,9 @@ if ($posting) {
 
 $e = db_grab('SELECT MONTH(e.start_date) month, YEAR(e.start_date) year FROM cal_events e WHERE e.id = ' . $_GET['id']);
 	
-drawTop();
+echo drawTop();
 echo drawNavigationCal($e['month'], $e['year'], true);
 
 echo drawEventForm();
 
-drawBottom();?>
+echo drawBottom();?>

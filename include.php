@@ -48,7 +48,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		ORDER BY m.precedence');
 		
 	//get sub-list of modulettes
-	$modulettes = db_table('SELECT m.id, m.title' . langExt() . ' title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title');
+	$modulettes = db_table('SELECT m.id, m.title' . langExt() . ' title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title' . langExt());
 
 	//get page
 	$page = array('id'=>false, 'title'=>'Untitled Page', 'module_id'=>false, 'modulette_id'=>false, 'color'=>'666', 'hilite'=>'eee', 'helptext'=>'<p>No description has been written yet for this page.</a>');
@@ -60,7 +60,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		
 			//start breadcrumbs and title, set module_id, is_admin
 			if ($request['folder'] == $m['folder']) {
-				$page['title'] = $m['title'] . ' > ';
 				$page['breadcrumbs'] = draw_link(url_base() . '/' . $request['folder'] . '/', $m['title']) . ' &gt; ';
 				$page['module_id'] = $m['id'];
 				$page['is_admin'] = $m['is_admin'];
@@ -89,7 +88,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 				if ($_SESSION['is_admin']) $m['is_admin'] = true;		
 
 				if ($request['subfolder'] == $m['folder']) {
-					$page['title'] .= $m['title'] . ' > ';
 					$page['breadcrumbs'] .= draw_link(url_base() . '/' . $request['folder'] . '/' . $request['subfolder'] . '/', $m['title']) . ' &gt; ';
 					$page['modulette_id'] = $m['id'];
 					$page['is_admin'] = $m['is_admin']; //overriding module privilege with that of modulette
@@ -108,12 +106,10 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		
 		if ($m) {
 			$page['id'] = $m['id'];
-			$page['title'] .= $m['title'];
-			$page['breadcrumbs'] .= $m['title'];
+			$page['title'] = $m['title'];
 			$page['helptext'] = $m['description'];
 		} else {
-			$page['title'] .= 'Untitled Page';
-			$page['breadcrumbs'] .= 'Untitled Page';
+			$page['title'] = 'Untitled Page';
 		}
 	}
 		
@@ -221,7 +217,7 @@ function drawNavigation() {
 function drawHeader($options=false, $title=false) {
 	//get the page for the header
 	global $_josh, $page, $modules, $modulettes;
-	$return = ($title) ? $title : $page['breadcrumbs'];	
+	$return = $page['breadcrumbs'] . (($title) ? $title : $page['title']);	
 	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
 	return $return;
 }
@@ -316,82 +312,87 @@ function drawTop() {
 			#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
 		')
 	);
-	?>
+	
+	$return = '
 	<body>
 		<div id="container">
-			<?=draw_div('banner', draw_img($_josh['write_folder'] . '/banner' . langExt() . '.png', $_SESSION['homepage']))?>
+			' . draw_div('banner', draw_img($_josh['write_folder'] . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
 			<div id="left">
 				<div id="help">
-				<a class="button left" href="<?=$_SESSION['homepage']?>">Home</a>
-				<?=draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), (($user['help']) ? 'Hide' : 'Show') . ' Help', array('class'=>'button right', 'id'=>'showhelp'))?>
-			<? if ($_SESSION['is_admin']) {
-				if ($page['id']) {?>
-					<a class='button right' href='/a/admin/page.php?id=<?=$page['id']?>'>Edit Page Info</a>
-				<? } else {?>
-					<a class='button right' href='/a/admin/page.php?module_id=<?=$page['module_id']?>&modulette_id=<?=$page['modulette_id']?>&url=<?=urlencode($_josh['request']['page'])?>'>Create Page Here</a>
-				<? }
-			}?>
-				<div id="helptext"<? if (!$user['help']) {?> style="display:none;"<? }?>><?=$page['helptext']?></div>
-				</div>
-	<? 
-	if ($_josh['request']['folder'] == 'helpdesk') echo drawNavigationHelpdesk();
-	echo drawNavigation();
+				<a class="button left" href="' . $_SESSION['homepage'] . '">' . getString('home') . '</a>
+				' . draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), getString('help_' . (($user['help']) ? 'hide' : 'show')), array('class'=>'button right', 'id'=>'showhelp'));
+	if ($_SESSION['is_admin']) {
+		if ($page['id']) {
+			$return .= '<a class="button right" href="/a/admin/page.php?id=' . $page['id'] . '">' . getString('page_edit_info') . '</a>';
+		} else {
+			$return .= '<a class="button right" href="/a/admin/page.php?module_id=' . $page['module_id'] . '&modulette_id=' . $page['modulette_id'] . '&url=' . urlencode($_josh['request']['page']) . '">Create Page Here</a>';
+		}
+	}
+	$return .= '<div id="helptext"';
+	if (!$user['help']) $return .= ' style="display:none;"';
+	$return .= '>' . $page['helptext'] . '</div>
+				</div>';
+
+	if ($_josh['request']['folder'] == 'helpdesk') $return .= drawNavigationHelpdesk();
+	$return .= drawNavigation();
 	$_josh['drawn']['top'] = true;
 	error_debug('finished drawing top', __file__, __line__);
+	return $return;
 }
 
 //it's convention to put this right below drawTop()
 function drawBottom() {
 	global $_SESSION, $_GET, $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes;
-	?>
+	$return = '
+		<!-- DRAWING BOTTOM -->
 			</div>
-			<div id='right'>
-				<div id='tools'>
-					<a class='right button' href='/index.php?action=logout'>Log Out</a>
-					Hello <a href='/staff/view.php?id=<?=$_SESSION['user_id']?>'><b><?=$_SESSION['full_name']?></b></a>.
+			<div id="right">
+				<div id="tools">
+					<a class="right button" href="/index.php?action=logout">' . getString('log_out') . '</a>
+					' . getString('hello') . ' <a href="/staff/view.php?id=' . $_SESSION['user_id'] . '"><b>' . $_SESSION['full_name'] . '</b></a>.
 
-					<form name='search' accept-charset='utf-8' method='get' action='/staff/search.php' onSubmit='javascript:return doSearch(this);'>
-		            <input type='text' name='q' value='Search Staff' onfocus='javascript:form_field_default(this, true, 'Search Staff');' onblur='javascript:form_field_default(this, false, 'Search Staff');'>
-					</form>
-					<?
-					if (getOption('channels')) echo draw_form_select('channel_id', 'SELECT id, title_en FROM channels ORDER BY title_en', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', 'View All Networks');
-					if (getOption('languages')) echo draw_form_select('language_id', 'SELECT id, title FROM languages ORDER BY title', $_SESSION['language_id'], true, 'languages', 'url_query_set(\'language_id\', this.value)');
-					?>
-					
-					<table class="links">
-						<? if ($_SESSION['is_admin']) {?><tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/a/admin/links.php">Edit Links</a></td></tr><? } ?>
-	<?
+					<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onSubmit="javascript:return doSearch(this);">
+		            <input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');">
+					</form>';
+
+	if (getOption('channels')) $return .= draw_form_select('channel_id', 'SELECT id, title_en FROM channels ORDER BY title_en', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
+	if (getOption('languages')) $return .= draw_form_select('language_id', 'SELECT id, title FROM languages ORDER BY title', $_SESSION['language_id'], true, 'languages', 'url_query_set(\'language_id\', this.value)');
+
+	$return .= '<table class="links">';
+	if ($_SESSION['is_admin']) $return .= '<tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/a/admin/links.php">' . getString('links_edit') . '</a></td></tr>';
+
 	$side = 'left';
-	$links = db_query('SELECT url, text FROM links WHERE is_active = 1 ORDER BY precedence');
+	$links = db_query('SELECT title' . langExt() . ' title, url FROM links WHERE is_active = 1 ORDER BY precedence');
 	while ($l = db_fetch($links)) {
-		if ($side == 'left') echo '<tr>';
-		echo '<td width="50%"><a href="' . $l['url'] . '" target="new">' . $l['text'] . '</a></td>';
-		if ($side == 'right') echo '</tr>';
+		if ($side == 'left') $return .= '<tr>';
+		$return .= '<td width="50%"><a href="' . $l['url'] . '" target="new">' . $l['title'] . '</a></td>';
+		if ($side == 'right') $return .= '</tr>';
 		$side = ($side == 'left') ? 'right' : 'left';
 	}
-	?>
-					</table>
-				</div>
-	<? 
-		            
-	foreach ($modules as $m) {?>
-		<table class="right <?=$m['folder']?>" cellspacing="1">
+	
+	$return .= '</table></div>';
+
+	foreach ($modules as $m) {
+		$return .= '
+		<table class="right ' . $m['folder'] . '" cellspacing="1">
 			<tr>
-				<td colspan="2" class="head" style="background-color:#<?=$m['color']?>;">
-					<a href="/<?=$m['folder']?>/"><?=$m['title']?></a>
-					<?=draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false))?>
+				<td colspan="2" class="head" style="background-color:#' . $m['color'] . ';">
+					<a href="/' . $m['folder'] . '/">' . $m['title'] . '</a>
+					' . draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false)) . '
 				</td>
-			</tr>
-			<? if (!$m['is_closed']) include($_josh['root'] . '/' . $m['folder'] . '/pallet.php');?>
-		</table>
-	<? }?>
-			</div>
-			<div id="footer">page rendered in <?=format_time_exec()?></div>
-		</div>
+			</tr>';
+			if (!$m['is_closed']) include($_josh['root'] . '/' . $m['folder'] . '/pallet.php');
+		$return .= '</table>';
+	}
+	$return .= '</div>';
+	
+	if ($_SESSION['is_admin']) $return .= '<div id="footer">page rendered in ' . format_time_exec() . '</div>';
+	
+	$return .= '</div>
 		<div id="subfooter"></div>
 	</body>
-</html>
-	<? db_close();
+</html>';
+	return $return;
 }
 
 
@@ -493,83 +494,12 @@ function getOption($key) {
 }
 
 function getString($key) {
-	global $strings;
+	global $_josh, $strings, $defaults;
 	
 	if (isset($strings[$key][$_SESSION['language']])) return $strings[$key][$_SESSION['language']];
 
 	//default strings.  override these in your config file by specifying $strings variables
-	$defaults['app_name']['en']			= 'Intranet';
-	
-	$defaults['app_welcome']['en']		= 'Welcome to the Intranet.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
-	
-	$defaults['staff_firsttime']['en']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
-	
-	$defaults['staff_update']['en']		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
-	
-	$defaults['topic']['en']			= 'Topic';
-	$defaults['topic']['es']			= 'Tema';
-	$defaults['topic']['fr']			= 'Sujet';
-	$defaults['topic']['ru']			= 'Рубрики';
-	
-	$defaults['starter']['en']			= 'Started By';
-	$defaults['starter']['es']			= 'Iniciado por';
-	$defaults['starter']['fr']			= 'Commencé par';
-	$defaults['starter']['ru']			= 'К работе';
-	
-	$defaults['replies']['en']			= 'Replies';
-	$defaults['replies']['es']			= 'Respuestas';
-	$defaults['replies']['fr']			= 'Réponses';
-	$defaults['replies']['ru']			= 'Ответы';
-	
-	$defaults['last_post']['en']			= 'Last Post';
-	$defaults['last_post']['es']			= 'Último';
-	$defaults['last_post']['fr']			= 'Dernier';
-	$defaults['last_post']['ru']			= 'Последнее сообщение';
-	
-	$defaults['no_topics']['en']			= 'No topics have been added yet.  Why not <a href="#bottom">be the first</a>?';
-	$defaults['no_topics']['es']			= 'No hay temas se han añadido todavía. ¿Por qué no <a href="#bottom">no ser el primero</a>?';
-	$defaults['no_topics']['fr']			= 'Aucun sujet n\'a encore été enregistré. Pourquoi <a href="#bottom">être pas le premier</a>?';
-	$defaults['no_topics']['ru']			= 'Нет тем еще не было добавлено. Почему бы не <a href="#bottom">не быть первой</a>?';
-	
-	$defaults['category']['en']			= 'Category';
-	$defaults['category']['es']			= 'Categoría';
-	$defaults['category']['fr']			= 'Catégorie';
-	$defaults['category']['ru']			= 'Категории';
-	
-	$defaults['new_topic']['en']			= 'Contribute a New Topic';
-	$defaults['new_topic']['es']			= 'Contribuir con un nuevo tema';
-	$defaults['new_topic']['fr']			= 'Contribuer par un nouveau thème';
-	$defaults['new_topic']['ru']			= 'Добавить новую тему';
-
-	$defaults['posted_by']['en']			= 'Posted By';
-	$defaults['posted_by']['es']			= 'Publicado por';
-	$defaults['posted_by']['fr']			= 'Signalé près';
-	$defaults['posted_by']['ru']			= 'вывешено мимо';
-	
-	$defaults['is_admin']['en']			= 'Is Admin';
-	$defaults['is_admin']['es']			= 'Es administrativo';
-	$defaults['is_admin']['fr']			= 'Est administratif';
-	$defaults['is_admin']['ru']			= 'административно';
-	
-	$defaults['title']['en']			= 'Title';
-	$defaults['title']['es']			= 'Título';
-	$defaults['title']['fr']			= 'Titre';
-	$defaults['title']['ru']			= 'Название';
-	
-	$defaults['networks']['en']			= 'Networks';
-	$defaults['networks']['es']			= 'Redes';
-	$defaults['networks']['fr']			= 'Réseaux';
-	$defaults['networks']['ru']			= 'Сети';
-
-	$defaults['description']['en']		= 'Description';
-	$defaults['description']['es']		= 'Descripción';
-	$defaults['description']['fr']		= 'Description';
-	$defaults['description']['ru']		= 'Описание';
-
-	$defaults['bb_admin']['en']			= 'This is an administrative announcement topic.  For more information, please contact the topic poster.';
-	$defaults['bb_admin']['es']			= 'Este es un tema anuncio administrativos. Para obtener más información, póngase en contacto con el anunciante tema.';
-	$defaults['bb_admin']['fr']			= 'C\'est un sujet annonce administratives. Pour de plus amples renseignements, s\'il vous plaît contacter l\'affiche sujet.';
-	$defaults['bb_admin']['ru']			= 'Это административная тема объявления. За дополнительной информацией просьба обращаться к тем авторам.';
+	include_once($_josh['root'] . '/strings.php');
 	
 	if (isset($defaults[$key][$_SESSION['language']])) return $defaults[$key][$_SESSION['language']];
 	
@@ -578,7 +508,7 @@ function getString($key) {
 		error_handle('string not set', 'The string ' . $key . ' is not set for language ' . $_SESSION['language'] . '.  Suggested translation:<p style="font-style:italic;">' . language_translate($str, 'en', $_SESSION['language'])) . '</p>';
 	}
 
-	error_handle('string not defined', 'The string ' . $key . ' is not defined yet.');
+	error_handle('string not defined', 'The string ' . $key . ' is not defined yet in English.');
 	
 }
 
@@ -595,7 +525,7 @@ function langTranslatePost($keys) {
 	global $_POST;
 	
 	//make sure do translations checkbox is checked
-	if (!isset($_POST['do_translations'])) return false;
+	if (!isset($_POST['translations_do'])) return false;
 
 	//list of fields to translate
 	$keys = array_post_fields($keys);
@@ -624,7 +554,7 @@ function langUnsetFields($form, $names) {
 
 function langTranslateCheckbox($form, $show=true) {
 	if (!getOption('languages')) return false;
-	$form->set_field(array('name'=>'do_translations', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'value'=>1));
+	$form->set_field(array('name'=>'translations_do', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'label'=>getString('translations_do'), 'value'=>1));
 }
 
 function login($username, $password, $skippass=false) {

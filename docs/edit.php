@@ -18,8 +18,7 @@ if (url_id()) {
 	$pageAction = 'Add Document';
 }
 
-drawTop();
-
+echo drawTop();
 
 //load code for JS
 $extensions = array();
@@ -76,5 +75,5 @@ if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'chec
 $f->set_field(array('name'=>'categories', 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
 echo $f->draw(); 
 
-drawBottom();
+echo drawBottom();
 ?>

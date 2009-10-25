@@ -1,6 +1,6 @@
 <?
 include("../../include.php");
-drawTop();
+echo drawTop();
 
 $r = db_grab("SELECT 
 		j.id,
@@ -69,4 +69,4 @@ $r = db_grab("SELECT
 	</tr>
 	<? } ?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

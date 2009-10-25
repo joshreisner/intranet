@@ -47,7 +47,7 @@ if (isset($_GET["deactivateTagType"])) {
 	$tag = db_grab("SELECT type_id, precedence FROM contacts_tags WHERE id = " . $_GET["moveTagDown"]);
 }
 
-drawTop();
+echo drawTop();
 
 ?>
 <script language="javascript">
@@ -133,4 +133,4 @@ drawTop();
 	</tr>
 	</form>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

@@ -1,8 +1,7 @@
 <?  
 include("../../include.php");
 
-drawTop();
-
+echo drawTop();
 ?>
 
 <table class="left" cellspacing="1">
@@ -36,4 +35,4 @@ while ($r = db_fetch($result)) {?>
 <? }?>
 </table>
 
-<? drawBottom();?>
+<?=drawBottom();?>

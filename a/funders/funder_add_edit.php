@@ -58,8 +58,7 @@ if ($posting) {
 	url_change("funder_view.php?id=" . $_GET["id"]);
 }
 
-drawTop();
-
+echo drawTop();
 	
 if (isset($_GET["id"])) { //edit a funder
 	$r = db_grab("SELECT 
@@ -157,4 +156,4 @@ if (isset($_GET["id"])) { //edit a funder
 	</tr>
 	</form>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

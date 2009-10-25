@@ -1,6 +1,6 @@
 <?	include("include.php");
 
-drawTop();
+echo drawTop();
 echo drawJumpToStaff();
 
 ?>
@@ -71,4 +71,4 @@ echo drawJumpToStaff();
 		</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

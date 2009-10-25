@@ -7,7 +7,7 @@ if ($posting) {
 	url_drop('id');
 }
 
-drawTop();
+echo drawTop();
 
 if (url_id()) {
 	//form
@@ -24,7 +24,7 @@ if (url_id()) {
 	$t->set_column('title', 'l', getString('title'));
 	$t->set_column('pages', 'r');
 	
-	$result = db_table('SELECT m.id, m.title, m.is_active, (SELECT COUNT(*) FROM pages p WHERE p.module_id = m.id AND p.modulette_id IS NULL) pages FROM modules m ORDER BY m.precedence');
+	$result = db_table('SELECT m.id, m.title' . langExt() . ' title, m.is_active, (SELECT COUNT(*) FROM pages p WHERE p.module_id = m.id AND p.modulette_id IS NULL) pages FROM modules m ORDER BY m.precedence');
 	$t->set_draggable('draggy');
 	
 	foreach ($result as &$r) {
@@ -37,8 +37,5 @@ if (url_id()) {
 	echo $t->draw($result, 'No modules');
 }
 
-
-
-
-drawBottom();
+echo drawBottom();
 ?>

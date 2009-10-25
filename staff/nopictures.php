@@ -1,8 +1,7 @@
 <?
 include("../include.php");
 
-drawTop();
-
+echo drawTop();
 
 $result = db_query("SELECT
 					u.id,
@@ -31,4 +30,4 @@ $result = db_query("SELECT
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

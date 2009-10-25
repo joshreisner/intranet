@@ -6,7 +6,7 @@ if ($posting) {
     url_change();
 }
 
-drawTop();
+echo drawTop();
 
 ?>
 <table class="left" cellspacing="1">
@@ -42,4 +42,4 @@ drawTop();
 	$form->draw("Add a New Type");
 }
 
-drawBottom(); ?>
+echo drawBottom(); ?>

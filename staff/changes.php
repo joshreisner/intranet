@@ -1,5 +1,5 @@
 <?php	include("include.php");
-drawTop();
+echo drawTop();
 echo drawJumpToStaff();
 ?>
 <table class="left" cellspacing="1">
@@ -75,4 +75,4 @@ $result = db_query("SELECT
 		echo drawEmptyResult("No staff left in the last month.", 4);
 	}
 echo drawTableEnd();
-drawBottom();?>
+echo drawBottom();?>

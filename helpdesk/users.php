@@ -1,6 +1,6 @@
 <?php include("include.php");
 
-drawTop();
+echo drawTop();
 
 echo drawTicketFilter();
 ?>
@@ -41,4 +41,4 @@ echo drawTicketFilter();
 	}
 	?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

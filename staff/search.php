@@ -1,6 +1,6 @@
 <? include("include.php");
 
-drawTop();
+echo drawTop();
 
 $fields = array("u.lastname", "u.firstname", "u.nickname", "u.title", "departmentName");
 $terms = explode(" ", str_replace("'", "''", $_GET["q"]));
@@ -11,4 +11,5 @@ foreach ($terms as $t) {
 	}
 }
 echo drawStaffList("u.is_active = 1 and (" . implode(" OR ", $where) . ")", $terms);
-drawBottom();?>
+echo drawBottom();
+?>

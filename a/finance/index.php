@@ -1,6 +1,6 @@
 <? include("../../include.php");
 
-drawTop();
+echo drawTop();
 
 if ($_josh["db"]["language"] == "mssql") {
 	db_switch("trackit");
@@ -14,4 +14,4 @@ if ($_josh["db"]["language"] == "mssql") {
 	<tr><td><a href="totals.php">Totals</a></td></tr>
 	<tr><td><a href="percentages.php">Percentages (without Vacation)</a></td></tr>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

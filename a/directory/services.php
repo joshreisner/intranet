@@ -1,6 +1,6 @@
 <?
 include("../../include.php");
-drawTop();
+echo drawTop();
 
 ?>
 <table class="left" cellspacing="1">
@@ -18,4 +18,4 @@ drawTop();
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

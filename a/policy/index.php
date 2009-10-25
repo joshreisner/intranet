@@ -19,7 +19,7 @@ while ($c = db_fetch($categories)) {
 	$options[str_replace(url_base(), "", url_query_add(array("category"=>$c["id"]), false))] = $c["description"];
 }
 
-drawTop();
+echo drawTop();
 echo drawNavigationRow($options, "areas", true);
 ?>
 <table class="left">

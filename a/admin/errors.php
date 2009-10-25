@@ -1,6 +1,6 @@
 <? include("../../include.php");
 
-drawTop();
+echo drawTop();
 echo drawTableStart();
 $errors = db_query("SELECT 
 		e.name,
@@ -19,4 +19,5 @@ while ($e = db_fetch($errors)) {?>
 	</tr>
 <? }
 echo drawTableEnd();
-drawBottom();?>
+echo drawBottom();
+?>

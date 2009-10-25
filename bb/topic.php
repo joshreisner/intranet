@@ -47,12 +47,12 @@ if (!$r = db_grab("SELECT
 		LEFT JOIN bb_topics_types y ON t.type_id = y.id
 		WHERE t.id = " . $_GET["id"])) url_change("/bb/");
 
-drawTop();
+echo drawTop();
 echo drawSyndicateLink("bb");
 
 $isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
 
-if ($r["is_admin"] == 1) echo drawMessage(getString("bb_admin"));
+if ($r["is_admin"] == 1) echo drawMessage(getString("topic_admin"));
 
 echo draw_javascript('
 	function checkDelete() {
@@ -69,11 +69,13 @@ echo draw_javascript('
 
 echo drawTableStart();
 if ($page['is_admin'] || $isPoster) {
-	echo drawHeaderRow($r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
+	echo drawHeaderRow($page['breadcrumbs'] . $r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 } else {
-	echo drawHeaderRow($r["title"], 2, "add a followup", "#bottom");
+	echo drawHeaderRow($page['breadcrumbs'] . $r["title"], 2, "add a followup", "#bottom");
 }
 echo bbDrawTopic($_GET["id"]);
 echo drawThreadCommentForm(false);
 echo drawTableEnd();
-drawBottom();?>
+echo drawBottom();
+
+?>

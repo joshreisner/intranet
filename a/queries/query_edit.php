@@ -6,7 +6,7 @@ if ($posting) {
 	url_change("./");
 }
 	
-drawTop();
+echo drawTop();
 
 if (isset($_GET["id"])) {
 	$r = db_grab("SELECT 
@@ -39,5 +39,4 @@ if (isset($_GET["id"])) {
 	$form->draw("Add New Query");
 }
 
-drawBottom() ?>
-
+echo drawBottom() ?>

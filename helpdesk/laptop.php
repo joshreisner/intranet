@@ -1,7 +1,6 @@
 <?php include("include.php");
 
-drawTop();
-
+echo drawTop();
 
 $r = db_grab("SELECT 
 			l.laptopName,
@@ -118,4 +117,4 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 	<? }?>
 </table>
 
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

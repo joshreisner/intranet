@@ -84,7 +84,7 @@ if ($posting) {
 	url_change("view.php?id=" . $id);
 }
 
-drawTop();
+echo drawTop();
 
 if (isset($_GET["id"])) {
 	$r = db_grab("SELECT 
@@ -222,4 +222,4 @@ if (isset($_GET["id"])) {
 } else {
 	$form->draw("Add New Staff Member");
 }
-drawBottom();?>
+echo drawBottom();?>

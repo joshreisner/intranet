@@ -2,7 +2,7 @@
 
 if (!isset($_GET["id"])) $_GET["id"] = 1;
 
-drawTop();
+echo drawTop();
 
 ?>
 <table class="navigation staff" cellspacing="1">
@@ -49,4 +49,4 @@ if ($_GET["id"] == 1) {
 				u.lastname like 'z%'";
 }
 echo drawStaffList("u.is_active = 1 and (" . $letters . ")");
-drawBottom();?>
+echo drawBottom();?>

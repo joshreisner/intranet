@@ -8,15 +8,16 @@ $result = db_query('SELECT
 	' . getChannelsWhere('docs', 'd', 'doc_id') . '
 	ORDER BY downloads DESC', 4);
 if (db_found($result)) {
-	while ($r = db_fetch($result)) {?>
+	while ($r = db_fetch($result)) {
+		$return .= '
 	<tr>
-		<td width="16"><a href="/<?=$m["folder"]?>/download.php?id=<?=$r["id"]?>"><img src="<?=$r["icon"]?>" width="16" height="16" border="0" alt="<?=$r["description"]?>"></a></td>
+		<td width="16"><a href="/' . $m["folder"] . '/download.php?id=' . $r["id"] . '"><img src="' . $r["icon"] . '" width="16" height="16" border="0" alt="' . $r["description"] . '"></a></td>
 		<td width="99%">
-			<div style="float:right;"><nobr><?=format_date($r["updated_date"], "", "M d")?></nobr></div>
-			<a href="/<?=$m["folder"]?>/download.php?id=<?=$r["id"]?>"><?=format_string($r["title"], 30);?></a>
+			<div style="float:right;"><nobr>' . format_date($r["updated_date"], "", "M d") . '</nobr></div>
+			<a href="/' . $m["folder"] . '/download.php?id=' . $r["id"] . '">' . format_string($r["title"], 30) . '</a>
 		</td>
-	</tr>
-	<? }
+	</tr>';
+	}
 } else {
-	echo drawEmptyResult("No documents added yet.", 2);
+	$return .= drawEmptyResult("No documents added yet.", 2);
 }

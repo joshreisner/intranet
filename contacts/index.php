@@ -4,8 +4,7 @@ include("../include.php");
 //empty query is confusing
 if (isset($_GET["q"]) && empty($_GET["q"])) url_change("/contacts/");
 
-drawTop();
-
+echo drawTop();
 
 function formatArrayForText($array) {
 	if (count($array) > 1) {
@@ -109,4 +108,4 @@ if (isset($_GET["q"])) {
 	document.mainsearchform.q.focus();
 	//-->
 </script>
-<? drawBottom();?>
+<?=drawBottom();?>

@@ -9,7 +9,7 @@ if ($posting) {
 	$_josh["request"]["path_query"] = "edit.php"; //shoddy way of setting the form target
 	$r["url"] = "http://";
 } elseif (url_id()) {
-	drawTop();
+	echo drawTop();
 	$r = db_grab("SELECT id, title, url, publication, pub_date, description, type_id from press_clips WHERE id = " . $_GET["id"]);
 	$r["title"] = format_title($r["title"], "US");
 } else {
@@ -47,5 +47,5 @@ $f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, titl
 if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'press_clips_to_channels', 'object_id'=>'clip_id', 'option_id'=>'channel_id'));
 echo $f->draw(@$r);
 
-if (!$included) drawBottom();
+if (!$included) echo drawBottom();
 ?>

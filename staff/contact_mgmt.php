@@ -1,7 +1,7 @@
 <? include("../include.php");
 
-drawTop();
-drawNavigation();
+echo drawTop();
+echo drawNavigation();
 
 $result = db_query("SELECT
 						u.id,
@@ -31,4 +31,4 @@ $result = db_query("SELECT
 	</tr>
 	<? }?>
 </table>
-<? drawBottom();?>
+<?=drawBottom();?>

@@ -2,8 +2,7 @@
 include("../../include.php");
 url_query_require("tags.php");
 
-drawTop();
-
+echo drawTop();
 
 $r = db_grab("SELECT description FROM wiki_tags WHERE id = " . $_GET["id"]);
 ?>
@@ -43,4 +42,4 @@ $r = db_grab("SELECT description FROM wiki_tags WHERE id = " . $_GET["id"]);
 	}?>
 </table>
 
-<? drawBottom(); ?>
+<?=drawBottom(); ?>

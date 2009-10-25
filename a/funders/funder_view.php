@@ -16,7 +16,7 @@ if (isset($_GET["delActivity"])) {
 	url_change("funder_view.php?id=" . $_GET["id"]);
 }
 	
-drawTop();
+echo drawTop();
 
 $r = db_grab("SELECT
 			f.funderTypeID,
@@ -165,4 +165,4 @@ while ($rsa = db_fetch($result_award_statuses)) {
 if (!$total_awards) echo drawEmptyResult("No awards entered yet!", 6);
 ?>
 </table>
-<? drawBottom(); ?>
+<?=drawBottom(); ?>
