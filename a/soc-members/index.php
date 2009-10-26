@@ -17,7 +17,7 @@ $t->set_column('delete', 'd', '&nbsp;');
 $result = db_table('SELECT m.id, m.name, m.is_selected, c.en "group", ' . db_updated('m') . ' FROM soc_members m JOIN jr_countries c ON m.country_id = c.id WHERE m.is_active = 1 ORDER BY c.en, m.name');
 
 foreach ($result as &$r) {
-	$r['is_selected']	= draw_form_checkbox('foo', $r['is_selected'], false, 'ajax_set(\'jr_members_inst\', \'is_selected\', ' . $r['id'] . ', ' . abs($r['is_selected'] - 1) . ');');
+	$r['is_selected']	= draw_form_checkbox('foo', $r['is_selected'], false, 'ajax_set(\'soc_members\', \'is_selected\', ' . $r['id'] . ', ' . abs($r['is_selected'] - 1) . ');');
 	$r['name']			= draw_link('edit.php?id=' . $r['id'], format_string($r['name'], 70));
 	$r['updated']		= format_date($r['updated']);
 	$r['delete']		= deleteColumn($r['id']);
