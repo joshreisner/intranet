@@ -39,7 +39,7 @@ function drawStaffList($where, $searchterms=false) {
 	if (getOption("channels") && $_SESSION["channel_id"]) {
 		$where .= " AND u2c.channel_id = " . $_SESSION["channel_id"];
 	}
-	$result = db_query("SELECT 
+	$result = db_query("SELECT DISTINCT
 							u.id, 
 							u.lastname,
 							ISNULL(u.nickname, u.firstname) firstname, 
@@ -54,8 +54,8 @@ function drawStaffList($where, $searchterms=false) {
 						FROM users u
 						LEFT JOIN users_to_channels u2c ON u.id = u2c.user_id
 						LEFT JOIN departments d	ON d.departmentID = u.departmentID 
-						LEFT JOIN organizations c			ON u.organization_id = c.id
-						LEFT JOIN offices o		ON o.id = u.officeID
+						LEFT JOIN organizations c ON u.organization_id = c.id
+						LEFT JOIN offices o ON o.id = u.officeID
 						WHERE " . $where . "
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
 	$count = db_found($result);
