@@ -55,13 +55,13 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 	<tr>
 		<td class="left">Networks</td>
 		<td>
-			<? $channels = db_query("SELECT
-				c.title_en
+			<? $channels = db_query('SELECT
+				c.title' . langExt() . ' title
 			FROM cal_events_to_channels e2c
 			JOIN channels c ON e2c.channel_id = c.id
-			WHERE e2c.event_id = " . $_GET["id"]);
+			WHERE e2c.event_id = ' . $_GET["id"]);
 				while ($c = db_fetch($channels)) {?>
-				 &#183; <?=$c["title_en"]?></a><br>
+				 &#183; <?=$c["title"]?></a><br>
 			<? }?>
 		</td>
 	</tr>

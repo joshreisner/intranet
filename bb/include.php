@@ -23,7 +23,7 @@ function bbDrawTopic($topic_id) {
 		$caption .= getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']) . '<br>';
 	}
 	if (getOption('channels')) {
-		$channels = db_array('SELECT c.title_en FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $topic_id . ' ORDER BY title_en');
+		$channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $topic_id . ' ORDER BY title' . langExt());
 		if ($channels) $caption .= 'Networks: ' . implode(', ', $channels);
 	}
 	if ($caption) $r['description' . langExt()] .= '<span class="light caption">' . $caption . '</span>';

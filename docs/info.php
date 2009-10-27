@@ -56,13 +56,13 @@ echo drawTop();
 	<tr>
 		<td class="left">Networks</td>
 		<td>
-			<? $channels = db_query("SELECT
-				c.title_en
+			<? $channels = db_query('SELECT
+				c.title' . langExt() . ' title
 			FROM docs_to_channels d2c
 			JOIN channels c ON d2c.channel_id = c.id
-			WHERE d2c.doc_id = " . $_GET["id"]);
+			WHERE d2c.doc_id = ' . $_GET["id"]);
 				while ($c = db_fetch($channels)) {?>
-				 &#183; <?=$c["title_en"]?></a><br>
+				 &#183; <?=$c["title"]?></a><br>
 			<? }?>
 		</td>
 	</tr>

@@ -3,7 +3,18 @@ include('../include.php');
 
 echo drawTop();
 
-$clips = db_query('SELECT c.id, c.title, c.url, c.publication, c.pub_date, c.description, t.title type FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id WHERE c.is_active = 1 ORDER BY t.precedence, c.pub_date');
+$clips = db_query('SELECT
+	c.id,
+	c.title,
+	c.url,
+	c.publication,
+	c.pub_date,
+	c.description,
+	t.title type
+	FROM press_clips c
+	JOIN press_clips_types t ON c.type_id = t.id
+	WHERE c.is_active = 1 AND ' . db_datediff('c.pub_date') . ' < 7
+	ORDER BY t.precedence, c.pub_date');
 
 $return = '';
 $lastType = '';

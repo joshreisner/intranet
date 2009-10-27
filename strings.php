@@ -35,6 +35,11 @@ $defaults['help_hide']['es']	= 'Ayuda Ocultar';
 $defaults['help_hide']['fr']	= 'Masquer l\'aide';
 $defaults['help_hide']['ru']	= 'помощь мостовья';
 
+$defaults['help_show']['en']	= 'Show Help';
+$defaults['help_show']['es']	= 'Mostrar Ayuda';
+$defaults['help_show']['fr']	= 'Afficher l\'aide';
+$defaults['help_show']['ru']	= 'Показать помощь';
+
 $defaults['home']['en']	= 'Home';
 $defaults['home']['es']	= 'Inicio';
 $defaults['home']['fr']	= 'Accueil';

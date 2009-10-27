@@ -355,7 +355,7 @@ function drawBottom() {
 		            <input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');">
 					</form>';
 
-	if (getOption('channels')) $return .= draw_form_select('channel_id', 'SELECT id, title_en FROM channels ORDER BY title_en', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
+	if (getOption('channels')) $return .= draw_form_select('channel_id', 'SELECT id, title' . langExt() . ' title FROM channels WHERE is_active = 1 ORDER BY precedence', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
 	if (getOption('languages')) $return .= draw_form_select('language_id', 'SELECT id, title FROM languages ORDER BY title', $_SESSION['language_id'], true, 'languages', 'url_query_set(\'language_id\', this.value)');
 
 	$return .= '<table class="links">';

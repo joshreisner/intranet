@@ -109,7 +109,7 @@ class intranet_form {
 		
 		//special exception for channels table
 		if ($table == "channels") {
-			$title = "title_en";
+			$title = "title" . langExt();
 			$checked = 1;
 		}
 

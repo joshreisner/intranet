@@ -20,13 +20,13 @@ if (url_action("undelete")) { //undelete user
 
 url_query_require();
 
-$r = db_grab("SELECT 
+$r = db_grab('SELECT 
 		u.firstname,
 		u.lastname,
 		u.nickname, 
 		u.bio, 
 		u.email,
-		" . db_pwdcompare("", "u.password") . " password,
+		' . db_pwdcompare("", "u.password") . ' password,
 		u.phone, 
 		u.lastlogin, 
 		u.title,
@@ -40,7 +40,7 @@ $r = db_grab("SELECT
 		s.stateAbbrev,
 		u.homeZIP,
 		u.notify_topics,
-		c.title_en channel,
+		c.title' . langExt() . ' channel,
 		u.homePhone,
 		u.homeCell,
 		u.homeEmail,
@@ -68,7 +68,7 @@ $r = db_grab("SELECT
 	LEFT JOIN departments		d ON d.departmentID	= u.departmentID 				
 	LEFT JOIN offices    		f ON f.id			= u.officeID 				
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
-	WHERE u.id = " . $_GET["id"]);
+	WHERE u.id = ' . $_GET["id"]);
 	
 $r["nickname"] = trim($r["nickname"]);
 
