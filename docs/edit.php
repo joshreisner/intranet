@@ -28,7 +28,6 @@ while ($t = db_fetch($types)) {
 	$extensions[] = '(extension != "' . $t['extension'] . '")';
 	$doctypes[] = ' - ' . $t['description'] . ' (.' . $t['extension'] . ')';
 }
-echo drawMessage('The maximum size you can upload here is ' . file_get_max() . '.');
 ?>
 <script language='javascript'>
 	<!--
@@ -60,7 +59,7 @@ echo drawMessage('The maximum size you can upload here is ' . file_get_max() . '
 			var arrFile   = form.userfile.value.split('.');
 			var extension = arrFile[arrFile.length - 1].toLowerCase();
 			if (<?=implode(' && ', $extensions)?>) {
-				alert('Only these filetypes are supported by this system:\n\n <?=implode('\\n', $doctypes)?>\n\nPlease change your selection, or make sure that the \nappropriate extension is at the end of the filetitle.');
+				alert('Only these filetypes are supported by this system:\n\n <?=implode('\\n', $doctypes)?>\n\nPlease change your selection, or make sure that the \nappropriate extension is at the end of the filename.');
 				return false;
 			}
 		}
@@ -71,8 +70,11 @@ echo drawMessage('The maximum size you can upload here is ' . file_get_max() . '
 <?
 $f = new form('docs', @$_GET['id'], $page['title']);
 $f->set_title_prefix($page['breadcrumbs']);
-if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'docs_to_channels', 'object_id'=>'doc_id', 'option_id'=>'channel_id'));
-$f->set_field(array('name'=>'categories', 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
+$f->set_field(array('name'=>'title', 'label'=>getString('title'), 'type'=>'text'));
+$f->set_field(array('name'=>'description', 'label'=>getString('description'), 'type'=>'textarea', 'class'=>'mceEditor'));
+$f->set_field(array('name'=>'content', 'label'=>getString('file'), 'type'=>'file', 'additional'=>getString('upload_max') . file_get_max()));
+if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'linking_table'=>'docs_to_channels', 'object_id'=>'doc_id', 'option_id'=>'channel_id'));
+$f->set_field(array('name'=>'categories', 'label'=>getString('categories'), 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
 echo $f->draw(); 
 
 echo drawBottom();

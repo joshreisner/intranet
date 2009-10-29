@@ -1,5 +1,5 @@
 <?
-$included = !@include('../../include.php');
+$included = !@include('../include.php');
 
 if ($posting) {
 	$id = db_save('external_orgs');

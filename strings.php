@@ -15,15 +15,30 @@ $defaults['category']['es']			= 'Categoría';
 $defaults['category']['fr']			= 'Catégorie';
 $defaults['category']['ru']			= 'Категории';
 
+$defaults['categories']['en']			= 'Categories';
+$defaults['categories']['es']			= 'Categorías';
+$defaults['categories']['fr']			= 'Catégories';
+$defaults['categories']['ru']			= 'Категория';
+
 $defaults['description']['en']		= 'Description';
 $defaults['description']['es']		= 'Descripción';
 $defaults['description']['fr']		= 'Description';
 $defaults['description']['ru']		= 'Описание';
 
+$defaults['documents_empty']['en']		= 'No documents added yet';
+$defaults['documents_empty']['es']		= 'No hay documentos que agregó aún';
+$defaults['documents_empty']['fr']		= 'Aucun document n\'a pas encore ajouté';
+$defaults['documents_empty']['ru']		= 'Никаких документов добавили еще';
+
 $defaults['events_empty']['en']		= 'No upcoming events';
 $defaults['events_empty']['es']		= 'No hay próximos eventos';
 $defaults['events_empty']['fr']		= 'Aucun événement à venir';
 $defaults['events_empty']['ru']		= 'Нет предстоящих событий';
+
+$defaults['file']['en']		= 'File';
+$defaults['file']['es']		= 'Archivo';
+$defaults['file']['fr']		= 'Fichier';
+$defaults['file']['ru']		= 'Файл';
 
 $defaults['hello']['en']		= 'Hello';
 $defaults['hello']['es']		= 'Hola';
@@ -148,5 +163,10 @@ $defaults['updated']['en']			= 'Updated';
 $defaults['updated']['es']			= 'Actualizado';
 $defaults['updated']['fr']			= 'Mise à jour';
 $defaults['updated']['ru']			= 'Обновлено';
+
+$defaults['upload_max']['en']			= 'The maximum size is ';
+$defaults['upload_max']['es']			= 'El tamaño máximo es ';
+$defaults['upload_max']['fr']			= 'La taille maximale est ';
+$defaults['upload_max']['ru']			= 'Максимальный размер ';
 
 ?>

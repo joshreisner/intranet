@@ -12,6 +12,6 @@ foreach ($result as &$r) $r['type'] = draw_link('type.php?id=' . $r["id"], $r["t
 echo $t->draw($result, 'There are no types added yet.');
 
 //add new
-include("edit/index.php");
+include("edit.php");
 echo drawBottom();
 ?>

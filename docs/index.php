@@ -27,7 +27,7 @@ foreach ($result as &$r) {
 	$r['updated'] = format_date($r['updated']);
 }
 
-echo $t->draw($result);
+echo $t->draw($result, getString('documents_empty'));
 						
 echo drawBottom();
 ?>

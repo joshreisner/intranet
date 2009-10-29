@@ -13,11 +13,11 @@ if (db_found($result)) {
 	<tr>
 		<td width="16">' . draw_img($r['icon'], '/' . $m['folder'] . '/download.php', $r['description']) . '</td>
 		<td width="99%">
-			<div class="r" style="float:right; width:44px;">' . format_date($r["updated_date"], "", "M d") . '</div>
+			<div class="r" style="float:right; width:56px;">' . format_date($r["updated_date"], "", "M d") . '</div>
 			<a href="/' . $m["folder"] . '/download.php?id=' . $r["id"] . '">' . format_string($r["title"], 30) . '</a>
 		</td>
 	</tr>';
 	}
 } else {
-	$return .= drawEmptyResult("No documents added yet.", 2);
+	$return .= drawEmptyResult(getString('documents_empty'), 2);
 }

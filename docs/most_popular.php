@@ -24,6 +24,6 @@ foreach ($result as &$r) {
 	$r['title'] = draw_link($link, $r['title']);
 }
 
-echo $t->draw($result);
+echo $t->draw($result, getString('documents_empty'));
 
 echo drawBottom();?>

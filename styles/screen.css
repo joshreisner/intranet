@@ -40,7 +40,7 @@ input.button:hover { background-color:#bbb; }
 input.checkbox	{ border:none; padding:0px; margin:0px; background-color:transparent; }
 input.file		{ border:none; }
 /* textarea		{ width:500px; height:300px; }*/
-textarea.thread { border-width:0px; width:435px; }
+textarea.thread { border-width:0px; width:432px; }
 
 .c { text-align:center; white-space:nowrap; }
 .r { text-align:right; white-space:nowrap; }
@@ -108,14 +108,14 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 
 #left table.table th { font-weight:normal; font-size:11px; background-color:#f0f0f0; color:#999; text-align:left; }
 #left table.table th a.right { font-size:9px; margin:0px; padding:0px 3px; text-transform:uppercase; }
-#left table.table td { height:27px; }
+#left table.table td { height:20px; }
 #left table.table td.empty { background-color:#f0f0f0; vertical-align:middle; height:120px; text-align:center; line-height:20px; font-size:13px; color:#666; }
 #left table.table ul.header { margin:0px; padding:0px; font-size:10px; line-height:18px; list-style-type:none; text-transform:uppercase; float:right; }
 #left table.table ul.header li { float:left; margin:0px 5px 0px 5px; }
 #left table.table td.group { vertical-align:bottom; font-weight:bold; height:50px; }
 #left table.table td.draggy:hover { cursor:move; }
 
-#left table.table tr.thread { height:36px; vertical-align:middle; font-size:12px; }
+#left table.table tr.thread td { height:36px; vertical-align:middle; font-size:12px; }
 #left table.table tr.admin { background-color:#fffce0; }
 #left table.table tr.thread:hover { background-color:#f4f4f4; cursor:pointer; }
 #left table.table tr.thread:hover a { text-decoration:underline; color:#d8282d; }
@@ -143,7 +143,7 @@ div.dropmarker {
 
 #left form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; overflow-y:auto; background-color:#eee; }
 #left form fieldset div.field label { line-height:26px; width:100px; display:block; float:left; }
-#left form fieldset div.field input.text { width:486px; }
+#left form fieldset div.field input.text { width:480px; }
 #left form fieldset div.field input.checkbox { margin-right:7px; }
 #left form fieldset div.field input.file { background-color:transparent; }
 #left form fieldset div.checkbox { height:18px; line-height:18px; overflow-y:hidden; }
