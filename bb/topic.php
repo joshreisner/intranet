@@ -69,9 +69,9 @@ echo draw_javascript('
 
 echo drawTableStart();
 if ($page['is_admin'] || $isPoster) {
-	echo drawHeaderRow($page['breadcrumbs'] . $r["title"], 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
+	echo drawHeaderRow($page['breadcrumbs'] . format_string($r["title"], 40), 2, "edit", "edit.php?id=" . $_GET["id"], "delete", "javascript:checkDelete();");
 } else {
-	echo drawHeaderRow($page['breadcrumbs'] . $r["title"], 2, "add a followup", "#bottom");
+	echo drawHeaderRow($page['breadcrumbs'] . format_string($r["title"], 40), 2, "add a followup", "#bottom");
 }
 echo bbDrawTopic($_GET["id"]);
 echo drawThreadCommentForm(false);

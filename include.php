@@ -293,27 +293,28 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 	return $return;	
 }
 
-function drawTop() {
+function drawTop($headcontent=false) {
 	global $_GET, $_SESSION, $_josh, $page, $user;
 	error_debug('starting top', __file__, __line__);
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
-	echo '<html>';
-	echo draw_container('head',
-		(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
-		draw_container('title', $page['title']) .
-		draw_css_src('/styles/screen.css',	'screen') .
-		draw_css_src('/styles/print.css',	'print') .
-		draw_css_src('/styles/ie.css',		'ie') .
-		draw_javascript_src('/javascript.js') .
-		draw_javascript_lib() .
-		draw_css('
-			#left table.left td.head { background-color:#' . $page['color'] . '; }
-			#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
-			#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
-		')
-	);
+	$return = draw_doctype() . 
+		draw_container('head',
+			(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
+			draw_container('title', $page['title']) .
+			draw_css_src('/styles/screen.css',	'screen') .
+			draw_css_src('/styles/print.css',	'print') .
+			draw_css_src('/styles/ie.css',		'ie') .
+			draw_javascript_src('/javascript.js') .
+			draw_javascript_lib() .
+			draw_css('
+				#left table.left td.head { background-color:#' . $page['color'] . '; }
+				#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
+				#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
+			') . 
+			$headcontent
+		);
 	
-	$return = '
+	$return .= '
 	<body>
 		<div id="container">
 			' . draw_div('banner', draw_img($_josh['write_folder'] . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
@@ -351,8 +352,8 @@ function drawBottom() {
 					<a class="right button" href="/index.php?action=logout">' . getString('log_out') . '</a>
 					' . getString('hello') . ' <a href="/staff/view.php?id=' . $_SESSION['user_id'] . '"><b>' . $_SESSION['full_name'] . '</b></a>.
 
-					<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onSubmit="javascript:return doSearch(this);">
-		            <input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');">
+					<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onsubmit="javascript:return doSearch(this);">
+		            <input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');"/>
 					</form>';
 
 	if (getOption('channels')) $return .= draw_form_select('channel_id', 'SELECT id, title' . langExt() . ' title FROM channels WHERE is_active = 1 ORDER BY precedence', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));

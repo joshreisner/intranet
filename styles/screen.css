@@ -42,6 +42,11 @@ input.file		{ border:none; }
 /* textarea		{ width:500px; height:300px; }*/
 textarea.thread { border-width:0px; width:435px; }
 
+.c { text-align:center; white-space:nowrap; }
+.r { text-align:right; white-space:nowrap; }
+.d { width:18px; text-align:center; }
+
+
 
 /*thread*/
 a, a.out		{ color:#0000ff;  text-decoration:none; }
@@ -100,9 +105,6 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #left table.table th.title a { color:#fff; }
 #left table.table th.title span { float:left; }
 #left table.table td, #left table.table th { padding:3px; border-bottom:1px solid #ddd; }
-#left table.table th.c, #left table.table td.c { text-align:center; }
-#left table.table th.r, #left table.table td.r { text-align:right; }
-#left table.table th.d, #left table.table td.d { width:18px; text-align:center; }
 
 #left table.table th { font-weight:normal; font-size:11px; background-color:#f0f0f0; color:#999; text-align:left; }
 #left table.table th a.right { font-size:9px; margin:0px; padding:0px 3px; text-transform:uppercase; }
@@ -150,7 +152,7 @@ div.dropmarker {
 #left form fieldset div.checkboxes li { display:block; width:138px; padding-left:19px; float:left; margin:2px; }
 #left form fieldset div.checkboxes input { margin-left:-19px; }
 #left form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
-#left form fieldset div.field textarea { width:486px; height:280px; }
+#left form fieldset div.field textarea { width:481px; height:280px; }
 #left form fieldset div.field select { background-color:#fff; border:1px solid #ccc; height:26px; }
 #left form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
@@ -167,7 +169,7 @@ textarea.press_export { width:594px; height:120px; }
 /* right column */
 /* tools */
 #tools { font-size:11px; border:1px solid #bbb; background-color:#ededed; padding:9px 8px 0px 8px; }
-#tools input { background-color:#fff; width:273px; height:22px; margin:7px 0px 5px 0px; font-size:12px; border:1px solid #ccc; color:#999; padding:3px; }
+#tools input { background-color:#fff; width:264px; height:20px; margin:7px 0px 5px 0px; font-size:12px; border:1px solid #ccc; color:#999; padding:3px; }
 #tools select { margin:7px 0px 12px 0px; }
 #tools select.channels { float:left; }
 #tools select.languages { float:right; }

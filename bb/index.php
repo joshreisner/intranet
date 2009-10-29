@@ -22,15 +22,13 @@ if ($posting) {
 	url_change();
 }
 
-echo drawTop();
-echo draw_autorefresh(5); //todo eliminate
-echo drawSyndicateLink('bb');
+echo drawTop(draw_autorefresh(5) . drawSyndicateLink('bb')); //todo eliminate refresh
 
 $t = new table('bb_topics', drawHeader(array('#bottom'=>getString('add_new'))));
 $t->set_column('topic', 'l', getString('topic'));
-$t->set_column('starter', 'l', getString('starter'));
-$t->set_column('replies', 'c', getString('replies'));
-$t->set_column('last_post', 'r', getString('last_post'));
+$t->set_column('starter', 'l', getString('starter'), 120);
+$t->set_column('replies', 'c', getString('replies'), 30);
+$t->set_column('last_post', 'r', getString('last_post'), 100);
 
 $result = db_table('SELECT 
 		t.id,
@@ -51,7 +49,7 @@ foreach ($result as &$r) {
 	$r['link'] = 'topic.php?id=' . $r['id'];
 	$r['topic'] = draw_link($r['link'], $r['topic']);
 	$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];
-	$r['last_post'] = format_nobr(format_date($r['last_post']));
+	$r['last_post'] = format_date($r['last_post']);
 }
 
 echo $t->draw($result, getString('topics_empty'));

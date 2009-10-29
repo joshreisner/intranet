@@ -69,8 +69,8 @@ echo drawMessage('The maximum size you can upload here is ' . file_get_max() . '
 	//-->
 </script>
 <?
-$f = new form('docs', @$_GET['id'], $page['name']);
-$f->set_title_prefix(drawHeader(false, ' '));
+$f = new form('docs', @$_GET['id'], $page['title']);
+$f->set_title_prefix($page['breadcrumbs']);
 if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'docs_to_channels', 'object_id'=>'doc_id', 'option_id'=>'channel_id'));
 $f->set_field(array('name'=>'categories', 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
 echo $f->draw(); 
