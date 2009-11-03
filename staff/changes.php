@@ -1,6 +1,9 @@
 <?php	include("include.php");
 echo drawTop();
 echo drawJumpToStaff();
+
+echo drawStaffList('u.is_active = 1 AND ' . db_datediff('u.startdate') . ' < 60', getString('staff_new_empty'), false, getString('staff_new'));
+
 ?>
 <table class="left" cellspacing="1">
 	<?

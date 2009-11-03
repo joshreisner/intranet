@@ -11,7 +11,7 @@ body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#4
 #subfooter		{ clear:both; height:20px; }
 
 
-a, input, textarea { outline:none; }
+a, input, textarea, select { outline:none; }
 h1				{ font-size:18px; line-height:22px; font-weight:normal; margin:0px; }
 img				{ border-width:0px; }
 p				{ margin:4px 0px 14px 0px; }
@@ -131,7 +131,7 @@ div.dropmarker {
 }
 
 /* special tables */
-#left table.administrators tbody tr { height:50px; vertical-align:top; }
+#left table.staff tbody tr { height:50px; vertical-align:top; }
 
 
 /* form */

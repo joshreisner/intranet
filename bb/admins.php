@@ -2,7 +2,7 @@
 include('../include.php');
 echo drawTop();
 
-$t = new table('administrators', drawHeader());
+$t = new table('staff', drawHeader());
 $t->col('picture', 'l', '&nbsp;', '50');
 $t->col('name');
 $t->col('organization');

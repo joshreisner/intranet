@@ -22,32 +22,18 @@ if ($posting) {
 	cookie("last_login");
 	$_SESSION["user_id"] = false;
 }
-?>
-<html>
-	<head>
-		<title>Reset Your Password</title>
-		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
-		<script language="javascript" src="/javascript.js"></script>
-	</head>
-	<body>
-<br>
-<table width="600" align="center">
-	<tr>
-		<td>
-<?
-if (@$_GET["msg"] == "email-not-found") {
-	echo drawMessage("<h1>Email Not Found</h1>That email address wasn't found in the system.  If the address below is correct and you've never logged in, you may need to <a href='account_request.php'>request an account</a>.");
+
+echo drawTopSimple(getString('login_password_reset'));
+
+if (@$_GET["msg"] == 'email-not-found') {
+	echo drawMessage(getString('login_password_reset_msg_email_not_found'));
 } else {
-	echo drawMessage("<h1>Starting Over, Password-Wise</h1>Your old password can't be recovered, since it was encrypted.  However, it can be reset so you can pick a new one.  What is the email address on the account?");
+	echo drawMessage(getString('login_password_reset_msg'));
 }
 
-$form = new intranet_form;
-$form->addRow("itext", "Email", "email", @$_GET["email"], "", true, 50);
-$form->addRow("submit", "Send Request");
-$form->draw("Reset Password");
+$form = new form('login', false, getString('login_password_reset'));
+$form->set_field(array('name'=>'email', 'label'=>getString('email'), 'type'=>'text', 'value'=>@$_GET["email"]));
+echo $form->draw();
+
+echo drawBottomSimple();
 ?>
-		</td>
-	</tr>
-</table>
-	</body>
-</html>

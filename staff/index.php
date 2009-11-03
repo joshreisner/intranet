@@ -5,8 +5,8 @@ if (!isset($_GET["id"])) $_GET["id"] = 1;
 echo drawTop();
 
 ?>
-<table class="navigation staff" cellspacing="1">
-	<tr class="staff-hilite">
+<table class="navigation" cellspacing="1">
+	<tr>
 		<td width="20%"<? if ($_GET["id"] == 1) {?> class="selected"<?}?>><? if ($_GET["id"] != 1) {?><a href="index.php?id=1"><?}?>A - E</a></td>
 		<td width="20%"<? if ($_GET["id"] == 2) {?> class="selected"<?}?>><? if ($_GET["id"] != 2) {?><a href="index.php?id=2"><?}?>F - J</a></td>
 		<td width="20%"<? if ($_GET["id"] == 3) {?> class="selected"<?}?>><? if ($_GET["id"] != 3) {?><a href="index.php?id=3"><?}?>K - O</a></td>
@@ -48,5 +48,5 @@ if ($_GET["id"] == 1) {
 				u.lastname like 'y%' or 
 				u.lastname like 'z%'";
 }
-echo drawStaffList("u.is_active = 1 and (" . $letters . ")");
+echo drawStaffList('u.is_active = 1 AND (' . $letters . ')', getString('staff_empty'));
 echo drawBottom();?>

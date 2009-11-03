@@ -33,6 +33,8 @@ if ($redirect) url_change($redirect);
 			#white	{ background-color:#ffffff; width:355px; height:296px; padding:18px 20px 20px 20px;  position:relative; float:left; }
 			#grey	{ background-color:#ededed; width:159px; height:314px; padding:10px;  position:relative;  margin-left:8px; float:left; }
 
+			input, a { outline:none; }
+			
 			.top-left { top:0px; left:0px; position:absolute; }
 			.top-right { top:0px; right:0px; float:right; position:absolute; }
 			.bottom-left { bottom:0px; left:0px; position:absolute; }

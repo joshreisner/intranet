@@ -83,27 +83,14 @@ if ($posting) {
 	url_change("account_confirm.php");
 }
 
-?>
-<html>
-	<head>
-		<title>Request an Account</title>
-		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
-			<script language="javascript" type="text/javascript" src="/javascript.js"></script>
-			<script language="javascript" type="text/javascript" src="<?=$_josh["write_folder"]?>/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-			<script language="javascript">
-				<!--
-				initTinyMCE("<?=$_josh["write_folder"]?>/tinymce.css");
-				//-->
-			</script>
-	</head>
-	<body>
-<br>
-<table width="600" align="center">
-	<tr>
-		<td>
-<?
+echo drawTopSimple(getString('login_account_request'));
+
 echo drawMessage("<h1>Welcome!</h1>  To request an account, please fill out the fields below.  Your login information will be emailed to you once your request is approved.");
-$form = new intranet_form;
+$f = new form('users_requests', false, getString('login_account_request'));
+$f->set_field(array('type'=>'textarea', 'name'=>'bio', 'label'=>getString('bio'), 'class'=>'mceEditor'));
+
+echo $f->draw();
+/*
 $form->addRow("itext",			"First Name",	"firstname", '', "", true, 20);
 $form->addRow("itext",			"Nickname (optional)", "nickname", '', "", false, 20);
 $form->addRow("itext",			"Last Name",	"lastname", '', "", true, 20);
@@ -123,9 +110,6 @@ $form->addRow("phone",			"Phone",		"phone", '', "", true, 14);
 $form->addRow("textarea",		"Additional Info", "bio", "", "mceEditor");
 $form->addRow("submit",			"Send Request");
 $form->draw("Request Intranet Account");
+*/
+echo drawBottomSimple();
 ?>
-		</td>
-	</tr>
-</table>
-	</body>
-</html>
