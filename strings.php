@@ -142,7 +142,7 @@ $defaults['replies']['ru']			= 'Ответы';
 $defaults['staff_firsttime']['en']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
 
 $defaults['staff_new']['en']	= 'Recent Arrivals';
-//$defaults['staff_new']['es']	= 'Recent Arrivals';
+$defaults['staff_new']['es']	= 'Los recién llegados';
 //$defaults['staff_new']['fr']	= 'Recent Arrivals';
 $defaults['staff_new']['ru']	= 'Новоприбывших';
 

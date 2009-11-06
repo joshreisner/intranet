@@ -248,7 +248,7 @@ function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $l
 	return draw_form_select($name, $array, $selectedID, !$nullable, $class, $jumpy);
 }
 
-function drawStaffList($where, $errmsg, $listtitle=false, $options=false, $searchterms=false) {
+function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searchterms=false) {
 	global $page, $_josh;
 	
 	$t = new table('staff', drawHeader($options, $listtitle));
