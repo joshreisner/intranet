@@ -23,7 +23,7 @@ if ($posting) {
 	$_SESSION["user_id"] = false;
 }
 
-echo drawTopSimple(getString('login_password_reset'));
+echo drawTopSimple(getString('password_reset'));
 
 if (@$_GET["msg"] == 'email-not-found') {
 	echo drawMessage(getString('login_password_reset_msg_email_not_found'));
@@ -31,7 +31,7 @@ if (@$_GET["msg"] == 'email-not-found') {
 	echo drawMessage(getString('login_password_reset_msg'));
 }
 
-$form = new form('login', false, getString('login_password_reset'));
+$form = new form('login', false, getString('password_reset'));
 $form->set_field(array('name'=>'email', 'label'=>getString('email'), 'type'=>'text', 'value'=>@$_GET["email"]));
 echo $form->draw();
 

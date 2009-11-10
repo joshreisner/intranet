@@ -45,7 +45,7 @@ if ($posting) {
 		//update permissions
 		db_query("UPDATE users_to_modules SET is_admin = 0 WHERE user_id = " . $id);
 		foreach ($_POST as $key => $value) {
-			@list($control, $field_name, $module_id) = explode("_", $key);
+			@list($control, $field_name, $module_id) = explode("-", $key);
 			if (($control == "chk") && ($field_name == "permissions")) {
 				//set admin flag
 				if (db_grab("SELECT COUNT(*) FROM users_to_modules WHERE module_id = $module_id AND user_id = " . $id)) {

@@ -94,63 +94,63 @@ if (!$r["is_active"]) {
 <table class="left" cellspacing="1">
 	<? if ($page['is_admin']) {
 		if ($r["is_active"]) {
-			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "deactivate", drawDeleteLink("Deactivate this staff member?"));
+			echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], getString('delete'), drawDeleteLink("Deactivate this staff member?"));
 		} else {
-			echo drawHeaderRow("View Staff Info", 3, "edit", "add_edit.php?id=" . $_GET["id"], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
+			echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
 		}
 	} elseif ($_GET["id"] == $_SESSION["user_id"]) {
-		echo drawHeaderRow("View Staff Info", 3, "edit your info", "add_edit.php?id=" . $_GET["id"]);
+		echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"]);
 	} else {
-		echo drawHeaderRow("View Staff Info", 3);
+		echo drawHeaderRow($page['title'], 3);
 	}
 	$rowspan = 6;
 	if (getOption("staff_showdept")) $rowspan++;
 	if (getOption("staff_showoffice")) $rowspan++;
 	?>
 	<tr>
-		<td class="left">Name</td>
+		<td class="left"><?=getString('name')?></td>
 		<td width="99%" class="big"><?=$r["firstname"]?> <? if (!empty($r["nickname"])) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
 		<td rowspan="<?=$rowspan?>" style="width:271px; text-align:center; vertical-align:middle;"><?=$img?></td>
 	</tr>
 	<tr>
-		<td class="left">Organization</td>
+		<td class="left"><?=getString('organization')?></td>
 		<td><?=$r["corporationName"]?></td>
 	</tr>
 	<tr>
-		<td class="left">Title</td>
+		<td class="left"><?=getString('title')?></td>
 		<td><?=$r["title"]?></td>
 	</tr>
 	<? if (getOption("staff_showoffice")) {?>
 	<tr>
-		<td class="left">Department</td>
+		<td class="left"><?=getString('department')?></td>
 		<td><?=$r["departmentName"]?></td>
 	</tr>
 	<? }
 	if (getOption("staff_showoffice")) {?>
 	<tr>
-		<td class="left">Office</td>
+		<td class="left"><?=getString('office')?></td>
 		<td><?=$r["office"]?></td>
 	</tr>
 	<? }?>
 	<tr>
-		<td class="left">Phone</td>
+		<td class="left"><?=getString('telephone')?></td>
 		<td><?=format_phone($r["phone"])?></td>
 	</tr>
 	<tr>
-		<td class="left">Email</td>
+		<td class="left"><?=getString('email')?></td>
 		<td><a href="mailto:<?=$r["email"]?>"><?=$r["email"]?></a></td>
 	</tr>
 	<tr>
-		<td class="left">Last Login</td>
+		<td class="left"><?=getString('last_login')?></td>
 		<td><?=format_date_time($r["lastlogin"], " ")?></td>
 	</tr>
 	<tr>
-		<td class="left">Bio</td>
+		<td class="left"><?=getString('bio')?></td>
 		<td colspan="2" height="167" class="text"><?=nl2br($r["bio"])?></td>
 	</tr>
 	<? if ($page['is_admin'] || ($_GET["id"] == $_SESSION["user_id"])) {?>
 	<tr class="group">
-		<td colspan="3">Administrative Information</td>
+		<td colspan="3"><?=getString('administrative_info')?></td>
 	</tr>
 	
 	<? if (getOption("bb_notifypost")) {?>
@@ -161,7 +161,7 @@ if (!$r["is_active"]) {
 	<? }
 	if (getOption("channels")) {?>
 	<tr>
-		<td class="left">Network</td>
+		<td class="left"><?=getString('network')?></td>
 		<td colspan="2" class="bigger"><?=$r["channel"]?></td>
 	</tr>
 	<? }
@@ -173,7 +173,7 @@ if (!$r["is_active"]) {
 	<? }
 	if ($r["startDate"]) {?>
 	<tr>
-		<td class="left">Start Date</td>
+		<td class="left"><?=getString('start_date')?></td>
 		<td colspan="2"><?=format_date($r["startDate"])?></td>
 	</tr>
 	<? }
@@ -186,17 +186,17 @@ if (!$r["is_active"]) {
 	if ($_GET["id"] == $_SESSION["user_id"]) {
 		?>
 		<tr>
-			<td class="left">Password</td>
-			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">change your password</a></td>
+			<td class="left"><?=getString('password')?></td>
+			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a></td>
 		</tr>
 		<? } elseif ($page['is_admin']) {?>
 		<tr>
-			<td class="left">Password</td>
+			<td class="left"><?=getString('password')?></td>
 			<td colspan="2">
 				<? if ($r["password"]){?>
-					<i>password is reset</i>
+					<i><?=getString('password_is_reset')?></i>
 				<? } else {?>
-					<a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;">reset password</a>
+					<a href="<?=drawDeleteLink(getString('are_you_sure'), $_GET["id"], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a>
 				<? }?>
 			</td>
 		</tr>
@@ -220,21 +220,17 @@ if (!$r["is_active"]) {
 			echo "Site Administrator";
 		} else {
 			$hasPermission = false;
-			$permissions = db_query("SELECT 
-				m.title,
-				m.isPublic,
-				p.url
+			$permissions = db_query('SELECT 
+				m.title' . langExt() . ' title,
+				m.folder
 				FROM modules m 
-				JOIN pages p ON m.homePageID = p.id
 				JOIN users_to_modules a ON m.id = a.module_id
-				WHERE a.user_id = {$_GET["id"]} AND a.is_admin = 1
-				ORDER BY m.title");
+				WHERE a.user_id = ' . $_GET["id"] . ' AND a.is_admin = 1
+				ORDER BY m.title');
 			while ($p = db_fetch($permissions)) {
 				$hasPermission = true;
 				echo "&#183;&nbsp;";
-				if ($p["isPublic"]) echo "<a href='" . $p["url"] . "'>";
 				echo $p["title"];
-				if ($p["isPublic"]) echo "</a>";
 				echo "<br>";
 			}
 			if (!$hasPermission) echo "None";

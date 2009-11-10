@@ -13,7 +13,6 @@ $t->set_column('draggy', 'd', '&nbsp;');
 $t->set_column('title', 'l', getString('title'));
 $t->set_column('updated', 'r', getString('updated'));
 $t->set_column('delete', 'd', '&nbsp;');
-$t->set_draggable('draggy');
 
 $result = db_table('SELECT w.id, w.title' . langExt() . ' title, ' . db_updated('w') . ' FROM soc_whatsnew w WHERE w.is_active = 1 ORDER BY w.precedence');
 

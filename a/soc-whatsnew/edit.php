@@ -19,5 +19,4 @@ echo $f->draw();
 
 echo drawBottom();
 
-
 ?>
