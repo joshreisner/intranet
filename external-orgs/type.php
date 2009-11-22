@@ -29,7 +29,7 @@ if (db_found($orgs)) {
 		<td class='text'>
 			<? if ($page['is_admin']) {?>
 			<a href='<?=drawDeleteLink('delete this org?', $o['id'], 'delete', 'org_id')?>' class='button-light right'>del</a>
-			<a href='edit/?id=<?=$o['id']?>' class='button-light right'>edit</a>
+			<a href='edit.php?id=<?=$o['id']?>' class='button-light right'>edit</a>
 			<? }?>
 			<a class='title' href='<?=$o['url']?>'><?=$o['title']?></a><br><?=$o['description']?>
 		</td>
@@ -41,5 +41,5 @@ if (db_found($orgs)) {
 echo drawTableEnd();
 
 //add new
-include('edit/index.php');
+include('edit.php');
 echo drawBottom();?>

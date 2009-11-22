@@ -42,9 +42,9 @@ input.file		{ border:none; }
 /* textarea		{ width:500px; height:300px; }*/
 textarea.thread { border-width:0px; width:432px; }
 
-.c { text-align:center; white-space:nowrap; }
-.r { text-align:right; white-space:nowrap; }
-.d { width:18px; text-align:center; }
+#left table.table thead th.c, td.c { text-align:center; white-space:nowrap; }
+#left table.table thead th.r, td.r { text-align:right; white-space:nowrap; }
+#left table.table thead th.d, td.d { width:18px; text-align:center; }
 
 
 
@@ -157,6 +157,8 @@ div.dropmarker {
 #left form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
 #left form fieldset div.submit input.submit:hover { cursor:pointer; }
+
+#left form fieldset div.group { background-color:#fff; height:50px; font-weight:bold; font-size:12px; line-height:80px; }
 
 /*google translate test*/
 #left form.foobar fieldset div.field { overflow:visible; }
