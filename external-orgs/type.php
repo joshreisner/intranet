@@ -3,12 +3,13 @@ include('../include.php');
 
 //need a type
 url_query_require('./');
-echo drawTop();
 
 if (url_action('delete')) {
 	db_delete('external_orgs', $_GET['org_id']);
 	url_drop('action,org_id');
 }
+
+echo drawTop();
 
 //main table
 echo drawTableStart();
@@ -28,8 +29,8 @@ if (db_found($orgs)) {
 	<tr>
 		<td class='text'>
 			<? if ($page['is_admin']) {?>
-			<a href='<?=drawDeleteLink('delete this org?', $o['id'], 'delete', 'org_id')?>' class='button-light right'>del</a>
-			<a href='edit.php?id=<?=$o['id']?>' class='button-light right'>edit</a>
+			<a href="<?=drawDeleteLink('delete this org?', $o['id'], 'delete', 'org_id')?>" class="button-light right">del</a>
+			<a href="edit.php?id=<?=$o['id']?>" class="button-light right">edit</a>
 			<? }?>
 			<a class='title' href='<?=$o['url']?>'><?=$o['title']?></a><br><?=$o['description']?>
 		</td>
