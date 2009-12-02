@@ -1,7 +1,8 @@
 <? include("include.php");
 
 if ($posting) {
-	$_POST["description"] = $_POST["message"];
+	$_POST['translations_do'] = true;
+	langTranslatePost('description');
 	$_POST["topic_id"] = $_GET["id"];
 	$id = db_save("bb_followups", false);
 	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $_POST["topic_id"]);
@@ -32,20 +33,20 @@ if ($posting) {
 }
 
 //get topic data
-if (!$r = db_grab("SELECT 
-		t.title,
-		t.description,
+if (!$r = db_grab('SELECT 
+		t.title' . langExt() . ' title,
+		t.description' . langExt() . ' description,
 		t.created_date,
 		t.is_admin,
 		t.type_id,
-		y.title type,
+		y.title' . langExt() . ' type,
 		u.id user_id,
 		ISNULL(u.nickname, u.firstname) firstname,
 		u.lastname
 		FROM bb_topics t
 		JOIN users u ON t.created_user = u.id
 		LEFT JOIN bb_topics_types y ON t.type_id = y.id
-		WHERE t.id = " . $_GET["id"])) url_change("/bb/");
+		WHERE t.id = ' . $_GET["id"])) url_change("/bb/");
 
 echo drawTop();
 echo drawSyndicateLink("bb");

@@ -10,7 +10,7 @@ function bbDrawTopic($topic_id) {
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
 			t.type_id,
-			y.title type,
+			y.title' . langExt() . ' type,
 			t.created_date
 		FROM bb_topics t
 		JOIN users u ON t.created_user = u.id
@@ -33,7 +33,7 @@ function bbDrawTopic($topic_id) {
 	//append followups
 	$followups = db_query('SELECT
 				f.id,
-				f.description,
+				f.description' . langExt() . ' description,
 				u.id,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
@@ -60,8 +60,8 @@ function drawTopicForm() {
 		$f->unset_fields('is_admin');
 	}
 	$f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getString('title')));
-	if (getOption('bb_types')) $f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM bb_topics_types', 'label'=>getString('category')));
-	if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'linking_table'=>'bb_topics_to_channels', 'object_id'=>'topic_id', 'option_id'=>'channel_id', 'default'=>'all'));
+	if (getOption('bb_types')) $f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, title' . langExt() . ' title FROM bb_topics_types', 'label'=>getString('category')));
+	if (getOption('channels')) $f->set_field(array('name'=>'channels', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'linking_table'=>'bb_topics_to_channels', 'object_id'=>'topic_id', 'option_id'=>'channel_id', 'default'=>'all'));
 	$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'mceEditor'));
 	$f->set_order('created_user,is_admin,title' . langExt() . ',type_id,channels,description' . langExt());
 	$f->unset_fields('thread_date');

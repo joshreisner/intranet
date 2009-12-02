@@ -11,6 +11,15 @@ extract(joshlib());
 //set language code
 if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_SESSION['language_id']);
 
+//language overwrites eg dates
+if ($_SESSION['language'] == 'es') {
+	$_josh['months'] = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+} elseif ($_SESSION['language'] == 'fr') {
+	$_josh['months'] = array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+} elseif ($_SESSION['language'] == 'ru') {
+	$_josh['months'] = array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
+}
+	
 //include options file if it exists
 @include($_josh['root'] . $_josh['write_folder'] . '/options.php');
 @include($_josh['root'] . $_josh['write_folder'] . '/strings.php');
@@ -310,11 +319,13 @@ function drawThreadComment($content, $user_id, $fullname, $date, $admin=false) {
 
 function drawThreadCommentForm($showAdmin=false) {
 	global $page, $_josh, $_SESSION;
+	$name = ($_josh['request']['folder'] == 'bb') ? 'description' : 'message';
+	
 	$return = '<a name="bottom"></a><form ';
 	if ($_josh['db']['language'] == 'mysql') $return .= 'accept-charset="utf-8" ';
 	$return .= 'method="post" action="' . $_josh['request']['path_query'] . '" onsubmit="javascript:return validate(this);"><tr valign="top">
 			<td class="left">' . drawName($_SESSION['user_id'], $_SESSION['full_name'], false, true) . '</td>
-			<td>' . draw_form_textarea('message', '', 'mceEditor thread');
+			<td>' . draw_form_textarea($name . langExt(), '', 'mceEditor thread');
 	if ($showAdmin && $page['is_admin']) {
 		$return .= '
 			<table class="nospacing">

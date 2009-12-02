@@ -2,6 +2,7 @@
 include('include.php');
 
 if ($posting) {
+	langTranslatePost('title,description');
 	$id = db_save('cal_events');
 	if (getOption('channels')) db_checkboxes('channels', 'cal_events_to_channels', 'event_id', 'channel_id', $id);
 	url_change('./event.php?id=' . $_GET['id']);

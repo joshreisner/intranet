@@ -1,7 +1,7 @@
 <?
 $events = db_query('SELECT
 			e.id, 
-			e.title, 
+			e.title' . langExt() . ' title, 
 			e.start_date,
 			t.color
 		FROM cal_events e
