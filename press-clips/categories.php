@@ -17,9 +17,9 @@ if (url_id()) {
 	
 } else {
 	$t = new table('press_clips', drawHeader());
-	$t->col('category');
-	$t->col('clips', 'r');
-	$result = db_table('SELECT t.id, t.title category, (SELECT COUNT(*) FROM press_clips c WHERE c.type_id = t.id) clips FROM press_clips_types t ORDER BY t.precedence');
+	$t->col('category', 'l', getString('category'));
+	$t->col('clips', 'r', getString('clips'));
+	$result = db_table('SELECT t.id, t.title' . langExt() . ' category, (SELECT COUNT(*) FROM press_clips c WHERE c.type_id = t.id) clips FROM press_clips_types t ORDER BY t.precedence');
 	foreach ($result as &$r) {
 		$r['category'] = draw_link(url_query_add(array('id'=>$r['id']), false), $r['category']);
 	}

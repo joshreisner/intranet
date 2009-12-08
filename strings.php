@@ -35,6 +35,16 @@ $defaults['categories']['es']			= 'Categorías';
 $defaults['categories']['fr']			= 'Catégories';
 $defaults['categories']['ru']			= 'Категория';
 
+$defaults['clips']['en']			= 'Clips';
+$defaults['clips']['es']			= 'Clips';
+$defaults['clips']['fr']			= 'Clips';
+$defaults['clips']['ru']			= 'Клипы';
+
+$defaults['date']['en']		= 'Date';
+$defaults['date']['es']		= 'Fecha';
+$defaults['date']['fr']		= 'Date';
+$defaults['date']['ru']		= 'Свидание';
+
 $defaults['delete']['en']		= 'Delete';
 $defaults['delete']['es']		= 'Borrar';
 $defaults['delete']['fr']		= 'Supprimer';
@@ -49,6 +59,11 @@ $defaults['documents_empty']['en']		= 'No documents added yet';
 $defaults['documents_empty']['es']		= 'No hay documentos que agregó aún';
 $defaults['documents_empty']['fr']		= 'Aucun document n\'a pas encore ajouté';
 $defaults['documents_empty']['ru']		= 'Никаких документов добавили еще';
+
+$defaults['docs_recent_views']['en']	= 'Recent Views';
+$defaults['docs_recent_views']['es']	= 'Visitas recientes';
+$defaults['docs_recent_views']['fr']	= 'Affichages récents';
+$defaults['docs_recent_views']['ru']	= 'Последние окна';
 
 $defaults['edit']['en']		= 'Edit';
 $defaults['edit']['es']		= 'Modificar';
@@ -106,6 +121,11 @@ $defaults['jump_to']['en']			= 'Jump To';
 $defaults['jump_to']['es']			= 'Salte a';
 $defaults['jump_to']['fr']			= 'Sautez à';
 $defaults['jump_to']['ru']			= 'поскачите к';
+
+$defaults['language']['en']			= 'Language';
+$defaults['language']['es']			= 'Idioma';
+$defaults['language']['fr']			= 'Langue';
+$defaults['language']['ru']			= 'Язык';
 
 $defaults['last_login']['en']			= 'Last Login';
 $defaults['last_login']['es']			= 'Último inicio de sesión';
@@ -187,6 +207,21 @@ $defaults['posted_by']['en']			= 'Posted By';
 $defaults['posted_by']['es']			= 'Publicado por';
 $defaults['posted_by']['fr']			= 'Signalé près';
 $defaults['posted_by']['ru']			= 'вывешено мимо';
+
+$defaults['pressclips_recent_empty']['en'] = 'There are no recent clips.';
+$defaults['pressclips_recent_empty']['es'] = 'No hay clips recientes.';
+$defaults['pressclips_recent_empty']['fr'] = 'Il n\'y a pas de clips récents.';
+$defaults['pressclips_recent_empty']['ru'] = 'Есть не последних клипов.';
+
+$defaults['published']['en']			= 'Published';
+$defaults['published']['es']			= 'Publicado';
+$defaults['published']['fr']			= 'Publié';
+$defaults['published']['ru']			= 'Опубликован';
+
+$defaults['publication']['en']			= 'Publication';
+$defaults['publication']['es']			= 'Publicación';
+$defaults['publication']['fr']			= 'Publication';
+$defaults['publication']['ru']			= 'Публикация';
 
 $defaults['replies']['en']			= 'Replies';
 $defaults['replies']['es']			= 'Respuestas';
@@ -273,10 +308,20 @@ $defaults['translations_do']['es']	= 'Haga las traducciones';
 $defaults['translations_do']['fr']	= 'Faire des traductions';
 $defaults['translations_do']['ru']	= 'Делают переводы';
 
+$defaults['type']['en']	= 'Type';
+$defaults['type']['es']	= 'Tipo';
+$defaults['type']['fr']	= 'Type';
+$defaults['type']['ru']	= 'Печатать';
+
 $defaults['updated']['en']			= 'Updated';
 $defaults['updated']['es']			= 'Actualizado';
 $defaults['updated']['fr']			= 'Mise à jour';
 $defaults['updated']['ru']			= 'Обновлено';
+
+$defaults['url']['en']			= 'URL';
+$defaults['url']['es']			= 'URL';
+$defaults['url']['fr']			= 'URL	';
+$defaults['url']['ru']			= 'URL';
 
 $defaults['upload_max']['en']			= 'The maximum size is ';
 $defaults['upload_max']['es']			= 'El tamaño máximo es ';

@@ -20,7 +20,7 @@ table.left td.title, a.title, span.title { font-size:18px; }
 /* general form elements */
 form					{ margin:0px; padding:0px; }
 input, select, textarea { font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
-input.text				{ width:500px; height:26px; vertical-align:middle; }
+input.text				{ width:500px; height:20px; vertical-align:middle; }
 	
 input.button   {
 	border:none;
@@ -142,15 +142,15 @@ div.dropmarker {
 #left form fieldset legend a { color:#fff; }
 
 #left form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; overflow-y:auto; background-color:#eee; }
-#left form fieldset div.field label { line-height:26px; width:100px; display:block; float:left; }
+#left form fieldset div.field label { line-height:15px; width:100px; display:block; float:left; height:26px; overflow:hidden; }
 #left form fieldset div.field input.text { width:480px; }
 #left form fieldset div.field input.checkbox { margin-right:7px; }
 #left form fieldset div.field input.file { background-color:transparent; }
 #left form fieldset div.checkbox { height:18px; line-height:18px; overflow-y:hidden; }
-#left form fieldset span.additional { color:#717171; margin-left:7px; font-size:11px; font-style:italic; }
+#left form fieldset span.additional { color:#717171; margin-left:2px; font-size:11px; font-style:italic; }
 #left form fieldset div.checkbox span.additional:hover { cursor:pointer; }
 #left form fieldset div.checkboxes ul { display:block; overflow:auto; margin:0px; padding:0px; font-size:11px;}
-#left form fieldset div.checkboxes li { display:block; width:135px; float:left; padding-left:17px; margin:0px 2px 3px 2px; }
+#left form fieldset div.checkboxes li { display:block; width:135px; float:left; padding-left:17px; margin:0px 2px 4px 2px; line-height:12px; }
 #left form fieldset div.checkboxes input { margin:0px 0px 0px -20px; }
 #left form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
 #left form fieldset div.field textarea { width:481px; height:280px; }

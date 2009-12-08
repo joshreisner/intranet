@@ -7,7 +7,7 @@ $result = db_table('SELECT
 		c.id, 
 		c.title, 
 		c.pub_date, 
-		t.title "group", 
+		t.title' . langExt() . ' "group", 
 		c.publication, 
 		' . db_updated('c') . '
 	FROM press_clips c 
@@ -15,15 +15,15 @@ $result = db_table('SELECT
 	' . getChannelsWhere('press_clips', 'c', 'clip_id') . '
 	ORDER BY t.title, pub_date DESC', 20);
 
-$t = new table('press-clips', drawHeader());
+$t = new table('press-clips', drawHeader((($page['is_admin']) ? array('edit.php'=>getString('add_new')) : false)));
 $t->col('title');
 foreach ($result as &$r) {
 	$r['title'] = draw_link("clip.php?id=" . $r["id"], format_string($r["title"], 80)) . '<br>' . 
 	$r["publication"] . ' <span class="light">' . format_date($r["pub_date"]) . '</span>';
 }
-echo $t->draw($result, 'There are no recent clips.');
+echo $t->draw($result, getString('pressclips_recent_empty'));
 
-include("edit/index.php");
+include("edit.php");
 
 echo drawBottom();
 ?>
