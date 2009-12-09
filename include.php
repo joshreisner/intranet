@@ -588,6 +588,13 @@ function langExt($code=false) {
 	return '_' . $code;
 }
 
+function langExtT($code=false) {
+	//return field name appendage
+	if (!$code) $code = $_SESSION['language'];
+	if ($code == 'ru') return '_ru';
+	return '';
+}
+
 function langTranslatePost($keys) {
 	//set incoming POST values for languages
 	if (!getOption('languages')) return false;
@@ -607,6 +614,28 @@ function langTranslatePost($keys) {
 			$_POST[$key . langExt($language)] = language_translate($_POST[$key . langExt()], $_SESSION['language'], $language);
 		}
 	}
+}
+
+function langTransliteratePost($keys) {
+	//set incoming POST values for languages
+	if (!getOption('languages')) return false;
+	global $_POST;
+	
+	//make sure do translations checkbox is checked
+	if (!isset($_POST['translations_do'])) return false;
+
+	//list of fields to translate
+	$keys = array_post_fields($keys);
+
+	//sorry, this is hard-coded for now
+	foreach ($keys as $key) {
+		if ($_SESSION['language'] == 'ru') {
+			$_POST[$key] = language_translate($_POST[$key . '_ru'], 'ru', 'en');
+		} else {
+			$_POST[$key . '_ru'] = language_translate($_POST[$key], $_SESSION['language'], 'ru');
+			die($_POST[$key . '_ru']);
+		}
+	}	
 }
 
 function langUnsetFields($form, $names) {

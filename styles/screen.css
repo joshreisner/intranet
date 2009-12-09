@@ -153,7 +153,7 @@ div.dropmarker {
 #left form fieldset div.checkboxes li { display:block; width:135px; float:left; padding-left:17px; margin:0px 2px 4px 2px; line-height:12px; }
 #left form fieldset div.checkboxes input { margin:0px 0px 0px -20px; }
 #left form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
-#left form fieldset div.field textarea { width:481px; height:280px; }
+#left form fieldset div.field textarea { width:480px; height:280px; }
 #left form fieldset div.field select { background-color:#fff; border:1px solid #ccc; height:26px; }
 #left form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }

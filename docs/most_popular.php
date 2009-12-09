@@ -1,10 +1,10 @@
-<?
+<?php
 include("../include.php");
 echo drawTop();
 
 $result = db_table('SELECT 
 		d.id,
-		d.title,
+		d.title' . langExt() . ' title,
 		(SELECT COUNT(*) FROM docs_views v WHERE v.documentID = d.id) downloads,
 		i.icon,
 		i.description alt
@@ -15,8 +15,8 @@ $result = db_table('SELECT
 	
 $t = new table('docs', drawHeader());
 $t->set_column('icon', 'd', '&nbsp;');
-$t->set_column('title');
-$t->set_column('downloads', 'r');
+$t->set_column('title', 'l', getString('title'));
+$t->set_column('downloads', 'r', getString('downloads'));
 
 foreach ($result as &$r) {
 	$link = 'info.php?id=' . $r['id'];
@@ -26,4 +26,5 @@ foreach ($result as &$r) {
 
 echo $t->draw($result, getString('documents_empty'));
 
-echo drawBottom();?>
+echo drawBottom();
+?>

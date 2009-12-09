@@ -11,7 +11,7 @@ echo drawTop();
 echo drawTableStart();
 echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 2, getString('edit'), 'edit/?id=' . $_GET['id'], getString('delete'), drawDeleteLink());
 
-$r = db_grab('SELECT c.title, c.url, c.pub_date, c.publication, c.type_id, c.description, t.title type FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id WHERE c.id = ' . $_GET['id']);
+$r = db_grab('SELECT c.title' . langExt() . ' title, c.url, c.pub_date, c.publication' . langExtT() . ' publication, c.type_id, c.description' . langExt() . ' description, t.title' . langExt() . ' type FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id WHERE c.id = ' . $_GET['id']);
 ?>
 	<tr>
 		<td class="left"><?=getString('title')?></td>

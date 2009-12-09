@@ -65,6 +65,11 @@ $defaults['docs_recent_views']['es']	= 'Visitas recientes';
 $defaults['docs_recent_views']['fr']	= 'Affichages récents';
 $defaults['docs_recent_views']['ru']	= 'Последние окна';
 
+$defaults['downloads']['en']	= 'Downloads';
+$defaults['downloads']['es']	= 'Descargas';
+$defaults['downloads']['fr']	= 'Téléchargements';
+$defaults['downloads']['ru']	= 'Загрузки';
+
 $defaults['edit']['en']		= 'Edit';
 $defaults['edit']['es']		= 'Modificar';
 $defaults['edit']['fr']		= 'Modifier';

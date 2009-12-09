@@ -74,7 +74,7 @@ $f->set_title_prefix($page['breadcrumbs']);
 $f->set_field(array('name'=>'title' . langExt(), 'label'=>getString('title'), 'type'=>'text'));
 $f->set_field(array('name'=>'description' . langExt(), 'label'=>getString('description'), 'type'=>'textarea', 'class'=>'mceEditor'));
 $f->set_field(array('name'=>'content', 'label'=>getString('file'), 'type'=>'file', 'additional'=>getString('upload_max') . file_get_max()));
-if (getOption('languages')) $f->set_field(array('name'=>'language_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'label'=>getString('language')));
+if (getOption('languages')) $f->set_field(array('name'=>'language_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'label'=>getString('language'), 'required'=>true));
 if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'option_title'=>'title' . langExt(), 'linking_table'=>'docs_to_channels', 'object_id'=>'doc_id', 'option_id'=>'channel_id'));
 $f->set_field(array('name'=>'categories', 'label'=>getString('categories'), 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'option_title'=>'title' . langExt(), 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
 langUnsetFields($f, 'title,description');
