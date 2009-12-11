@@ -11,15 +11,15 @@ echo draw_container('head',
 <body style="background-color:#fff;">
 <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="font-family:Arial,Helvetica,sans-serif; font-size:11px; line-height:16px;">
 	<tr>
-		<td width="85" height="117"><img src="header1.jpg" alt="header1" width="85" height="117" border="0"/></td>
-		<td width="5" bgcolor="#8dc13f"><img src="spacer.png" width="5" height="5" border="0"/></td>
-		<td width="85" height="117"><img src="header2.jpg" alt="header1" width="85" height="117" border="0"/></td>
-		<td width="5" bgcolor="#8dc13f"><img src="spacer.png" width="5" height="5" border="0"/></td>
-		<td width="85" height="117"><img src="header3.jpg" alt="header1" width="85" height="117" border="0"/></td>
-		<td width="5" bgcolor="#8dc13f"><img src="spacer.png" width="5" height="5" border="0"/></td>
-		<td width="330" bgcolor="#3397ba" align="center"><img src="logo.png" alt="logo" width="330" height="117"/></td>
+		<td width="85" height="117"><img src="http://members.sitesofconscience.org/a/soc-newsletter/header1.jpg" alt="header1" width="85" height="117" border="0"/></td>
+		<td width="5" bgcolor="#8dc13f"><img src="http://members.sitesofconscience.org/a/soc-newsletter/spacer.png" width="5" height="5" border="0"/></td>
+		<td width="85" height="117"><img src="http://members.sitesofconscience.org/a/soc-newsletter/header2.jpg" alt="header1" width="85" height="117" border="0"/></td>
+		<td width="5" bgcolor="#8dc13f"><img src="http://members.sitesofconscience.org/a/soc-newsletter/spacer.png" width="5" height="5" border="0"/></td>
+		<td width="85" height="117"><img src="http://members.sitesofconscience.org/a/soc-newsletter/header3.jpg" alt="header1" width="85" height="117" border="0"/></td>
+		<td width="5" bgcolor="#8dc13f"><img src="http://members.sitesofconscience.org/a/soc-newsletter/spacer.png" width="5" height="5" border="0"/></td>
+		<td width="330" bgcolor="#3397ba" align="center"><img src="http://members.sitesofconscience.org/a/soc-newsletter/logo.png" alt="logo" width="330" height="117"/></td>
 	</tr>
-	<tr><td colspan="7" bgcolor="#8dc13f" height="5"><img src="spacer.png" width="5" height="5" border="0"/></td></tr>
+	<tr><td colspan="7" bgcolor="#8dc13f" height="5"><img src="http://members.sitesofconscience.org/a/soc-newsletter/spacer.png" width="5" height="5" border="0"/></td></tr>
 	<tr>
 		<td colspan="3" valign="top">
 			<div style="margin:16px 8px 16px 8px;">
@@ -62,7 +62,7 @@ echo draw_container('head',
 		<p>Communities across the country identified dozens of local sites related to Liberia’s 14-year conflict as crucial spaces for healing and reconciliation.  To support them, Coalition members Civic Initiative and Liberia Media Center worked with the Secretariat to make memorialization the <a style="color:#3397ba;" href="http://www.sitesofconscience.org/activities/en/#TRC">first among 38 recommendations</a> of the Truth and Reconciliation Commission at the Liberian National Reconciliation Conference this June.</p>
 
 
-		<img src="signature.png" alt="signature" width="82" height="32"/>
+		<img src="http://members.sitesofconscience.org/a/soc-newsletter/signature.png" alt="signature" width="82" height="32"/>
 		<p>Liz Ševčenko<br>
 		Director, International Coalition of Sites of Conscience</p>
 		</div>
