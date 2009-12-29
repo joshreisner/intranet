@@ -1,34 +1,10 @@
 <?  include("../../include.php");
 
 if (url_action("delete")) {
-	db_query("UPDATE board_members SET 
-				deleted_date = GETDATE(),
-				deleted_user = {$_SESSION["user_id"]},
-				is_active = 0
-			WHERE id = " . $_GET["id"]);
+	db_delete('board_members');
 	url_drop();
 } elseif ($posting) {
-	db_query("INSERT INTO board_members (
-		firstname,
-		lastname,
-		bio,
-		board_position,
-		employment,
-		organization_id,
-		created_date,
-		created_user,
-		is_active
-	) VALUES (
-		'" . $_POST["firstname"] . "',
-		'" . $_POST["lastname"] . "',
-		'" . $_POST["bio"] . "',
-		'" . $_POST["board_position"] . "',
-		'" . $_POST["employment"] . "',
-		" . $_POST["organization_id"] . ",
-		GETDATE(),
-		" . $_SESSION["user_id"] . ",
-		1
-	)");
+	$id = db_save('board_members');
 	url_change();
 }
 
@@ -47,10 +23,10 @@ $result = db_query("SELECT
 				m.lastname,
 				m.board_position,
 				o.description organization
-				FROM board_members m
-				JOIN organizations o ON m.organization_id = o.id
-				WHERE m.is_active = 1
-				ORDER BY o.description, m.lastname, m.firstname");
+			FROM board_members m
+			JOIN organizations o ON m.organization_id = o.id
+			WHERE m.is_active = 1
+			ORDER BY o.description, m.lastname, m.firstname");
 if (db_found($result)) {?>
 	<tr>
 		<th align="left" width="60%">Name</th>
