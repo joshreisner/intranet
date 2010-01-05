@@ -4,7 +4,7 @@ include('../../include.php');
 echo drawTop();
 
 $f = new form('translate', false, $page['title']);
-$f->set_field(array('type'=>'textarea', 'name'=>'text_to_translate', 'class'=>'mceEditor', 'label'=>'English text', 'value'=>@$_POST['text_to_translate']));
+$f->set_field(array('type'=>'textarea', 'name'=>'text_to_translate', 'class'=>'tinymce', 'label'=>'English text', 'value'=>@$_POST['text_to_translate']));
 $f->set_title_prefix($page['breadcrumbs']);
 echo $f->draw();
 

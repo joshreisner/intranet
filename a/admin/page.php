@@ -11,7 +11,7 @@ echo drawTop();
 
 $f = new form('pages', @$_GET['id']);
 $f->set_field(array('type'=>'text', 'name'=>'title' . langExt(), 'label'=>getString('title')));
-$f->set_field(array('type'=>'textarea', 'class'=>'mceEditor', 'name'=>'description' . langExt(), 'label'=>getString('description')));
+$f->set_field(array('type'=>'textarea', 'class'=>'tinymce', 'name'=>'description' . langExt(), 'label'=>getString('description')));
 $f->unset_fields('is_admin,is_hidden,url');
 if (url_id('module_id')) $f->set_field(array('type'=>'hidden', 'name'=>'module_id', 'value'=>$_GET['module_id']));
 if (url_id('modulette_id')) $f->set_field(array('type'=>'hidden', 'name'=>'modulette_id', 'value'=>$_GET['modulette_id']));

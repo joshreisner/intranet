@@ -87,7 +87,7 @@ echo drawTopSimple(getString('login_account_request'));
 
 echo drawMessage("<h1>Welcome!</h1>  To request an account, please fill out the fields below.  Your login information will be emailed to you once your request is approved.");
 $f = new form('users_requests', false, getString('login_account_request'));
-$f->set_field(array('type'=>'textarea', 'name'=>'bio', 'label'=>getString('bio'), 'class'=>'mceEditor'));
+$f->set_field(array('type'=>'textarea', 'name'=>'bio', 'label'=>getString('bio'), 'class'=>'tinymce'));
 
 echo $f->draw();
 /*

@@ -72,7 +72,7 @@ while ($t = db_fetch($types)) {
 $f = new form('docs', @$_GET['id'], $page['title']);
 $f->set_title_prefix($page['breadcrumbs']);
 $f->set_field(array('name'=>'title' . langExt(), 'label'=>getString('title'), 'type'=>'text'));
-$f->set_field(array('name'=>'description' . langExt(), 'label'=>getString('description'), 'type'=>'textarea', 'class'=>'mceEditor'));
+$f->set_field(array('name'=>'description' . langExt(), 'label'=>getString('description'), 'type'=>'textarea', 'class'=>'tinymce'));
 $f->set_field(array('name'=>'content', 'label'=>getString('file'), 'type'=>'file', 'additional'=>getString('upload_max') . file_get_max()));
 if (getOption('languages')) $f->set_field(array('name'=>'language_id', 'type'=>'select', 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'label'=>getString('language'), 'required'=>true));
 if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'option_title'=>'title' . langExt(), 'linking_table'=>'docs_to_channels', 'object_id'=>'doc_id', 'option_id'=>'channel_id'));

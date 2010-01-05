@@ -4,7 +4,7 @@ if (!$included) include('../include.php');
 
 $r = false;
 if ($posting) {
-	//langTransliteratePost('publication');
+	langTransliteratePost('publication');
 	langTranslatePost('title,description');
 	$id = db_save("press_clips");
 	if (getOption('channels')) db_checkboxes('channels', 'press_clips_to_channels', 'clip_id', 'channel_id', $id);
@@ -57,7 +57,7 @@ $f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getStr
 $f->set_field(array('name'=>'url', 'type'=>'text', 'label'=>getString('url')));
 $f->set_field(array('name'=>'publication' . langExtT(), 'type'=>'text', 'label'=>getString('publication')));
 $f->set_field(array('name'=>'pub_date', 'type'=>'date', 'label'=>getString('published'), 'required'=>true));
-$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'mceEditor'));
+$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'tinymce'));
 $f->set_field(array('name'=>'type_id', 'label'=>getString('category'), 'type'=>'select', 'sql'=>'SELECT id, title' . langExt() . ' title FROM press_clips_types ORDER BY precedence', 'required'=>true));
 if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'option_title'=>'title' . langExt(), 'options_table'=>'channels', 'linking_table'=>'press_clips_to_channels', 'object_id'=>'clip_id', 'option_id'=>'channel_id'));
 langUnsetFields($f, 'title,description,publication');
