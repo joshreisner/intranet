@@ -1,50 +1,8 @@
 <?php	include("include.php");
 echo drawTop();
-echo drawJumpToStaff();
+//echo drawJumpToStaff();
 
-echo drawStaffList('u.is_active = 1 AND ' . db_datediff('u.startdate') . ' < 60', getString('staff_new_empty'), false, getString('staff_new'));
-
-?>
-<table class="left" cellspacing="1">
-	<?
-	if ($page['is_admin']) {
-		echo drawHeaderRow("Comings", 2, "new", "add_edit.php");
-	} else {
-		echo drawHeaderRow("Comings", 2);
-	}
-	$staff = db_query("SELECT
-		u.id,
-		ISNULL(u.nickname, u.firstname) first, 
-		u.lastname last,
-		u.title,
-		d.departmentName,
-		o.name office,
-		u.startdate,
-		u.bio
-	FROM users u
-	LEFT JOIN offices o ON u.officeID = o.id
-	LEFT JOIN departments d ON u.departmentID = d.departmentID
-	WHERE " . db_datediff("u.startdate", "GETDATE()") . " < 60 AND u.is_active = 1
-	ORDER BY u.startdate DESC");
-	if (db_found($staff)) {
-		while ($s = db_fetch($staff)) {?>
-		<tr>
-			<td width="135" height="60" align="center" style="padding:0px;"><?
-				echo draw_img($_josh["write_folder"] . "/staff/" . $s["id"] . "-medium.jpg", "/staff/view.php?id=" . $s["id"]);
-				?></td>
-			<td class="text">
-				<b><a href="/staff/view.php?id=<?=$s["id"]?>"><?=$s["first"]?> <?=$s["last"]?></a></b> &nbsp;<span class="light"><?=format_date($s["startdate"])?></span><br>
-				<?=$s["title"]?><br>
-				<? if (getOption("staff_showdept")) echo $s["departmentName"] . "<br>";?>
-				<? if (getOption("staff_showoffice")) echo $s["office"] . "<br>";?>
-				<?=$s["bio"]?>
-			</td>
-		</tr>
-		<? }
-	} else {
-		echo drawEmptyResult("No staff are listed as having started in the last two months.", 2);
-	}
-echo drawTableEnd();
+echo drawStaffList('u.is_active = 1 AND ' . db_datediff('u.startdate') . ' < 60', getString('staff_new_empty'), array('add_edit.php'=>getString('add_new')), getString('staff_new'));
 
 echo drawTableStart();
 $result = db_query("SELECT 

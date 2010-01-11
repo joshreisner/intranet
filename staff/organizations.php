@@ -1,41 +1,37 @@
-<?
-include("include.php");
-
-if (isset($_GET["deleteID"])) {
-	if (db_grab("SELECT endDate FROM users WHERE user_id = " . $_GET["deleteID"])) {
-		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE() WHERE user_id = " . $_GET["deleteID"]);
-	} else {
-		db_query("UPDATE users SET is_active = 0, deleted_user = {$_SESSION["user_id"]}, deleted_date = GETDATE(), endDate = GETDATE() WHERE user_id = " . $_GET["deleteID"]);
-	}
-	url_query_drop("deleteID");
-}
+<?php
+include('include.php');
 
 $orgs = array();
-if (getOption("staff_allowshared")) {
-	if (!isset($_GET["id"])) $_GET["id"] = 0;
-	$orgs[0] = "Shared";
-} else {
-	if (!isset($_GET["id"])) $_GET["id"] = 1;
+if (getOption('staff_allowshared')) {
+	$orgs[0] = 'Shared';
 }
-$orgs = db_array("SELECT id, title from organizations ORDER BY title", $orgs, false, false);
+$orgs = db_table('SELECT id, title from organizations WHERE is_active = 1 ORDER BY title', $orgs, false, false);
 
 echo drawTop();
 
 if (count($orgs) < 8) {
 ?>
-<table class="navigation staff" cellspacing="1">
-	<tr class="staff-hilite">
-		<? foreach ($orgs as $key=>$value) {
-		$value = format_string($value, 26);
-		?>
-		<td width="14.28%"<? if ($_GET["id"] == $key) {?> class="selected"<? }?>><? if ($_GET["id"] != $key) {?><a href="organizations.php?id=<?=$key?>"><?} else {?><b><?}?><?=$value?></b></a></td>
+<table class='navigation staff' cellspacing='1'>
+	<tr class='staff-hilite'>
+		<? foreach ($orgs as $o) { ?>
+		<td width='14.28%'<? if (url_id() == $o['id']) {?> class='selected'<? }?>><? if (url_id() != $o['id']) {?><a href='organizations.php?id=<?=$o['id']?>'><? } else { ?><b><? }?><?=format_string($o['title'], 26)?></b></a></td>
 		<? }?>
 	</tr>
 </table>
 <?
+} else {
+	echo draw_div('panel', draw_form_select('foo', $orgs, url_id(), false, false, 'location.href=\'' . $request['path'] . '?id=\' + this.value'));
 }
 
-$where = ($_GET["id"] == 0) ? " IS NULL " : " = " . $_GET["id"];
-echo drawStaffList("u.is_active = 1 AND u.organization_id " . $where);
+if (url_id()) {
+	$where = ($_GET['id'] == 0) ? ' IS NULL ' : ' = ' . $_GET['id'];
+	echo drawStaffList('u.is_active = 1 AND u.organization_id ' . $where, 'This organization has no staff associated with it.', array('add_edit.php'=>getString('add_new')), draw_link($request['path_query'], $page['title']) . ' &gt; ' . db_grab('SELECT title FROM organizations WHERE id = ' . $_GET['id']));
+} else {
+	$t = new table('foo', drawHeader());
+	$t->col('title');
+	foreach ($orgs as &$o) $o['title'] = draw_link('organizations.php?id=' . $o['id'], $o['title']);
+	echo $t->draw($orgs);
+}
 
-echo drawBottom();?>
+echo drawBottom();
+?>
