@@ -3,7 +3,7 @@ include('../include.php');
 url_query_require();
 
 if (url_action('delete')) {
-	db_delete('press_clips');
+	db_delete('press_clips', $_GET['delete_id']);
 	url_change('/press-clips/');
 }
 

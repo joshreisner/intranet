@@ -2,8 +2,8 @@
 include('../../include.php');
 
 if (url_action('delete')) {
-	db_delete('soc_members');
-	url_drop('action,id');
+	db_delete('soc_members', $_GET['delete_id']);
+	url_drop('action,delete_id');
 }
 
 echo drawTop();

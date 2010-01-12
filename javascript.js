@@ -1,9 +1,3 @@
-function confirmDelete(id) {
-	if (confirm('Are you sure?')) {
-		location.href = location.href + '?action=delete&id=' + id;
-	}
-}
-
 function showHelp(id, value) {
 	ajax_set('users', 'help', id, value);
 }
@@ -41,10 +35,6 @@ function changeCursor(state) {
 	} else {
 		this.style.cursor = 'default';
 	}
-}
-
-function changeDept(id, user_id) {
-	location.href='<?=$request["path_query"]?>&newDeptID=' + id + '&contactID=' + user_id;
 }
 
 function toggleCheckbox(which) {

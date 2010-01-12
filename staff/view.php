@@ -94,9 +94,9 @@ if (!$r["is_active"]) {
 <table class="left" cellspacing="1">
 	<? if ($page['is_admin']) {
 		if ($r["is_active"]) {
-			echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], getString('delete'), drawDeleteLink("Deactivate this staff member?"));
+			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], getString('delete'), drawDeleteLink("Deactivate this staff member?"));
 		} else {
-			echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
+			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
 		}
 	} elseif ($_GET["id"] == $_SESSION["user_id"]) {
 		echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"]);
@@ -202,42 +202,42 @@ if (!$r["is_active"]) {
 		</tr>
 	<? }?>
 	<? if ($page['is_admin']) {?>
-	<tr>
-		<td class="left">Invite</td>
-		<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;">re-invite user</a></td>
-	</tr>
-		<? if (getOption("staff_showrank")) {?>
 		<tr>
-			<td class="left">Rank</td>
-			<td colspan="2"><?=$r["rank"]?></td>
+			<td class="left"><?=getString('invite')?></td>
+			<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;"><?=getString('invite_again')?></a></td>
 		</tr>
+		<? if (getOption("staff_showrank")) {?>
+			<tr>
+				<td class="left">Rank</td>
+				<td colspan="2"><?=$r["rank"]?></td>
+			</tr>
 		<? } ?>
-	<tr>
-		<td class="left">Permissions</td>
-		<td colspan="2">
-		<?
-		if ($r["is_admin"]) {
-			echo "Site Administrator";
-		} else {
-			$hasPermission = false;
-			$permissions = db_query('SELECT 
-				m.title' . langExt() . ' title,
-				m.folder
-				FROM modules m 
-				JOIN users_to_modules a ON m.id = a.module_id
-				WHERE a.user_id = ' . $_GET["id"] . ' AND a.is_admin = 1
-				ORDER BY m.title');
-			while ($p = db_fetch($permissions)) {
-				$hasPermission = true;
-				echo "&#183;&nbsp;";
-				echo $p["title"];
-				echo "<br>";
+		<tr>
+			<td class="left"><?=getString('permissions')?></td>
+			<td colspan="2">
+			<?
+			if ($r["is_admin"]) {
+				echo "Site Administrator";
+			} else {
+				$hasPermission = false;
+				$permissions = db_query('SELECT 
+					m.title' . langExt() . ' title,
+					m.folder
+					FROM modules m 
+					JOIN users_to_modules a ON m.id = a.module_id
+					WHERE a.user_id = ' . $_GET["id"] . ' AND a.is_admin = 1
+					ORDER BY m.title');
+				while ($p = db_fetch($permissions)) {
+					$hasPermission = true;
+					echo "&#183;&nbsp;";
+					echo $p["title"];
+					echo "<br>";
+				}
+				if (!$hasPermission) echo getString('none');
 			}
-			if (!$hasPermission) echo "None";
-		}
-		?>
-		</td>
-	</tr>
+			?>
+			</td>
+		</tr>
 	<? }
 	
 	if (getOption("staff_showhome")) {?>

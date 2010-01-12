@@ -17,8 +17,8 @@ $defaults['app_welcome']['en']		= 'Welcome to the Intranet.  If you don\'t have 
 
 $defaults['are_you_sure']['en']		= 'Are you sure?';
 $defaults['are_you_sure']['es']		= '¿Estás seguro?';
-//$defaults['are_you_sure']['fr']		= 'Bio';
-//$defaults['are_you_sure']['ru']		= 'Биография';
+$defaults['are_you_sure']['fr']		= 'Etes-vous sûr?';
+$defaults['are_you_sure']['ru']		= 'Вы уверены?';
 
 $defaults['bio']['en']		= 'Bio';
 $defaults['bio']['es']		= 'Bio';
@@ -44,6 +44,11 @@ $defaults['date']['en']		= 'Date';
 $defaults['date']['es']		= 'Fecha';
 $defaults['date']['fr']		= 'Date';
 $defaults['date']['ru']		= 'Свидание';
+
+$defaults['date_created']['en']		= 'Date Created';
+$defaults['date_created']['es']		= 'Fecha de creación';
+$defaults['date_created']['fr']		= 'Date de création';
+$defaults['date_created']['ru']		= 'Дата создания';
 
 $defaults['delete']['en']		= 'Delete';
 $defaults['delete']['es']		= 'Borrar';
@@ -117,6 +122,21 @@ $defaults['home']['es']	= 'Inicio';
 $defaults['home']['fr']	= 'Accueil';
 $defaults['home']['ru']	= 'Дом';
 
+$defaults['image']['en']			= 'Image';
+$defaults['image']['es']			= 'Imagen';
+$defaults['image']['fr']			= 'Image';
+$defaults['image']['ru']			= 'Image';
+
+$defaults['invite']['en']			= 'Invite';
+$defaults['invite']['es']			= 'Invitación';
+$defaults['invite']['fr']			= 'Inviter';
+$defaults['invite']['ru']			= 'Пригласить';
+
+$defaults['invite_again']['en']			= 'Invite Again';
+$defaults['invite_again']['es']			= 'Volver a invitar';
+$defaults['invite_again']['fr']			= 'Inviter de nouveau';
+$defaults['invite_again']['ru']			= 'Пригласить еще раз';
+
 $defaults['is_admin']['en']			= 'Is Admin';
 $defaults['is_admin']['es']			= 'Es administrativo';
 $defaults['is_admin']['fr']			= 'Est administratif';
@@ -163,10 +183,30 @@ $defaults['login_password_reset_msg']['en'] = '<h1>Starting Over, Password-Wise<
 
 $defaults['login_password_reset_msg_email_not_found']['en'] = '<h1>Email Not Found</h1>That email address wasn\'t found in the system.  If the address below is correct and you\'ve never logged in, you may need to <a href="account_request.php">request an account</a>.';
 
+$defaults['module_permissions']['en']			= 'Module Permissions';
+$defaults['module_permissions']['es']			= 'Módulo de permisos';
+$defaults['module_permissions']['fr']			= 'Module autorisations';
+$defaults['module_permissions']['ru']			= 'Разрешение модуля';
+
+$defaults['modulette_permissions']['en']			= 'Modulette Permissions';
+$defaults['modulette_permissions']['es']			= 'Permisos Modulette';
+$defaults['modulette_permissions']['fr']			= 'Modulette autorisations';
+$defaults['modulette_permissions']['ru']			= 'Modulette Разрешения';
+
 $defaults['name']['en']			= 'Name';
 $defaults['name']['es']			= 'Nombre';
 $defaults['name']['fr']			= 'Nom';
 $defaults['name']['ru']			= 'Имя';
+
+$defaults['name_first']['en']			= 'First Name';
+$defaults['name_first']['es']			= 'Nombre';
+$defaults['name_first']['fr']			= 'Prénom';
+$defaults['name_first']['ru']			= 'Имя';
+
+$defaults['name_last']['en']			= 'Last Name';
+$defaults['name_last']['es']			= 'Apellido';
+$defaults['name_last']['fr']			= 'Nom de famille';
+$defaults['name_last']['ru']			= 'Фамилия';
 
 $defaults['network']['en']			= 'Network';
 $defaults['network']['es']			= 'Red';
@@ -183,6 +223,21 @@ $defaults['networks_view_all']['es']			= 'Ver todos los videos';
 $defaults['networks_view_all']['fr']			= 'Tout voir';
 $defaults['networks_view_all']['ru']			= 'Открыть Все сети';
 
+$defaults['nickname']['en']			= 'Nickname';
+$defaults['nickname']['es']			= 'Nickname';
+$defaults['nickname']['fr']			= 'Pseudo';
+$defaults['nickname']['ru']			= 'Ник';
+
+$defaults['none']['en']			= 'None';
+$defaults['none']['es']			= 'Ninguno';
+$defaults['none']['fr']			= 'Aucun';
+$defaults['none']['ru']			= 'Никакой';
+
+$defaults['notify_topics']['en']			= 'Notify Topics';
+//$defaults['notify_topics']['es']			= 'Ninguno';
+//$defaults['notify_topics']['fr']			= 'Aucun';
+//$defaults['notify_topics']['ru']			= 'Никакой';
+
 $defaults['organization']['en']			= 'Organization';
 $defaults['organization']['es']			= 'Organización';
 $defaults['organization']['fr']			= 'Organisation';
@@ -196,17 +251,22 @@ $defaults['page_edit_info']['ru']	= 'Редактировать страницу
 $defaults['password']['en'] = 'Password';
 $defaults['password']['es'] = 'Contraseña';
 $defaults['password']['fr'] = 'Mot de passe';
-//$defaults['password']['ru'] = 'Reset Password';
+$defaults['password']['ru'] = 'Пароль';
 
 $defaults['password_is_reset']['en'] = 'Password is Reset';
-//$defaults['password_reset']['es'] = 'Reset Password';
-//$defaults['password_reset']['fr'] = 'Reset Password';
-//$defaults['password_reset']['ru'] = 'Reset Password';
+$defaults['password_is_reset']['es'] = 'Contraseña se restablece';
+$defaults['password_is_reset']['fr'] = 'Réinitialiser le mot de passe est';
+$defaults['password_is_reset']['ru'] = 'Сброс пароля';
 
 $defaults['password_reset']['en'] = 'Reset Password';
 $defaults['password_reset']['es'] = 'Restablecer Contraseña';
 $defaults['password_reset']['fr'] = 'Remettez le mot de passe';
-//$defaults['password_reset']['ru'] = 'Reset Password';
+$defaults['password_reset']['ru'] = 'Сбросить пароль';
+
+$defaults['permissions']['en']			= 'Permissions';
+$defaults['permissions']['es']			= 'Permisos';
+$defaults['permissions']['fr']			= 'Autorisations';
+$defaults['permissions']['ru']			= 'Разрешения';
 
 $defaults['posted_by']['en']			= 'Posted By';
 $defaults['posted_by']['es']			= 'Publicado por';
@@ -217,6 +277,11 @@ $defaults['pressclips_recent_empty']['en'] = 'There are no recent clips.';
 $defaults['pressclips_recent_empty']['es'] = 'No hay clips recientes.';
 $defaults['pressclips_recent_empty']['fr'] = 'Il n\'y a pas de clips récents.';
 $defaults['pressclips_recent_empty']['ru'] = 'Есть не последних клипов.';
+
+$defaults['public_info']['en']			= 'Public Information';
+$defaults['public_info']['es']			= 'Información Pública';
+$defaults['public_info']['fr']			= 'Information du public';
+$defaults['public_info']['ru']			= 'Общественной информации';
 
 $defaults['published']['en']			= 'Published';
 $defaults['published']['es']			= 'Publicado';
@@ -235,15 +300,25 @@ $defaults['replies']['ru']			= 'Ответы';
 
 $defaults['staff_firsttime']['en']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
 
+$defaults['staff_goings_empty']['en'] = 'No staff left in the last month.';
+$defaults['staff_goings_empty']['es'] = 'Ningún miembro del personal a la izquierda en el último mes.';
+$defaults['staff_goings_empty']['fr'] = 'Aucun membre du personnel à gauche dans le dernier mois.';
+$defaults['staff_goings_empty']['ru'] = 'Нет сотрудников осталось в прошлом месяце.';
+
 $defaults['staff_new']['en']	= 'Recent Arrivals';
 $defaults['staff_new']['es']	= 'Los recién llegados';
-//$defaults['staff_new']['fr']	= 'Recent Arrivals';
+$defaults['staff_new']['fr']	= 'Dernières arrivées';
 $defaults['staff_new']['ru']	= 'Новоприбывших';
 
 $defaults['staff_new_empty']['en']	= 'No staff are listed as having started in the last two months.';
 $defaults['staff_new_empty']['es']	= 'Ningún miembro del personal se muestran como se inició en los últimos dos meses.';
 $defaults['staff_new_empty']['fr']	= 'Aucun membre du personnel sont répertoriés comme ayant commencé au cours des deux derniers mois.';
 $defaults['staff_new_empty']['ru']	= 'Нет персонала указаны как, начавшийся в последние два месяца.';
+
+$defaults['staff_requests_empty']['en']	= 'No pending requests!';
+$defaults['staff_requests_empty']['es']	= 'No hay solicitudes pendientes!';
+$defaults['staff_requests_empty']['fr']	= 'Aucune demande en cours!';
+$defaults['staff_requests_empty']['ru']	= 'Нет ожидающих запросов!';
 
 
 $defaults['staff_update']['en']		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
@@ -263,6 +338,16 @@ $defaults['staff_empty']['es']		= 'Ningún miembro del personal coinciden con lo
 $defaults['staff_empty']['fr']		= 'Aucun membre du personnel correspondant à ces critères.';
 $defaults['staff_empty']['ru']		= 'Нет персонала соответствуют этим критериям.';
 
+$defaults['staff_invite_all']['en']			= 'Invite Them All';
+$defaults['staff_invite_all']['es']			= 'Invitarlos a todos';
+$defaults['staff_invite_all']['fr']			= 'Invitez-les tous';
+$defaults['staff_invite_all']['ru']			= 'Пригласите их всех';
+
+$defaults['staff_never_logged_in']['en']			= 'Never Logged In';
+$defaults['staff_never_logged_in']['es']			= 'Nunca se ha conectado';
+$defaults['staff_never_logged_in']['fr']			= 'Aucune connexion';
+$defaults['staff_never_logged_in']['ru']			= 'Никогда не входили в';
+
 $defaults['staff_search']['en']			= 'Search Staff';
 $defaults['staff_search']['es']			= 'Búsqueda de personal';
 $defaults['staff_search']['fr']			= 'Recherche personnel';
@@ -277,6 +362,11 @@ $defaults['telephone']['en']			= 'Telephone';
 $defaults['telephone']['es']			= 'Teléfono';
 $defaults['telephone']['fr']			= 'Téléphone';
 $defaults['telephone']['ru']			= 'Телефон';
+
+$defaults['telephone_extension']['en']			= 'Extension';
+$defaults['telephone_extension']['es']			= 'Extensión';
+$defaults['telephone_extension']['fr']			= 'Extension';
+$defaults['telephone_extension']['ru']			= 'Расширение';
 
 $defaults['title']['en']			= 'Title';
 $defaults['title']['es']			= 'Título';

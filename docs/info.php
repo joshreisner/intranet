@@ -2,7 +2,7 @@
 include('../include.php');
 
 if (url_action('delete')) {
-	db_delete('docs');
+	db_delete('docs', $_GET['delete_id']);
 	url_change('/docs/');
 }
 

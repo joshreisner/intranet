@@ -42,9 +42,9 @@ input.file		{ border:none; }
 /* textarea		{ width:500px; height:300px; }*/
 textarea.thread { border-width:0px; width:432px; }
 
-#left table.table thead th.c, td.c { text-align:center; white-space:nowrap; }
-#left table.table thead th.r, td.r { text-align:right; white-space:nowrap; }
-#left table.table thead th.d, td.d { width:18px; text-align:center; }
+th.c, td.c { text-align:center; white-space:nowrap; }
+th.r, td.r { text-align:right; white-space:nowrap; }
+th.d, td.d { width:18px; text-align:center; }
 
 
 
@@ -81,7 +81,7 @@ div.message {
 	margin:0px 0px 14px 0px;
 }
 
-#panel {
+div.panel {
 	width:572px; 
 	border:1px solid #bbb;
 	font-size:13px;

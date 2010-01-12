@@ -32,24 +32,25 @@ if (db_found($result)) {?>
 	<?
 	}
 } else {
-	echo drawEmptyResult("No pending requests!");
+	echo drawEmptyResult(getString('staff_requests_empty'));
 }
 echo drawTableEnd();
 
+//never logged in
 echo drawTableStart();
-echo drawHeaderRow("Never Logged In", 3, "invite them all", url_query_add(array("action"=>"invite"), false));
+echo drawHeaderRow(getString('staff_never_logged_in'), 3, getString('staff_invite_all'), url_query_add(array("action"=>"invite"), false));
 $result = db_query("SELECT id, lastname, firstname, created_date FROM users WHERE lastlogin IS NULL AND is_active = 1 ORDER BY lastname");
 if (db_found($result)) {?>
 	<tr>
-		<th width="70%">Name</th>
-		<th width="30%" class="r">Created Date</th>
+		<th width="70%"><?=getString('name')?></th>
+		<th width="30%" class="r"><?=getString('date_created')?></th>
 		<th></th>
 	</tr>
 	<?
 	while ($r = db_fetch($result)) {?>
 	<tr>
 		<td><a href="view.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
-		<td class="r"><?=format_date_time($r["created_date"])?></td>
+		<td class="r"><?=format_date($r["created_date"])?></td>
 		<?=drawDeleteColumn("Delete user?", $r["id"])?>
 	</tr>
 	<?

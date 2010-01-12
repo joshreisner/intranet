@@ -4,9 +4,9 @@ include("../../include.php");
 if ($posting) {
 	$id = db_save('organizations');
 	url_drop('id');
-} elseif (url_action('delete') && url_id()) {
-	db_delete('organizations');
-	url_drop('id,action');
+} elseif (url_action('delete') && url_id('delete_id')) {
+	db_delete('organizations', $_GET['delete_id']);
+	url_drop('delete_id,action');
 }
 
 echo drawTop();

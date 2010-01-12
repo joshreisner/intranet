@@ -5,9 +5,9 @@ if ($posting) {
 	langTranslatePost('title');
 	$id = db_save('links');
 	url_drop('id');
-} elseif (url_action('delete') && url_id()) {
-	db_delete('links');
-	url_drop('id,action');
+} elseif (url_action('delete') && url_id('delete_id')) {
+	db_delete('links', $_GET['delete_id']);
+	url_drop('delete_id,action');
 }
 
 echo drawTop();

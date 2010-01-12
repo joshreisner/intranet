@@ -65,11 +65,11 @@ if (!$i["id"]) {
 	?>
 	<script language="javascript">
 		<!--
-		function confirmDelete(id) {
+		function confirmContactDelete(id) {
 			if (confirm("Are you sure you want to delete this contact?")) location.href='<?=url_action_add("delete")?>';
 		}
 		
-		function confirmExpunge(id) {
+		function confirmContactExpunge(id) {
 			if (confirm("Are you sure you want to expunge this contact?")) location.href='<?=url_action_add("expunge")?>';
 		}
 		//-->
@@ -77,11 +77,11 @@ if (!$i["id"]) {
 	<table class="left" cellspacing="1">
 		<?
 		if ($page['is_admin'] && $i["is_active"]) {
-			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");
+			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmContactDelete({$_GET["id"]});");
 		} elseif ($page['is_admin'] && !$i["is_active"]) {
-			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"), "expunge", "javascript:confirmExpunge({$_GET["id"]});");
+			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"), "expunge", "javascript:confirmContactExpunge({$_GET["id"]});");
 		} elseif ($i["is_active"]) {
-			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmDelete({$_GET["id"]});");
+			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmContactDelete({$_GET["id"]});");
 		} else {
 			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"));
 		}?>

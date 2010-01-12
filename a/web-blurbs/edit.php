@@ -5,7 +5,7 @@ if ($posting) {
 	$id = db_save("web_news_blurbs");
 	url_change_post("../");
 } elseif (url_action('delete')) {
-	db_delete($_GET['id']);
+	db_delete('web_news_blurbs', $_GET['delete_id']);
 	url_change('../');
 }
 

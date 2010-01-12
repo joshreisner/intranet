@@ -48,5 +48,6 @@ if ($_GET["id"] == 1) {
 				u.lastname like 'y%' or 
 				u.lastname like 'z%'";
 }
+echo drawJumpToStaff();
 echo drawStaffList('u.is_active = 1 AND (' . $letters . ')', getString('staff_empty'), array('add_edit.php'=>getString('add_new')));
 echo drawBottom();?>

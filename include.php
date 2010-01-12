@@ -183,11 +183,16 @@ function drawBottomSimple($email=false) {
 	$return .= '</body></html>';
 }
 
-function drawMessage($str, $align='left') {
+function drawMessage($str) {
 	if (empty($str) || !format_html_text($str)) return false;
-	return draw_container('div', $str, array('class'=>'message'));
+	return draw_div_class('message', $str);
 }
-						
+
+function drawPanel($str) {
+	if (empty($str) || !format_html_text($str)) return false;
+	return draw_div_class('panel', $str);
+}
+
 function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br>') {
 	global $_josh;
 	$base = url_base();
@@ -260,12 +265,15 @@ function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $l
 function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searchterms=false) {
 	global $page, $_josh;
 	
+	//only show delete for admins on pages that aren't the chagnes page
+	$showDelete = ($page['is_admin'] && ($page['id'] != 35));
+		
 	$t = new table('staff', drawHeader($options, $listtitle));
 	$t->col('pic', 'c', '&nbsp;', 50);
 	$t->col('name', 'l', getString('name') . ((getOption('staff_showoffice') ? ' / ' . getString('office') : '')));
 	$t->col('title', 'l', getString('staff_title') . ' / ' . ((getOption('staff_showdept') ? getString('department') : getString('organization'))));
 	$t->col('phone', 'l', getString('telephone'));
-	$t->col('del', 'c', '&nbsp;', 16);
+	if ($showDelete) $t->col('del', 'c', '&nbsp;', 16);
 	
 	$result = db_table("SELECT DISTINCT
 							u.id, 
@@ -297,7 +305,7 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 		} else {
 			$r['title'] .= '<br/>' . draw_link('organizations.php?id=' . $r['organization_id'], format_string($r['organization']));
 		}
-		$r['del'] = deleteColumn($r['id']);
+		if ($showDelete) $r['del'] = deleteColumn($r['id']);
 	}
 	
 	return $t->draw($result, $errmsg);
@@ -378,6 +386,17 @@ function drawTop($headcontent=false) {
 				#left table.left td.head { background-color:#' . $page['color'] . '; }
 				#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
 				#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
+			') . 
+			draw_javascript('
+			function confirmDelete(id) {
+				if (confirm("' . getString('are_you_sure') . '")) {
+					location.href = location.href + "?action=delete&delete_id=" + id;
+				}
+			}
+
+			function changeDept(id, user_id) {
+				location.href="' . $_josh['request']['path_query'] . '&newDeptID=" + id + "&contactID=" + user_id;
+			}
 			') . 
 			$headcontent
 		);

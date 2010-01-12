@@ -20,7 +20,7 @@ if (count($orgs) < 8) {
 </table>
 <?
 } else {
-	echo draw_div('panel', draw_form_select('foo', $orgs, url_id(), false, false, 'location.href=\'' . $request['path'] . '?id=\' + this.value'));
+	echo drawPanel(draw_form_select('foo', $orgs, url_id(), false, false, 'location.href=\'' . $request['path'] . '?id=\' + this.value'));
 }
 
 if (url_id()) {
@@ -28,7 +28,7 @@ if (url_id()) {
 	echo drawStaffList('u.is_active = 1 AND u.organization_id ' . $where, 'This organization has no staff associated with it.', array('add_edit.php'=>getString('add_new')), draw_link($request['path_query'], $page['title']) . ' &gt; ' . db_grab('SELECT title FROM organizations WHERE id = ' . $_GET['id']));
 } else {
 	$t = new table('foo', drawHeader());
-	$t->col('title');
+	$t->col('title', false, getString('title'));
 	foreach ($orgs as &$o) $o['title'] = draw_link('organizations.php?id=' . $o['id'], $o['title']);
 	echo $t->draw($orgs);
 }
