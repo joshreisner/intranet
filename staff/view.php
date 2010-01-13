@@ -24,12 +24,12 @@ $r = db_grab('SELECT
 		u.firstname,
 		u.lastname,
 		u.nickname, 
-		u.bio, 
+		u.bio' . langExt() . ' bio, 
 		u.email,
 		' . db_pwdcompare("", "u.password") . ' password,
 		u.phone, 
 		u.lastlogin, 
-		u.title,
+		u.title' . langExt() . ' title,
 		f.name office, 
 		d.departmentName,
 		u.organization_id,
@@ -109,8 +109,8 @@ if (!$r["is_active"]) {
 	?>
 	<tr>
 		<td class="left"><?=getString('name')?></td>
-		<td width="99%" class="big"><?=$r["firstname"]?> <? if (!empty($r["nickname"])) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
-		<td rowspan="<?=$rowspan?>" style="width:271px; text-align:center; vertical-align:middle;"><?=$img?></td>
+		<td class="title"><?=$r["firstname"]?> <? if (!empty($r["nickname"])) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
+		<td rowspan="<?=$rowspan?>" style="width:267px; text-align:center; vertical-align:middle;"><?=$img?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('organization')?></td>
@@ -220,20 +220,11 @@ if (!$r["is_active"]) {
 				echo "Site Administrator";
 			} else {
 				$hasPermission = false;
-				$permissions = db_query('SELECT 
-					m.title' . langExt() . ' title,
-					m.folder
-					FROM modules m 
-					JOIN users_to_modules a ON m.id = a.module_id
-					WHERE a.user_id = ' . $_GET["id"] . ' AND a.is_admin = 1
-					ORDER BY m.title');
-				while ($p = db_fetch($permissions)) {
-					$hasPermission = true;
-					echo "&#183;&nbsp;";
-					echo $p["title"];
-					echo "<br>";
+				if ($permissions = db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET["id"] . ' ORDER BY m.title')) {
+					echo draw_list($permissions);
+				} else {
+					echo getString('none');
 				}
-				if (!$hasPermission) echo getString('none');
 			}
 			?>
 			</td>

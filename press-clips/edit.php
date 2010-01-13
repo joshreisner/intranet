@@ -4,8 +4,7 @@ if (!$included) include('../include.php');
 
 $r = false;
 if ($posting) {
-	langTransliteratePost('publication');
-	langTranslatePost('title,description');
+	langTranslatePost('title,description,publication');
 	$id = db_save("press_clips");
 	if (getOption('channels')) db_checkboxes('channels', 'press_clips_to_channels', 'clip_id', 'channel_id', $id);
 	url_change_post("/press-clips/clip.php?id=" . $id);

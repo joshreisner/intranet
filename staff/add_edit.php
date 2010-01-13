@@ -92,6 +92,7 @@ if (getOption("staff_showemergency")) {
 
 $f->unset_fields('isPayroll,isImagePublic,help');
 
+langUnsetFields($f, 'title,bio');
 langTranslateCheckbox($f, url_id());
 
 echo $f->draw();

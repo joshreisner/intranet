@@ -5,10 +5,10 @@ echo drawTop();
 
 $result = db_table('SELECT 
 		c.id, 
-		c.title, 
+		c.title' . langExt() . ' title, 
 		c.pub_date, 
 		t.title' . langExt() . ' "group", 
-		c.publication, 
+		c.publication' . langExt() . ' publication, 
 		' . db_updated('c') . '
 	FROM press_clips c 
 	JOIN press_clips_types t ON c.type_id = t.id 
