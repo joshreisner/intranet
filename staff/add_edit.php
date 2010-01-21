@@ -18,7 +18,7 @@ if ($posting) {
 			db_query('DELETE FROM users_to_modules WHERE user_id = ' . $id);
 			db_query('DELETE FROM users_to_modulettes WHERE user_id = ' . $id);
 		} else {
-			
+			//handle permissions updates
 			db_query('UPDATE users SET is_admin = 0 WHERE id = ' . $id);
 			db_checkboxes('modules', 'users_to_modules', 'user_id', 'module_id', $id);
 			db_checkboxes('modulettes', 'users_to_modulettes', 'user_id', 'modulette_id', $id);
@@ -58,6 +58,8 @@ if ($_SESSION['is_admin']) {
 	$f->set_field(array('type'=>'checkbox', 'name'=>'is_admin', 'label'=>getString('is_admin'), 'position'=>increment()));
 	$f->set_field(array('type'=>'checkboxes', 'name'=>'modules', 'label'=>getString('module_permissions'), 'options_table'=>'modules', 'linking_table'=>'users_to_modules', 'option_title'=>'title' . langExt(), 'option_id'=>'module_id', 'object_id'=>'user_id', 'position'=>increment()));
 	$f->set_field(array('type'=>'checkboxes', 'name'=>'modulettes', 'label'=>getString('modulette_permissions'), 'options_table'=>'modulettes', 'linking_table'=>'users_to_modulettes', 'option_title'=>'title' . langExt(), 'option_id'=>'modulette_id', 'object_id'=>'user_id', 'position'=>increment()));
+} else {
+	$f->unset_fields('is_admin');
 }
 
 

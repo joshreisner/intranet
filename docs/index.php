@@ -1,4 +1,5 @@
-<?	include("../include.php");
+<?php
+include("../include.php");
 
 if (url_action("delete")) {
 	db_delete('docs');

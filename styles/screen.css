@@ -106,7 +106,7 @@ table.navigation td.selected { font-weight:bold; background-color:#fff; }
 #left table.table th.title span { float:left; }
 #left table.table td, #left table.table th { padding:3px; border-bottom:1px solid #ddd; }
 
-#left table.table th { font-weight:normal; font-size:11px; background-color:#f0f0f0; color:#999; text-align:left; }
+th { font-weight:normal; font-size:11px; background-color:#f0f0f0; color:#999; text-align:left; }
 #left table.table th a.right { font-size:9px; margin:0px; padding:0px 3px; text-transform:uppercase; }
 #left table.table td { height:20px; }
 #left table.table td.empty { background-color:#f0f0f0; vertical-align:middle; height:120px; text-align:center; line-height:20px; font-size:13px; color:#666; }

@@ -50,14 +50,14 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 			m.folder,
 			m.color,
 			m.hilite,
-			(SELECT u.is_closed FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_closed,
-			(SELECT u.is_admin FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_admin
+			(SELECT COUNT(*) FROM users_to_modules_closed u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_closed,
+			(SELECT COUNT(*) FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_admin
 		FROM modules m
 		WHERE m.is_active = 1
 		ORDER BY m.precedence');
 		
 	//get sub-list of modulettes
-	$modulettes = db_table('SELECT m.id, m.title' . langExt() . ' title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id) is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY title' . langExt());
+	$modulettes = db_table('SELECT m.id, m.title' . langExt() . ' title, m.folder, m.is_public, (SELECT COUNT(*) FROM users_to_modulettes u2m WHERE m.id = u2m.modulette_id AND u2m.user_id = ' . $_SESSION['user_id'] . ') is_admin FROM modulettes m WHERE m.is_active = 1 ORDER BY m.title' . langExt());
 
 	//get page
 	$page = array('id'=>false, 'title'=>'Untitled Page', 'module_id'=>false, 'modulette_id'=>false, 'color'=>'666', 'hilite'=>'eee', 'helptext'=>'<p>No description has been written yet for this page.</a>');
@@ -104,6 +104,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 			}
 		}
 		
+		
 		//get actual page from database now, just need the title
 		if ($page['modulette_id'] && $page['module_id']) {
 			$m = db_grab('SELECT id, title' . langExt() . ' title, description' . langExt() . ' description FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id'] . ' AND modulette_id = ' . $page['modulette_id']);
@@ -135,11 +136,10 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 
 	//handle side menu pref updates
 	if (isset($_GET['module'])) {
-		if (db_grab('SELECT COUNT(*) FROM users_to_modules WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id'])) {
-			$closed = db_grab('SELECT is_closed FROM users_to_modules WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id']);
-			db_query('UPDATE users_to_modules SET is_closed = ' . abs($closed - 1) . ' WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id']);
+		if (db_grab('SELECT COUNT(*) FROM users_to_modules_closed WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id'])) {
+			db_query('DELETE FROM users_to_modules_closed WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id']);
 		} else {
-			db_query('INSERT INTO users_to_modules ( user_id, module_id, is_closed ) VALUES ( ' . $_SESSION['user_id'] . ', ' . $_GET['module'] . ', 1 )');
+			db_query('INSERT INTO users_to_modules_closed ( module_id, user_id ) VALUES ( ' . $_GET['module'] . ', ' . $_SESSION['user_id'] . ' )');
 		}
 		url_query_drop('module');
 	} elseif(isset($_GET['language_id'])) {
@@ -390,7 +390,8 @@ function drawTop($headcontent=false) {
 			draw_javascript('
 			function confirmDelete(id) {
 				if (confirm("' . getString('are_you_sure') . '")) {
-					location.href = location.href + "?action=delete&delete_id=" + id;
+					var newloc = "' . url_query_add(array('action'=>'delete', 'delete_id'=>'replaceme'), false) . '";
+					location.href = newloc.replace("replaceme", id);
 				}
 			}
 
