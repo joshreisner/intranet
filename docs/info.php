@@ -8,7 +8,7 @@ if (url_action('delete')) {
 
 $d = db_grab('SELECT 
 		d.title' . langExt() . ' title,
-		d.description,
+		d.description' . langExt() . ' description,
 		d.content,
 		i.icon,
 		i.description fileType
