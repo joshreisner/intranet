@@ -12,8 +12,14 @@ $defaults['administrative_info']['fr']	= 'Renseignements administratifs';
 $defaults['administrative_info']['ru']	= 'Административная информация';
 
 $defaults['app_name']['en']			= 'Intranet';
+$defaults['app_name']['es']			= 'Centro de Recursos en línea';
+$defaults['app_name']['fr']			= 'Online Resource Center';
+$defaults['app_name']['ru']			= 'Online Resource Center';
 
 $defaults['app_welcome']['en']		= 'Welcome to the Intranet.  If you don\'t have a login for this site or if you are having trouble, please use the links below:';
+$defaults['app_welcome']['es']		= 'Bienvenido a la Intranet. Si usted no tiene un inicio de sesión en este sitio o si usted está teniendo problemas, por favor utilice los siguientes enlaces:';
+$defaults['app_welcome']['fr']		= 'Bienvenue sur l\'Intranet. Si vous n\'avez pas une connexion à ce site ou si vous rencontrez des difficultés, s\'il vous plaît, utilisez les liens ci-dessous:';
+$defaults['app_welcome']['ru']		= 'Добро пожаловать в Интранет. Если вы не имеете Войти на этом сайте, или если у вас возникли проблемы, пожалуйста, используйте ссылки ниже:';
 
 $defaults['are_you_sure']['en']		= 'Are you sure?';
 $defaults['are_you_sure']['es']		= '¿Estás seguro?';
@@ -113,7 +119,7 @@ $defaults['help_hide']['fr']	= 'Masquer l\'aide';
 $defaults['help_hide']['ru']	= 'помощь мостовья';
 
 $defaults['help_show']['en']	= 'Show Help';
-$defaults['help_show']['es']	= 'Mostrar Ayuda';
+$defaults['help_show']['es']	= 'Ayuda';
 $defaults['help_show']['fr']	= 'Afficher l\'aide';
 $defaults['help_show']['ru']	= 'Показать помощь';
 
@@ -177,6 +183,21 @@ $defaults['log_out']['es']		= 'Cierre de sesión';
 $defaults['log_out']['fr']		= 'Déconnexion';
 $defaults['log_out']['ru']		= 'Выйти';
 
+$defaults['login_forgot_password']['en'] = 'I Forgot My Password';
+$defaults['login_forgot_password']['es'] = 'Olvidé mi contraseña';
+$defaults['login_forgot_password']['fr'] = 'J\'ai oublié mon mot de passe';
+$defaults['login_forgot_password']['ru'] = 'Я Забыли Пароль?';
+
+$defaults['login_need_account']['en'] = 'I Need a New Account';
+$defaults['login_need_account']['es'] = 'Necesito una nueva cuenta';
+$defaults['login_need_account']['fr'] = 'J&#39;ai besoin d&#39;un nouveau compte';
+$defaults['login_need_account']['ru'] = 'Мне нужен новый Учетная запись';
+
+$defaults['login_ask_question']['en'] = 'I Would Like To Ask a Question';
+$defaults['login_ask_question']['es'] = 'Me gustaría preguntar a una pregunta';
+$defaults['login_ask_question']['fr'] = 'Je voudrais poser une question';
+$defaults['login_ask_question']['ru'] = 'Я хотел бы задать вопрос';
+
 $defaults['login_account_request']['en'] = 'Request an Account';
 
 $defaults['login_password_reset_msg']['en'] = '<h1>Starting Over, Password-Wise</h1>Your old password can\'t be recovered, since it was encrypted.  However, it can be reset so you can pick a new one.  What is the email address on the account?';
@@ -219,7 +240,7 @@ $defaults['networks']['fr']			= 'Réseaux';
 $defaults['networks']['ru']			= 'Сети';
 
 $defaults['networks_view_all']['en']			= 'View All Networks';
-$defaults['networks_view_all']['es']			= 'Ver todos los videos';
+$defaults['networks_view_all']['es']			= 'Ver todas las redes';
 $defaults['networks_view_all']['fr']			= 'Tout voir';
 $defaults['networks_view_all']['ru']			= 'Открыть Все сети';
 

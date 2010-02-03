@@ -21,9 +21,11 @@ if (url_action("logout")) {
     }
 }
 if ($redirect) url_change($redirect);
+url_header_utf8();
 ?>
 <html>
 	<head>
+		<?=draw_meta_utf8()?>
 		<title><?=getString("app_name")?></title>
 		<style type="text/css">
 			<!--
@@ -89,9 +91,9 @@ if ($redirect) url_change($redirect);
 					<form method="post" action="/" name="login">
 					<input type="hidden" name="goto" value="<?=@$_GET["goto"]?>">
 					<dl>
-					<dt>Email</dt>
+					<dt><?=getString('email')?></dt>
 					<dd><input type="text" name="email" class="text" value="<?=@$_COOKIE["last_email"]?>"></dd>
-					<dt>Password</dt>
+					<dt><?=getString('password')?></dt>
 					<dd><input type="password" name="password" class="text"></dd>
 					<dt>&nbsp;</dt>
 					<dd><input type="submit" value="go" class="submit"></dd>
@@ -106,9 +108,9 @@ if ($redirect) url_change($redirect);
 				<div class="bottom-right"><img src="/images/corners-grey/bottom-right.png" width="10" height"10" border="0"></div>
 				<?=getString("app_welcome")?>
 				<ul>
-				<li><a href="/login/password_reset.php">I Forgot My Password</a></li>
-				<li><a href="/login/account_request.php">I Need a New Account</a></li>
-				<li><a href="mailto:josh@joshreisner.com">I Would Like To Ask a Question</a></li>
+				<li><a href="/login/password_reset.php"><?=getString("login_forgot_password")?></a></li>
+				<li><a href="/login/account_request.php"><?=getString("login_need_account")?></a></li>
+				<li><a href="mailto:josh@joshreisner.com"><?=getString("login_ask_question")?></a></li>
 				</ul>
 			</div>
 		</div>
