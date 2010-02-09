@@ -3,7 +3,10 @@ $included = isset($_josh);
 
 if (!$included) include('../include.php');
 
+$r = array();
+
 if ($posting) {
+	langTranslatePost('title,description');
 	$id = db_save('external_orgs');
 	db_checkboxes('types', 'external_orgs_to_types', 'org_id', 'type_id', $id);
 	if (getOption('channels')) db_checkboxes('channels', 'external_orgs_to_channels', 'org_id', 'channel_id', $id);
@@ -26,8 +29,13 @@ echo '<a name="bottom"></a>';
 
 $f = new form('external_orgs', @$_GET['id'], $title);
 if (!$included) $f->set_title_prefix(drawHeader(false, ' '));
-$f->set_field(array('name'=>'types', 'type'=>'checkboxes', 'options_table'=>'external_orgs_types', 'linking_table'=>'external_orgs_to_types', 'object_id'=>'org_id', 'option_id'=>'type_id'));
-if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>'Networks', 'options_table'=>'channels', 'linking_table'=>'external_orgs_to_channels', 'object_id'=>'org_id', 'option_id'=>'channel_id'));
+$f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getString('title')));
+$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'tinymce'));
+$f->set_field(array('name'=>'url' . langExt(), 'type'=>'text', 'label'=>getString('url')));
+$f->set_field(array('name'=>'types', 'label'=>getString('type'), 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'options_table'=>'external_orgs_types', 'linking_table'=>'external_orgs_to_types', 'object_id'=>'org_id', 'option_id'=>'type_id'));
+if (getOption('channels')) $f->set_field(array('name'=>'channels', 'label'=>getString('networks'), 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'options_table'=>'channels', 'linking_table'=>'external_orgs_to_channels', 'object_id'=>'org_id', 'option_id'=>'channel_id'));
+langUnsetFields($f, 'title,description');
+langTranslateCheckbox($f, url_id());
 echo $f->draw($r, !$included);
 
 if (!$included) echo drawBottom();

@@ -14,12 +14,12 @@ echo drawTop();
 //main table
 echo drawTableStart();
 if ($page['is_admin']) {
-	echo drawHeaderRow(db_grab('SELECT title FROM external_orgs_types WHERE id = ' . $_GET['id']), 1, 'add new', '#bottom');
+	echo drawHeaderRow($page['breadcrumbs'] . format_string(db_grab('SELECT title' . langExt() . ' title FROM external_orgs_types WHERE id = ' . $_GET['id'])), 1, getString('add_new'), '#bottom');
 } else {
-	echo drawHeaderRow();
+	echo drawHeaderRow($page['breadcrumbs'] . format_string(db_grab('SELECT title' . langExt() . ' title FROM external_orgs_types WHERE id = ' . $_GET['id'])));
 }
 $orgs = db_query('SELECT 
-	o.id, o.url, o.title, o.description 
+	o.id, o.url, o.title' . langExt() . ' title, o.description' . langExt() . ' description 
 	FROM external_orgs o 
 		' . getChannelsWhere('external_orgs', 'o', 'org_id') . '
 		AND (SELECT COUNT(*) FROM external_orgs_to_types t WHERE t.org_id = o.id AND t.type_id = ' . $_GET['id'] . ' > 0)
@@ -29,8 +29,8 @@ if (db_found($orgs)) {
 	<tr>
 		<td class='text'>
 			<? if ($page['is_admin']) {?>
-			<a href="<?=drawDeleteLink('delete this org?', $o['id'], 'delete', 'org_id')?>" class="button-light right">del</a>
-			<a href="edit.php?id=<?=$o['id']?>" class="button-light right">edit</a>
+			<a href="<?=drawDeleteLink('delete this org?', $o['id'], 'delete', 'org_id')?>" class="button-light right"><?=getString('delete')?></a>
+			<a href="edit.php?id=<?=$o['id']?>" class="button-light right"><?=getString('edit')?></a>
 			<? }?>
 			<a class='title' href='<?=$o['url']?>'><?=$o['title']?></a><br><?=$o['description']?>
 		</td>

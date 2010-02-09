@@ -40,7 +40,7 @@ $f->set_field(array('name'=>'nickname', 'type'=>'text', 'label'=>getString('nick
 $f->set_field(array('name'=>'lastname', 'type'=>'text', 'label'=>getString('name_last'), 'position'=>increment()));
 $f->set_field(array('type'=>'select', 'name'=>'organization_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title FROM organizations WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
 $f->set_field(array('name'=>'email', 'type'=>'text', 'label'=>getString('email'), 'position'=>increment()));
-$f->set_field(array('name'=>'title', 'type'=>'text', 'label'=>getString('title'), 'position'=>increment()));
+$f->set_field(array('name'=>'title', 'type'=>'text', 'label'=>getString('staff_title'), 'position'=>increment()));
 $f->set_field(array('name'=>'image_large', 'type'=>'file', 'label'=>getString('image'), 'position'=>increment()));
 
 

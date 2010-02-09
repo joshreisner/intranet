@@ -149,7 +149,7 @@ $defaults['is_admin']['fr']			= 'Est administratif';
 $defaults['is_admin']['ru']			= 'административно';
 
 $defaults['jump_to']['en']			= 'Jump To';
-$defaults['jump_to']['es']			= 'Salte a';
+$defaults['jump_to']['es']			= 'Ir a';
 $defaults['jump_to']['fr']			= 'Sautez à';
 $defaults['jump_to']['ru']			= 'поскачите к';
 
@@ -179,7 +179,7 @@ $defaults['links_edit']['fr']		= 'Modifier les liens';
 $defaults['links_edit']['ru']		= 'Изменить ссылку';
 
 $defaults['log_out']['en']		= 'Log Out';
-$defaults['log_out']['es']		= 'Cierre de sesión';
+$defaults['log_out']['es']		= 'Cerrar Sesión';
 $defaults['log_out']['fr']		= 'Déconnexion';
 $defaults['log_out']['ru']		= 'Выйти';
 
@@ -375,7 +375,7 @@ $defaults['staff_search']['fr']			= 'Recherche personnel';
 $defaults['staff_search']['ru']			= 'Поиск персонала';
 
 $defaults['staff_title']['en']			= 'Job Title';
-$defaults['staff_title']['es']			= 'Título del Empleo';
+$defaults['staff_title']['es']			= 'Puesto';
 $defaults['staff_title']['fr']			= 'Titre de l\'emploi';
 $defaults['staff_title']['ru']			= 'Должность';
 
@@ -419,7 +419,7 @@ $defaults['topic_admin']['es']			= 'Este es un tema anuncio administrativos. Par
 $defaults['topic_admin']['fr']			= 'C\'est un sujet annonce administratives. Pour de plus amples renseignements, s\'il vous plaît contacter l\'affiche sujet.';
 $defaults['topic_admin']['ru']			= 'Это административная тема объявления. За дополнительной информацией просьба обращаться к тем авторам.';
 
-$defaults['translations_do']['en']	= 'Do Translations';
+$defaults['translations_do']['en']	= 'Re-translate';
 $defaults['translations_do']['es']	= 'Haga las traducciones';
 $defaults['translations_do']['fr']	= 'Faire des traductions';
 $defaults['translations_do']['ru']	= 'Делают переводы';

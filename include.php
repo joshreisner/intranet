@@ -672,7 +672,7 @@ function langUnsetFields($form, $names) {
 
 function langTranslateCheckbox($form, $show=true) {
 	if (!getOption('languages')) return false;
-	$form->set_field(array('name'=>'translations_do', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'label'=>getString('translations_do'), 'value'=>1));
+	$form->set_field(array('name'=>'translations_do', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'label'=>getString('translations_do'), 'value'=>0));
 }
 
 function login($username, $password, $skippass=false) {

@@ -1,8 +1,8 @@
 <?php
-$orgs = db_query("SELECT id, title FROM external_orgs_types ORDER BY title");
+$orgs = db_query('SELECT id, title' . langExt() . ' title FROM external_orgs_types ORDER BY title');
 $types = array();
 while ($o = db_fetch($orgs)) {
-	$types[] = '<a href="/' . $m["folder"] . '/?type=' . $o["id"] . '">' . format_string($o["title"], 22) . '</a>';
+	$types[] = draw_link('/' . $m["folder"] . '/type.php?id=' . $o["id"], format_string($o["title"], 22));
 }
 
 $return .= '

@@ -117,7 +117,7 @@ if (!$r["is_active"]) {
 		<td><?=$r["corporationName"]?></td>
 	</tr>
 	<tr>
-		<td class="left"><?=getString('title')?></td>
+		<td class="left"><?=getString('staff_title')?></td>
 		<td><?=$r["title"]?></td>
 	</tr>
 	<? if (getOption("staff_showoffice")) {?>

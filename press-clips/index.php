@@ -16,7 +16,7 @@ $result = db_table('SELECT
 	ORDER BY t.title, pub_date DESC', 20);
 
 $t = new table('press-clips', drawHeader((($page['is_admin']) ? array('edit.php'=>getString('add_new')) : false)));
-$t->col('title');
+$t->col('title', 'l', getString('title'));
 foreach ($result as &$r) {
 	$r['title'] = draw_link("clip.php?id=" . $r["id"], format_string($r["title"], 80)) . '<br>' . 
 	$r["publication"] . ' <span class="light">' . format_date($r["pub_date"]) . '</span>';
