@@ -24,6 +24,17 @@ if ($posting) {
 			db_checkboxes('modulettes', 'users_to_modulettes', 'user_id', 'modulette_id', $id);
 		}
 	}
+	
+	if (!$editing) {
+		//todo send invite
+		//emailInvite($id, $email, $name)
+	}
+	
+	if ($id == $_SESSION['user_id']) {
+		//todo, fix this and make it more user-update dependent
+		$_SESSION['update_days'] = 0;
+		$_SESSION['updated_date'] = 'foo';
+	}
 	url_change('view.php?id=' . $id);
 }
 

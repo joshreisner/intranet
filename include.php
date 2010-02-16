@@ -19,7 +19,14 @@ if ($_SESSION['language'] == 'es') {
 } elseif ($_SESSION['language'] == 'ru') {
 	$_josh['months'] = array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
 }
-	
+
+if (isset($_GET['language_id'])) {
+	$_SESSION['language_id'] = $_GET['language_id'];
+	$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_GET['language_id']);
+	//update users
+	url_drop('language_id');
+}
+
 //include options file if it exists
 @include($_josh['root'] . $_josh['write_folder'] . '/options.php');
 @include($_josh['root'] . $_josh['write_folder'] . '/strings.php');
@@ -111,7 +118,8 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		} elseif ($page['module_id']) {
 			$m = db_grab('SELECT id, title' . langExt() . ' title, description' . langExt() . ' description FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id']);
 		} else {
-			error_handle('Something is wrong!', 'Page is not set for ' . $request['url']);
+			$m = db_grab('SELECT id, title' . langExt() . ' title, description' . langExt() . ' description FROM pages WHERE url = "' . $request['page'] . '" AND module_id IS NULL');
+			//error_handle('Something is wrong!', 'Page is not set for ' . $request['url']);
 		}
 		
 		if ($m) {
@@ -126,12 +134,12 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	
 	//check to see if user needs update ~ todo make this a site preference
 	error_debug('checking if user needs update', __file__, __line__);
-	if (($_SESSION['update_days'] > 90 || empty($_SESSION['updated_date'])) && ($_josh['request']['path'] != '/staff/add_edit.php')) {
-		error_debug('user needs address update', __file__, __line__);
-		url_change('/staff/add_edit.php?id=' . $_SESSION['user_id']);
-	} elseif ($_SESSION['password'] && ($_josh['request']['path'] != '/login/password_update.php') && ($_josh['request']['path'] != '/staff/add_edit.php')) {
+	if ($_SESSION['password']) {
 		error_debug('user needs password update', __file__, __line__);
-		url_change('/login/password_update.php');
+	 	if ($_josh['request']['path'] != '/login/password_update.php') url_change('/login/password_update.php');
+	} elseif (($_SESSION['update_days'] > 90) || empty($_SESSION['updated_date'])) {
+		error_debug('user needs address update', __file__, __line__);
+		if ($_josh['request']['path'] != '/staff/add_edit.php') url_change('/staff/add_edit.php?id=' . $_SESSION['user_id']);
 	}		
 
 	//handle side menu pref updates
@@ -142,11 +150,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 			db_query('INSERT INTO users_to_modules_closed ( module_id, user_id ) VALUES ( ' . $_GET['module'] . ', ' . $_SESSION['user_id'] . ' )');
 		}
 		url_query_drop('module');
-	} elseif(isset($_GET['language_id'])) {
-		$_SESSION['language_id'] = $_GET['language_id'];
-		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_GET['language_id']);
-		//update users
-		url_drop('language_id');
 	} elseif(isset($_GET['channel_id'])) {
 		$_SESSION['channel_id'] = (empty($_GET['channel_id'])) ? false : $_GET['channel_id'];
 		//update users
@@ -165,8 +168,10 @@ include($_josh['root'] . '/obsolete.php');
 //draw functions
 function drawTopSimple($title=false) {
 	//leave title empty for emails
-	$return = '<html>
-		<head>' . draw_css(file_get('/styles/simple.css'));
+	$return = url_header_utf8() . draw_doctype() . '
+		<head>' . 
+			draw_meta_utf8() . 
+			draw_css(file_get('/styles/simple.css'));
 	if ($title) {
 		$return .= draw_container('title', $title);
 		$return .= draw_javascript_lib();
@@ -512,23 +517,20 @@ function emailUser($address, $title, $content, $colspan=1, $message=false) {
 	global $_josh, $_SESSION;
 
 	//build message
-	$message = drawEmailHeader() . 
+	$message = drawTopSimple() . 
 		(($message) ? drawMessage($message) : '') . 
 		drawTableStart() . 
 		drawHeaderRow($title, $colspan) .
 		$content . 
 		drawTableEnd() . 
-		drawEmailFooter();
-	
-	//only send to me if developing
-	if (($_josh['mode'] == 'dev') && ($address != 'josh@joshreisner.com')) return false;
-	
+		drawBottomSimple();
+		
 	//send
 	$result = email($address, $message, $title);
 	
 	//keep a record
 	db_query('INSERT INTO emails ( address, subject, message, created_date, created_user, was_sent ) VALUES (
-		' . $address . ',
+		\'' . $address . '\',
 		\'' . format_quotes($title) . '\',
 		\'' . format_quotes($message) . '\',
 		GETDATE(),
@@ -686,7 +688,7 @@ function login($username, $password, $skippass=false) {
 		error_debug('<b>login</b> running with password', __file__, __line__);
     }
 
-		if ($user = db_grab('SELECT 
+	if ($user = db_grab('SELECT 
 		u.id,
 		ISNULL(u.nickname, u.firstname) firstname,
 		u.lastname,

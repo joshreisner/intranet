@@ -19,7 +19,7 @@ table.left td.title, a.title, span.title { font-size:18px; }
 
 /* general form elements */
 form					{ margin:0px; padding:0px; }
-input, select, textarea { font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
+input, select, textarea { margin:0px; font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
 input.text				{ width:500px; height:20px; vertical-align:middle; }
 	
 input.button   {

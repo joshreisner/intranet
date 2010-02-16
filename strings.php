@@ -46,6 +46,11 @@ $defaults['clips']['es']			= 'Clips';
 $defaults['clips']['fr']			= 'Clips';
 $defaults['clips']['ru']			= 'Клипы';
 
+$defaults['confirm']['en']			= 'Confirm';
+$defaults['confirm']['es']			= 'Confirmar';
+$defaults['confirm']['fr']			= 'Confirmer';
+$defaults['confirm']['ru']			= 'Подтвердите';
+
 $defaults['date']['en']		= 'Date';
 $defaults['date']['es']		= 'Fecha';
 $defaults['date']['fr']		= 'Date';
@@ -274,6 +279,11 @@ $defaults['password']['es'] = 'Contraseña';
 $defaults['password']['fr'] = 'Mot de passe';
 $defaults['password']['ru'] = 'Пароль';
 
+$defaults['password_update']['en'] = 'Update Your Password';
+$defaults['password_update']['es'] = 'Actualizar su contraseña';
+$defaults['password_update']['fr'] = 'Mettez à jour votre mot de passe';
+$defaults['password_update']['ru'] = 'Изменить пароль';
+
 $defaults['password_is_reset']['en'] = 'Password is Reset';
 $defaults['password_is_reset']['es'] = 'Contraseña se restablece';
 $defaults['password_is_reset']['fr'] = 'Réinitialiser le mot de passe est';
@@ -374,10 +384,20 @@ $defaults['staff_search']['es']			= 'Búsqueda de personal';
 $defaults['staff_search']['fr']			= 'Recherche personnel';
 $defaults['staff_search']['ru']			= 'Поиск персонала';
 
+$defaults['staff_search_empty']['en']			= 'This search did not return any results.';
+$defaults['staff_search_empty']['es']			= 'Esta búsqueda no ha obtenido ningún resultado.';
+$defaults['staff_search_empty']['fr']			= 'Cette recherche n\'a donné aucun résultat.';
+$defaults['staff_search_empty']['ru']			= 'Этот поиск не дал никаких результатов.';
+
 $defaults['staff_title']['en']			= 'Job Title';
 $defaults['staff_title']['es']			= 'Puesto';
 $defaults['staff_title']['fr']			= 'Titre de l\'emploi';
 $defaults['staff_title']['ru']			= 'Должность';
+
+$defaults['submit']['en']			= 'Submit';
+$defaults['submit']['es']			= 'Enviar';
+$defaults['submit']['fr']			= 'Envoyer';
+$defaults['submit']['ru']			= 'Отправить';
 
 $defaults['telephone']['en']			= 'Telephone';
 $defaults['telephone']['es']			= 'Teléfono';
@@ -420,7 +440,7 @@ $defaults['topic_admin']['fr']			= 'C\'est un sujet annonce administratives. Pou
 $defaults['topic_admin']['ru']			= 'Это административная тема объявления. За дополнительной информацией просьба обращаться к тем авторам.';
 
 $defaults['translations_do']['en']	= 'Re-translate';
-$defaults['translations_do']['es']	= 'Haga las traducciones';
+$defaults['translations_do']['es']	= 'Permitir traducción automática';
 $defaults['translations_do']['fr']	= 'Faire des traductions';
 $defaults['translations_do']['ru']	= 'Делают переводы';
 
