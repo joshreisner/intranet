@@ -1,4 +1,5 @@
-<? include('include.php');
+<?php
+include('include.php');
 
 echo drawTop();
 
@@ -10,6 +11,7 @@ foreach ($terms as $t) {
 		foreach ($fields as $f) $where[] = $f . ' LIKE "%' . $t . '%"';
 	}
 }
-echo drawStaffList('u.is_active = 1 and (' . implode(' OR ', $where) . ')', getString('staff_search_empty'), array('add_edit.php'=>getString('add_new')), false, $terms);
+$links = ($page['is_admin']) ? array('add_edit.php'=>getString('add_new')) : false;
+echo drawStaffList('u.is_active = 1 and (' . implode(' OR ', $where) . ')', getString('staff_search_empty'), $links, false, $terms);
 echo drawBottom();
 ?>

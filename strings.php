@@ -4,7 +4,7 @@ $defaults = array();
 $defaults['add_new']['en']			= 'Add New';
 $defaults['add_new']['es']			= 'Agregar nuevo';
 $defaults['add_new']['fr']			= 'Ajouter un nouveau';
-$defaults['add_new']['ru']			= 'Добавить';
+$defaults['add_new']['ru']			= 'Создать новую тему';
 
 $defaults['administrative_info']['en']	= 'Administrative Information';
 $defaults['administrative_info']['es']	= 'Información Administrativa';
@@ -302,7 +302,7 @@ $defaults['permissions']['ru']			= 'Разрешения';
 $defaults['posted_by']['en']			= 'Posted By';
 $defaults['posted_by']['es']			= 'Publicado por';
 $defaults['posted_by']['fr']			= 'Signalé près';
-$defaults['posted_by']['ru']			= 'вывешено мимо';
+$defaults['posted_by']['ru']			= 'Автор';
 
 $defaults['pressclips_recent_empty']['en'] = 'There are no recent clips.';
 $defaults['pressclips_recent_empty']['es'] = 'No hay clips recientes.';
@@ -362,7 +362,7 @@ $defaults['start_date']['ru']			= 'Дата начала';
 $defaults['starter']['en']			= 'Started By';
 $defaults['starter']['es']			= 'Iniciado por';
 $defaults['starter']['fr']			= 'Commencé par';
-$defaults['starter']['ru']			= 'К работе';
+$defaults['starter']['ru']			= 'Тема начата';
 
 $defaults['staff_empty']['en']		= 'No staff match those criteria.';
 $defaults['staff_empty']['es']		= 'Ningún miembro del personal coinciden con los criterios.';
@@ -417,7 +417,7 @@ $defaults['title']['ru']			= 'Название';
 $defaults['topic']['en']			= 'Topic';
 $defaults['topic']['es']			= 'Tema';
 $defaults['topic']['fr']			= 'Sujet';
-$defaults['topic']['ru']			= 'Рубрики';
+$defaults['topic']['ru']			= 'Тема';
 
 $defaults['topics']['en']			= 'Topics';
 $defaults['topics']['es']			= 'Temas';

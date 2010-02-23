@@ -25,7 +25,8 @@ if (count($orgs) < 8) {
 
 if (url_id()) {
 	$where = ($_GET['id'] == 0) ? ' IS NULL ' : ' = ' . $_GET['id'];
-	echo drawStaffList('u.is_active = 1 AND u.organization_id ' . $where, 'This organization has no staff associated with it.', array('add_edit.php'=>getString('add_new')), draw_link($request['path_query'], $page['title']) . ' &gt; ' . db_grab('SELECT title FROM organizations WHERE id = ' . $_GET['id']));
+	$links = ($page['is_admin']) ? array('add_edit.php'=>getString('add_new')) : false;
+	echo drawStaffList('u.is_active = 1 AND u.organization_id ' . $where, 'This organization has no staff associated with it.', $links, draw_link($request['path_query'], $page['title']) . ' &gt; ' . db_grab('SELECT title FROM organizations WHERE id = ' . $_GET['id']));
 } else {
 	$t = new table('foo', drawHeader());
 	$t->col('title', false, getString('title'));

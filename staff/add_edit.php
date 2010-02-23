@@ -49,14 +49,15 @@ $f->unset_fields(array('image_medium', 'image_small', 'password', 'lastLogin'));
 $f->set_field(array('name'=>'firstname', 'type'=>'text', 'label'=>getString('name_first'), 'position'=>increment()));
 $f->set_field(array('name'=>'nickname', 'type'=>'text', 'label'=>getString('nickname'), 'position'=>increment()));
 $f->set_field(array('name'=>'lastname', 'type'=>'text', 'label'=>getString('name_last'), 'position'=>increment()));
-$f->set_field(array('type'=>'select', 'name'=>'organization_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title FROM organizations WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
+$f->set_field(array('type'=>'select', 'name'=>'organization_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title FROM organizations WHERE is_active = 1 ORDER BY precedence', 'required'=>true, 'position'=>increment()));
 $f->set_field(array('name'=>'email', 'type'=>'text', 'label'=>getString('email'), 'position'=>increment()));
 $f->set_field(array('name'=>'title', 'type'=>'text', 'label'=>getString('staff_title'), 'position'=>increment()));
 $f->set_field(array('name'=>'image_large', 'type'=>'file', 'label'=>getString('image'), 'position'=>increment()));
+if (getOption('languages')) $f->set_field(array('type'=>'select', 'name'=>'language_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'required'=>true, 'position'=>increment()));
 
 
-if (getOption("staff_showdept")) $f->set_field(array('type'=>'select', 'name'=>'departmentID', 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
-if (getOption("staff_showoffice")) $f->set_field(array('type'=>'select', 'name'=>'officeID', 'sql'=>'SELECT id, name FROM offices ORDER BY name', 'position'=>increment()));
+if (getOption('staff_showdept')) $f->set_field(array('type'=>'select', 'name'=>'departmentID', 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
+if (getOption('staff_showoffice')) $f->set_field(array('type'=>'select', 'name'=>'officeID', 'sql'=>'SELECT id, name FROM offices ORDER BY name', 'position'=>increment()));
 
 $f->set_field(array('name'=>'bio', 'label'=>getString('bio'), 'type'=>'textarea', 'class'=>'tinymce', 'position'=>increment()));
 $f->set_field(array('name'=>'phone', 'label'=>getString('telephone'), 'type'=>'text', 'position'=>increment()));
@@ -92,13 +93,13 @@ if (getOption('bb_notifypost')) {
 }
 
 //home info
-if (getOption("staff_showhome")) {
+if (getOption('staff_showhome')) {
 } else {
 	$f->unset_fields('homeAddress1,homeAddress2,homeCity,homeCity,homeZIP,homePhone,homeCell,homeEmail');
 }
 
 //emergency info
-if (getOption("staff_showemergency")) {
+if (getOption('staff_showemergency')) {
 } else {
 	$f->unset_fields('emerCont1Name,emerCont1Relationship,emerCont1Phone,emerCont1Cell,emerCont1Email,emerCont2Name,emerCont2Relationship,emerCont2Phone,emerCont2Cell,emerCont2Email');
 }

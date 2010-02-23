@@ -4,8 +4,8 @@ include('../include.php');
 echo drawTop();
 
 if (url_action('delete')) {
-	db_delete('press_clips', $_GET['delete_id']);
-	url_change('/press-clips/');
+	db_delete('external_orgs');
+	url_change('./');
 }
 
 if (url_id()) {	
