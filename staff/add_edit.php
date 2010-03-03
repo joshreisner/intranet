@@ -49,17 +49,17 @@ $f->unset_fields(array('image_medium', 'image_small', 'password', 'lastLogin'));
 $f->set_field(array('name'=>'firstname', 'type'=>'text', 'label'=>getString('name_first'), 'position'=>increment()));
 $f->set_field(array('name'=>'nickname', 'type'=>'text', 'label'=>getString('nickname'), 'position'=>increment()));
 $f->set_field(array('name'=>'lastname', 'type'=>'text', 'label'=>getString('name_last'), 'position'=>increment()));
-$f->set_field(array('type'=>'select', 'name'=>'organization_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title FROM organizations WHERE is_active = 1 ORDER BY precedence', 'required'=>true, 'position'=>increment()));
+$f->set_field(array('type'=>'select', 'name'=>'organization_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title' . langExt() . ' title FROM organizations WHERE is_active = 1 ORDER BY precedence', 'required'=>true, 'position'=>increment()));
 $f->set_field(array('name'=>'email', 'type'=>'text', 'label'=>getString('email'), 'position'=>increment()));
-$f->set_field(array('name'=>'title', 'type'=>'text', 'label'=>getString('staff_title'), 'position'=>increment()));
+$f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getString('staff_title'), 'position'=>increment()));
 $f->set_field(array('name'=>'image_large', 'type'=>'file', 'label'=>getString('image'), 'position'=>increment()));
-if (getOption('languages')) $f->set_field(array('type'=>'select', 'name'=>'language_id', 'label'=>getString('organization'), 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'required'=>true, 'position'=>increment()));
+if (getOption('languages')) $f->set_field(array('type'=>'select', 'name'=>'language_id', 'label'=>getString('language'), 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'required'=>true, 'position'=>increment()));
 
 
 if (getOption('staff_showdept')) $f->set_field(array('type'=>'select', 'name'=>'departmentID', 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
 if (getOption('staff_showoffice')) $f->set_field(array('type'=>'select', 'name'=>'officeID', 'sql'=>'SELECT id, name FROM offices ORDER BY name', 'position'=>increment()));
 
-$f->set_field(array('name'=>'bio', 'label'=>getString('bio'), 'type'=>'textarea', 'class'=>'tinymce', 'position'=>increment()));
+$f->set_field(array('name'=>'bio' . langExt(), 'label'=>getString('bio'), 'type'=>'textarea', 'class'=>'tinymce', 'position'=>increment()));
 $f->set_field(array('name'=>'phone', 'label'=>getString('telephone'), 'type'=>'text', 'position'=>increment()));
 $f->set_field(array('name'=>'extension', 'label'=>getString('telephone_extension'), 'type'=>'text', 'class'=>'short', 'position'=>increment()));
 

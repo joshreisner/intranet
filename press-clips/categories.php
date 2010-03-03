@@ -3,12 +3,12 @@ include("../include.php");
 echo drawTop();
 
 if (url_id()) {
-	$title = db_grab("SELECT title FROM press_clips_types WHERE id = " . $_GET["id"]);
-	$result = db_table('SELECT c.id, c.title, c.pub_date, t.title type, c.publication, ISNULL(c.created_date, c.updated_date) updated FROM press_clips c JOIN press_clips_types t ON c.type_id = t.id ' . getChannelsWhere('press_clips', 'c', 'clip_id') . ' AND c.type_id = ' . $_GET["id"] . ' ORDER BY updated DESC');
+	$title = db_grab('SELECT title' . langExt() . ' title FROM press_clips_types WHERE id = ' . $_GET["id"]);
+	$result = db_table('SELECT c.id, c.title' . langExt() . ' title, c.pub_date, c.publication' . langExt() . ' publication, ISNULL(c.created_date, c.updated_date) updated FROM press_clips c ' . getChannelsWhere('press_clips', 'c', 'clip_id') . ' AND c.type_id = ' . $_GET["id"] . ' ORDER BY updated DESC');
 	$t = new table('press_clips', drawHeader(false, $title));
-	$t->col('title');
-	$t->col('publication');
-	$t->col('pub_date', 'r');
+	$t->col('title', 'l', getString('title'));
+	$t->col('publication', 'l', getString('publication'));
+	$t->col('pub_date', 'r', getString('published'));
 	foreach ($result as &$r) {
 		$r['title'] = draw_link('clip.php?id=' . $r['id'], format_string($r['title'], 50));
 		$r['pub_date'] = format_date($r['pub_date']);

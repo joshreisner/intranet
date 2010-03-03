@@ -13,11 +13,23 @@ if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code
 
 //language overwrites eg dates
 if ($_SESSION['language'] == 'es') {
-	$_josh['months'] = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+	setlocale(LC_TIME, 'es_ES');
+	$_josh['date']['strings'] = array('Ayer', 'Hoy', 'Mañana');
+	$_josh['days']		= array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
+	$_josh['months']	= array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+	$_josh['mos']		= array('ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jun', 'ago', 'sep', 'oct', 'nov', 'dic');
 } elseif ($_SESSION['language'] == 'fr') {
-	$_josh['months'] = array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+	setlocale(LC_TIME, 'fr_FR');
+	$_josh['date']['strings'] = array('Hier', 'Aujourd\'hui', 'Demain');
+	$_josh['days']		= array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+	$_josh['months']	= array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+	$_josh['mos']		= array('jan', 'fév', 'mar', 'avr', 'mai', 'jui', 'jul', 'aoû', 'sep', 'oct', 'nov', 'déc');
 } elseif ($_SESSION['language'] == 'ru') {
-	$_josh['months'] = array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
+	setlocale(LC_TIME, 'ru_RU');
+	$_josh['date']['strings'] = array('Вчера', 'Сегодня', 'Завтра');
+	$_josh['days']		= array('Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота');
+	$_josh['months']	= array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
+	$_josh['mos']		= array('янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек');
 }
 
 if (isset($_GET['language_id'])) {
@@ -280,13 +292,13 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 	$t->col('phone', 'l', getString('telephone'));
 	if ($showDelete) $t->col('del', 'c', '&nbsp;', 16);
 	
-	$result = db_table("SELECT DISTINCT
+	$result = db_table('SELECT DISTINCT
 							u.id, 
 							u.lastname,
 							ISNULL(u.nickname, u.firstname) firstname, 
 							u.bio, 
 							u.phone,
-							c.title organization,
+							c.title' . langExt() . ' organization,
 							u.organization_id,
 							o.name office, 
 							o.isMain,
@@ -297,8 +309,8 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 						LEFT JOIN departments d	ON d.departmentID = u.departmentID 
 						LEFT JOIN organizations c ON u.organization_id = c.id
 						LEFT JOIN offices o ON o.id = u.officeID
-						WHERE " . $where . "
-						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)");
+						WHERE ' . $where . '
+						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)');
 	
 	foreach ($result as &$r) {
 		$link = '/staff/view.php?id=' . $r['id'];
@@ -319,6 +331,16 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 function drawSyndicateLink($name) {
 	global $_josh;
 	return draw_rss_link($_josh['write_folder'] . '/rss/' . $name . '.xml');
+}
+
+function drawTableEnd() {
+	//not obsolete!  calendar and other nonstandard tables
+	return '</table>';
+}
+
+function drawTableStart() {
+	//not obsolete!  calendar and other nonstandard tables
+	return '<table cellspacing="1" class="left">';
 }
 
 function drawThreadComment($content, $user_id, $fullname, $date, $admin=false) {
@@ -352,7 +374,7 @@ function drawThreadCommentForm($showAdmin=false) {
 			</td>
 		</tr>
 		<tr>
-			<td class="bottom" colspan="2">' . draw_form_submit('Update Conversation') . '</td>
+			<td class="bottom" colspan="2">' . draw_form_submit(getString('add_followup')) . '</td>
 		</tr>
 		</form>';
 	return $return;
@@ -376,6 +398,9 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 
 function drawTop($headcontent=false) {
 	global $_GET, $_SESSION, $_josh, $page, $user;
+	
+	ob_start('browser_output');
+	
 	error_debug('starting top', __file__, __line__);
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
 	$return = draw_doctype() . 
@@ -611,7 +636,7 @@ function langExt($code=false) {
 }
 
 function langExtT($code=false) {
-	//return field name appendage
+	//don't think we're using this.  intended to be transliteration
 	if (!$code) $code = $_SESSION['language'];
 	if ($code == 'ru') return '_ru';
 	return '';
@@ -639,6 +664,7 @@ function langTranslatePost($keys) {
 }
 
 function langTransliteratePost($keys) {
+	//don't think we're using this either
 	//set incoming POST values for languages
 	if (!getOption('languages')) return false;
 	global $_POST;

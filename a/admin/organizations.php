@@ -2,6 +2,7 @@
 include("../../include.php");
 
 if ($posting) {
+	langTranslatePost('title');
 	$id = db_save('organizations');
 	url_drop('id');
 } elseif (url_action('delete') && url_id('delete_id')) {
@@ -14,6 +15,9 @@ echo drawTop();
 if (url_id()) {
 	//form
 	$f = new form('organizations', @$_GET['id']);
+	$f->set_field(array('type'=>'text', 'name'=>'title' . langExt(), 'label'=>getString('title')));
+	langUnsetFields($f, 'title');
+	langTranslateCheckbox($f);
 	echo $f->draw();
 } else {
 	//modules list
@@ -22,20 +26,21 @@ if (url_id()) {
 	$t->set_column('title', 'l', getString('title'));
 	$t->set_column('delete', 'd', '&nbsp;');
 	
-	$result = db_table('SELECT id, title FROM organizations WHERE is_active = 1 ORDER BY precedence');
-	$t->set_draggable('draggy');
+	$result = db_table('SELECT id, title' . langExt() . ' title FROM organizations WHERE is_active = 1 ORDER BY precedence');
 	
 	foreach ($result as &$r) {
-		$r['draggy']		= draw_img('/images/icons/move.png');
-		$r['title']			= draw_link('organizations.php?id=' . $r['id'], $r['title']);
-		$r['delete']	= deleteColumn($r['id']);
+		$r['draggy'] = draw_img('/images/icons/move.png');
+		$r['title'] = draw_link('organizations.php?id=' . $r['id'], $r['title']);
+		$r['delete'] = deleteColumn($r['id']);
 	}
 	
-	echo $t->draw($result, 'No modules');
+	echo $t->draw($result, 'No organizations');
 	
 	//add new
 	$f = new form('organizations');
-	echo $f->draw();
+	$f->set_field(array('type'=>'text', 'name'=>'title' . langExt(), 'label'=>getString('title')));
+	langUnsetFields($f, 'title');
+	echo $f->draw(false, false);
 }
 
 echo drawBottom();

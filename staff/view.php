@@ -33,7 +33,7 @@ $r = db_grab('SELECT
 		f.name office, 
 		d.departmentName,
 		u.organization_id,
-		o.title corporationName,
+		o.title' . langExt() . ' organization,
 		u.homeAddress1,
 		u.homeAddress2,
 		u.homeCity,
@@ -72,7 +72,7 @@ $r = db_grab('SELECT
 	
 $r["nickname"] = trim($r["nickname"]);
 
-$r["corporationName"] = (empty($r["corporationName"])) ? '<a href="organizations.php?id=0">Shared</a>' : '<a href="organizations.php?id=' . $r["organization_id"] . '">' . $r["corporationName"] . '</a>';
+$r["organization"] = (empty($r["organization"])) ? '<a href="organizations.php?id=0">' . getString('shared') . '</a>' : '<a href="organizations.php?id=' . $r["organization_id"] . '">' . $r["organization"] . '</a>';
 
 if (!isset($r["is_active"])) url_change("./");
 
@@ -114,7 +114,7 @@ if (!$r["is_active"]) {
 	</tr>
 	<tr>
 		<td class="left"><?=getString('organization')?></td>
-		<td><?=$r["corporationName"]?></td>
+		<td><?=$r["organization"]?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('staff_title')?></td>

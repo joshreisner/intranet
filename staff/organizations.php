@@ -5,7 +5,7 @@ $orgs = array();
 if (getOption('staff_allowshared')) {
 	$orgs[0] = 'Shared';
 }
-$orgs = db_table('SELECT id, title from organizations WHERE is_active = 1 ORDER BY title', $orgs, false, false);
+$orgs = db_table('SELECT id, title' . langExt() . ' title from organizations WHERE is_active = 1 ORDER BY precedence', $orgs, false, false);
 
 echo drawTop();
 

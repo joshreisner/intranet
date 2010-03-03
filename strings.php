@@ -1,6 +1,11 @@
 <?php
 $defaults = array();
 
+$defaults['add_followup']['en']		= 'Add a Followup';
+$defaults['add_followup']['es']		= 'Añadir a Followup';
+$defaults['add_followup']['fr']		= 'Ajouter un Followup';
+$defaults['add_followup']['ru']		= 'Добавить ВЫПОЛНЕНИЕ';
+
 $defaults['add_new']['en']			= 'Add New';
 $defaults['add_new']['es']			= 'Agregar nuevo';
 $defaults['add_new']['fr']			= 'Ajouter un nouveau';
@@ -328,6 +333,11 @@ $defaults['replies']['en']			= 'Replies';
 $defaults['replies']['es']			= 'Respuestas';
 $defaults['replies']['fr']			= 'Réponses';
 $defaults['replies']['ru']			= 'Ответы';
+
+$defaults['shared']['en'] = 'Shared';
+$defaults['shared']['es'] = 'Compartidas';
+$defaults['shared']['fr'] = 'Partagée';
+$defaults['shared']['ru'] = 'Общие';
 
 $defaults['staff_firsttime']['en']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
 

@@ -58,5 +58,6 @@ echo $t->draw($result, getString('topics_empty'));
 echo '<a name="bottom"></a>';
 echo drawTopicForm();
 
-echo drawBottom(); 
+echo drawBottom();
+
 ?>

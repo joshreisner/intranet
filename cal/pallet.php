@@ -13,7 +13,7 @@ if (db_found($events)) {
 		$return .= '
 	<tr>
 		<td width="80%"><a href="/' . $m["folder"] . '/event.php?id=' . $e["id"] . '" class="block" style="background-color:' . $e["color"] . ';">' . $e["title"] . '</a></td>
-		<td width="20%" align="right">' . format_date($e["start_date"], "", "M d") . '</a></td>
+		<td width="20%" align="right">' . format_date($e["start_date"], "", "%b %d") . '</td>
 	</tr>';
 	}
 } else {

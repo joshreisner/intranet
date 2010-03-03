@@ -205,6 +205,9 @@ textarea.press_export { width:594px; height:120px; }
 }
 #right table td.helpdesk-status:hover { cursor:pointer; }
 
+#right ul { list-style-type:none; margin:0px; padding:0px; }
+#right ul li { float:left; width:139px; padding:5px 0px 3px 1px; }
+
 /*deprecated*/
 .head a { padding:0px; color:#fff; }
 .head a:hover { color:#fff; }

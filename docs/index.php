@@ -37,8 +37,8 @@ if (getOption('languages')) {
 $links = ($page['is_admin']) ? array('edit.php'=>getString('add_new')) : false;
 $t = new table('docs', drawHeader($links));
 $t->set_column('icon', 'd', '&nbsp;');
-$t->set_column('title');
-$t->set_column('updated', 'r');
+$t->set_column('title', 'l', getString('title'));
+$t->set_column('updated', 'r', getString('updated'));
 
 foreach ($result as &$r) {
 	$link = 'info.php?id=' . $r['id'];

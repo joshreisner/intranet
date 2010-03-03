@@ -135,19 +135,12 @@ if (getOption("cal_showholidays")) {
 	}
 }	
 
-?>
-<table class="left" cellspacing="1">
-	<?=drawHeaderRow($_josh['months'][$_GET['month']-1] . " " . $_GET['year'], 7, "new", "#bottom");?>
-	<tr>
-		<th>Sunday</th>
-		<th>Monday</th>
-		<th>Tuesday</th>
-		<th>Wednesday</th>
-		<th>Thursday</th>
-		<th>Friday</th>
-		<th>Saturday</th>
-	</tr>
-<?
+echo drawTableStart();
+echo drawHeaderRow($_josh['months'][$_GET['month']-1] . " " . $_GET['year'], 7, getString('add_new'), "#bottom");
+echo '<tr>';
+foreach ($_josh['days'] as $day) echo draw_container('th', $day, 'c');
+echo '</tr>';
+
 // === OUTER LOOP: WEEKS ====================================================
 		for ($week = 1, $thisday = 1; ($thisday < $lastday); $week++) {
 			?><tr class="calendar"><?

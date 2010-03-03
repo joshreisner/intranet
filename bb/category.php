@@ -5,7 +5,7 @@ echo drawTop();
 
 if (url_id()) {
 	//get a particular topic
-	$title = db_grab('SELECT title FROM bb_topics_types WHERE id = ' . $_GET['id']);
+	$title = db_grab('SELECT title' . langExt() . ' title FROM bb_topics_types WHERE id = ' . $_GET['id']);
 	$where = 't.type_id = ' . $_GET['id'];
 } else {
 	$title = 'Uncategorised Topics';
@@ -14,7 +14,7 @@ if (url_id()) {
 
 $result = db_table('SELECT 
 		t.id,
-		t.title topic,
+		t.title' . langExt() . ' topic,
 		t.is_admin,
 		t.thread_date last_post,
 		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,

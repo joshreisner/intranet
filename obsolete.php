@@ -57,16 +57,6 @@ function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=fal
 	return $header;
 }
 
-function drawTableEnd() {
-	//todo ~ obsolete.  tables should use joshlib's table class
-	return '</table>';
-}
-
-function drawTableStart() {
-	//todo ~ obsolete.  tables should use joshlib's table class
-	return '<table cellspacing="1" class="left">';
-}
-
 class intranet_form {
 	//todo ~ this is obsolete.  we should either use or extend the form class in joshlib
 	var $rows, $js;
