@@ -25,7 +25,7 @@ if ($_SESSION['language'] == 'es') {
 	$_josh['months']	= array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
 	$_josh['mos']		= array('jan', 'fév', 'mar', 'avr', 'mai', 'jui', 'jul', 'aoû', 'sep', 'oct', 'nov', 'déc');
 } elseif ($_SESSION['language'] == 'ru') {
-	setlocale(LC_TIME, 'ru_RU');
+	setlocale(LC_TIME, 'ru_RU.UTF8');
 	$_josh['date']['strings'] = array('Вчера', 'Сегодня', 'Завтра');
 	$_josh['days']		= array('Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота');
 	$_josh['months']	= array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
@@ -309,7 +309,7 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 						LEFT JOIN departments d	ON d.departmentID = u.departmentID 
 						LEFT JOIN organizations c ON u.organization_id = c.id
 						LEFT JOIN offices o ON o.id = u.officeID
-						WHERE ' . $where . '
+						' . getChannelsWhere('users', 'u', 'user_id') . ' AND ' . $where . '
 						ORDER BY u.lastname, ISNULL(u.nickname, u.firstname)');
 	
 	foreach ($result as &$r) {

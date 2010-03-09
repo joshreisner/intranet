@@ -106,7 +106,7 @@ function bbDrawRss() {
 		);
 	}
 
-	file_rss('Bulletin Board: Last 15 Topics', url_base() . '/bb/', $items, $_josh['write_folder'] . '/rss/bb.xml');
+	file_rss('Bulletin Board: Last 15 Topics', url_base() . '/bb/', $items, 'bb.xml');
 }
 
 ?>

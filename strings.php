@@ -9,7 +9,7 @@ $defaults['add_followup']['ru']		= 'Добавить ВЫПОЛНЕНИЕ';
 $defaults['add_new']['en']			= 'Add New';
 $defaults['add_new']['es']			= 'Agregar nuevo';
 $defaults['add_new']['fr']			= 'Ajouter un nouveau';
-$defaults['add_new']['ru']			= 'Создать новую тему';
+$defaults['add_new']['ru']			= 'Добавить';
 
 $defaults['administrative_info']['en']	= 'Administrative Information';
 $defaults['administrative_info']['es']	= 'Información Administrativa';
@@ -44,7 +44,7 @@ $defaults['category']['ru']			= 'Категории';
 $defaults['categories']['en']			= 'Categories';
 $defaults['categories']['es']			= 'Categorías';
 $defaults['categories']['fr']			= 'Catégories';
-$defaults['categories']['ru']			= 'Категория';
+$defaults['categories']['ru']			= 'Категории';
 
 $defaults['clips']['en']			= 'Clips';
 $defaults['clips']['es']			= 'Clips';
@@ -161,7 +161,7 @@ $defaults['is_admin']['ru']			= 'административно';
 $defaults['jump_to']['en']			= 'Jump To';
 $defaults['jump_to']['es']			= 'Ir a';
 $defaults['jump_to']['fr']			= 'Sautez à';
-$defaults['jump_to']['ru']			= 'поскачите к';
+$defaults['jump_to']['ru']			= 'Перейти к';
 
 $defaults['language']['en']			= 'Language';
 $defaults['language']['es']			= 'Idioma';
@@ -171,7 +171,7 @@ $defaults['language']['ru']			= 'Язык';
 $defaults['last_login']['en']			= 'Last Login';
 $defaults['last_login']['es']			= 'Último inicio de sesión';
 $defaults['last_login']['fr']			= 'Dernière connexion';
-$defaults['last_login']['ru']			= 'Последние Логин';
+$defaults['last_login']['ru']			= 'Последнее посещение';
 
 $defaults['last_post']['en']			= 'Last Post';
 $defaults['last_post']['es']			= 'Último';
@@ -249,7 +249,7 @@ $defaults['networks']['es']			= 'Redes';
 $defaults['networks']['fr']			= 'Réseaux';
 $defaults['networks']['ru']			= 'Сети';
 
-$defaults['networks_view_all']['en']			= 'View All Networks';
+$defaults['networks_view_all']['en']			= 'View All';
 $defaults['networks_view_all']['es']			= 'Ver todas las redes';
 $defaults['networks_view_all']['fr']			= 'Tout voir';
 $defaults['networks_view_all']['ru']			= 'Открыть Все сети';
@@ -272,7 +272,7 @@ $defaults['notify_topics']['en']			= 'Notify Topics';
 $defaults['organization']['en']			= 'Organization';
 $defaults['organization']['es']			= 'Organización';
 $defaults['organization']['fr']			= 'Organisation';
-$defaults['organization']['ru']			= 'Организация';
+$defaults['organization']['ru']			= 'По организациям';
 
 $defaults['page_edit_info']['en']	= 'Edit Page Info';
 $defaults['page_edit_info']['es']	= 'Información de la página';
@@ -322,12 +322,12 @@ $defaults['public_info']['ru']			= 'Общественной информаци�
 $defaults['published']['en']			= 'Published';
 $defaults['published']['es']			= 'Publicado';
 $defaults['published']['fr']			= 'Publié';
-$defaults['published']['ru']			= 'Опубликован';
+$defaults['published']['ru']			= 'Опубликовано';
 
 $defaults['publication']['en']			= 'Publication';
 $defaults['publication']['es']			= 'Publicación';
 $defaults['publication']['fr']			= 'Publication';
-$defaults['publication']['ru']			= 'Публикация';
+$defaults['publication']['ru']			= 'Публикации';
 
 $defaults['replies']['en']			= 'Replies';
 $defaults['replies']['es']			= 'Respuestas';
@@ -349,7 +349,7 @@ $defaults['staff_goings_empty']['ru'] = 'Нет сотрудников оста�
 $defaults['staff_new']['en']	= 'Recent Arrivals';
 $defaults['staff_new']['es']	= 'Los recién llegados';
 $defaults['staff_new']['fr']	= 'Dernières arrivées';
-$defaults['staff_new']['ru']	= 'Новоприбывших';
+$defaults['staff_new']['ru']	= 'Новые пользователи';
 
 $defaults['staff_new_empty']['en']	= 'No staff are listed as having started in the last two months.';
 $defaults['staff_new_empty']['es']	= 'Ningún miembro del personal se muestran como se inició en los últimos dos meses.';
@@ -422,7 +422,7 @@ $defaults['telephone_extension']['ru']			= 'Расширение';
 $defaults['title']['en']			= 'Title';
 $defaults['title']['es']			= 'Título';
 $defaults['title']['fr']			= 'Titre';
-$defaults['title']['ru']			= 'Название';
+$defaults['title']['ru']			= 'Заголовок';
 
 $defaults['topic']['en']			= 'Topic';
 $defaults['topic']['es']			= 'Tema';
