@@ -17,11 +17,8 @@ function drawJumpToStaff($selectedID=false) {
 	global $page;
 	$nullable = ($selectedID === false);
 	$return = drawPanel(getString('jump_to') . ' ' . drawSelectUser('', $selectedID, $nullable, 0, true, true, 'Staff Member:'));
-	if ($page['is_admin']) { 
-		if ($r = db_grab('SELECT COUNT(*) FROM users_requests')) {
-			$return = drawMessage('There are pending <a href="requests.php">account requests</a> for you to review.') . $return;
-		}
-		
+	if ($page['is_admin'] && db_grab('SELECT COUNT(*) FROM users_requests WHERE is_active = 1')) {
+		$return = drawMessage('There are pending <a href="requests.php">account requests</a> for you to review.') . $return;
 	}
 	return $return;
 }
