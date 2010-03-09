@@ -23,7 +23,7 @@ $result = db_table('SELECT
 	FROM bb_topics t
 	JOIN users u ON u.id = t.created_user
 	' . getChannelsWhere('bb_topics', 't', 'topic_id') . ' AND ' . $where . '
-	ORDER BY t.thread_date DESC', 15);
+	ORDER BY t.thread_date DESC');
 $t = new table('bb_topics', drawHeader(false, $title));
 $t->col('topic', 'l', getString('topic'));
 $t->col('starter', 'l', getString('starter'));

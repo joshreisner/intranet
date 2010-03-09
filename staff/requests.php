@@ -16,7 +16,7 @@ echo drawTop();
 echo drawJumpToStaff();
 echo drawTableStart();
 echo drawHeaderRow("", 3);
-$result = db_query("SELECT id, lastname, firstname, created_date FROM users_requests ORDER BY created_date DESC");
+$result = db_query("SELECT id, lastname, firstname, created_date FROM users_requests WHERE is_active = 1 ORDER BY created_date DESC");
 if (db_found($result)) {?>
 	<tr>
 		<th width="70%">Name</th>

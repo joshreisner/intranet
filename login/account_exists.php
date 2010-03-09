@@ -1,22 +1,10 @@
 <?
 $pageIsPublic = true;
-include("../include.php");?>
-<html>
-	<head>
-		<title>Request an Account</title>
-		<link rel="stylesheet" type="text/css" href="/styles/screen.css" />
-	</head>
-	<body>
-<br>
-<table width="600" align="center">
-	<tr>
-		<td>
-<?
-echo drawMessage("<h1>Account Already Exists</h1>  The email you entered already belongs to an active account on the system.  Would you
-like to <a href='password_reset.php'>reset your password</a>?");
+include("../include.php");
+
+echo drawTopSimple(getString('login_account_exists'));
+
+echo drawMessage(getString('login_account_exists_msg'));
+
+echo drawBottomSimple();
 ?>
-				</td>
-			</tr>
-		</table>
-	</body>
-</html>

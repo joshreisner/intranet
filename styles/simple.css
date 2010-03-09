@@ -11,7 +11,10 @@ body table {
 a, input, textarea, select { outline:none; }
 
 table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; border-width:1px; }
-input.text				{ width:500px; height:26px; vertical-align:middle; }
+
+form					{ margin:0px; padding:0px; }
+input, select, textarea { margin:0px; font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
+input.text				{ width:500px; height:20px; vertical-align:middle; }
 
 
 table td			{ padding:4px 3px 4px 3px; }
@@ -61,7 +64,7 @@ form fieldset div.checkboxes ul { overflow:auto; margin:0px; padding:0px; font-s
 form fieldset div.checkboxes li { display:block; width:138px; padding-left:19px; float:left; margin:2px; }
 form fieldset div.checkboxes input { margin-left:-19px; }
 form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
-form fieldset div.field textarea { width:481px; height:280px; }
+form fieldset div.field textarea { width:478px; height:280px; }
 form fieldset div.field select { background-color:#fff; border:1px solid #ccc; height:26px; }
 form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }

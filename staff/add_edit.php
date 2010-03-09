@@ -35,7 +35,15 @@ if ($posting) {
 		$_SESSION['update_days'] = 0;
 		$_SESSION['updated_date'] = 'foo';
 	}
+	
+	//clean up users requests
+	if (url_id('requestID')) db_delete('users_requests', $_GET['requestID']);
+	
 	url_change('view.php?id=' . $id);
+} elseif (url_id('requestID')) {
+	$values = db_grab('SELECT * FROM users_requests WHERE id = ' . $_GET['requestID']);
+} else {
+	$values = false;
 }
 
 echo drawTop();
@@ -109,7 +117,7 @@ $f->unset_fields('isPayroll,isImagePublic,help');
 langUnsetFields($f, 'title,bio');
 langTranslateCheckbox($f, url_id());
 
-echo $f->draw();
+echo $f->draw($values);
 
 echo drawBottom();
 ?>
