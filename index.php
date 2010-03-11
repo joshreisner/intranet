@@ -85,11 +85,9 @@ url_header_utf8();
 	<body>
 		<div id="container">
 			<div id="white">
-				<div class="top-left"><img src="/images/corners-white/top-left.png" width="10" height"10" border="0"></div>
-				<div class="top-right"><img src="/images/corners-white/top-right.png" width="10" height"10" border="0"></div>
-				<div class="bottom-left"><img src="/images/corners-white/bottom-left.png" width="10" height"10" border="0"></div>
-				<div class="bottom-right"><img src="/images/corners-white/bottom-right.png" width="10" height"10" border="0"></div>
 				<?php
+				$corners = array('top-left', 'top-right', 'bottom-left', 'bottom-right');
+				foreach ($corners as $c) echo draw_div_class($c, draw_img('/images/corners-white/' . $c . '.png'));
 				echo draw_img(DIRECTORY_WRITE . "/login.png");
 				
 				$f = new form('login', false, getString('submit'));
@@ -101,16 +99,15 @@ url_header_utf8();
 				?>
 			</div>
 			<div id="grey">
-				<div class="top-left"><img src="/images/corners-grey/top-left.png" width="10" height"10" border="0"></div>
-				<div class="top-right"><img src="/images/corners-grey/top-right.png" width="10" height"10" border="0"></div>
-				<div class="bottom-left"><img src="/images/corners-grey/bottom-left.png" width="10" height"10" border="0"></div>
-				<div class="bottom-right"><img src="/images/corners-grey/bottom-right.png" width="10" height"10" border="0"></div>
-				<?=getString("app_welcome")?>
-				<ul>
-				<li><a href="/login/password_reset.php"><?=getString("login_forgot_password")?></a></li>
-				<li><a href="/login/account_request.php"><?=getString("login_need_account")?></a></li>
-				<li><a href="mailto:josh@joshreisner.com"><?=getString("login_ask_question")?></a></li>
-				</ul>
+				<?php
+				foreach ($corners as $c) echo draw_div_class($c, draw_img('/images/corners-grey/' . $c . '.png'));
+				echo getString("app_welcome");
+				echo draw_navigation(array(
+					'/login/password_reset.php'=>getString("login_forgot_password"),
+					'/login/account_request.php'=>getString("login_need_account"),
+					'mailto:' . $_josh['email_default']=>getString("login_ask_question")
+				));
+				?>
 			</div>
 			<? if (getOption('languages')) {
 				echo draw_div('language', draw_form_select('language_id', 'SELECT id, title FROM languages ORDER BY title', $_SESSION['language_id'], true, 'grey', 'url_query_set(\'language_id\', this.value)'));
