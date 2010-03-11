@@ -40,8 +40,8 @@ if (isset($_GET['language_id'])) {
 }
 
 //include options file if it exists
-@include($_josh['root'] . $_josh['write_folder'] . '/options.php');
-@include($_josh['root'] . $_josh['write_folder'] . '/strings.php');
+@include(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
+@include(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
 
 //debug();
 
@@ -174,7 +174,7 @@ error_debug('done processing include!', __file__, __line__);
 	
 
 //obsolete functions
-include($_josh['root'] . '/obsolete.php');
+include(DIRECTORY_ROOT . '/obsolete.php');
 
 
 //draw functions
@@ -210,11 +210,11 @@ function drawPanel($str) {
 	return draw_div_class('panel', $str);
 }
 
-function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br>') {
+function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br/>') {
 	global $_josh;
 	$base = url_base();
 	$date = ($date) ? format_date_time($date, '', $separator) : false;
-	$img  = draw_img($_josh['write_folder'] . '/dynamic/users-image_small-' . $user_id . '.jpg', $base . '/staff/view.php?id=' . $user_id);		
+	$img  = draw_img(DIRECTORY_WRITE . '/dynamic/users-image_small-' . $user_id . '.jpg', $base . '/staff/view.php?id=' . $user_id);		
 	return '
 	<table cellpadding="0" cellspacing="0" border="0" width="144">
 		<tr valign="top" style="background-color:transparent;">
@@ -329,8 +329,7 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 }
 
 function drawSyndicateLink($name) {
-	global $_josh;
-	return draw_rss_link($_josh['write_folder'] . '/rss/' . $name . '.xml');
+	return draw_rss_link(DIRECTORY_WRITE . '/rss/' . $name . '.xml');
 }
 
 function drawTableEnd() {
@@ -435,7 +434,7 @@ function drawTop($headcontent=false) {
 	$return .= '
 	<body>
 		<div id="container">
-			' . draw_div('banner', draw_img($_josh['write_folder'] . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
+			' . draw_div('banner', draw_img(DIRECTORY_WRITE . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
 			<div id="left">
 				<div id="help">
 				<a class="button left" href="' . $_SESSION['homepage'] . '">' . getString('home') . '</a>
@@ -500,7 +499,7 @@ function drawBottom() {
 					' . draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false)) . '
 				</td>
 			</tr>';
-			if (!$m['is_closed']) include($_josh['root'] . '/' . $m['folder'] . '/pallet.php');
+			if (!$m['is_closed']) include(DIRECTORY_ROOT . DIRECTORY_SEPARATOR . $m['folder'] . DIRECTORY_SEPARATOR . 'pallet.php');
 		$return .= '</table>';
 	}
 	$return .= '</div>';
@@ -610,12 +609,12 @@ function getOption($key) {
 }
 
 function getString($key) {
-	global $_josh, $strings, $defaults;
+	global $strings, $defaults;
 	
 	if (isset($strings[$key][$_SESSION['language']])) return $strings[$key][$_SESSION['language']];
 
 	//default strings.  override these in your config file by specifying $strings variables
-	include_once($_josh['root'] . '/strings.php');
+	include_once(DIRECTORY_ROOT . '/strings.php');
 	
 	if (isset($defaults[$key][$_SESSION['language']])) return $defaults[$key][$_SESSION['language']];
 	
@@ -651,7 +650,7 @@ function langTranslatePost($keys) {
 	if (!isset($_POST['translations_do'])) return false;
 
 	//list of fields to translate
-	$keys = array_post_fields($keys);
+	$keys = array_separated($keys);
 
 	//get list of languages to translate to
 	$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
@@ -673,7 +672,7 @@ function langTransliteratePost($keys) {
 	if (!isset($_POST['translations_do'])) return false;
 
 	//list of fields to translate
-	$keys = array_post_fields($keys);
+	$keys = array_separated($keys);
 
 	//sorry, this is hard-coded for now
 	foreach ($keys as $key) {
@@ -690,7 +689,7 @@ function langUnsetFields($form, $names) {
 	//unset fields for other languages
 	//todo - take multiple names
 	if (!getOption('languages')) return false;
-	$names = array_post_fields($names);
+	$names = array_separated($names);
 	foreach ($names as $name) {
 		$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
 		foreach ($languages as &$l) $l = $name . langExt($l);
