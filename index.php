@@ -90,7 +90,7 @@ url_header_utf8();
 				<div class="bottom-left"><img src="/images/corners-white/bottom-left.png" width="10" height"10" border="0"></div>
 				<div class="bottom-right"><img src="/images/corners-white/bottom-right.png" width="10" height"10" border="0"></div>
 				<?php
-				echo draw_img($_josh["write_folder"] . "/login.png");
+				echo draw_img(DIRECTORY_WRITE . "/login.png");
 				
 				$f = new form('login', false, getString('submit'));
 				$f->set_field(array('name'=>'email', 'type'=>'text', 'label'=>getString('email'), 'value'=>@$_COOKIE["last_email"]));
