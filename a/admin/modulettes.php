@@ -27,7 +27,7 @@ if (url_id()) {
 	foreach ($result as &$r) {
 		$r['is_active']	= draw_form_checkbox('is_active', $r['is_active'], false, 'ajax_set(\'modulettes\', \'is_active\', ' . $r['id'] . ', ' . abs($r['is_active'] - 1) . ');');
 		$r['title']			= draw_link('modulettes.php?id=' . $r['id'], $r['title']);
-		$r['pages']			= draw_link('pages.php?modulette_id=' . $r['id'], format_q($r['pages'], 'page'));
+		$r['pages']			= draw_link('pages.php?modulette_id=' . $r['id'], format_quantitize($r['pages'], 'page'));
 	}
 	
 	echo $t->draw($result, 'No modulettes');

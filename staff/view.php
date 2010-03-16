@@ -78,7 +78,7 @@ if (!isset($r["is_active"])) url_change("./");
 
 echo drawTop();
 
-if (!$img = draw_img($_josh["write_folder"] . "/dynamic/users-image_large-" . $_GET["id"] . ".jpg")) $img = draw_img($_josh["write_folder"] . "/images/to-be-taken.png");
+if (!$img = draw_img(DIRECTORY_WRITE . "/dynamic/users-image_large-" . $_GET["id"] . ".jpg")) $img = draw_img(DIRECTORY_WRITE . "/images/to-be-taken.png");
 
 echo drawJumpToStaff($_GET["id"]);
 

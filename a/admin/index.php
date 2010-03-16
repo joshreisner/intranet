@@ -31,7 +31,7 @@ if (url_id()) {
 		$r['is_selected']	= draw_form_checkbox('foo', $r['is_active'], false, 'ajax_set(\'modules\', \'is_active\', ' . $r['id'] . ', ' . abs($r['is_active'] - 1) . ');');
 		$r['draggy']		= draw_img('/images/icons/move.png');
 		$r['title']			= draw_link('./?id=' . $r['id'], $r['title']);
-		$r['pages']			= draw_link('pages.php?module_id=' . $r['id'], format_q($r['pages'], 'page'));
+		$r['pages']			= draw_link('pages.php?module_id=' . $r['id'], format_quantitize($r['pages'], 'page'));
 	}
 	
 	echo $t->draw($result, 'No modules');

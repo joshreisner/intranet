@@ -49,7 +49,7 @@ echo drawTop();
 	}
 	while ($r = db_fetch($result)) {?>
 	<tr height="46">
-		<td><a href="download.php?id=<?=$r["id"]?>"><img src="<?=$_josh["write_folder"]?>/images/doctypes/xls.png" width="16" height="16" border="0"></a></td>
+		<td><a href="download.php?id=<?=$r["id"]?>"><img src="<?=DIRECTORY_WRITE?>/images/doctypes/xls.png" width="16" height="16" border="0"></a></td>
 		<td><a href="download.php?id=<?=$r["id"]?>"><b><?=$r["name"]?></b></a><? if($page['is_admin']){?>&nbsp;&nbsp;/&nbsp;<a href="query_edit.php?id=<?=$r["id"]?>">edit</a><?}?><br><?=$r["description"]?></td>
 		<td align="center"><?=number_format($r["downloads"])?></td>
 		<td align="center"><nobr><?=number_format($r["num_columns"])?> / <?=number_format($r["num_rows"])?></nobr></td>

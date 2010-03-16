@@ -60,7 +60,7 @@ if ($posting) {
 		if (getOption("channels")) db_checkboxes("channels", "users_to_channels", "user_id", "channel_id", $id);
 		
 		//check long distance code
-		if (($_josh["write_folder"] == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
+		if ((DIRECTORY_WRITE == "/_intranet.seedco.org") && ($_POST["officeID"] == "1")) {
 			if (!db_grab("SELECT longdistancecode FROM users WHERE id = " . $id)) {
 				$code = db_grab("SELECT code FROM ldcodes WHERE code NOT IN ( SELECT longdistancecode FROM users WHERE is_active = 1 AND longdistancecode IS NOT NULL)");
 				db_query("UPDATE users SET longDistanceCode = {$code} WHERE id = " . $id);
@@ -157,7 +157,7 @@ if (!isset($r["rankID"])) $r["rankID"] = db_grab("SELECT id FROM intranet_ranks 
 if (!isset($r["notify_topics"])) $r["notify_topics"] = 1;
 
 //this should be an $option
-$isRequired = (isset($_GET["id"]) && ($_GET["id"] == $_SESSION["user_id"]) && ($_josh["write_folder"] == "/_intranet.seedco.org"));
+$isRequired = (isset($_GET["id"]) && ($_GET["id"] == $_SESSION["user_id"]) && (DIRECTORY_WRITE == "/_intranet.seedco.org"));
 
 $form = new intranet_form;
 $form->addGroup("Public Information");

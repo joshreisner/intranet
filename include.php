@@ -276,7 +276,7 @@ function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $l
 	while ($r = db_fetch($result)) {
 		$array[$r['id']] = ($lname1st) ? $r['last'] . ', ' . $r['first'] : $r['first'] . ' ' . $r['last'];
 	}
-	return draw_form_select($name, $array, $selectedID, !$nullable, $class, $jumpy);
+	return draw_form_select($name, $array, $selectedID, !$nullable, $class, $jumpy, '', 36);
 }
 
 function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searchterms=false) {

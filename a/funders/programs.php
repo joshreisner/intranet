@@ -33,7 +33,7 @@ while ($r = db_fetch($result)) {?>
 		<? if (($r["awardCount"] == 0) && ($r["funderCount"] == 0)) {
 			echo drawDeleteColumn("Delete this program?", $r["programID"]);
 		} else {?>
-			<td width="16"><img src="<?=$_josh["write_folder"]?>/images/icons/delete-disabled.gif" width="16" height="16" border="0"></td>
+			<td width="16"><img src="<?=DIRECTORY_WRITE?>/images/icons/delete-disabled.gif" width="16" height="16" border="0"></td>
 		<? }?>
 	</tr>
 <? }?>

@@ -6,6 +6,8 @@ if (url_action('delete')) {
 	url_change('/docs/');
 }
 
+url_query_require('./');
+
 $d = db_grab('SELECT 
 		d.title' . langExt() . ' title,
 		d.description' . langExt() . ' description,

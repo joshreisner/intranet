@@ -72,7 +72,7 @@ echo drawTableStart();
 if ($page['is_admin'] || $isPoster) {
 	echo drawHeaderRow($page['breadcrumbs'] . format_string($r["title"], 40), 2, getString('edit'), "edit.php?id=" . $_GET["id"], getString('delete'), "javascript:checkDelete();");
 } else {
-	echo drawHeaderRow($page['breadcrumbs'] . format_string($r["title"], 40), 2, getString('bb_followup'), "#bottom");
+	echo drawHeaderRow($page['breadcrumbs'] . format_string($r["title"], 40), 2, getString('add_followup'), "#bottom");
 }
 echo bbDrawTopic($_GET["id"]);
 echo drawThreadCommentForm(false);
