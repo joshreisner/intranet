@@ -7,9 +7,15 @@ if (url_action("undelete")) { //undelete user
 	url_query_drop("action");
 } elseif (url_action("passwd")) {
 	db_query("UPDATE users SET password = NULL WHERE id = " . $_GET["id"]);
-	$r = db_grab("SELECT id, email FROM users WHERE id = " . $_GET["id"]);
-	emailUser($r["email"], "Intranet Password Reset", drawEmptyResult($_SESSION["full_name"] . ' has just reset your password on the Intranet.  To pick a new password, please <a href="' . url_base() . '/login/password_reset.php?id=' . $r["id"] . '">follow this link</a>.'));
-	if ($_GET["id"] == $_SESSION["user_id"]) $_SESSION["password"] = true; //if is user, make him/her reset pw now
+	if ($_GET["id"] == $_SESSION["user_id"]) {
+		//if is user, make em reset pw now
+		$_SESSION["password"] = true;
+	} else {
+		//otherwise send email
+		$r = db_grab("SELECT id, email FROM users WHERE id = " . $_GET["id"]);
+		$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $r["id"], getString('email_password_message'));
+		emailUser($r["email"], getString('email_password_subject'), drawEmptyResult($message));
+	}
 	url_query_drop("action");
 } elseif (url_action("invite")) {
 	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE id = " . $_GET["id"]);

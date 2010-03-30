@@ -40,8 +40,9 @@ if (isset($_GET['language_id'])) {
 }
 
 //include options file if it exists
-@include(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
-@include(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
+include_once(DIRECTORY_ROOT . '/strings.php');
+include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
+include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
 
 //debug();
 
@@ -525,20 +526,14 @@ function emailAdmins($message, $subject, $colspan=1) {
 }
 
 function emailInvite($id, $email, $name) {
-	global $_SESSION;
-	$email = format_email($email);
-	$message = '<tr><td class="text">
-		Welcome ' . $name . '!  You can
-		<a href="' . url_base() . '/login/password_reset.php?id=' . $id . '">log in to the ' . getString('app_name') . ' now</a>.  
-		The system will prompt you to pick a password and update your contact information.
-		<br><br>
-		If you run into problems, please ask <a href="mailto:' . $_SESSION['email'] . '">' . $_SESSION['full_name'] . '</a> for help.
-		</td></tr>';
-	emailUser($email, getString('app_name') . ' Login Information', $message);
+	$message = getString('email_invite_message');
+	$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $id, $message);
+	$message = str_replace('%NAME%', $name, $message);
+	emailUser($email, getString('email_invite_subject'), '<tr><td class="text">' . $message . '</td></tr>');
 }
 
 function emailUser($address, $title, $content, $colspan=1, $message=false) {
-	global $_josh, $_SESSION;
+	global $_josh;
 
 	//build message
 	$message = drawTopSimple() . 
@@ -609,19 +604,13 @@ function getOption($key) {
 }
 
 function getString($key) {
-	global $strings, $defaults;
-	
+	global $strings;
+
+	//success
 	if (isset($strings[$key][$_SESSION['language']])) return $strings[$key][$_SESSION['language']];
 
-	//default strings.  override these in your config file by specifying $strings variables
-	include_once(DIRECTORY_ROOT . '/strings.php');
-	
-	if (isset($defaults[$key][$_SESSION['language']])) return $defaults[$key][$_SESSION['language']];
-	
-	if (isset($defaults[$key]['en']) || isset($strings[$key]['en'])) {
-		$str = (isset($strings[$key]['en'])) ? $strings[$key]['en'] : $defaults[$key]['en'];
-		error_handle('string not set', 'The string ' . $key . ' is not set for language ' . $_SESSION['language'] . '.  Suggested translation:<p style="font-style:italic;">' . language_translate($str, 'en', $_SESSION['language'])) . '</p>';
-	}
+	//is set for english, suggest translation
+	if (isset($strings[$key]['en'])) error_handle('string not set', 'The string ' . $key . ' is not set for language ' . $_SESSION['language'] . '.  Suggested translation:<p style="font-style:italic;">' . language_translate($strings[$key]['en'], 'en', $_SESSION['language'])) . '</p>';
 
 	error_handle('string not defined', 'The string ' . $key . ' is not defined yet in English.');
 	
@@ -761,7 +750,7 @@ function updateInstanceWords($id, $text) {
 
 //it's convention to always put this at the bottom
 function joshlib() {
-	global $_SERVER, $_josh, $strings, $options;
+	global $_josh;
 	$possibilities = array(
 		'D:\Sites\joshlib\index.php', //seedco-web-srv
 		'/home/hcfacc/www/joshlib/index.php', //icd 2
@@ -770,6 +759,6 @@ function joshlib() {
 		'/Users/joshreisner/Sites/joshlib/index.php' //dev
 	);
 	foreach ($possibilities as $p) if (@include($p)) return $_josh;
-	die('Cannot locate library! ' . $_SERVER['DOCUMENT_ROOT']);
+	die('Help me locate my library. ' . $_SERVER['DOCUMENT_ROOT']);
 }
 ?>
