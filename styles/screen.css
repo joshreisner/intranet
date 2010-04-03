@@ -7,7 +7,8 @@ body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#4
 #left, #left table.table { font-size:12px; }
 #right			{ float:right; position:relative; width:290px; z-index:1; }
 #right, #right table { font-size:11px; }
-#footer			{ float:right; clear:right; font-size:10px; color:#ccc; margin:10px 0px 0px 0px; }
+#footer			{ float:right; clear:right; font-size:10px; color:#aaa; text-align:right; margin:10px 0px 0px 0px; }
+#footer	 a		{ color:#888; }
 #subfooter		{ clear:both; height:20px; }
 
 

@@ -35,7 +35,7 @@ if ($_SESSION['language'] == 'es') {
 if (isset($_GET['language_id'])) {
 	$_SESSION['language_id'] = $_GET['language_id'];
 	$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_GET['language_id']);
-	//update users
+	if (user()) db_query('UPDATE users SET language_id = ' . $_GET['language_id'] . ' WHERE id = ' . user());
 	url_drop('language_id');
 }
 
@@ -49,7 +49,7 @@ include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
 //apply security
 if (!isset($pageIsPublic) || !$pageIsPublic) {
 	//page is not public
-	if (!$_SESSION['user_id']) {
+	if (!user()) {
 		error_debug('user_id session not set', __file__, __line__);
 		if (!login(@$_COOKIE['last_login'], '', true)) {
 			error_debug('could not log in with ' . @$_COOKIE['last_login'] . ', redirecting', __file__, __line__);
@@ -503,11 +503,14 @@ function drawBottom() {
 			if (!$m['is_closed']) include(DIRECTORY_ROOT . DIRECTORY_SEPARATOR . $m['folder'] . DIRECTORY_SEPARATOR . 'pallet.php');
 		$return .= '</table>';
 	}
-	$return .= '</div>';
-	
-	if ($_SESSION['is_admin']) $return .= '<div id="footer">page rendered in ' . format_time_exec() . '</div>';
-	
 	$return .= '</div>
+	<div id="footer">';
+	
+	//if (admin()) $return .= 'page rendered in ' . format_time_exec() . '<br/>';
+	$return .= getString('copyright') . '<br/>';
+	if (getOption('legal')) $return .= draw_link('/login/legal.php', getString('legal_title'));
+	
+	$return .= '</div></div>
 		<div id="subfooter"></div>
 	</body>
 </html>';
@@ -525,11 +528,20 @@ function emailAdmins($message, $subject, $colspan=1) {
 	return emailUsers(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message, $colspan);
 }
 
-function emailInvite($id, $email, $name) {
-	$message = getString('email_invite_message');
+function emailInvite($id) {
+	$user = db_grab("SELECT u.nickname, u.email, u.firstname, l.code language FROM users u JOIN languages l ON u.language_id = l.id WHERE u.id = " . $_GET["id"]);
+	$name = (!$user["nickname"]) ? $user["firstname"] : $user["nickname"];
+	$message = getString('email_invite_message', $user['language']);
 	$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $id, $message);
 	$message = str_replace('%NAME%', $name, $message);
-	emailUser($email, getString('email_invite_subject'), '<tr><td class="text">' . $message . '</td></tr>');
+	emailUser($user['email'], getString('email_invite_subject', $user['language']), '<tr><td class="text">' . $message . '</td></tr>');
+}
+
+function emailPassword($user_id) {
+	$user = db_grab('SELECT u.email, l.code language FROM users u JOIN languages l ON u.language_id = l.id WHERE u.is_active = 1 AND u.id = ' . $user_id);
+	$message = getString('email_password_message', $user['language']);
+	$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $user_id, $message);
+	emailUser($user['email'], getString('email_password_subject', $user['language']), '<tr><td class="text">' . $message . '</td></tr>');
 }
 
 function emailUser($address, $title, $content, $colspan=1, $message=false) {
@@ -567,6 +579,10 @@ function emailUsers($addresses, $title, $content, $colspan=1, $message=false) {
 	return true;
 }
 
+function formAddChannels($form) {
+	if (getOption('channels')) $form->set_field(array('name'=>'channels', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('channels_label'), 'options_table'=>'channels', 'linking_table'=>'bb_topics_to_channels', 'object_id'=>'topic_id', 'option_id'=>'channel_id', 'default'=>'all'));
+}
+
 function getChannelsWhere($table, $short, $column) {
 	if (getOption('channels') && $_SESSION['channel_id']) return ' JOIN ' . $table . '_to_channels t2c ON ' . $short . '.id = t2c.' . $column . ' WHERE ' . $short . '.is_active = 1 AND t2c.channel_id = ' . $_SESSION['channel_id'] . ' ';
 	return ' WHERE ' . $short . '.is_active = 1 ';
@@ -581,6 +597,7 @@ function getOption($key) {
 	//default options.  override these in your config file by specifying $options variables
 	$defaults['channels']				= false;
 	$defaults['languages']				= false;
+	$defaults['legal']					= false;
 
 	$defaults['bb_notifyfollowup']		= false;
 	$defaults['bb_notifypost']			= false;
@@ -603,14 +620,17 @@ function getOption($key) {
 	return $defaults[$key];
 }
 
-function getString($key) {
+function getString($key, $language=false) {
 	global $strings;
 
+	//default is user language, but can be overridden, such as in emails
+	if (!$language) $language = $_SESSION['language'];
+	
 	//success
-	if (isset($strings[$key][$_SESSION['language']])) return $strings[$key][$_SESSION['language']];
+	if (isset($strings[$key][$language])) return $strings[$key][$language];
 
 	//is set for english, suggest translation
-	if (isset($strings[$key]['en'])) error_handle('string not set', 'The string ' . $key . ' is not set for language ' . $_SESSION['language'] . '.  Suggested translation:<p style="font-style:italic;">' . language_translate($strings[$key]['en'], 'en', $_SESSION['language'])) . '</p>';
+	if (isset($strings[$key]['en'])) error_handle('string not set', 'The string ' . $key . ' is not set for language ' . $language . '.  Suggested translation:<p style="font-style:italic;">' . language_translate($strings[$key]['en'], 'en', $language)) . '</p>';
 
 	error_handle('string not defined', 'The string ' . $key . ' is not defined yet in English.');
 	
@@ -713,8 +733,11 @@ function login($username, $password, $skippass=false) {
 		u.help,
 		u.is_admin,
 		u.updated_date,
+		u.language_id,
+		l.code language,
 		' . db_datediff('u.updated_date', 'GETDATE()') . ' update_days
 	FROM users u
+	JOIN languages l ON u.language_id = l.id
 	LEFT JOIN departments d ON u.departmentID = d.departmentID
 	WHERE u.email = \'' . $username . '\' AND u.is_active = 1' . $where)) {
 		//login was good
@@ -728,11 +751,13 @@ function login($username, $password, $skippass=false) {
 		$_SESSION['update_days']	= $user['update_days'];
 		$_SESSION['updated_date']	= $user['updated_date'];
 		$_SESSION['password']		= $user['password'];
+		$_SESSION['language_id']	= $user['language_id'];
+		$_SESSION['language']		= $user['language'];
 		$_SESSION['full_name']		= $user['firstname'] . ' ' . $user['lastname'];
 		$_SESSION['isLoggedIn']		= true;
+		
 		cookie('last_login', $user['email']);
 		cookie('last_email', $user['email']);
-		
 		return true;
 	}
 	$_SESSION['user_id']		= false;

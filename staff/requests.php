@@ -4,11 +4,8 @@ if (url_action("deletereq")) {
 	db_query("DELETE FROM users_requests WHERE id = " . $_GET["id"]);
 	url_query_drop("action,id");
 } elseif (url_action("invite")) {
-	$result = db_query("SELECT id, nickname, email, firstname FROM users WHERE lastlogin IS NULL AND is_active = 1");
-	while ($r = db_fetch($result)) {
-		$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
-		emailInvite($r["id"], $r["email"], $name);
-	}
+	$result = db_query('SELECT id FROM users WHERE lastlogin IS NULL AND is_active = 1');
+	while ($r = db_fetch($result)) emailInvite($r['id']);
 	url_query_drop("action");
 }
 

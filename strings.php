@@ -46,6 +46,11 @@ $strings['categories']['es']			= 'Categorías';
 $strings['categories']['fr']			= 'Catégories';
 $strings['categories']['ru']			= 'Категории';
 
+$strings['channels_label']['en']			= 'Channels';
+$strings['channels_label']['es']			= 'Canales';
+$strings['channels_label']['fr']			= 'Chaînes';
+$strings['channels_label']['ru']			= 'Каналы';
+
 $strings['clips']['en']			= 'Clips';
 $strings['clips']['es']			= 'Clips';
 $strings['clips']['fr']			= 'Clips';
@@ -261,7 +266,6 @@ $strings['login_account_request_msg']['es'] = 'Para solicitar una cuenta, por fa
 $strings['login_account_request_msg']['fr'] = 'Pour demander un compte, s\'il vous plaît remplissez les champs ci-dessous. Vos informations de connexion vous sera envoyé dès que votre demande est approuvée.';
 $strings['login_account_request_msg']['ru'] = 'Чтобы запросить счет, пожалуйста, заполните поля ниже. Логин Ваша информация будет отправлен к вам после утверждения вашего запроса.';
 
-
 $strings['login_password_reset_msg']['en'] = 'Your old password can\'t be recovered, since it was encrypted.  However, it can be reset so you can pick a new one.  What is the email address on the account?';
 $strings['login_password_reset_msg']['es'] = 'Su contraseña antigua no se puede recuperar, ya que se encriptada. Sin embargo, se puede restablecer de modo que puede elegir uno nuevo. ¿Cuál es la dirección de correo electrónico en la cuenta?';
 $strings['login_password_reset_msg']['fr'] = 'Votre ancien mot de passe ne peuvent pas être récupérés, car il a été chiffré. Cependant, il peut être remis à zéro et vous pouvez choisir un nouveau. Quelle est l\'adresse e-mail sur le compte?';
@@ -301,11 +305,6 @@ $strings['network']['en']			= 'Network';
 $strings['network']['es']			= 'Red';
 $strings['network']['fr']			= 'Réseau';
 $strings['network']['ru']			= 'Сеть';
-
-$strings['networks']['en']			= 'Networks';
-$strings['networks']['es']			= 'Redes';
-$strings['networks']['fr']			= 'Réseaux';
-$strings['networks']['ru']			= 'Сети';
 
 $strings['networks_view_all']['en']			= 'View All';
 $strings['networks_view_all']['es']			= 'Ver todas las redes';

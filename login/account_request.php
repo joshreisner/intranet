@@ -57,6 +57,9 @@ $f->set_field(array('type'=>'text', 'name'=>'lastname', 'label'=>getString('name
 $f->set_field(array('type'=>'text', 'name'=>'title', 'label'=>getString('staff_title')));
 $f->set_field(array('type'=>'text', 'name'=>'phone', 'label'=>getString('telephone')));
 $f->set_field(array('type'=>'text', 'name'=>'email', 'label'=>getString('email')));
+if (getOption('legal')) {
+	$f->set_field(array('type'=>'checkbox', 'name'=>'legal', 'label'=>getString('legal_checkbox')));
+}
 $f->set_field(array('type'=>'textarea', 'name'=>'bio', 'label'=>getString('bio')));
 
 echo $f->draw();

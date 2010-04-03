@@ -25,10 +25,8 @@ if ($posting) {
 		}
 	}
 	
-	if (!$editing) {
-		//todo send invite
-		//emailInvite($id, $email, $name)
-	}
+	//send invite
+	//if (!$editing) emailInvite($id);
 	
 	if ($id == $_SESSION['user_id']) {
 		//todo, fix this and make it more user-update dependent
@@ -86,7 +84,7 @@ if ($_SESSION['is_admin']) {
 //administrative info
 if ($page['is_admin']) {
 	$f->set_group(getString('administrative_info'), increment());
-	if (getOption('channels')) $f->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('networks'), 'options_table'=>'channels', 'linking_table'=>'users_to_channels', 'object_id'=>'user_id', 'option_id'=>'channel_id', 'default'=>'all', 'position'=>increment()));
+	formAddChannels($f);
 	$f->set_field(array('name'=>'startDate', 'label'=>getString('start_date'), 'type'=>'date', 'required'=>true, 'position'=>increment()));
 	$f->set_field(array('name'=>'endDate', 'label'=>getString('end_date'), 'type'=>'date', 'required'=>false, 'position'=>increment()));
 } else {

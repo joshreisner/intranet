@@ -69,4 +69,4 @@ form fieldset div.field select { background-color:#fff; border:1px solid #ccc; h
 form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
 form fieldset div.submit input.submit:hover { cursor:pointer; }
-
+form fieldset span.additional { font-size:11px; }

@@ -12,15 +12,11 @@ if (url_action("undelete")) { //undelete user
 		$_SESSION["password"] = true;
 	} else {
 		//otherwise send email
-		$r = db_grab("SELECT id, email FROM users WHERE id = " . $_GET["id"]);
-		$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $r["id"], getString('email_password_message'));
-		emailUser($r["email"], getString('email_password_subject'), drawEmptyResult($message));
+		emailPassword($_GET['id']);
 	}
 	url_query_drop("action");
 } elseif (url_action("invite")) {
-	$r = db_grab("SELECT nickname, email, firstname FROM users WHERE id = " . $_GET["id"]);
-	$name = (!$r["nickname"]) ? $r["firstname"] : $r["nickname"];
-	emailInvite($_GET["id"], $r["email"], $name);
+	emailInvite($_GET["id"]);
 	url_query_drop("action");
 }
 
@@ -65,8 +61,10 @@ $r = db_grab('SELECT
 		u.endDate,
 		u.is_active,
 		u.is_admin,
-		r.description rank
+		r.description rank,
+		l.title language
 	FROM users u
+	JOIN languages l ON u.language_id = l.id
 	LEFT JOIN users_to_channels u2c ON u.id = u2c.user_id
 	LEFT JOIN channels			c ON u2c.channel_id = c.id
 	LEFT JOIN intranet_ranks	r ON u.rankID = r.id
@@ -112,6 +110,7 @@ if (!$r["is_active"]) {
 	$rowspan = 6;
 	if (getOption("staff_showdept")) $rowspan++;
 	if (getOption("staff_showoffice")) $rowspan++;
+	if (getOption("languages")) $rowspan++;
 	?>
 	<tr>
 		<td class="left"><?=getString('name')?></td>
@@ -136,6 +135,12 @@ if (!$r["is_active"]) {
 	<tr>
 		<td class="left"><?=getString('office')?></td>
 		<td><?=$r["office"]?></td>
+	</tr>
+	<? }
+	if (getOption("languages")) {?>
+	<tr>
+		<td class="left"><?=getString('language')?></td>
+		<td><?=$r["language"]?></td>
 	</tr>
 	<? }?>
 	<tr>

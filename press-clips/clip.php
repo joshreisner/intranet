@@ -35,7 +35,7 @@ $r = db_grab('SELECT c.title' . langExt() . ' title, c.url, c.pub_date, c.public
 	</tr>
 	<? if (getOption('channels')) {?>
 	<tr>
-		<td class="left"><?=getString('networks')?></td>
+		<td class="left"><?=getString('channels_label')?></td>
 		<td>
 			<? $channels = db_query('SELECT
 				c.title' . langExt() . ' title

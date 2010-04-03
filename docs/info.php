@@ -56,7 +56,7 @@ echo drawTop();
 	</tr>
 	<? if (getOption('channels')) {?>
 	<tr>
-		<td class="left"><?=getString('networks')?></td>
+		<td class="left"><?=getString('channels_label')?></td>
 		<td>
 			<? $channels = db_query('SELECT
 				c.title' . langExt() . ' title
