@@ -1,3 +1,11 @@
+function refreshBB() {
+	new Ajax.Request('/bb/ajax.php', {
+		onSuccess: function(transport) {
+			document.getElementById('bb_topics').innerHTML = transport.responseText;
+		}
+	});	
+}
+
 function showHelp(id, value) {
 	ajax_set('users', 'help', id, value);
 }

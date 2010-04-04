@@ -410,8 +410,8 @@ function drawTop($headcontent=false) {
 			draw_css_src('/styles/screen.css',	'screen') .
 			draw_css_src('/styles/print.css',	'print') .
 			draw_css_src('/styles/ie.css',		'ie') .
-			draw_javascript_src('/javascript.js') .
 			draw_javascript_lib() .
+			draw_javascript_src('/javascript.js') .
 			draw_css('
 				#left table.left td.head { background-color:#' . $page['color'] . '; }
 				#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
