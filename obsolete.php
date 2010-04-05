@@ -267,7 +267,7 @@ class intranet_form {
 		echo draw_javascript("function validate(form) {
 				var errors = new Array();
 				" . $js . "
-				return showErrors(errors);
+				return form_errors(errors);
 			}");
 		}?>
 		<a name="bottom"></a>

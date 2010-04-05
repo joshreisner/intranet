@@ -35,7 +35,7 @@ function drawEventForm() {
 	$f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, description' . langExt() . ' FROM cal_events_types ORDER BY description', 'label'=>getString('category'), 'required'=>'true'));
 	$f->set_field(array('name'=>'description' . langExt(), 'label'=>getString('description'), 'type'=>'textarea', 'class'=>'tinymce'));
 	langUnsetFields($f, 'title,description');
-	formAddChannels($f);
+	formAddChannels($f, 'cal_events', 'event_id');
 	$f->set_order('created_user,title, start_date, end_date, type_id, description, channels');
 	langTranslateCheckbox($f, url_id());
 	return $f->draw();

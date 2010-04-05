@@ -54,7 +54,7 @@ form fieldset legend span { border-bottom:1px solid #ccc; display:block; positio
 form fieldset legend a { color:#fff; }
 
 form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; overflow-y:auto; background-color:#eee; }
-form fieldset div.field label { line-height:26px; width:100px; display:block; float:left; }
+form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; height:29px; overflow:hidden; }
 form fieldset div.field input.text { width:480px; }
 form fieldset div.field input.checkbox { margin-right:7px; }
 form fieldset div.field input.file { background-color:transparent; }
@@ -70,3 +70,4 @@ form fieldset div.submit { text-align:center; border-bottom:none; background-col
 form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
 form fieldset div.submit input.submit:hover { cursor:pointer; }
 form fieldset span.additional { font-size:11px; }
+form fieldset div.group { background-color:#fff; height:50px; font-weight:bold; font-size:12px; line-height:80px; }

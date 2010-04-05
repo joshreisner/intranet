@@ -91,13 +91,15 @@ function drawTopicForm() {
 	$f = new form('bb_topics', @$_GET['id'], getString('topic_new'));
 	if ($page['is_admin']) {
 		$f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>getString('posted_by')));
+	}
+	if ($page['is_admin'] && !getOption('bb_notifypost')) {
 		$f->set_field(array('name'=>'is_admin', 'class'=>'admin', 'type'=>'checkbox', 'label'=>getString('is_admin')));
 	} else {
 		$f->unset_fields('is_admin');
 	}
 	$f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getString('title')));
 	if (getOption('bb_types')) $f->set_field(array('name'=>'type_id', 'type'=>'select', 'sql'=>'SELECT id, title' . langExt() . ' title FROM bb_topics_types', 'label'=>getString('category')));
-	formAddChannels($f);
+	formAddChannels($f, 'bb_topics', 'topic_id');
 	$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'tinymce'));
 	$f->set_order('created_user,is_admin,title' . langExt() . ',type_id,channels,description' . langExt());
 	$f->unset_fields('thread_date');

@@ -9,9 +9,17 @@ function increment() {
 }
 
 if ($posting) {
+	//check to make sure email not already assigned to an active user
+	if (db_grab('SELECT id FROM users WHERE is_active = 1 AND email = "' . $_POST['email'] . '"')) {
+		url_change('view.php?id=' . $id);
+	}
+	
 	langTranslatePost('bio,title');
 	$id = db_save('users');
-	if (getOption('channels')) db_checkboxes('channels', 'users_to_channels', 'user_id', 'channel_id', $id);
+	if (getOption('channels')) {
+		db_checkboxes('channels', 'users_to_channels', 'user_id', 'channel_id', $id);
+		db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
+	}
 	if ($_SESSION['is_admin']) {
 		if (isset($_POST['is_admin'])) {
 			//is admin, so delete permissions
@@ -60,17 +68,21 @@ $f->set_field(array('name'=>'email', 'type'=>'text', 'label'=>getString('email')
 $f->set_field(array('name'=>'title' . langExt(), 'type'=>'text', 'label'=>getString('staff_title'), 'position'=>increment()));
 $f->set_field(array('name'=>'image_large', 'type'=>'file', 'label'=>getString('image'), 'position'=>increment()));
 if (getOption('languages')) $f->set_field(array('type'=>'select', 'name'=>'language_id', 'label'=>getString('language'), 'sql'=>'SELECT id, title FROM languages ORDER BY title', 'required'=>true, 'position'=>increment()));
-
-
 if (getOption('staff_showdept')) $f->set_field(array('type'=>'select', 'name'=>'departmentID', 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
 if (getOption('staff_showoffice')) $f->set_field(array('type'=>'select', 'name'=>'officeID', 'sql'=>'SELECT id, name FROM offices ORDER BY name', 'position'=>increment()));
-
 $f->set_field(array('name'=>'bio' . langExt(), 'label'=>getString('bio'), 'type'=>'textarea', 'class'=>'tinymce', 'position'=>increment()));
 $f->set_field(array('name'=>'phone', 'label'=>getString('telephone'), 'type'=>'text', 'position'=>increment()));
 $f->set_field(array('name'=>'extension', 'label'=>getString('telephone_extension'), 'type'=>'text', 'class'=>'short', 'position'=>increment()));
 
-//administrative info
-if ($_SESSION['is_admin']) {
+//communications preferences (user only)
+if (getOption('channels') && (url_id() == user())) {
+	$f->set_group(getString('email_prefs'), increment());
+	$f->set_field(array('name'=>'email_prefs', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('email_prefs_label'), 'options_table'=>'channels', 'linking_table'=>'users_to_channels_prefs', 'object_id'=>'user_id', 'option_id'=>'channel_id', 'default'=>'all', 'position'=>increment()));
+}
+
+
+//permissions (true admin only)
+if (admin()) {
 	$f->set_group(getString('permissions'), increment());
 	//new rule: only admins can edit permissions
 	$f->set_field(array('type'=>'checkbox', 'name'=>'is_admin', 'label'=>getString('is_admin'), 'position'=>increment()));
@@ -80,11 +92,10 @@ if ($_SESSION['is_admin']) {
 	$f->unset_fields('is_admin');
 }
 
-
-//administrative info
+//administrative info (admin)
 if ($page['is_admin']) {
 	$f->set_group(getString('administrative_info'), increment());
-	formAddChannels($f);
+	formAddChannels($f, 'users', 'user_id');
 	$f->set_field(array('name'=>'startDate', 'label'=>getString('start_date'), 'type'=>'date', 'required'=>true, 'position'=>increment()));
 	$f->set_field(array('name'=>'endDate', 'label'=>getString('end_date'), 'type'=>'date', 'required'=>false, 'position'=>increment()));
 } else {

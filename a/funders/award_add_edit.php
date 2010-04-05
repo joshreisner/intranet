@@ -115,7 +115,7 @@ if (isset($_GET["funderID"])) { //adding
 		} else if (!isFinite(form.txtAmount.value)) {
 			errors[errors.length] = "the amount must have only numbers";
 		}
-		return showErrors(errors);
+		return form_errors(errors);
 	}
 	//-->
 </script>

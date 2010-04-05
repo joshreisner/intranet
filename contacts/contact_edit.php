@@ -134,7 +134,7 @@ if (isset($_GET["id"])) {
 			$checkboxes = array();
 			while ($v = db_fetch($values)) $checkboxes[] = "!form.tag_multiple_" . $v["id"] . ".checked";
 		?>
-		return(showErrors(errors));
+		return(form_errors(errors));
 	}
 	//-->
 	

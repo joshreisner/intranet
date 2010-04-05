@@ -58,7 +58,7 @@ $f->set_field(array('name'=>'publication' . langExtT(), 'type'=>'text', 'label'=
 $f->set_field(array('name'=>'pub_date', 'type'=>'date', 'label'=>getString('published'), 'required'=>true));
 $f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'tinymce'));
 $f->set_field(array('name'=>'type_id', 'label'=>getString('category'), 'type'=>'select', 'sql'=>'SELECT id, title' . langExt() . ' title FROM press_clips_types ORDER BY precedence', 'required'=>true));
-formAddChannels($f);
+formAddChannels($f, 'press_clips', 'clip_id');
 langUnsetFields($f, 'title,description,publication');
 langTranslateCheckbox($f, url_id());
 echo $f->draw(@$r, !$included);

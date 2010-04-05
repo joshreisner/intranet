@@ -188,6 +188,7 @@ function drawTopSimple($title=false) {
 	if ($title) {
 		$return .= draw_container('title', $title);
 		$return .= draw_javascript_lib();
+		$return .= draw_javascript_src('/javascript.js');
 	}
 	$return .= '</head>
 		<body class="s">';
@@ -547,6 +548,10 @@ function emailPassword($user_id) {
 function emailUser($address, $title, $content, $colspan=1, $message=false) {
 	global $_josh;
 
+	//for now, only send email to me and eva
+	$valid_addresses = array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com');
+	if (!in_array($address, $valid_addresses)) return;
+	
 	//build message
 	$message = drawTopSimple() . 
 		(($message) ? drawMessage($message) : '') . 
@@ -579,8 +584,8 @@ function emailUsers($addresses, $title, $content, $colspan=1, $message=false) {
 	return true;
 }
 
-function formAddChannels($form) {
-	if (getOption('channels')) $form->set_field(array('name'=>'channels', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('channels_label'), 'options_table'=>'channels', 'linking_table'=>'bb_topics_to_channels', 'object_id'=>'topic_id', 'option_id'=>'channel_id', 'default'=>'all'));
+function formAddChannels($form, $table, $column) {
+	if (getOption('channels')) $form->set_field(array('name'=>'channels', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('channels_label'), 'options_table'=>'channels', 'linking_table'=>$table . '_to_channels', 'object_id'=>$column, 'option_id'=>'channel_id', 'default'=>'all'));
 }
 
 function getChannelsWhere($table, $short, $column) {
@@ -598,6 +603,7 @@ function getOption($key) {
 	$defaults['channels']				= false;
 	$defaults['languages']				= false;
 	$defaults['legal']					= false;
+	$defaults['requests']				= true;
 
 	$defaults['bb_notifyfollowup']		= false;
 	$defaults['bb_notifypost']			= false;

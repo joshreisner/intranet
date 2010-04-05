@@ -143,7 +143,7 @@ div.dropmarker {
 #left form fieldset legend a { color:#fff; }
 
 #left form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; background-color:#eee; }
-#left form fieldset div.field label { line-height:15px; width:100px; display:block; float:left; height:29px; overflow:hidden; }
+#left form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; height:29px; overflow:hidden; }
 #left form fieldset div.field input.text { width:480px; }
 #left form fieldset div.field input.short { width:80px; }
 #left form fieldset div.field input.checkbox { margin-right:7px; }
