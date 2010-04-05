@@ -331,11 +331,6 @@ $strings['none']['es']			= 'Ninguno';
 $strings['none']['fr']			= 'Aucun';
 $strings['none']['ru']			= 'Никакой';
 
-$strings['notify_topics']['en']			= 'Notify Topics';
-//$strings['notify_topics']['es']			= 'Ninguno';
-//$strings['notify_topics']['fr']			= 'Aucun';
-//$strings['notify_topics']['ru']			= 'Никакой';
-
 $strings['organization']['en']			= 'Organization';
 $strings['organization']['es']			= 'Organización';
 $strings['organization']['fr']			= 'Organisation';

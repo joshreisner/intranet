@@ -41,7 +41,6 @@ $r = db_grab('SELECT
 		u.homeCity,
 		s.stateAbbrev,
 		u.homeZIP,
-		u.notify_topics,
 		c.title' . langExt() . ' channel,
 		u.homePhone,
 		u.homeCell,
@@ -163,13 +162,7 @@ if (!$r["is_active"]) {
 	<tr class="group">
 		<td colspan="3"><?=getString('administrative_info')?></td>
 	</tr>
-	
-	<? if (getOption("bb_notifypost")) {?>
-	<tr>
-		<td class="left">Notify Posts</td>
-		<td colspan="2" class="bigger"><?=format_boolean($r["notify_topics"])?></td>
-	</tr>
-	<? }
+	<?
 	if (getOption("channels")) {?>
 	<tr>
 		<td class="left"><?=getString('network')?></td>

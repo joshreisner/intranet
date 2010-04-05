@@ -102,13 +102,6 @@ if ($page['is_admin']) {
 	$f->unset_fields('startDate,endDate');
 }
 
-//notify topics
-if (getOption('bb_notifypost')) {
-	$f->set_field(array('name'=>'notify_topics', 'type'=>'checkbox', 'label'=>getString('notify_topics'), 'potition'=>increment()));
-} else {
-	$f->unset_fields('notify_topics');
-}
-
 //home info
 if (getOption('staff_showhome')) {
 } else {
