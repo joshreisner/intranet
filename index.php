@@ -69,7 +69,7 @@ url_header_utf8();
 			.bottom-right { right:-1px; }
 		</style>
 		<![endif]--> 
-		<?=draw_javascript_lib();?>
+		<?=draw_javascript_src();?>
 		<script language="javascript">
 			<!--
 	    	function validate(form) {

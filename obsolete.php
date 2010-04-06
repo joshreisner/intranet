@@ -50,7 +50,7 @@ function drawHeaderRow($name=false, $colspan=1, $link1text=false, $link1link=fal
 	//urls are absolute because it could be used in an email
 	$header ='<tr>
 			<td class="head" colspan="' . $colspan . '">
-				<div class="head-left">' . $name . '</div>';
+				<div class="left">' . $name . '</div>';
 	if ($link2link && $link2text) $header .= '<a class="right" href="' . $link2link . '">' . $link2text . '</a>';
 	if ($link1link && $link1text) $header .= '<a class="right" href="' . $link1link . '">' . $link1text . '</a>';
 	$header .='</td></tr>';

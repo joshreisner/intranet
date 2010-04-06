@@ -7,7 +7,7 @@ body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#4
 #left, #left table.table { font-size:12px; }
 #right			{ float:right; position:relative; width:290px; z-index:1; }
 #right, #right table { font-size:11px; }
-#footer			{ float:right; clear:right; font-size:10px; color:#aaa; text-align:right; margin:10px 0px 0px 0px; }
+#footer			{ float:right; clear:right; font-size:9px; color:#aaa; text-align:right; margin:10px 0px 0px 0px; width:290px; }
 #footer	 a		{ color:#888; }
 #subfooter		{ clear:both; height:20px; }
 
@@ -21,7 +21,7 @@ table.left td.title, a.title, span.title { font-size:18px; }
 /* general form elements */
 form					{ margin:0px; padding:0px; }
 input, select, textarea { margin:0px; font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
-input.text				{ width:500px; height:20px; vertical-align:middle; }
+/* input.text				{ width:500px; height:20px; vertical-align:middle; } */
 	
 input.button   {
 	border:none;
@@ -55,7 +55,8 @@ a:hover, a.over	{ color:#d8282d;  text-decoration:underline; }
 
 
 /* help */
-#help { border:1px solid #bbb; background-color:#ededed; width:570px; min-height:22px; padding:9px 11px 0px 11px; margin-bottom:14px; }
+#help { border:1px solid #bbb; background-color:#ededed; min-height:33px; margin-bottom:14px; }
+#help div.inner { margin:9px 11px 0px 9px; } 
 #helptext { font-size:12px; line-height:20px; clear:both; }
 #helptext p { padding:0px; margin:0px 0px 10px 0px; }
 #help a { margin-bottom:14px; }
@@ -95,20 +96,22 @@ div.panel {
 
 
 /* navigation */
-table.navigation { list-style:none; margin:0px 0px 15px 0px; width:594px; border:none; height:22px; text-align:center; }
+table.navigation { list-style:none; margin:0px 0px 15px 0px; width:100%; border:none; height:22px; text-align:center; }
 table.navigation td { padding:3px; }
 table.navigation td.selected { font-weight:bold; background-color:#fff; }
 
 
 /* table */
-#left table.table { border:1px solid #ddd; border-bottom:0px; width:594px; margin:0px 0px 14px 0px; }
+#left table.table { border:1px solid #ddd; border-bottom:0px; margin:0px 0px 14px 0px; width:100%; }
 #left table.table th.title { font-size:13px; height:19px; color:#fff; line-height:19px; padding-left:4px; }
 #left table.table th.title a { color:#fff; }
 #left table.table th.title span { float:left; }
 #left table.table td, #left table.table th { padding:3px; border-bottom:1px solid #ddd; }
 
 th { font-weight:normal; font-size:11px; background-color:#f0f0f0; color:#999; text-align:left; }
-#left table.table th a.right { font-size:9px; margin:0px; padding:0px 3px; text-transform:uppercase; }
+#left table a.right { font-size:9px; margin:0px; padding:0px 3px; text-transform:uppercase; color:#fff; }
+#left table div.left { float:left; }
+#left table div.left a { color:#fff; }
 #left table.table td { height:20px; }
 #left table.table td.empty { background-color:#f0f0f0; vertical-align:middle; height:120px; text-align:center; line-height:20px; font-size:13px; color:#666; }
 #left table.table ul.header { margin:0px; padding:0px; font-size:10px; line-height:18px; list-style-type:none; text-transform:uppercase; float:right; }
@@ -136,15 +139,15 @@ div.dropmarker {
 
 
 /* form */
-#left form div.fieldset { padding:26px 0px 0px 0px; margin:0px 0px 14px 0px; border:1px solid #ccc; position:relative; width:592px; }
+#left form div.fieldset { padding:26px 0px 0px 0px; margin:0px 0px 14px 0px; border:1px solid #ccc; position:relative; }
 #left form fieldset { padding:0px; margin:0px; border:0px; }
 #left form fieldset legend {  }
-#left form fieldset legend span { border-bottom:1px solid #ccc; display:block; position:absolute; top:0px; left:0px; font-size:13px; height:25px; padding-left:4px; width:588px; line-height:24px; color:#fff; }
+#left form fieldset legend span { border-bottom:1px solid #ccc; display:block; position:absolute; top:0px; left:0px; font-size:13px; height:25px; padding-left:4px; width:584px; line-height:24px; color:#fff; }
 #left form fieldset legend a { color:#fff; }
 
 #left form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; background-color:#eee; }
 #left form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; height:29px; overflow:hidden; }
-#left form fieldset div.field input.text { width:480px; }
+#left form fieldset div.field input.text { width:476px; height:20px; }
 #left form fieldset div.field input.short { width:80px; }
 #left form fieldset div.field input.checkbox { margin-right:7px; }
 #left form fieldset div.field input.file { background-color:transparent; }
@@ -156,7 +159,7 @@ div.dropmarker {
 #left form fieldset div.checkboxes li { display:block; width:135px; float:left; padding-left:17px; margin:0px 4px 4px 0px; line-height:12px; }
 #left form fieldset div.checkboxes input { margin:0px 0px 0px -17px; }
 #left form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
-#left form fieldset div.field textarea { width:480px; height:280px; }
+#left form fieldset div.field textarea { width:476px; height:280px; }
 #left form fieldset div.field select { background-color:#fff; border:1px solid #ccc; height:26px; }
 #left form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }
@@ -194,8 +197,8 @@ textarea.press_export { width:594px; height:120px; }
 #right table tr { background-color:#fff; }
 #right table tr.admin { background-color:#fffce0; }
 #right table td { padding:4px 3px 4px 3px; }
-#right table td.head { vertical-align:middle; height:13px; font-size:12px; color:#fff; line-height:18px; }
-#right table td.head a { color:#fff; }
+#right table td.head { vertical-align:middle; font-size:12px; line-height:18px; }
+#right table td.head a.left { color:#fff; float:left; }
 #right table td.head img { float:right; margin:2px; }
 #right table td.empty { text-align:center; background-color:#eee; height:50px; color:#777; }
 #right table td.helpdesk-status {
@@ -210,14 +213,6 @@ textarea.press_export { width:594px; height:120px; }
 #right ul li { float:left; width:139px; padding:5px 0px 3px 1px; }
 
 /*deprecated*/
-.head a { padding:0px; color:#fff; }
-.head a:hover { color:#fff; }
-
-.head a.right { font-size:9px; margin:0px; padding:0px 3px; line-height:22px; text-transform: uppercase;}
-.head a.right:hover { text-decoration:underline; }
-
-.head div.head-left { float:left; height:23px; line-height:20px; }
-.head div.head-right { float:left; height:12px; line-height:14px;}
 
 table.left { 
 	width:594px; 

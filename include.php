@@ -187,7 +187,7 @@ function drawTopSimple($title=false) {
 			draw_css(file_get('/styles/simple.css'));
 	if ($title) {
 		$return .= draw_container('title', $title);
-		$return .= draw_javascript_lib();
+		$return .= draw_javascript_src();
 		$return .= draw_javascript_src('/javascript.js');
 	}
 	$return .= '</head>
@@ -261,7 +261,7 @@ function drawNavigation() {
 function drawHeader($options=false, $title=false) {
 	//get the page for the header
 	global $_josh, $page, $modules, $modulettes;
-	$return = $page['breadcrumbs'] . (($title) ? $title : $page['title']);	
+	$return = draw_div_class('left', $page['breadcrumbs'] . (($title) ? $title : $page['title']));
 	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
 	return $return;
 }
@@ -411,7 +411,8 @@ function drawTop($headcontent=false) {
 			draw_css_src('/styles/screen.css',	'screen') .
 			draw_css_src('/styles/print.css',	'print') .
 			draw_css_src('/styles/ie.css',		'ie') .
-			draw_javascript_lib() .
+			lib_get('scriptaculous') .
+			draw_javascript_src() .
 			draw_javascript_src('/javascript.js') .
 			draw_css('
 				#left table.left td.head { background-color:#' . $page['color'] . '; }
@@ -439,6 +440,7 @@ function drawTop($headcontent=false) {
 			' . draw_div('banner', draw_img(DIRECTORY_WRITE . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
 			<div id="left">
 				<div id="help">
+					<div class="inner">
 				<a class="button left" href="' . $_SESSION['homepage'] . '">' . getString('home') . '</a>
 				' . draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), getString('help_' . (($user['help']) ? 'hide' : 'show')), array('class'=>'button right', 'id'=>'showhelp'));
 	if ($_SESSION['is_admin']) {
@@ -451,6 +453,7 @@ function drawTop($headcontent=false) {
 	$return .= '<div id="helptext"';
 	if (!$user['help']) $return .= ' style="display:none;"';
 	$return .= '>' . $page['helptext'] . '</div>
+					</div>
 				</div>';
 
 	if ($_josh['request']['folder'] == 'helpdesk') $return .= drawNavigationHelpdesk();
@@ -462,7 +465,7 @@ function drawTop($headcontent=false) {
 
 //it's convention to put this right below drawTop()
 function drawBottom() {
-	global $_SESSION, $_GET, $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes;
+	global $_SESSION, $_GET, $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes, $page;
 	$return = '
 		<!-- DRAWING BOTTOM -->
 			</div>
@@ -497,7 +500,7 @@ function drawBottom() {
 		<table class="right ' . $m['folder'] . '" cellspacing="1">
 			<tr>
 				<td colspan="2" class="head" style="background-color:#' . $m['color'] . ';">
-					<a href="/' . $m['folder'] . '/">' . $m['title'] . '</a>
+					<a href="/' . $m['folder'] . '/" class="left">' . $m['title'] . '</a>
 					' . draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false)) . '
 				</td>
 			</tr>';
@@ -515,6 +518,10 @@ function drawBottom() {
 		<div id="subfooter"></div>
 	</body>
 </html>';
+
+	//record pageview
+	if ($page['id'] && user()) db_query('INSERT INTO pages_views ( page_id, user_id, timestamp ) VALUES ( ' . $page['id'] . ', ' . user('NULL') . ', GETDATE() )');
+	
 	return $return;
 }
 
@@ -530,7 +537,7 @@ function emailAdmins($message, $subject, $colspan=1) {
 }
 
 function emailInvite($id) {
-	$user = db_grab("SELECT u.nickname, u.email, u.firstname, l.code language FROM users u JOIN languages l ON u.language_id = l.id WHERE u.id = " . $_GET["id"]);
+	$user = db_grab("SELECT u.nickname, u.email, u.firstname, l.code language FROM users u JOIN languages l ON u.language_id = l.id WHERE u.id = " . $id);
 	$name = (!$user["nickname"]) ? $user["firstname"] : $user["nickname"];
 	$message = getString('email_invite_message', $user['language']);
 	$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $id, $message);
@@ -546,7 +553,6 @@ function emailPassword($user_id) {
 }
 
 function emailUser($address, $title, $content, $colspan=1, $message=false) {
-	global $_josh;
 
 	//for now, only send email to me and eva
 	$valid_addresses = array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com');
@@ -570,7 +576,7 @@ function emailUser($address, $title, $content, $colspan=1, $message=false) {
 		\'' . format_quotes($title) . '\',
 		\'' . format_quotes($message) . '\',
 		GETDATE(),
-		' . (($_SESSION['user_id']) ? $_SESSION['user_id'] : 'NULL') . ',
+		' . user('NULL') . ',
 		' . format_boolean($result, '1|0') . '
 		)');
 	

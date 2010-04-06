@@ -44,7 +44,7 @@ if ($posting) {
 			}
 			$message .= '<tr><td class="left">' . $key . '</td><td>' . $value . '</td></tr>';
 		}
-		$message .= '<tr><td colspan="2" class="bottom">' . draw_link($link . 'click here') . '</td></tr>';
+		$message .= '<tr><td colspan="2" class="bottom">' . draw_link($link, 'click here') . '</td></tr>';
 		emailAdmins($message, $title, 2);
 	}
 		

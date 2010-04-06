@@ -10,7 +10,7 @@ function increment() {
 
 if ($posting) {
 	//check to make sure email not already assigned to an active user
-	if (db_grab('SELECT id FROM users WHERE is_active = 1 AND email = "' . $_POST['email'] . '"')) {
+	if (!$editing && db_grab('SELECT id FROM users WHERE is_active = 1 AND email = "' . $_POST['email'] . '"')) {
 		url_change('view.php?id=' . $id);
 	}
 	
@@ -18,7 +18,7 @@ if ($posting) {
 	$id = db_save('users');
 	if (getOption('channels')) {
 		db_checkboxes('channels', 'users_to_channels', 'user_id', 'channel_id', $id);
-		db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
+		if (url_id() == user()) db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
 	}
 	if ($_SESSION['is_admin']) {
 		if (isset($_POST['is_admin'])) {
@@ -36,7 +36,7 @@ if ($posting) {
 	//send invite
 	//if (!$editing) emailInvite($id);
 	
-	if ($id == $_SESSION['user_id']) {
+	if (url_id() == user()) {
 		//todo, fix this and make it more user-update dependent
 		$_SESSION['update_days'] = 0;
 		$_SESSION['updated_date'] = 'foo';

@@ -11,7 +11,7 @@ body table {
 a, input, textarea, select { outline:none; }
 
 table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; border-width:1px; }
-
+input.checkbox { border:none; background-color:transparent; }
 form					{ margin:0px; padding:0px; }
 input, select, textarea { margin:0px; font-size:13px; background-color:#fff; border:1px solid #ddd; padding:2px; }
 input.text				{ width:500px; height:20px; vertical-align:middle; }
@@ -54,7 +54,7 @@ form fieldset legend span { border-bottom:1px solid #ccc; display:block; positio
 form fieldset legend a { color:#fff; }
 
 form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; overflow-y:auto; background-color:#eee; }
-form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; height:29px; overflow:hidden; }
+form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; }
 form fieldset div.field input.text { width:480px; }
 form fieldset div.field input.checkbox { margin-right:7px; }
 form fieldset div.field input.file { background-color:transparent; }
