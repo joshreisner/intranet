@@ -11,7 +11,7 @@ body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#4
 #footer	 a		{ color:#888; }
 #subfooter		{ clear:both; height:20px; }
 
-
+a { cursor:pointer; }
 a, input, textarea, select { outline:none; }
 h1				{ font-size:18px; line-height:22px; font-weight:normal; margin:0px; }
 img				{ border-width:0px; }
@@ -47,18 +47,19 @@ th.c, td.c { text-align:center; white-space:nowrap; }
 th.r, td.r { text-align:right; white-space:nowrap; }
 th.d, td.d { width:18px; text-align:center; }
 
-
-
 /*thread*/
 a, a.out		{ color:#0000ff;  text-decoration:none; }
 a:hover, a.over	{ color:#d8282d;  text-decoration:underline; }
 
-
 /* help */
 #help { border:1px solid #bbb; background-color:#ededed; min-height:33px; margin-bottom:14px; }
-#help div.inner { margin:9px 11px 0px 9px; } 
-#helptext { font-size:12px; line-height:20px; clear:both; }
-#helptext p { padding:0px; margin:0px 0px 10px 0px; }
+#help #help_buttons { margin:10px; } 
+#help #help_buttons a { color:#fff; background-color:#999; text-transform:uppercase; font-size:9px; line-height:8px; padding:2px 4px 3px 4px; }
+#help #help_buttons a:hover { color:#fff; background-color:#ccc; text-decoration:none; }
+#help #help_buttons a.hidden { display:none; }
+
+#help #help_text { margin:10px; font-size:12px; line-height:18px; clear:both; }
+#help_text p { padding:0px; margin:0px 0px 10px 0px; }
 #help a { margin-bottom:14px; }
 
 a.left { float:left; margin-right:5px; }
@@ -146,7 +147,7 @@ div.dropmarker {
 #left form fieldset legend a { color:#fff; }
 
 #left form fieldset div.field { border-bottom:1px solid #ccc; padding:3px; background-color:#eee; }
-#left form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; height:29px; overflow:hidden; }
+#left form fieldset div.field label { line-height:15px; width:90px; margin-right:10px; display:block; float:left; overflow:hidden; }
 #left form fieldset div.field input.text { width:476px; height:20px; }
 #left form fieldset div.field input.short { width:80px; }
 #left form fieldset div.field input.checkbox { margin-right:7px; }

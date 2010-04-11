@@ -162,7 +162,7 @@ $strings['hello']['fr']		= 'Bonjour';
 $strings['hello']['ru']		= 'Привет';
 
 $strings['help_hide']['en']	= 'Hide Help';
-$strings['help_hide']['es']	= 'Ayuda Ocultar';
+$strings['help_hide']['es']	= 'Ocultar Ayuada';
 $strings['help_hide']['fr']	= 'Masquer l\'aide';
 $strings['help_hide']['ru']	= 'помощь мостовья';
 
@@ -317,7 +317,7 @@ $strings['network']['fr']			= 'Réseau';
 $strings['network']['ru']			= 'Сеть';
 
 $strings['networks_view_all']['en']			= 'View All';
-$strings['networks_view_all']['es']			= 'Ver todas las redes';
+$strings['networks_view_all']['es']			= 'Ver Todos';
 $strings['networks_view_all']['fr']			= 'Tout voir';
 $strings['networks_view_all']['ru']			= 'Открыть Все сети';
 

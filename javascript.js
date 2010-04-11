@@ -16,23 +16,18 @@ function refreshBB() {
 	});	
 }
 
-function showHelp(id, value) {
-	ajax_set('users', 'help', id, value);
+function helpHide(user_id) {
+	new Effect.BlindUp("help_text");
+	css_add(document.getElementById("hide_help_btn"), 'hidden');
+	css_remove(document.getElementById("show_help_btn"), 'hidden');
+	ajax_set('users', 'help', user_id, 0);
 }
 
-function set_users_help(value) {
-	//value has already been set to this
-	if (value == 0) {
-		new Effect.BlindUp("helptext");
-		document.getElementById("showhelp").innerHTML = 'Show Help';
-		document.getElementById("showhelp").href = "javascript:ajax_set('users','help','session',1);";
-	} else if (value == 1) {
-		new Effect.BlindDown("helptext");
-		document.getElementById("showhelp").innerHTML = 'Hide Help';
-		document.getElementById("showhelp").href = "javascript:ajax_set('users','help','session',0);";
-	} else {
-		alert(value);
-	}
+function helpShow(user_id) {
+	new Effect.BlindDown("help_text");
+	css_add(document.getElementById("show_help_btn"), 'hidden');
+	css_remove(document.getElementById("hide_help_btn"), 'hidden');
+	ajax_set('users', 'help', user_id, 1);
 }
 
 function toggleCheckbox(which) {

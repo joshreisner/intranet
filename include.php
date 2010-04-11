@@ -440,21 +440,21 @@ function drawTop($headcontent=false) {
 			' . draw_div('banner', draw_img(DIRECTORY_WRITE . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
 			<div id="left">
 				<div id="help">
-					<div class="inner">
-				<a class="button left" href="' . $_SESSION['homepage'] . '">' . getString('home') . '</a>
-				' . draw_link_ajax_set('users', 'help', 'session', abs($user['help'] - 1), getString('help_' . (($user['help']) ? 'hide' : 'show')), array('class'=>'button right', 'id'=>'showhelp'));
+					<div id="help_buttons">' .
+					draw_link($_SESSION['homepage'], getString('home'), false, 'left') . 
+					draw_link('javascript:helpShow(' . user() . ')', getString('help_show'), false, array('class'=>'right' . ($user['help'] ? ' hidden' : false), 'id'=>'show_help_btn')) . 
+					draw_link('javascript:helpHide(' . user() . ')', getString('help_hide'), false, array('class'=>'right' . (!$user['help'] ? ' hidden' : false), 'id'=>'hide_help_btn'));
+					
 	if ($_SESSION['is_admin']) {
 		if ($page['id']) {
-			$return .= '<a class="button right" href="/a/admin/page.php?id=' . $page['id'] . '">' . getString('page_edit_info') . '</a>';
+			$return .= draw_link('/a/admin/page.php?id=' . $page['id'], getString('page_edit_info'), false, 'right');
 		} else {
-			$return .= '<a class="button right" href="/a/admin/page.php?module_id=' . $page['module_id'] . '&modulette_id=' . $page['modulette_id'] . '&url=' . urlencode($_josh['request']['page']) . '">Create Page Here</a>';
+			$return .= draw_link('/a/admin/page.php?module_id=' . $page['module_id'] . '&modulette_id=' . $page['modulette_id'] . '&url=' . urlencode($_josh['request']['page']), 'Create Page Here', false, 'right');
 		}
 	}
-	$return .= '<div id="helptext"';
+	$return .= '</div><div id="help_text"';
 	if (!$user['help']) $return .= ' style="display:none;"';
-	$return .= '>' . $page['helptext'] . '</div>
-					</div>
-				</div>';
+	$return .= '>' . $page['helptext'] . '</div></div>';
 
 	if ($_josh['request']['folder'] == 'helpdesk') $return .= drawNavigationHelpdesk();
 	$return .= drawNavigation();
