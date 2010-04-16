@@ -256,6 +256,6 @@ $return = '<?xml version="1.0"?>
  </Worksheet>
 </Workbook>';
 
-die($return);
+//die($return);
 file_download($return, "contact export", "xls");
 ?>
