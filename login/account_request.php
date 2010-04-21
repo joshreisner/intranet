@@ -13,17 +13,17 @@ if ($posting) {
 		url_change('account_exists.php');
 	} elseif (getOption('requests') && ($id = db_grab('SELECT id FROM users_requests WHERE email = "' . $_POST['email'] . '"'))) {
 		db_save('users_requests', $id);
-		emailAdmins(drawEmptyResult($_POST['firstname'] . ' ' . $_POST['lastname'] . ' is ' . draw_link(url_base() . '/staff/add_edit.php?requestID=' . $id, 're-requesting an account'), 'Repeat Account Request'));
+		emailAdmins('Repeat Account Request', $_POST['firstname'] . ' ' . $_POST['lastname'] . ' is ' . draw_link(url_base() . '/staff/add_edit.php?requestID=' . $id, 're-requesting an account'));
 	} else {
 		if (getOption('requests')) {
 			$id = db_save('users_requests');
 			//if (getOption('channels')) db_checkboxes('email_prefs', 'requests_to_channels_prefs', 'request_id', 'channel_id', $id);
-			$title = 'New User Request';
+			$subject = 'New User Request';
 			$link = url_base() . '/staff/add_edit.php?requestID=' . $id;
 		} else {
 			$id = db_save('users');
 			if (getOption('channels')) db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
-			$title = 'New User Registration';
+			$subject = 'New User Registration';
 			$link = url_base() . '/staff/add_edit.php?id=' . $id;
 			emailInvite($id);
 		}
@@ -45,7 +45,8 @@ if ($posting) {
 			$message .= '<tr><td class="left">' . $key . '</td><td>' . $value . '</td></tr>';
 		}
 		$message .= '<tr><td colspan="2" class="bottom">' . draw_link($link, 'click here') . '</td></tr>';
-		emailAdmins($message, $title, 2);
+		$message = '<table border="1">' . $message . '</table>';
+		emailAdmins($subject, $message);
 	}
 		
 	url_change('account_confirm.php');

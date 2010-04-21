@@ -48,7 +48,7 @@ if (url_id()) {
 		WHERE e.is_active = 1 ORDER BY t.title, e.title
 		');
 	$t = new table('external_orgs_types', drawHeader(array('#bottom'=>getString('add_new'))));
-	$t->col('title', 'l', getString('title'));
+	$t->set_column('title', 'l', getString('title'));
 	foreach ($result as &$r) {
 		$r['group'] = draw_link('./type.php?id=' . $r['type_id'], $r['group']);
 		$r['title'] = draw_link('./?id=' . $r['id'], $r['title']);

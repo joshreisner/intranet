@@ -3,10 +3,10 @@ include('../include.php');
 echo drawTop();
 
 $t = new table('staff', drawHeader());
-$t->col('picture', 'l', '&nbsp;', '50');
-$t->col('name');
-$t->col('organization');
-$t->col('last_login', 'r');
+$t->set_column('picture', 'l', '&nbsp;', '50');
+$t->set_column('name');
+$t->set_column('organization');
+$t->set_column('last_login', 'r');
 
 $result = db_table('SELECT u.id, u.firstname, u.lastname, u.title, o.title organization, u.organization_id, u.lastLogin last_login FROM users u LEFT JOIN organizations o ON u.organization_id = o.id JOIN users_to_modules u2m ON u.id = u2m.user_id WHERE u.is_active = 1 AND u2m.module_id = ' . $page['module_id'] . ' ORDER BY u.lastname, u.firstname');
 

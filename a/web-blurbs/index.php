@@ -11,9 +11,9 @@ echo drawTop();
 $blurbs = db_table("SELECT b.id, b.title, b.publish_date FROM web_news_blurbs b WHERE b.is_active = 1 ORDER BY b.publish_date DESC");
 
 $t = new table("web_news_blurbs");
-$t->col("title");
-$t->col("publish_date", "r");
-$t->col('delete', 'c', '&nbsp;');
+$t->set_column("title");
+$t->set_column("publish_date", "r");
+$t->set_column('delete', 'c', '&nbsp;');
 $t->set_title(drawHeader(array("add new"=>"edit/")));
 
 foreach ($blurbs as &$b) {

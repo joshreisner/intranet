@@ -9,7 +9,7 @@ if (url_action('delete')) {
 	} else {
 		db_query('UPDATE users SET is_active = 0, deleted_user = ' . $_SESSION['user_id'] . ', deleted_date = GETDATE(), endDate = GETDATE() WHERE id = ' . $_GET['delete_id']);
 	}
-	if (getOption('staff_alertdelete')) emailAdmins('<a href="' . url_base() . '/staff/view.php?id=' . $_GET['staffID'] . '">' . $r['firstname'] . ' ' . $r['lastname'] . '</a> was just deactivated on the Intranet.', 'Intranet: Staff Deleted');
+	if (getOption('staff_alertdelete')) emailAdmins('Intranet: Staff Deleted', draw_link(url_base() . '/staff/view.php?id=' . $_GET['staffID'], $r['firstname'] . ' ' . $r['lastname']) . ' was just deactivated on the Intranet.');
 	url_query_drop('action,delete_id');
 }
 

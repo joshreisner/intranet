@@ -14,9 +14,9 @@ $blurbs = db_table("SELECT
 		ORDER BY updated DESC", 20);
 
 $t = new table("web_news_blurbs");
-$t->col("icon");
-$t->col("title");
-$t->col("updated", "r");
+$t->set_column("icon");
+$t->set_column("title");
+$t->set_column("updated", "r");
 $t->set_title(drawHeader(array("add new"=>"edit/")));
 
 foreach ($blurbs as &$b) {

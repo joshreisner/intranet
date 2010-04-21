@@ -12,12 +12,39 @@ if ($posting) {
 	//notification
 	if ($_POST['is_admin'] == '1') {
 		//get addresses of everyone & send with message
-		//emailUsers(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id), 2, getString('topic_admin'));
-	} elseif (getOption('bb_notifypost') && getOption('channels')) {
+		//emailUsers(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id));
+	} elseif (getOption('bb_notifypost') && getOption('channels') && getOption('languages')) {
 		//get addresses of everyone with indicated interests and send
 		$channels = array_post_checkboxes('channels');
-		$emails = db_array('SELECT DISTINCT u.email FROM users u JOIN users_to_channels_prefs u2cp ON u.id = u2cp.user_id WHERE u2cp.channel_id IN (' . implode(',', $channels) . ')');
-		emailUsers($emails, $_POST['title'], bbDrawTopic($id), 2);
+		
+		$languages = db_table('SELECT id, code FROM languages');
+		foreach ($languages as $l) {
+			$addresses = db_array('SELECT DISTINCT u.language_id, u.email FROM users u JOIN users_to_channels_prefs u2cp ON u.id = u2cp.user_id WHERE u.language_id = ' . $l['id'] . ' AND u2cp.channel_id IN (' . implode(',', $channels) . ')');
+			
+			$topic = db_grab('SELECT 
+						ISNULL(u.nickname, u.firstname) firstname, 
+						u.lastname, 
+						t.title' . langExt($l['code']) . ' title, 
+						t.description' . langExt($l['code']) . ' description, 
+						y.title' . langExt($l['code']) . ' type,
+						t.created_date
+					FROM bb_topics t
+					LEFT JOIN bb_topics_types y ON t.type_id = y.id
+					JOIN users u ON t.created_user = u.id
+					WHERE t.id = ' . $id);
+			
+			$channels_text = db_array('SELECT title' . langExt($l['code']) . ' FROM channels WHERE id IN (' . implode(',', $channels) . ')');
+			$channels_text = implode(', ', $channels_text);
+			
+			$message = 
+				'<p style="font-weight:bold;">' . $topic['firstname'] . ' ' . $topic['lastname'] . ' ' . getString('bb_notify', $l['code']) . '</p>
+				<p>' . getString('title', $l['code']) . ': ' . draw_link(url_base() . '/bb/topic.php?id=' . $id, $topic['title']) . '</p>
+				<p>' . getString('channels_label', $l['code']) . ': ' . $channels_text . '</p>';
+			if ($topic['type']) $message .= '<p>' . getString('category', $l['code']) . ': ' . $topic['type'] . '</p>';
+			$message .= '<div style="color:#555; border-top:1px dotted #555; padding-top:5px; margin-top:5px;">' . $topic['description'] . '</div>';
+	 
+			emailUsers($addresses, $topic['title'], $message);
+		}
 	}
 	
 	bbDrawRss();

@@ -102,7 +102,7 @@ url_header_utf8();
 				<?php
 				foreach ($corners as $c) echo draw_div_class($c, draw_img('/images/corners-grey/' . $c . '.png'));
 				echo getString("app_welcome");
-				echo draw_navigation(array(
+				echo draw_nav(array(
 					'/login/password_reset.php'=>getString("login_forgot_password"),
 					'/login/account_request.php'=>getString("login_need_account"),
 					'mailto:' . $_josh['email_default']=>getString("login_ask_question")

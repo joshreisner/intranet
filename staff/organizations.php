@@ -29,7 +29,7 @@ if (url_id()) {
 	echo drawStaffList('u.is_active = 1 AND u.organization_id ' . $where, 'This organization has no staff associated with it.', $links, draw_link($request['path_query'], $page['title']) . ' &gt; ' . db_grab('SELECT title FROM organizations WHERE id = ' . $_GET['id']));
 } else {
 	$t = new table('foo', drawHeader());
-	$t->col('title', false, getString('title'));
+	$t->set_column('title', false, getString('title'));
 	foreach ($orgs as &$o) $o['title'] = draw_link('organizations.php?id=' . $o['id'], $o['title']);
 	echo $t->draw($orgs);
 }

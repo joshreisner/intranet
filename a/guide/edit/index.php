@@ -10,6 +10,8 @@ if ($posting) {
 echo drawTop();
 
 $f = new form('guide', 1);
+langUnsetFields($f, 'content');
+langTranslateCheckbox($f, true);
 echo $f->draw();
 
 echo drawBottom();

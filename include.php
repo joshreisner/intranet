@@ -288,11 +288,11 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 	$showDelete = ($page['is_admin'] && ($page['id'] != 35));
 		
 	$t = new table('staff', drawHeader($options, $listtitle));
-	$t->col('pic', 'c', '&nbsp;', 50);
-	$t->col('name', 'l', getString('name') . ((getOption('staff_showoffice') ? ' / ' . getString('office') : '')));
-	$t->col('title', 'l', getString('staff_title') . ' / ' . ((getOption('staff_showdept') ? getString('department') : getString('organization'))));
-	$t->col('phone', 'l', getString('telephone'));
-	if ($showDelete) $t->col('del', 'c', '&nbsp;', 16);
+	$t->set_column('pic', 'c', '&nbsp;', 50);
+	$t->set_column('name', 'l', getString('name') . ((getOption('staff_showoffice') ? ' / ' . getString('office') : '')));
+	$t->set_column('title', 'l', getString('staff_title') . ' / ' . ((getOption('staff_showdept') ? getString('department') : getString('organization'))));
+	$t->set_column('phone', 'l', getString('telephone'));
+	if ($showDelete) $t->set_column('del', 'c', '&nbsp;', 16);
 	
 	$result = db_table('SELECT DISTINCT
 							u.id, 
@@ -532,8 +532,8 @@ function deleteColumn($id) {
 	return '<a href="javascript:confirmDelete(' . $id . ');"><img src="/images/icons/delete.png" alt="delete" width="16" height="16" border="0"/></a>';
 }
 
-function emailAdmins($message, $subject, $colspan=1) {
-	return emailUsers(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message, $colspan);
+function emailAdmins($message, $subject) {
+	return emailUsers(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message);
 }
 
 function emailInvite($id) {
@@ -542,38 +542,31 @@ function emailInvite($id) {
 	$message = getString('email_invite_message', $user['language']);
 	$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $id, $message);
 	$message = str_replace('%NAME%', $name, $message);
-	emailUser($user['email'], getString('email_invite_subject', $user['language']), '<tr><td class="text">' . $message . '</td></tr>');
+	emailUser($user['email'], getString('email_invite_subject', $user['language']), $message);
 }
 
 function emailPassword($user_id) {
 	$user = db_grab('SELECT u.email, l.code language FROM users u JOIN languages l ON u.language_id = l.id WHERE u.is_active = 1 AND u.id = ' . $user_id);
 	$message = getString('email_password_message', $user['language']);
 	$message = str_replace('%LINK%', url_base() . '/login/password_reset.php?id=' . $user_id, $message);
-	emailUser($user['email'], getString('email_password_subject', $user['language']), '<tr><td class="text">' . $message . '</td></tr>');
+	emailUser($user['email'], getString('email_password_subject', $user['language']), $message);
 }
 
-function emailUser($address, $title, $content, $colspan=1, $message=false) {
-
+function emailUser($address, $subject, $message) {
 	//for now, only send email to me and eva
 	$valid_addresses = array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com');
 	if (!in_array($address, $valid_addresses)) return;
 	
-	//build message
-	$message = drawTopSimple() . 
-		(($message) ? drawMessage($message) : '') . 
-		drawTableStart() . 
-		drawHeaderRow($title, $colspan) .
-		$content . 
-		drawTableEnd() . 
-		drawBottomSimple();
-		
+	//repeat subject and basic formatting
+	$message = '<div style="font-family:Verdana;font-size:11px;line-height:17px;"><h1 style="font-weight:normal;font-size:20px;margin:0px 0px 10px 0px">' . $subject . '</h1>' . $message . '</div>';
+	
 	//send
-	$result = email($address, $message, $title);
+	$result = email($address, $message, $subject);
 	
 	//keep a record
 	db_query('INSERT INTO emails ( address, subject, message, created_date, created_user, was_sent ) VALUES (
 		\'' . $address . '\',
-		\'' . format_quotes($title) . '\',
+		\'' . format_quotes($subject) . '\',
 		\'' . format_quotes($message) . '\',
 		GETDATE(),
 		' . user('NULL') . ',
@@ -583,11 +576,10 @@ function emailUser($address, $title, $content, $colspan=1, $message=false) {
 	return $result;
 }
 
-function emailUsers($addresses, $title, $content, $colspan=1, $message=false) {
+function emailUsers($addresses, $subject, $message) {
 	if (!is_array($addresses)) $addresses = array($addresses);
 	$addresses = array_unique($addresses);
-	foreach($addresses as $a) emailUser($a, $title, $content, $colspan, $message);
-	return true;
+	foreach($addresses as $address) emailUser($address, $subject, $message);
 }
 
 function formAddChannels($form, $table, $column) {

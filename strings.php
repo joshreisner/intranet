@@ -31,6 +31,16 @@ $strings['are_you_sure']['es']		= '¿Estás seguro?';
 $strings['are_you_sure']['fr']		= 'Etes-vous sûr?';
 $strings['are_you_sure']['ru']		= 'Вы уверены?';
 
+$strings['bb_followup']['en']	= 'posted a response on the Bulletin Board';
+$strings['bb_followup']['es']	= 'publicó una respuesta en el Tablón de Anuncios';
+$strings['bb_followup']['fr']	= 'posté une réponse sur le babillard';
+$strings['bb_followup']['ru']	= 'опубликовал ответ на электронной доске объявлений';
+
+$strings['bb_notify']['en']	= 'posted a new topic on the Bulletin Board';
+$strings['bb_notify']['es']	= 'publicado un nuevo tema en el Tablón de Anuncios';
+$strings['bb_notify']['fr']	= 'publié un nouveau sujet sur le babillard';
+$strings['bb_notify']['ru']	= 'опубликовал новую тему на электронной доске объявлений';
+
 $strings['bio']['en']		= 'Bio';
 $strings['bio']['es']		= 'Bio';
 $strings['bio']['fr']		= 'Bio';

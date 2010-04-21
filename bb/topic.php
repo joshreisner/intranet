@@ -9,17 +9,61 @@ if ($posting) {
 	
 	//send followup email to all topic contributors
 	if (getOption("bb_notifyfollowup")) {
-		$message = "There has been an update on a bulletin board topic you contributed to.<br>Click <a href='" . url_base() . "/bb/topic.php?id=" . $_POST["topic_id"] . "'>here to view</a> the topic.";
+		$addresses = array();
+		$languages = db_array('SELECT code FROM languages');
+		foreach ($languages as $l) $addresses[$l] = array();
+				
+		//get topic poster email, put in correct bucket
+		$poster = db_grab("SELECT 
+				u.email, 
+				l.code 
+			FROM bb_topics t 
+			JOIN users u ON t.created_user = u.id 
+			JOIN languages l ON u.language_id = l.id
+			WHERE u.is_active = 1 AND t.id = " . $_POST["topic_id"]);
+		$addresses[$poster['code']][] = $poster['email'];
 		
-		//get topic poster email
-		$emails = array(db_grab("SELECT u.email FROM bb_topics t JOIN users u ON t.created_user = u.id WHERE t.id = " . $_POST["topic_id"]));
-
 		//get followup poster emails
-		$emails = array_merge($emails, db_array("SELECT u.email FROM bb_followups f JOIN users u ON u.id = f.created_user WHERE f.is_active = 1 AND f.topic_id = " . $_POST["topic_id"]));
+		$repliers = db_table("SELECT 
+				u.email,
+				l.code
+			FROM bb_followups f 
+			JOIN users u ON u.id = f.created_user 
+			JOIN languages l ON u.language_id = l.id
+			WHERE u.is_active = 1 AND f.is_active = 1 AND f.topic_id = " . $_POST["topic_id"]);
+		foreach ($repliers as $r) $addresses[$r['code']][] = $r['email'];
 
-		//emailUsers($emails, "Followup on Bulletin Board Post", bbDrawTopic($_GET["id"]), 2, $message);
+		foreach ($addresses as $lang=>$emails) {
+			$topic = db_grab('SELECT 
+						t.title' . langExt($lang) . ' title, 
+						y.title' . langExt($lang) . ' type,
+						t.created_date
+					FROM bb_topics t
+					LEFT JOIN bb_topics_types y ON t.type_id = y.id
+					WHERE t.id = ' . $_POST['topic_id']);
+					
+			$reply = db_grab('SELECT
+						f.description' . langExt($lang) . ' description,
+						ISNULL(u.nickname, u.firstname) firstname, 
+						u.lastname
+					FROM bb_followups f
+					JOIN users u ON f.created_user = u.id
+					WHERE f.id = ' . $id);
+						
+			$channels_text = db_array('SELECT c.title' . langExt($lang) . ' FROM bb_topics_to_channels t2c JOIN channels c ON t2c.channel_id = c.id WHERE t2c.topic_id = ' . $_POST['topic_id']);
+			$channels_text = implode(', ', $channels_text);
+			
+			$message = 
+				'<p style="font-weight:bold;">' . $reply['firstname'] . ' ' . $reply['lastname'] . ' ' . getString('bb_followup', $lang) . '</p>
+				<p>' . getString('title', $lang) . ': ' . draw_link(url_base() . '/bb/topic.php?id=' . $id, $topic['title']) . '</p>
+				<p>' . getString('channels_label', $lang) . ': ' . $channels_text . '</p>';
+			if ($topic['type']) $message .= '<p>' . getString('category', $lang) . ': ' . $topic['type'] . '</p>';
+			$message .= '<div style="color:#555; border-top:1px dotted #555; padding-top:5px; margin-top:5px;">' . $reply['description'] . '</div>';
+			
+			emailUsers($emails, 'RE: ' . $topic['title'], $message);
+		}
 	}
-		
+	
 	bbDrawRss();
 	url_change();
 } elseif (isset($_GET["delete"])) {
