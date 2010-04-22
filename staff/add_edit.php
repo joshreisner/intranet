@@ -1,13 +1,6 @@
 <?php
 include('../include.php');
 
-function increment() {
-	global $_josh;
-	if (!isset($_josh['increment'])) $_josh['increment'] = 0;
-	$_josh['increment']++;
-	return $_josh['increment'];
-}
-
 if ($posting) {
 	//check to make sure email not already assigned to an active user
 	if (!$editing && db_grab('SELECT id FROM users WHERE is_active = 1 AND email = "' . $_POST['email'] . '"')) {

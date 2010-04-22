@@ -554,8 +554,8 @@ function emailPassword($user_id) {
 
 function emailUser($address, $subject, $message) {
 	//for now, only send email to me and eva
-	$valid_addresses = array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com');
-	if (!in_array($address, $valid_addresses)) return;
+	//$valid_addresses = array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com');
+	//if (!in_array($address, $valid_addresses)) return;
 	
 	//repeat subject and basic formatting
 	$message = '<div style="font-family:Verdana;font-size:11px;line-height:17px;"><h1 style="font-weight:normal;font-size:20px;margin:0px 0px 10px 0px">' . $subject . '</h1>' . $message . '</div>';
