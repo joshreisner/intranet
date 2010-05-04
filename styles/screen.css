@@ -40,7 +40,6 @@ input.button:hover { background-color:#bbb; }
 
 input.checkbox	{ border:none; padding:0px; margin:0px; background-color:transparent; }
 input.file		{ border:none; }
-/* textarea		{ width:500px; height:300px; }*/
 textarea.thread { border-width:0px; width:432px; }
 
 th.c, td.c { text-align:center; white-space:nowrap; }
@@ -160,7 +159,7 @@ div.dropmarker {
 #left form fieldset div.checkboxes li { display:block; width:135px; float:left; padding-left:17px; margin:0px 4px 4px 0px; line-height:12px; }
 #left form fieldset div.checkboxes input { margin:0px 0px 0px -17px; }
 #left form fieldset div.checkboxes li span.option_name:hover { cursor:pointer; }
-#left form fieldset div.field textarea { width:476px; height:280px; }
+#left form fieldset div.field textarea.tinymce { width:476px; height:180px; }
 #left form fieldset div.field select { background-color:#fff; border:1px solid #ccc; height:26px; }
 #left form fieldset div.submit { text-align:center; border-bottom:none; background-color:#ddd; }
 #left form fieldset div.submit input.submit { color:#fff; background-color:#999; text-transform:uppercase; padding:3px 14px 3px 14px; }

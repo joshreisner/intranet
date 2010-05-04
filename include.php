@@ -533,7 +533,7 @@ function deleteColumn($id) {
 }
 
 function emailAdmins($message, $subject) {
-	return emailUsers(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message);
+	return emailUser(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message);
 }
 
 function emailInvite($id) {
@@ -552,34 +552,40 @@ function emailPassword($user_id) {
 	emailUser($user['email'], getString('email_password_subject', $user['language']), $message);
 }
 
-function emailUser($address, $subject, $message) {
-	//for now, only send email to me and eva
-	//$valid_addresses = array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com');
-	//if (!in_array($address, $valid_addresses)) return;
+function emailUser($to, $subject, $message) {
+	global $request;
+	
+	$to = (is_array($to)) ? array_unique($to) : array($to);
+	
+	//do a little maintenance
+	if (!$tocount = count($to)) return false;
+	for ($i = 0; $i < $tocount; $i++) {
+		if (empty($to[$i])) {
+			unset($to[$i]);
+		//} elseif (($request['tld'] == 'site') && !in_array($to[$i], array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com'))) {
+		//	unset($to[$i]);
+		}
+	}
+	if (!$tocount = count($to)) return false;
 	
 	//repeat subject and basic formatting
 	$message = '<div style="font-family:Verdana;font-size:11px;line-height:17px;"><h1 style="font-weight:normal;font-size:20px;margin:0px 0px 10px 0px">' . $subject . '</h1>' . $message . '</div>';
 	
 	//send
-	$result = email($address, $message, $subject);
-	
+	$result = email($to, $message, $subject);
+		
 	//keep a record
-	db_query('INSERT INTO emails ( address, subject, message, created_date, created_user, was_sent ) VALUES (
-		\'' . $address . '\',
-		\'' . format_quotes($subject) . '\',
-		\'' . format_quotes($message) . '\',
-		GETDATE(),
-		' . user('NULL') . ',
-		' . format_boolean($result, '1|0') . '
-		)');
-	
+	foreach ($to as $t) {
+		db_query('INSERT INTO emails ( address, subject, message, created_date, created_user, was_sent ) VALUES (
+			\'' . $t . '\',
+			\'' . format_quotes($subject) . '\',
+			\'' . format_quotes($message) . '\',
+			GETDATE(),
+			' . user('NULL') . ',
+			' . format_boolean($result, '1|0') . '
+			)');
+	}		
 	return $result;
-}
-
-function emailUsers($addresses, $subject, $message) {
-	if (!is_array($addresses)) $addresses = array($addresses);
-	$addresses = array_unique($addresses);
-	foreach($addresses as $address) emailUser($address, $subject, $message);
 }
 
 function formAddChannels($form, $table, $column) {

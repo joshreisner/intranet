@@ -11,7 +11,7 @@ if ($posting) {
 	$id = db_save('users');
 	if (getOption('channels')) {
 		db_checkboxes('channels', 'users_to_channels', 'user_id', 'channel_id', $id);
-		if (url_id() == user()) db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
+		if ((admin() || url_id() == user())) db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
 	}
 	if ($_SESSION['is_admin']) {
 		if (isset($_POST['is_admin'])) {
@@ -27,7 +27,7 @@ if ($posting) {
 	}
 	
 	//send invite
-	//if (!$editing) emailInvite($id);
+	if (!$editing) emailInvite($id);
 	
 	if (url_id() == user()) {
 		//todo, fix this and make it more user-update dependent
@@ -68,7 +68,7 @@ $f->set_field(array('name'=>'phone', 'label'=>getString('telephone'), 'type'=>'t
 $f->set_field(array('name'=>'extension', 'label'=>getString('telephone_extension'), 'type'=>'text', 'class'=>'short', 'position'=>increment()));
 
 //communications preferences (user only)
-if (getOption('channels') && (url_id() == user())) {
+if (getOption('channels') && (admin() || (url_id() == user()))) {
 	$f->set_group(getString('email_prefs'), increment());
 	$f->set_field(array('name'=>'email_prefs', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('email_prefs_label'), 'options_table'=>'channels', 'linking_table'=>'users_to_channels_prefs', 'object_id'=>'user_id', 'option_id'=>'channel_id', 'default'=>'all', 'position'=>increment()));
 }

@@ -60,7 +60,7 @@ if ($posting) {
 			if ($topic['type']) $message .= '<p>' . getString('category', $lang) . ': ' . $topic['type'] . '</p>';
 			$message .= '<div style="color:#555; border-top:1px dotted #555; padding-top:5px; margin-top:5px;">' . $reply['description'] . '</div>';
 			
-			emailUsers($emails, 'RE: ' . $topic['title'], $message);
+			emailUser($emails, 'RE: ' . $topic['title'], $message);
 		}
 	}
 	

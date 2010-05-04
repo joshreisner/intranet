@@ -3,7 +3,7 @@ include('include.php');
 
 echo drawTop();
 
-$fields = array('u.lastname', 'u.firstname', 'u.nickname', 'u.title', 'departmentName');
+$fields = array('u.lastname', 'u.firstname', 'u.nickname', 'u.title', 'u.email', 'departmentName');
 $terms = explode(' ', format_quotes($_GET['q']));
 $where = array();
 foreach ($terms as $t) {

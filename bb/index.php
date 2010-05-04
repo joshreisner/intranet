@@ -12,15 +12,15 @@ if ($posting) {
 	//notification
 	if ($_POST['is_admin'] == '1') {
 		//get addresses of everyone & send with message
-		//emailUsers(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id));
+		//emailUser(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id));
 	} elseif (getOption('bb_notifypost') && getOption('channels') && getOption('languages')) {
 		//get addresses of everyone with indicated interests and send
 		$channels = array_post_checkboxes('channels');
 		
 		$languages = db_table('SELECT id, code FROM languages');
 		foreach ($languages as $l) {
-			$addresses = db_array('SELECT DISTINCT u.language_id, u.email FROM users u JOIN users_to_channels_prefs u2cp ON u.id = u2cp.user_id WHERE u.language_id = ' . $l['id'] . ' AND u2cp.channel_id IN (' . implode(',', $channels) . ')');
-			
+			$addresses = db_array('SELECT DISTINCT u.email FROM users u JOIN users_to_channels_prefs u2cp ON u.id = u2cp.user_id WHERE u.is_active = 1 AND u.language_id = ' . $l['id'] . ' AND u2cp.channel_id IN (' . implode(',', $channels) . ')');
+						
 			$topic = db_grab('SELECT 
 						ISNULL(u.nickname, u.firstname) firstname, 
 						u.lastname, 
@@ -42,11 +42,11 @@ if ($posting) {
 				<p>' . getString('channels_label', $l['code']) . ': ' . $channels_text . '</p>';
 			if ($topic['type']) $message .= '<p>' . getString('category', $l['code']) . ': ' . $topic['type'] . '</p>';
 			$message .= '<div style="color:#555; border-top:1px dotted #555; padding-top:5px; margin-top:5px;">' . $topic['description'] . '</div>';
-	 
-			emailUsers($addresses, $topic['title'], $message);
+	 		
+			emailUser($addresses, $topic['title'], $message);
 		}
 	}
-	
+
 	bbDrawRss();
 	url_change();
 }

@@ -382,9 +382,9 @@ $strings['permissions']['fr']			= 'Autorisations';
 $strings['permissions']['ru']			= 'Разрешения';
 
 $strings['please_select']['en']			= 'Please Select';
-//$strings['please_select']['es']			= 'Publicado por';
-//$strings['please_select']['fr']			= 'Signalé près';
-//$strings['please_select']['ru']			= 'Автор';
+$strings['please_select']['es']			= 'Seleccione';
+$strings['please_select']['fr']			= 'S\'il vous plaît choisir';
+$strings['please_select']['ru']			= 'Выберите из списка';
 
 $strings['posted_by']['en']			= 'Posted By';
 $strings['posted_by']['es']			= 'Publicado por';
