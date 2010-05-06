@@ -562,8 +562,8 @@ function emailUser($to, $subject, $message) {
 	for ($i = 0; $i < $tocount; $i++) {
 		if (empty($to[$i])) {
 			unset($to[$i]);
-		//} elseif (($request['tld'] == 'site') && !in_array($to[$i], array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com'))) {
-		//	unset($to[$i]);
+		} elseif (($request['tld'] == 'site') && !in_array($to[$i], array('josh@joshreisner.com', 'josh.reisner@gmail.com', 'evanesbroeck@sitesofconscience.org', 'vanesbroeck3@hotmail.com'))) {
+			unset($to[$i]);
 		}
 	}
 	if (!$tocount = count($to)) return false;
@@ -573,6 +573,7 @@ function emailUser($to, $subject, $message) {
 	
 	//send
 	$result = email($to, $message, $subject);
+	
 		
 	//keep a record
 	foreach ($to as $t) {
