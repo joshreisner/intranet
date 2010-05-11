@@ -46,7 +46,7 @@ if ($posting) {
 		}
 		$message .= '<tr><td colspan="2" class="bottom">' . draw_link($link, 'click here') . '</td></tr>';
 		$message = '<table border="1">' . $message . '</table>';
-		emailAdmins($subject, $message);
+		emailAdmins($message, $subject);
 	}
 		
 	url_change('account_confirm.php');
