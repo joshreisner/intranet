@@ -30,6 +30,7 @@ if ($posting) {
 		
 		//prepare email
 		$message = '';
+		reset($_POST);
 		while (list($key, $value) = each($_POST)) {
 			if ($key == 'email') {
 				$value = draw_link('mailto:' . $value);
