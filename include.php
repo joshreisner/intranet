@@ -789,10 +789,11 @@ function joshlib() {
 	global $_josh;
 	$possibilities = array(
 		'D:\Sites\joshlib\index.php', //seedco-web-srv
-		'/home/hcfacc/www/joshlib/index.php', //icd 2
-		'/home/sites/www/joshlib/index.php', //icd 3
-		'/home/joshreisner/www/joshlib/joshlib/index.php', //icd 4
-		'/Users/joshreisner/Sites/joshlib/index.php' //dev
+		'/home/livingcities/www/joshlib/index.php', //living cities
+		'/home/hcfacc/www/joshlib/index.php', //hcfa-cc
+		'/home/sites/www/joshlib/index.php', //soc
+		'/home/joshreisner/www/joshlib/joshlib/index.php', //josh demo
+		'/Users/joshreisner/Sites/joshlib/index.php' //josh dev
 	);
 	foreach ($possibilities as $p) if (@include($p)) return $_josh;
 	die('Help me locate my library. ' . $_SERVER['DOCUMENT_ROOT']);
