@@ -9,34 +9,38 @@ if (!isset($_SESSION['language_id']))	$_SESSION['language_id'] = 1;
 extract(joshlib());
 
 //set language code
-if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_SESSION['language_id']);
-
-//language overwrites eg dates
-if ($_SESSION['language'] == 'es') {
-	setlocale(LC_TIME, 'es_ES');
-	$_josh['date']['strings'] = array('Ayer', 'Hoy', 'Mañana');
-	$_josh['days']		= array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
-	$_josh['months']	= array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
-	$_josh['mos']		= array('ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jun', 'ago', 'sep', 'oct', 'nov', 'dic');
-} elseif ($_SESSION['language'] == 'fr') {
-	setlocale(LC_TIME, 'fr_FR');
-	$_josh['date']['strings'] = array('Hier', 'Aujourd\'hui', 'Demain');
-	$_josh['days']		= array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
-	$_josh['months']	= array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
-	$_josh['mos']		= array('jan', 'fév', 'mar', 'avr', 'mai', 'jui', 'jul', 'aoû', 'sep', 'oct', 'nov', 'déc');
-} elseif ($_SESSION['language'] == 'ru') {
-	setlocale(LC_TIME, 'ru_RU.UTF8');
-	$_josh['date']['strings'] = array('Вчера', 'Сегодня', 'Завтра');
-	$_josh['days']		= array('Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота');
-	$_josh['months']	= array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
-	$_josh['mos']		= array('янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек');
-}
-
-if (isset($_GET['language_id'])) {
-	$_SESSION['language_id'] = $_GET['language_id'];
-	$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_GET['language_id']);
-	if (user()) db_query('UPDATE users SET language_id = ' . $_GET['language_id'] . ' WHERE id = ' . user());
-	url_drop('language_id');
+if (getOption('languages')) {
+	if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_SESSION['language_id']);
+	
+	//language overwrites eg dates
+	if ($_SESSION['language'] == 'es') {
+		setlocale(LC_TIME, 'es_ES');
+		$_josh['date']['strings'] = array('Ayer', 'Hoy', 'Mañana');
+		$_josh['days']		= array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
+		$_josh['months']	= array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+		$_josh['mos']		= array('ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jun', 'ago', 'sep', 'oct', 'nov', 'dic');
+	} elseif ($_SESSION['language'] == 'fr') {
+		setlocale(LC_TIME, 'fr_FR');
+		$_josh['date']['strings'] = array('Hier', 'Aujourd\'hui', 'Demain');
+		$_josh['days']		= array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+		$_josh['months']	= array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+		$_josh['mos']		= array('jan', 'fév', 'mar', 'avr', 'mai', 'jui', 'jul', 'aoû', 'sep', 'oct', 'nov', 'déc');
+	} elseif ($_SESSION['language'] == 'ru') {
+		setlocale(LC_TIME, 'ru_RU.UTF8');
+		$_josh['date']['strings'] = array('Вчера', 'Сегодня', 'Завтра');
+		$_josh['days']		= array('Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота');
+		$_josh['months']	= array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');
+		$_josh['mos']		= array('янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек');
+	}
+	
+	if (isset($_GET['language_id'])) {
+		$_SESSION['language_id'] = $_GET['language_id'];
+		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_GET['language_id']);
+		if (user()) db_query('UPDATE users SET language_id = ' . $_GET['language_id'] . ' WHERE id = ' . user());
+		url_drop('language_id');
+	}
+} else {
+	$_SESSION['language'] = 'en';
 }
 
 //include options file if it exists
@@ -708,7 +712,7 @@ function langTransliteratePost($keys) {
 function langUnsetFields($form, $names) {
 	//unset fields for other languages
 	//todo - take multiple names
-	if (!getOption('languages')) return false;
+	//if (!getOption('languages')) return false;
 	$names = array_separated($names);
 	foreach ($names as $name) {
 		$languages = db_array('SELECT code FROM languages WHERE id <> ' . $_SESSION['language_id']);
@@ -748,7 +752,7 @@ function login($username, $password, $skippass=false) {
 		l.code language,
 		' . db_datediff('u.updated_date', 'GETDATE()') . ' update_days
 	FROM users u
-	JOIN languages l ON u.language_id = l.id
+	LEFT JOIN languages l ON u.language_id = l.id
 	LEFT JOIN departments d ON u.departmentID = d.departmentID
 	WHERE u.email = \'' . $username . '\' AND u.is_active = 1' . $where)) {
 		//login was good
