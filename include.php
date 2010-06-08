@@ -8,6 +8,11 @@ if (!isset($_SESSION['language_id']))	$_SESSION['language_id'] = 1;
 //session & env
 extract(joshlib());
 
+//include options file if it exists
+include_once(DIRECTORY_ROOT . '/strings.php');
+@include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
+@include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
+
 //set language code
 if (getOption('languages')) {
 	if (!isset($_SESSION['language']))		$_SESSION['language'] = db_grab('SELECT code FROM languages WHERE id = ' . $_SESSION['language_id']);
@@ -42,11 +47,6 @@ if (getOption('languages')) {
 } else {
 	$_SESSION['language'] = 'en';
 }
-
-//include options file if it exists
-include_once(DIRECTORY_ROOT . '/strings.php');
-@include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
-@include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
 
 //debug();
 
