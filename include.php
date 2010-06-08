@@ -45,8 +45,8 @@ if (getOption('languages')) {
 
 //include options file if it exists
 include_once(DIRECTORY_ROOT . '/strings.php');
-include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
-include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
+@include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
+@include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/options.php');
 
 //debug();
 
