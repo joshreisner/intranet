@@ -1,4 +1,5 @@
-<? include("include.php");
+<?php
+include("include.php");
 
 if ($posting) {
 	$_POST['translations_do'] = true;
