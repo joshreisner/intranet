@@ -71,6 +71,11 @@ $strings['confirm']['es']			= 'Confirmar';
 $strings['confirm']['fr']			= 'Confirmer';
 $strings['confirm']['ru']			= 'Подтвердите';
 
+$strings['copyright']['en']			= 'Copyright &copy; ' . $_josh['year'] . '.  All rights reserved.';
+//$strings['copyright']['es']			= '';
+//$strings['copyright']['fr']			= '';
+//$strings['copyright']['ru']			= '';
+
 $strings['date']['en']		= 'Date';
 $strings['date']['es']		= 'Fecha';
 $strings['date']['fr']		= 'Date';
@@ -85,6 +90,11 @@ $strings['delete']['en']		= 'Delete';
 $strings['delete']['es']		= 'Borrar';
 $strings['delete']['fr']		= 'Supprimer';
 $strings['delete']['ru']		= 'Удалить';
+
+$strings['department']['en']			= 'Department';
+//$strings['department']['es']			= '';
+//$strings['department']['fr']			= '';
+//$strings['department']['ru']			= '';
 
 $strings['description']['en']		= 'Description';
 $strings['description']['es']		= 'Descripción';
@@ -340,6 +350,11 @@ $strings['none']['en']			= 'None';
 $strings['none']['es']			= 'Ninguno';
 $strings['none']['fr']			= 'Aucun';
 $strings['none']['ru']			= 'Никакой';
+
+$strings['office']['en']			= 'Office';
+//$strings['office']['es']			= '';
+//$strings['office']['fr']			= '';
+//$strings['office']['ru']			= '';
 
 $strings['organization']['en']			= 'Organization';
 $strings['organization']['es']			= 'Organización';

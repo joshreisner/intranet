@@ -6,7 +6,7 @@ $result = db_table('SELECT
 		d.id,
 		d.title' . langExt() . ' title,
 		(SELECT COUNT(*) FROM docs_views v WHERE v.documentID = d.id) downloads,
-		i.icon,
+		i.extension,
 		i.description alt
 	FROM docs d
 	JOIN docs_types i ON d.type_id = i.id
@@ -20,7 +20,7 @@ $t->set_column('downloads', 'r', getString('downloads'));
 
 foreach ($result as &$r) {
 	$link = 'info.php?id=' . $r['id'];
-	$r['icon'] = draw_img($r['icon'], $link);
+	$r['icon'] = file_icon($r['extension'], $link);
 	$r['title'] = draw_link($link, $r['title']);
 }
 

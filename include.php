@@ -505,7 +505,7 @@ function drawBottom() {
 			<tr>
 				<td colspan="2" class="head" style="background-color:#' . $m['color'] . ';">
 					<a href="/' . $m['folder'] . '/" class="left">' . $m['title'] . '</a>
-					' . draw_img('/' . $m['folder'] . '/arrow-' . format_boolean($m['is_closed'], 'up|down') . '.gif', url_query_add(array('module'=>$m['id']), false)) . '
+					' . draw_img('/images/arrows/' . format_boolean($m['is_closed'], 'up|down') . '.png', url_query_add(array('module'=>$m['id']), false)) . '
 				</td>
 			</tr>';
 			if (!$m['is_closed']) include(DIRECTORY_ROOT . DIRECTORY_SEPARATOR . $m['folder'] . DIRECTORY_SEPARATOR . 'pallet.php');

@@ -13,7 +13,7 @@ if (getOption('languages')) {
 				d.id, 
 				d.title' . langExt() . ' title, 
 				' . db_updated('d') . ', 
-				i.icon, 
+				i.extension, 
 				i.description alt, 
 				c.title' . langExt() . ' "group",
 				l.title language
@@ -25,7 +25,7 @@ if (getOption('languages')) {
 			' . getChannelsWhere('docs', 'd', 'doc_id') . '
 			ORDER BY c.precedence, d.title;');
 } else {
-	$result = db_table('SELECT d.id, d.title, ' . db_updated('d') . ', i.icon, i.description alt, c.title "group"
+	$result = db_table('SELECT d.id, d.title, ' . db_updated('d') . ', i.extension, i.description alt, c.title "group"
 			FROM docs d
 			JOIN docs_to_categories d2c ON d.id = d2c.documentID
 			JOIN docs_categories c ON d2c.categoryID = c.id
@@ -42,7 +42,7 @@ $t->set_column('updated', 'r', getString('updated'));
 
 foreach ($result as &$r) {
 	$link = 'info.php?id=' . $r['id'];
-	$r['icon'] = draw_img($r['icon'], $link);
+	$r['icon'] = file_icon($r['extension'], $link);
 	$r['title'] = draw_link($link, $r['title']);
 	if (getOption('languages')) $r['title'] .= ' (' . $r['language'] . ')';
 	$r['updated'] = format_date($r['updated']);

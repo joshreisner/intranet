@@ -13,7 +13,7 @@ $result = db_table('SELECT
 	FROM bb_topics_types y 
 	ORDER BY y.title');
 foreach ($result as &$r) $r['category'] = draw_link('category.php?id=' . $r['id'], $r['category']);
-echo $t->draw($result, 'No categories added yet', array('topics'));
+echo $t->draw($result, 'No categories added yet');
 
 echo drawBottom();
 ?>
