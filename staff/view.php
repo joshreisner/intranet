@@ -61,7 +61,8 @@ $r = db_grab('SELECT
 		u.is_active,
 		u.is_admin,
 		r.description rank,
-		l.title language
+		l.title language,
+		' . db_updated('u') . '
 	FROM users u
 	JOIN languages l ON u.language_id = l.id
 	LEFT JOIN users_to_channels u2c ON u.id = u2c.user_id
@@ -77,11 +78,15 @@ $r["nickname"] = trim($r["nickname"]);
 
 $r["organization"] = (empty($r["organization"])) ? '<a href="organizations.php?id=0">' . getString('shared') . '</a>' : '<a href="organizations.php?id=' . $r["organization_id"] . '">' . $r["organization"] . '</a>';
 
+
+
 if (!isset($r["is_active"])) url_change("./");
 
 echo drawTop();
 
-if (!$img = draw_img(DIRECTORY_WRITE . "/dynamic/users-image_large-" . $_GET["id"] . ".jpg")) $img = draw_img(DIRECTORY_WRITE . "/images/to-be-taken.png");
+if (!$img = draw_img(file_dynamic('users', 'image_large', $_GET['id'], 'jpg', $r['updated']))) $img = draw_img(DIRECTORY_WRITE . "/images/to-be-taken.png");
+file_dynamic('users', 'image_medium', $_GET['id'], 'jpg', $r['updated']);
+file_dynamic('users', 'image_small', $_GET['id'], 'jpg', $r['updated']);
 
 echo drawJumpToStaff($_GET["id"]);
 

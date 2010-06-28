@@ -51,6 +51,11 @@ $strings['category']['es']			= 'Categoría';
 $strings['category']['fr']			= 'Catégorie';
 $strings['category']['ru']			= 'Категории';
 
+$strings['category_new']['en']			= 'Add Category';
+//$strings['category_new']['es']			= '';
+//$strings['category_new']['fr']			= '';
+//$strings['category_new']['ru']			= '';
+
 $strings['categories']['en']			= 'Categories';
 $strings['categories']['es']			= 'Categorías';
 $strings['categories']['fr']			= 'Catégories';

@@ -8,11 +8,21 @@ if ($posting) {
 	}
 	
 	langTranslatePost('bio,title');
+	
+	if (!getOption('languages')) $_POST['language_id'] = 1;
+	
+	if ($uploading) {
+		$_POST['image_large'] = format_image_resize(file_get_uploaded('image_large'), 240);
+		$_POST['image_medium'] = format_image_resize($_POST['image_large'], 135);
+		$_POST['image_small'] = format_image_resize($_POST['image_large'], 50);
+	}
+	
 	$id = db_save('users');
 	if (getOption('channels')) {
 		db_checkboxes('channels', 'users_to_channels', 'user_id', 'channel_id', $id);
 		if ((admin() || url_id() == user())) db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
 	}
+
 	if ($_SESSION['is_admin']) {
 		if (isset($_POST['is_admin'])) {
 			//is admin, so delete permissions
