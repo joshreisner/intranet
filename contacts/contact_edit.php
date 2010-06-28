@@ -1,5 +1,6 @@
 <?	include("../include.php");
 
+/*
 if ($_POST) {
 	//clean up values
 	$_POST["objectID"]   = ($_POST["objectID"])   ?       $_POST["objectID"]         : "NULL";
@@ -90,11 +91,12 @@ if ($_POST) {
 	
 	//redirect
 	url_change("contact.php?id=" . $_GET["id"]);
-}
+}*/
 
 echo drawTop();
 
 if (isset($_GET["id"])) {
+	url_change('contact.php?id=' . $_GET['id']); //read only
 	$i = db_grab("SELECT
 			i.id,
 			(SELECT t1.id FROM contacts_tags t1 INNER JOIN contacts_instances_to_tags i2t1 ON t1.id = i2t1.tagID WHERE t1.is_active = 1 AND t1.type_id = 10 AND i2t1.instanceID = i.id) salutation,

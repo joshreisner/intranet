@@ -95,11 +95,11 @@ if (isset($_GET["q"])) {
 				echo drawEmptyResult("No contact records contain <i>" . formatArrayForText($terms) . "</i>.");
 			}
 			?>
-		<tr>
+		<!--<tr>
 			<td class="bottom" colspan="4">
 				<?=draw_form_button("Add a new contact", "contact_edit.php")?>
 			</td>
-		</tr>
+		</tr>-->
 	</table>
 	<? }
 }?>

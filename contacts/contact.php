@@ -76,6 +76,7 @@ if (!$i["id"]) {
 	</script>
 	<table class="left" cellspacing="1">
 		<?
+		/*
 		if ($page['is_admin'] && $i["is_active"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmContactDelete({$_GET["id"]});");
 		} elseif ($page['is_admin'] && !$i["is_active"]) {
@@ -84,7 +85,9 @@ if (!$i["id"]) {
 			echo drawHeaderRow("View Contact", 3, "edit", "contact_edit.php?id=" . $_GET["id"], "delete", "javascript:confirmContactDelete({$_GET["id"]});");
 		} else {
 			echo drawHeaderRow("View Contact", 3, "undelete", url_action_add("undelete"));
-		}?>
+		}*/
+		echo drawHeaderRow("View Contact", 3);
+		?>
 		<tr>
 			<td class="left">Name</td>
 			<td width="82%" colspan="2" class="input"><font size="+1"><b><? if(!$i["is_active"]) {?><strike><font color="#666666"><?}?><? if($i["salutation"]) {?><?=$i["salutation"]?> <?}?><?=$i["first"]?> <? if($i["nickname"]) {?>(<?=$i["nickname"]?>)<?}?> <?=$i["last"]?><? if($i["suffix"]) {?>, <?=$i["suffix"]?><?}?><? if(!$i["is_active"]) {?></strike></font><? }?></b></font></td>
