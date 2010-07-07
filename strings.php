@@ -296,15 +296,15 @@ $strings['login_account_request']['es'] = 'Solicitar una cuenta';
 $strings['login_account_request']['fr'] = 'Demande de compte';
 $strings['login_account_request']['ru'] = 'Запрос счета';
 
-/*$strings['login_account_request_msg']['en'] = 'To request an account, please fill out the fields below.  Your login information will be emailed to you once your request is approved.';
+$strings['login_account_request_msg']['en'] = 'To request an account, please fill out the fields below.  Your login information will be emailed to you once your request is approved.';
 $strings['login_account_request_msg']['es'] = 'Para solicitar una cuenta, por favor, rellene los campos abajo. Su información de acceso será enviada a usted una vez que se apruebe su solicitud.';
 $strings['login_account_request_msg']['fr'] = 'Pour demander un compte, s\'il vous plaît remplissez les champs ci-dessous. Vos informations de connexion vous sera envoyé dès que votre demande est approuvée.';
 $strings['login_account_request_msg']['ru'] = 'Чтобы запросить счет, пожалуйста, заполните поля ниже. Логин Ваша информация будет отправлен к вам после утверждения вашего запроса.';
+
 $strings['login_password_reset_msg']['en'] = 'Your old password can\'t be recovered, since it was encrypted.  However, it can be reset so you can pick a new one.  What is the email address on the account?';
 $strings['login_password_reset_msg']['es'] = 'Su contraseña antigua no se puede recuperar, ya que se encriptada. Sin embargo, se puede restablecer de modo que puede elegir uno nuevo. ¿Cuál es la dirección de correo electrónico en la cuenta?';
 $strings['login_password_reset_msg']['fr'] = 'Votre ancien mot de passe ne peuvent pas être récupérés, car il a été chiffré. Cependant, il peut être remis à zéro et vous pouvez choisir un nouveau. Quelle est l\'adresse e-mail sur le compte?';
 $strings['login_password_reset_msg']['ru'] = 'Ваш старый пароль и не может быть восстановлена, так как она была зашифрована. Тем не менее, его можно сбросить так что вы можете выбрать новый. Что такое адрес электронной почты, на счету?';
-*/
 
 $strings['login_password_reset_msg_email_not_found']['en'] = 'That email address wasn\'t found in the system.  If the address below is correct and you\'ve never logged in, you may need to <a href="account_request.php">request an account</a>.';
 $strings['login_password_reset_msg_email_not_found']['es'] = 'Esa dirección de correo electrónico no se encontró en el sistema. Si la dirección a continuación es correcta y que nunca has iniciado sesión, puede que tenga que <a href="account_request.php">solicitar una cuenta</a>.';
