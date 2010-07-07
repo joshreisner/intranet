@@ -188,6 +188,7 @@ function drawTopSimple($title=false) {
 	$return = url_header_utf8() . draw_doctype() . '
 		<head>' . 
 			draw_meta_utf8() . 
+			draw_favicon(DIRECTORY_WRITE . '/favicon.png') .
 			draw_css(file_get('/styles/simple.css'));
 	if ($title) {
 		$return .= draw_container('title', $title);
@@ -412,6 +413,7 @@ function drawTop($headcontent=false) {
 		draw_container('head',
 			(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
 			draw_container('title', $page['title']) .
+			draw_favicon(DIRECTORY_WRITE . '/favicon.png') .
 			draw_css_src('/styles/screen.css',	'screen') .
 			draw_css_src('/styles/print.css',	'print') .
 			draw_css_src('/styles/ie.css',		'ie') .
