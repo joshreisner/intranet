@@ -9,25 +9,26 @@ function validate_users_requests(form) {
 }
 
 function refreshBB() {
-	new Ajax.Request('/bb/ajax.php', {
-		onSuccess: function(transport) {
-			document.getElementById('bb_topics').innerHTML = transport.responseText;
-		}
-	});	
+	$.ajax({ 
+		url: "/bb/ajax.php",
+		success: function(data) { $('#bb_topics').html(data); }
+	});
 }
 
 function helpHide(user_id) {
-	new Effect.BlindUp("help_text");
+	$("#help_text").slideUp("slow");
 	css_add(document.getElementById("hide_help_btn"), 'hidden');
 	css_remove(document.getElementById("show_help_btn"), 'hidden');
 	ajax_set('users', 'help', user_id, 0);
+	return false;
 }
 
 function helpShow(user_id) {
-	new Effect.BlindDown("help_text");
+	$("#help_text").slideDown("slow");
 	css_add(document.getElementById("show_help_btn"), 'hidden');
 	css_remove(document.getElementById("hide_help_btn"), 'hidden');
 	ajax_set('users', 'help', user_id, 1);
+	return false;
 }
 
 function toggleCheckbox(which) {

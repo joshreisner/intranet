@@ -417,7 +417,7 @@ function drawTop($headcontent=false) {
 			draw_css_src('/styles/screen.css',	'screen') .
 			draw_css_src('/styles/print.css',	'print') .
 			draw_css_src('/styles/ie.css',		'ie') .
-			lib_get('scriptaculous') .
+			lib_get('jquery') .
 			draw_javascript_src() .
 			draw_javascript_src('/javascript.js') .
 			draw_css('

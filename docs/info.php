@@ -12,7 +12,7 @@ $d = db_grab('SELECT
 		d.title' . langExt() . ' title,
 		d.description' . langExt() . ' description,
 		d.content,
-		i.icon,
+		i.extension,
 		i.description fileType
 	FROM docs d
 	JOIN docs_types i ON d.type_id = i.id
@@ -36,7 +36,7 @@ echo drawTop();
 	<tr>
 		<td class="left"><?=getString('type')?></td>
 		<td><table class='nospacing'><tr>
-			<td><?=draw_img($d['icon'])?></td>
+			<td><?=file_icon($d['extension'])?></td>
 			<td><?=$d['fileType']?> (<?=format_size(strlen($d['content']))?>)</td>
 			</tr></table>
 		</td>
@@ -71,7 +71,7 @@ echo drawTop();
 	<? }?>
 	<tr height='120'>
 		<td class="left"><?=getString('description')?></td>
-		<td class='text'><?=nl2br($d['description'])?></td>
+		<td class='text'><?=$d['description']?></td>
 	</tr>
 </table>
 <?
