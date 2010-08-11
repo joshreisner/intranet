@@ -119,7 +119,7 @@ if (!$r["is_active"]) {
 	<tr>
 		<td class="left"><?=getString('name')?></td>
 		<td class="title"><?=$r["firstname"]?> <? if (!empty($r["nickname"])) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
-		<td rowspan="<?=$rowspan?>" style="width:267px; text-align:center; vertical-align:middle;"><?=$img?></td>
+		<td rowspan="<?=$rowspan?>" style="width:240px; text-align:center; vertical-align:middle; padding:0px;"><?=$img?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('organization')?></td>
