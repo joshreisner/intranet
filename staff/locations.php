@@ -1,4 +1,5 @@
-<?	include("include.php");
+<?php
+include("include.php");
 
 if (!isset($_GET["id"])) $_GET["id"] = 1;
 
@@ -23,9 +24,9 @@ if (db_found($locations)) {
 }
 
 if ($_GET["id"] == "other") {
-	echo drawStaffList("u.is_active = 1 AND u.officeID <> 1 AND u.officeID <> 6 AND u.officeID <> 11 AND u.officeID <> 9");
+	echo drawStaffList('u.is_active = 1 AND u.officeID <> 1 AND u.officeID <> 6 AND u.officeID <> 11 AND u.officeID <> 9', '');
 } else {
-	echo drawStaffList("u.is_active = 1 and u.officeID = " . $_GET["id"]);
+	echo drawStaffList('u.is_active = 1 and u.officeID = ' . $_GET['id'], '');
 }
 
 echo drawBottom();?>

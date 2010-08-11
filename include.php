@@ -231,36 +231,30 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br
 	</table>';
 }
 
-function drawNavigation() {
-	global $_SESSION, $_josh, $page;
-	if (!$page['module_id']) return false; //not in module
-	$pages		= array();
-	$admin		= ($page['is_admin']) ? ' ' : ' AND is_admin = 0 ';
-	$modulette	= (empty($page['modulette_id'])) ? ' AND modulette_id IS NULL ' : ' AND modulette_id = ' . $page['modulette_id'];
-	$result	= db_query('SELECT id, title' . langExt() . ' title, url FROM pages WHERE module_id = ' . $page['module_id'] . $modulette . $admin . ' AND is_hidden = 0 ORDER BY precedence');
-	while ($r = db_fetch($result)) {
-		//don't do navigation for helpdesk.  it needs to do it, since a message could go above
-		if ($r['url'] != '/helpdesk/') $pages[$r['url']] = $r['title'];
+function drawNavigation($pages=false) {
+	global $_josh, $page;
+	
+	if (!$pages) {
+		if (!$page['module_id']) return false; //not in module
+		$pages		= array();
+		$admin		= ($page['is_admin']) ? ' ' : ' AND is_admin = 0 ';
+		$modulette	= (empty($page['modulette_id'])) ? ' AND p.modulette_id IS NULL ' : ' AND p.modulette_id = ' . $page['modulette_id'];
+		$result	= db_query('SELECT p.id, p.title' . langExt() . ' title, p.url, m.folder FROM pages p JOIN modules m ON p.module_id = m.id WHERE m.id = ' . $page['module_id'] . $modulette . $admin . ' AND p.is_hidden = 0 ORDER BY p.precedence');
+		while ($r = db_fetch($result)) {
+			//don't do navigation for helpdesk.  it needs to do it, since a message could go above -- todo fix this
+			if ($r['url'] != '/helpdesk/') $pages['/' . $r['folder'] . '/' . $r['url']] = $r['title'];
+		}
 	}
 
 	$count = count($pages);
 	if ($count < 2) return false;
-	$return = '<table class="navigation" cellspacing="1">
-		<tr>';
 	$cellwidth = round(100 / $count, 2);
-
+	$cells = array();
 	foreach ($pages as $url=>$name) {
-		$pageurl = (empty($_josh['request']['page'])) ? './' : $_josh['request']['page'];
-		if (empty($url)) $url = './';
-		if ($url == $pageurl) {
-			$cell = ' class="selected">' . $name;
-		} else {
-			$cell = '><a href="' . $url . '">' . $name . '</a>';
-		}
-		$return .= '<td width="' . $cellwidth . '%"' . $cell . '</td>';
+		$cell = ($url == $_josh['request']['path_query']) ? ' class="selected">' . $name : '><a href="' . $url . '">' . $name . '</a>';
+		$cells[] = '<td width="' . $cellwidth . '%"' . $cell . '</td>';
 	}
-	return $return . '</tr>
-		</table>';
+	return '<table class="navigation" cellspacing="1"><tr>' . implode('', $cells) . '</tr></table>';
 }
 
 function drawHeader($options=false, $title=false) {
@@ -295,7 +289,7 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 	$t = new table('staff', drawHeader($options, $listtitle));
 	$t->set_column('pic', 'c', '&nbsp;', 50);
 	$t->set_column('name', 'l', getString('name') . ((getOption('staff_showoffice') ? ' / ' . getString('office') : '')));
-	$t->set_column('title', 'l', getString('staff_title') . ' / ' . ((getOption('staff_showdept') ? getString('department') : getString('organization'))));
+	$t->set_column('title', 'l', getString('staff_title') . ' / ' . ((getOption('staff_showdept') ? getString('department') : getString('organization'))), 222);
 	$t->set_column('phone', 'l', getString('telephone'));
 	if ($showDelete) $t->set_column('del', 'c', '&nbsp;', 16);
 	
@@ -403,12 +397,12 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 }
 
 function drawTop($headcontent=false) {
-	global $_GET, $_SESSION, $_josh, $page, $user;
-	
+	global $_josh, $page, $user;
+
 	ob_start('browser_output');
-	
 	error_debug('starting top', __file__, __line__);
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
+
 	$return = draw_doctype() . 
 		draw_container('head',
 			(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
@@ -417,6 +411,7 @@ function drawTop($headcontent=false) {
 			draw_css_src('/styles/screen.css',	'screen') .
 			draw_css_src('/styles/print.css',	'print') .
 			draw_css_src('/styles/ie.css',		'ie') .
+			draw_css_src(DIRECTORY_WRITE . '/screen.css', 'screen') .
 			lib_get('jquery') .
 			draw_javascript_src() .
 			draw_javascript_src('/javascript.js') .
@@ -432,14 +427,12 @@ function drawTop($headcontent=false) {
 					location.href = newloc.replace("replaceme", id);
 				}
 			}
-
 			function changeDept(id, user_id) {
 				location.href="' . $_josh['request']['path_query'] . '&newDeptID=" + id + "&contactID=" + user_id;
 			}
 			') . 
 			$headcontent
 		);
-	
 	$return .= '
 	<body>
 		<div id="container">
@@ -473,33 +466,26 @@ function drawTop($headcontent=false) {
 function drawBottom() {
 	global $_SESSION, $_GET, $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes, $page;
 	$return = '
-		<!-- DRAWING BOTTOM -->
 			</div>
 			<div id="right">
 				<div id="tools">
 					<a class="right button" href="/index.php?action=logout">' . getString('log_out') . '</a>
-					' . getString('hello') . ' <a href="/staff/view.php?id=' . $_SESSION['user_id'] . '"><b>' . $_SESSION['full_name'] . '</b></a>.
+					' . getString('hello') . ' <a href="/staff/view.php?id=' . $_SESSION['user_id'] . '"><b>' . $_SESSION['full_name'] . '</b></a>';
+	//search
+	$return .= '<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onsubmit="javascript:return doSearch(this);">
+			<input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');"/>
+		</form>';
 
-					<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onsubmit="javascript:return doSearch(this);">
-		            <input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');"/>
-					</form>';
-
+	//channel or language selectors
 	if (getOption('channels')) $return .= draw_form_select('channel_id', 'SELECT id, title' . langExt() . ' title FROM channels WHERE is_active = 1 ORDER BY precedence', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
 	if (getOption('languages')) $return .= draw_form_select('language_id', 'SELECT id, title FROM languages ORDER BY title', $_SESSION['language_id'], true, 'languages', 'url_query_set(\'language_id\', this.value)');
 
-	$return .= '<table class="links">';
-	if ($_SESSION['is_admin']) $return .= '<tr><td colspan="2" style="padding:6px 6px 0px 0px;"><a class="right button" href="/a/admin/links.php">' . getString('links_edit') . '</a></td></tr>';
-
-	$side = 'left';
-	$links = db_query('SELECT title' . langExt() . ' title, url FROM links WHERE is_active = 1 ORDER BY precedence');
-	while ($l = db_fetch($links)) {
-		if ($side == 'left') $return .= '<tr>';
-		$return .= '<td width="50%"><a href="' . $l['url'] . '" target="new">' . $l['title'] . '</a></td>';
-		if ($side == 'right') $return .= '</tr>';
-		$side = ($side == 'left') ? 'right' : 'left';
-	}
+	//links
+	$links = db_table('SELECT title' . langExt() . ' title, url FROM links WHERE is_active = 1 ORDER BY precedence');
+	foreach ($links as &$l) $l = draw_link($l['url'], $l['title'], true);
+	$return .= draw_div('links', draw_container('h3', getString('links')) . (admin() ? draw_link('/a/admin/links.php', getString('edit'), false, array('class'=>'right button')) : false) . draw_list($links));
 	
-	$return .= '</table></div>';
+	$return .= '</div>';
 
 	foreach ($modules as $m) {
 		$return .= '
@@ -507,7 +493,7 @@ function drawBottom() {
 			<tr>
 				<td colspan="2" class="head" style="background-color:#' . $m['color'] . ';">
 					<a href="/' . $m['folder'] . '/" class="left">' . $m['title'] . '</a>
-					' . draw_img('/images/arrows/' . format_boolean($m['is_closed'], 'up|down') . '.png', url_query_add(array('module'=>$m['id']), false)) . '
+					' . draw_img('/images/arrows-new/' . format_boolean($m['is_closed'], 'up|down') . '.png', url_query_add(array('module'=>$m['id']), false)) . '
 				</td>
 			</tr>';
 			if (!$m['is_closed']) include(DIRECTORY_ROOT . DIRECTORY_SEPARATOR . $m['folder'] . DIRECTORY_SEPARATOR . 'pallet.php');

@@ -246,10 +246,10 @@ $strings['link']['es']		= 'Vínculo';
 $strings['link']['fr']		= 'Lien';
 $strings['link']['ru']		= 'Ссылка';
 
-$strings['links_edit']['en']		= 'Edit Links';
-$strings['links_edit']['es']		= 'Modificar vínculos';
-$strings['links_edit']['fr']		= 'Modifier les liens';
-$strings['links_edit']['ru']		= 'Изменить ссылку';
+$strings['links']['en']		= 'Links';
+$strings['links']['es']		= 'Vínculos';
+$strings['links']['fr']		= 'Liens';
+$strings['links']['ru']		= 'ссылку';
 
 $strings['log_out']['en']		= 'Log Out';
 $strings['log_out']['es']		= 'Cerrar Sesión';

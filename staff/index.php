@@ -1,54 +1,32 @@
-<?	include("include.php");
-
-if (!isset($_GET["id"])) $_GET["id"] = 1;
+<?php
+include('include.php');
 
 echo drawTop();
 
-?>
-<table class="navigation" cellspacing="1">
-	<tr>
-		<td width="20%"<? if ($_GET["id"] == 1) {?> class="selected"<?}?>><? if ($_GET["id"] != 1) {?><a href="index.php?id=1"><?}?>A - E</a></td>
-		<td width="20%"<? if ($_GET["id"] == 2) {?> class="selected"<?}?>><? if ($_GET["id"] != 2) {?><a href="index.php?id=2"><?}?>F - J</a></td>
-		<td width="20%"<? if ($_GET["id"] == 3) {?> class="selected"<?}?>><? if ($_GET["id"] != 3) {?><a href="index.php?id=3"><?}?>K - O</a></td>
-		<td width="20%"<? if ($_GET["id"] == 4) {?> class="selected"<?}?>><? if ($_GET["id"] != 4) {?><a href="index.php?id=4"><?}?>P - T</a></td>
-		<td width="20%"<? if ($_GET["id"] == 5) {?> class="selected"<?}?>><? if ($_GET["id"] != 5) {?><a href="index.php?id=5"><?}?>U - Z</a></td>
-	</tr>
-</table>
-
-<?
-if ($_GET["id"] == 1) {
-	$letters = "u.lastname like 'a%' or 
-				u.lastname like 'b%' or 
-				u.lastname like 'c%' or 
-				u.lastname like 'd%' or 
-				u.lastname like 'e%'";
-} elseif ($_GET["id"] == 2) {
-	$letters = "u.lastname like 'f%' or 
-				u.lastname like 'g%' or 
-				u.lastname like 'h%' or 
-				u.lastname like 'i%' or 
-				u.lastname like 'j%'";
-} elseif ($_GET["id"] == 3) {
-	$letters = "u.lastname like 'k%' or 
-				u.lastname like 'l%' or 
-				u.lastname like 'm%' or 
-				u.lastname like 'n%' or 
-				u.lastname like 'o%'";
-} elseif ($_GET["id"] == 4) {
-	$letters = "u.lastname like 'p%' or 
-				u.lastname like 'q%' or 
-				u.lastname like 'r%' or 
-				u.lastname like 's%' or 
-				u.lastname like 't%'";
-} else {
-	$letters = "u.lastname like 'u%' or 
-				u.lastname like 'v%' or 
-				u.lastname like 'w%' or 
-				u.lastname like 'x%' or 
-				u.lastname like 'y%' or 
-				u.lastname like 'z%'";
+if (db_grab('SELECT COUNT(*) FROM users WHERE is_active = 1') > 70) {
+	if (!isset($_GET['id'])) {
+		$_josh['request']['path_query'] .= '?id=1';
+		$_GET['id'] = 1;
+	}
+	
+	echo drawNavigation(array('/staff/?id=1'=>'A - E', '/staff/?id=2'=>'F - J', '/staff/?id=3'=>'K - O', '/staff/?id=4'=>'P - T', '/staff/?id=5'=>'U - Z'));
+	
+	if ($_GET['id'] == 1) {
+		$letters = ' AND (u.lastname LIKE "a%" OR u.lastname LIKE "b%" OR u.lastname LIKE "c%" OR u.lastname LIKE "d%" OR u.lastname LIKE "e%")';
+	} elseif ($_GET['id'] == 2) {
+		$letters = ' AND (u.lastname LIKE "f%" OR u.lastname LIKE "g%" OR u.lastname LIKE "h%" OR u.lastname LIKE "i%" OR u.lastname LIKE "j%")';
+	} elseif ($_GET['id'] == 3) {
+		$letters = ' AND (u.lastname LIKE "k%" OR u.lastname LIKE "l%" OR u.lastname LIKE "m%" OR u.lastname LIKE "n%" OR u.lastname LIKE "o%")';
+	} elseif ($_GET['id'] == 4) {
+		$letters = ' AND (u.lastname LIKE "p%" OR u.lastname LIKE "q%" OR u.lastname LIKE "r%" OR u.lastname LIKE "s%" OR u.lastname LIKE "t%")';
+	} elseif ($_GET['id'] == 5) {
+		$letters = ' AND (u.lastname LIKE "u%" OR u.lastname LIKE "v%" OR u.lastname LIKE "w%" OR u.lastname LIKE "x%" OR u.lastname LIKE "y%" OR u.lastname LIKE "z%")';
+	}
 }
+
 echo drawJumpToStaff();
-$links = ($page['is_admin']) ? array('add_edit.php'=>getString('add_new')) : false;
-echo drawStaffList('u.is_active = 1 AND (' . $letters . ')', getString('staff_empty'), $links);
-echo drawBottom();?>
+
+echo drawStaffList('u.is_active = 1' . @$letters, getString('staff_empty'), ($page['is_admin'] ? array('add_edit.php'=>getString('add_new')) : false));
+
+echo drawBottom();
+?>
