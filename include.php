@@ -1,11 +1,11 @@
 <?php
-//might need session for ajax in joshlib
+//start session, set defaults
 session_start();
-if (!isset($_SESSION['user_id']))		$_SESSION['user_id'] = false;
-if (!isset($_SESSION['channel_id']))	$_SESSION['channel_id'] = false;
-if (!isset($_SESSION['language_id']))	$_SESSION['language_id'] = 1;
+if (!isset($_SESSION['user_id']))		$_SESSION['user_id']		= false;
+if (!isset($_SESSION['channel_id']))	$_SESSION['channel_id']		= false;
+if (!isset($_SESSION['language_id']))	$_SESSION['language_id']	= 1;
 
-//session & env
+//joshlib
 extract(joshlib());
 
 //include options file if it exists
@@ -128,7 +128,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 			}
 		}
 		
-		
 		//get actual page from database now, just need the title
 		if ($page['modulette_id'] && $page['module_id']) {
 			$m = db_grab('SELECT id, title' . langExt() . ' title, description' . langExt() . ' description FROM pages WHERE url = "' . $request['page'] . '" AND module_id = ' . $page['module_id'] . ' AND modulette_id = ' . $page['modulette_id']);
@@ -148,7 +147,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		}
 	}
 		
-	
 	//check to see if user needs update ~ todo make this a site preference
 	error_debug('checking if user needs update', __file__, __line__);
 	if ($_SESSION['password']) {
@@ -161,6 +159,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 
 	//handle side menu pref updates
 	if (isset($_GET['module'])) {
+		//todo ajax
 		if (db_grab('SELECT COUNT(*) FROM users_to_modules_closed WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id'])) {
 			db_query('DELETE FROM users_to_modules_closed WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id']);
 		} else {
@@ -169,7 +168,6 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 		url_query_drop('module');
 	} elseif(isset($_GET['channel_id'])) {
 		$_SESSION['channel_id'] = (empty($_GET['channel_id'])) ? false : $_GET['channel_id'];
-		//update users
 		url_drop('channel_id');
 	}
 }
@@ -177,44 +175,25 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 //done!
 error_debug('done processing include!', __file__, __line__);
 	
-
 //obsolete functions
 include(DIRECTORY_ROOT . '/obsolete.php');
 
-
 //draw functions
-function drawTopSimple($title=false) {
-	//leave title empty for emails
-	$return = url_header_utf8() . draw_doctype() . '
-		<head>' . 
-			draw_meta_utf8() . 
-			draw_favicon(DIRECTORY_WRITE . '/favicon.png') .
-			draw_css(file_get('/styles/simple.css'));
-	if ($title) {
-		$return .= draw_container('title', $title);
-		$return .= draw_javascript_src();
-		$return .= draw_javascript_src('/javascript.js');
-	}
-	$return .= '</head>
-		<body class="s">';
-	return $return;
+function drawColumnDelete($id) {
+	return draw_img('/images/icons/delete.png', 'javascript:confirmDelete(' . $id . ');');
 }
 
-function drawBottomSimple($email=false) {
-	//if it's an email, send true
-	$return = '';
-	if ($email) $return .= draw_div_class('email_footer', getString('email_footer') . draw_link(url_base(), getString('app_name')));
-	$return .= '</body></html>';
+function drawHeader($options=false, $title=false) {
+	//get the page for the header
+	global $_josh, $page, $modules, $modulettes;
+	$return = draw_div_class('left', $page['breadcrumbs'] . (($title) ? $title : $page['title']));
+	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
+	return $return;
 }
 
 function drawMessage($str) {
 	if (empty($str) || !format_html_text($str)) return false;
 	return draw_div_class('message', $str);
-}
-
-function drawPanel($str) {
-	if (empty($str) || !format_html_text($str)) return false;
-	return draw_div_class('panel', $str);
 }
 
 function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br/>') {
@@ -231,7 +210,7 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br
 	</table>';
 }
 
-function drawNavigation($pages=false) {
+function drawNavigation($pages=false, $match='path') {
 	global $_josh, $page;
 	
 	if (!$pages) {
@@ -251,18 +230,15 @@ function drawNavigation($pages=false) {
 	$cellwidth = round(100 / $count, 2);
 	$cells = array();
 	foreach ($pages as $url=>$name) {
-		$cell = ($url == $_josh['request']['path_query']) ? ' class="selected">' . $name : '><a href="' . $url . '">' . $name . '</a>';
+		$cell = ($url == $_josh['request'][$match]) ? ' class="selected">' . $name : '><a href="' . $url . '">' . $name . '</a>';
 		$cells[] = '<td width="' . $cellwidth . '%"' . $cell . '</td>';
 	}
 	return '<table class="navigation" cellspacing="1"><tr>' . implode('', $cells) . '</tr></table>';
 }
 
-function drawHeader($options=false, $title=false) {
-	//get the page for the header
-	global $_josh, $page, $modules, $modulettes;
-	$return = draw_div_class('left', $page['breadcrumbs'] . (($title) ? $title : $page['title']));
-	if ($options) foreach ($options as $url=>$name) $return .= draw_link($url, $name, false, array('class'=>'right'));
-	return $return;
+function drawPanel($str) {
+	if (empty($str) || !format_html_text($str)) return false;
+	return draw_div_class('panel', $str);
 }
 
 function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $lname1st=false, $jumpy=false, $text='', $class=false) { 
@@ -280,15 +256,41 @@ function drawSelectUser($name, $selectedID=false, $nullable=false, $length=0, $l
 	return draw_form_select($name, $array, $selectedID, !$nullable, $class, $jumpy, '', 36);
 }
 
-function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searchterms=false) {
+function drawSimpleTop($title=false) {
+	//leave title empty for emails
+	$return = url_header_utf8() . draw_doctype() . '
+		<head>' . 
+			draw_meta_utf8() . 
+			draw_favicon(DIRECTORY_WRITE . '/favicon.png') .
+			draw_css(file_get('/styles/simple.css'));
+	if ($title) {
+		$return .= draw_container('title', $title);
+		$return .= draw_javascript_src();
+		$return .= draw_javascript_src('/javascript.js');
+	}
+	$return .= '</head>
+		<body class="s">';
+	return $return;
+}
+
+function drawSimpleBottom($email=false) {
+	//if it's an email, send true
+	$return = '';
+	if ($email) $return .= draw_div_class('email_footer', getString('email_footer') . draw_link(url_base(), getString('app_name')));
+	$return .= '</body></html>';
+}
+
+function drawStaffList($where, $errmsg=false, $options=false, $listtitle=false, $searchterms=false) {
 	global $page, $_josh;
+	
+	if (!$errmsg) $errmsg = getString('results_empty');
 	
 	//only show delete for admins on pages that aren't the chagnes page
 	$showDelete = ($page['is_admin'] && ($page['id'] != 35));
 		
 	$t = new table('staff', drawHeader($options, $listtitle));
 	$t->set_column('pic', 'c', '&nbsp;', 50);
-	$t->set_column('name', 'l', getString('name') . ((getOption('staff_showoffice') ? ' / ' . getString('office') : '')));
+	$t->set_column('name', 'l', getString('name') . ((getOption('staff_showoffice') ? ' / ' . getString('location') : '')));
 	$t->set_column('title', 'l', getString('staff_title') . ' / ' . ((getOption('staff_showdept') ? getString('department') : getString('organization'))), 222);
 	$t->set_column('phone', 'l', getString('telephone'));
 	if ($showDelete) $t->set_column('del', 'c', '&nbsp;', 16);
@@ -323,7 +325,7 @@ function drawStaffList($where, $errmsg, $options=false, $listtitle=false, $searc
 		} else {
 			$r['title'] .= '<br/>' . draw_link('organizations.php?id=' . $r['organization_id'], format_string($r['organization']));
 		}
-		if ($showDelete) $r['del'] = deleteColumn($r['id']);
+		if ($showDelete) $r['del'] = drawColumnDelete($r['id']);
 	}
 	
 	return $t->draw($result, $errmsg);
@@ -402,7 +404,9 @@ function drawTop($headcontent=false) {
 	ob_start('browser_output');
 	error_debug('starting top', __file__, __line__);
 	if ($_josh['db']['language'] == 'mysql') url_header_utf8();
-
+	
+	if (empty($page['helptext'])) $page['helptext'] = getString('help_empty');
+	
 	$return = draw_doctype() . 
 		draw_container('head',
 			(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
@@ -452,7 +456,7 @@ function drawTop($headcontent=false) {
 		}
 	}
 	$return .= '</div><div id="help_text"';
-	if (!$user['help']) $return .= ' style="display:none;"';
+	if (!$user['help']) $return .= ' class="hidden"';
 	$return .= '>' . $page['helptext'] . '</div></div>';
 
 	if ($_josh['request']['folder'] == 'helpdesk') $return .= drawNavigationHelpdesk();
@@ -517,13 +521,6 @@ function drawBottom() {
 	return $return;
 }
 
-
-//email functions
-
-function deleteColumn($id) {
-	return '<a href="javascript:confirmDelete(' . $id . ');"><img src="/images/icons/delete.png" alt="delete" width="16" height="16" border="0"/></a>';
-}
-
 function emailAdmins($message, $subject) {
 	return emailUser(db_array('SELECT email FROM users WHERE is_admin = 1 AND is_active = 1'), $subject, $message);
 }
@@ -549,6 +546,9 @@ function emailUser($to, $subject, $message) {
 	
 	$to = (is_array($to)) ? array_unique($to) : array($to);
 	
+	//dev limiting
+	if ($limit = getOption('email_limit')) $to = array_intersect($limit, $to);
+
 	//do a little maintenance
 	if (!$tocount = count($to)) return false;
 	for ($i = 0; $i < $tocount; $i++) {
@@ -565,7 +565,6 @@ function emailUser($to, $subject, $message) {
 	
 	//send
 	$result = email($to, $message, $subject);
-	
 		
 	//keep a record
 	foreach ($to as $t) {
@@ -607,6 +606,8 @@ function getOption($key) {
 	$defaults['bb_types']				= false;
 	
 	$defaults['cal_showholidays']		= true;
+
+	$defaults['email_limit']			= false;
 	
 	$defaults['staff_alertnew']			= false;
 	$defaults['staff_alertdelete']		= false;
@@ -647,7 +648,7 @@ function langExt($code=false) {
 }
 
 function langExtT($code=false) {
-	//don't think we're using this.  intended to be transliteration
+	//intended to be transliteration.  being used in press-clips
 	if (!$code) $code = $_SESSION['language'];
 	if ($code == 'ru') return '_ru';
 	return '';
@@ -674,27 +675,9 @@ function langTranslatePost($keys) {
 	}
 }
 
-function langTransliteratePost($keys) {
-	//don't think we're using this either
-	//set incoming POST values for languages
+function langTranslateCheckbox($form, $show=true) {
 	if (!getOption('languages')) return false;
-	global $_POST;
-	
-	//make sure do translations checkbox is checked
-	if (!isset($_POST['translations_do'])) return false;
-
-	//list of fields to translate
-	$keys = array_separated($keys);
-
-	//sorry, this is hard-coded for now
-	foreach ($keys as $key) {
-		if ($_SESSION['language'] == 'ru') {
-			$_POST[$key] = language_translate($_POST[$key . '_ru'], 'ru', 'en');
-		} else {
-			$_POST[$key . '_ru'] = language_translate($_POST[$key], $_SESSION['language'], 'ru');
-			die($_POST[$key . '_ru']);
-		}
-	}	
+	$form->set_field(array('name'=>'translations_do', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'label'=>getString('translations_do'), 'value'=>0));
 }
 
 function langUnsetFields($form, $names) {
@@ -707,11 +690,6 @@ function langUnsetFields($form, $names) {
 		foreach ($languages as &$l) $l = $name . langExt($l);
 		$form->unset_fields(implode(',', $languages));
 	}
-}
-
-function langTranslateCheckbox($form, $show=true) {
-	if (!getOption('languages')) return false;
-	$form->set_field(array('name'=>'translations_do', 'type'=>(($show) ? 'checkbox' : 'hidden'), 'label'=>getString('translations_do'), 'value'=>0));
 }
 
 function login($username, $password, $skippass=false) {

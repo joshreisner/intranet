@@ -32,7 +32,7 @@ if (url_id()) {
 	foreach ($result as &$r) {
 		$r['draggy']		= draw_img('/images/icons/move.png');
 		$r['title']			= draw_link('links.php?id=' . $r['id'], $r['title']);
-		$r['delete']	= deleteColumn($r['id']);
+		$r['delete']	= drawColumnDelete($r['id']);
 	}
 	
 	echo $t->draw($result, 'No modules');

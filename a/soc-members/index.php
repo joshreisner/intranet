@@ -20,7 +20,7 @@ foreach ($result as &$r) {
 	$r['is_selected']	= draw_form_checkbox('foo', $r['is_selected'], false, 'ajax_set(\'soc_members\', \'is_selected\', ' . $r['id'] . ', ' . abs($r['is_selected'] - 1) . ');');
 	$r['name']			= draw_link('edit.php?id=' . $r['id'], format_string($r['name'], 70));
 	$r['updated']		= format_date($r['updated']);
-	$r['delete']		= deleteColumn($r['id']);
+	$r['delete']		= drawColumnDelete($r['id']);
 }
 
 echo $t->draw($result);

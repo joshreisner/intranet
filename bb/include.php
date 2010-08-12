@@ -26,7 +26,7 @@ function bbDrawTable($limit=false, $where=false, $title=false) {
 	
 	foreach ($result as &$r) {
 		$r['class'] = 'thread';
-		if ($r['is_admin']) $r['class'] .= ' admin';
+		if ($r['is_admin']) $r['class'] = 'admin thread';
 		$r['link'] = 'topic.php?id=' . $r['id'];
 		$r['topic'] = draw_link($r['link'], $r['topic']);
 		$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];

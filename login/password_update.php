@@ -8,12 +8,12 @@ if ($posting) {
 	url_change($_SESSION['homepage']);
 }
 
-echo drawTopSimple(getString('password_update'));
+echo drawSimpleTop(getString('password_update'));
 
 $f = new form('password_update', false, getString('submit'));
 $f->set_field(array('type'=>'password', 'name'=>'password1', 'label'=>getString('password')));
 $f->set_field(array('type'=>'password', 'name'=>'password2', 'label'=>getString('confirm')));
 echo $f->draw();
 
-echo drawBottomSimple();
+echo drawSimpleBottom();
 ?>

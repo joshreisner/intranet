@@ -91,7 +91,7 @@ if (url_id()) {
 		        <td><a href="./?id=<?=$r["id"]?>"><?=$r["headline"]?></a></td>
 		        <td><nobr><?=$r["corporationName"]?></nobr></td>
 		        <td align="right"><nobr><?=format_date($r["releaseDate"], "n/a", "M d, Y", false)?></nobr></td>
-				<?=drawDeleteColumn("Delete this press release?", $r["id"])?>
+				<?=drawdrawColumnDelete("Delete this press release?", $r["id"])?>
 		    </tr>
 		<? }?>
 	</table>

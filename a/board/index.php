@@ -43,7 +43,7 @@ if (db_found($result)) {?>
 	    <tr>
 	        <td><a href="member.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 	        <td><nobr><?=$r["board_position"]?></nobr></td>
-			<?=drawDeleteColumn("Are you sure you want to delete this board member?", $r["id"])?>
+			<?=drawdrawColumnDelete("Are you sure you want to delete this board member?", $r["id"])?>
 	    </tr>
 	<? }
 } else {

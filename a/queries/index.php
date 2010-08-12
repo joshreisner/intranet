@@ -54,7 +54,7 @@ echo drawTop();
 		<td align="center"><?=number_format($r["downloads"])?></td>
 		<td align="center"><nobr><?=number_format($r["num_columns"])?> / <?=number_format($r["num_rows"])?></nobr></td>
 		<td align="right"><nobr><?=format_date($r["updated_date"])?></nobr></td>
-		<?=drawDeleteColumn("Delete this database query?", $r["id"])?>
+		<?=drawdrawColumnDelete("Delete this database query?", $r["id"])?>
 	</tr>
 	<? }?>
 </table>

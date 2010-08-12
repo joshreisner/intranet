@@ -55,7 +55,7 @@ while ($rs = db_fetch($result_funder_statuses)) {
 			<td><a href="funder_view.php?id=<?=$r["funderID"]?>"><?=$r["name"]?></a></td>
 			<td><?=$r["first"]?> <?=$r["last"]?></td>
 			<td align="right">$<?=number_Format($r["awardAmt"])?></td>
-			<?=drawDeleteColumn("Delete this funder?", $r["funderID"]);?>
+			<?=drawdrawColumnDelete("Delete this funder?", $r["funderID"]);?>
 		</tr>
 	<? }?>
 	<tr class="total">

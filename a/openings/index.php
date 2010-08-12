@@ -47,7 +47,7 @@ echo drawTop();
 			<td><a href="position.php?id=<?=$r["id"]?>"><?=$r["title"]?></a></td>
 			<td><?=$r["office"]?></td>
 			<td class="r"><?=format_date($r["updated_date"])?></td>
-			<?=drawDeleteColumn("Delete this position?", $r["id"])?>
+			<?=drawdrawColumnDelete("Delete this position?", $r["id"])?>
 		</tr>
 		<? }?>
 </table>

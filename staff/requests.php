@@ -48,7 +48,7 @@ if (db_found($result)) {?>
 	<tr>
 		<td><a href="view.php?id=<?=$r["id"]?>"><?=$r["lastname"]?>, <?=$r["firstname"]?></a></td>
 		<td class="r"><?=format_date($r["created_date"])?></td>
-		<?=drawDeleteColumn("Delete user?", $r["id"])?>
+		<?=drawdrawColumnDelete("Delete user?", $r["id"])?>
 	</tr>
 	<?
 	}

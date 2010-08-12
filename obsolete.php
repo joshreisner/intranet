@@ -3,7 +3,7 @@ function drawCheckboxText($chkname, $description) {
 	return draw_container("span", $description, array("class"=>"clickme", "onclick"=>"javascript:toggleCheckbox('$chkname');"));
 }
 
-function drawDeleteColumn($prompt=false, $id=false, $action="delete", $adminOnly=true) {
+function drawdrawColumnDelete($prompt=false, $id=false, $action="delete", $adminOnly=true) {
 	//if we're going to backend all the table stuff, then this should be incorporated somehow.  perhaps we will need to extend the class
 	global $page, $_josh;
 	if ($adminOnly && !$page['is_admin']) return false;

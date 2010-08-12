@@ -186,6 +186,8 @@ $strings['hello']['es']		= 'Hola';
 $strings['hello']['fr']		= 'Bonjour';
 $strings['hello']['ru']		= 'Привет';
 
+$strings['help_empty']['en']	= '<p>No help is defined for this page.</p>';
+
 $strings['help_hide']['en']	= 'Hide Help';
 $strings['help_hide']['es']	= 'Ocultar Ayuada';
 $strings['help_hide']['fr']	= 'Masquer l\'aide';
@@ -250,6 +252,11 @@ $strings['links']['en']		= 'Links';
 $strings['links']['es']		= 'Vínculos';
 $strings['links']['fr']		= 'Liens';
 $strings['links']['ru']		= 'ссылку';
+
+$strings['location']['en']			= 'Location';
+//$strings['office']['es']			= '';
+//$strings['office']['fr']			= '';
+//$strings['office']['ru']			= '';
 
 $strings['log_out']['en']		= 'Log Out';
 $strings['log_out']['es']		= 'Cerrar Sesión';
@@ -356,11 +363,6 @@ $strings['none']['es']			= 'Ninguno';
 $strings['none']['fr']			= 'Aucun';
 $strings['none']['ru']			= 'Никакой';
 
-$strings['office']['en']			= 'Office';
-//$strings['office']['es']			= '';
-//$strings['office']['fr']			= '';
-//$strings['office']['ru']			= '';
-
 $strings['organization']['en']			= 'Organization';
 $strings['organization']['es']			= 'Organización';
 $strings['organization']['fr']			= 'Organisation';
@@ -436,6 +438,8 @@ $strings['replies']['es']			= 'Respuestas';
 $strings['replies']['fr']			= 'Réponses';
 $strings['replies']['ru']			= 'Ответы';
 
+$strings['results_empty']['en']		= 'No results';
+
 $strings['shared']['en'] = 'Shared';
 $strings['shared']['es'] = 'Compartidas';
 $strings['shared']['fr'] = 'Partagée';
@@ -465,7 +469,6 @@ $strings['staff_requests_empty']['en']	= 'No pending requests!';
 $strings['staff_requests_empty']['es']	= 'No hay solicitudes pendientes!';
 $strings['staff_requests_empty']['fr']	= 'Aucune demande en cours!';
 $strings['staff_requests_empty']['ru']	= 'Нет ожидающих запросов!';
-
 
 $strings['staff_update']['en']		= 'Your personal info hasn\'t been updated in a while.  Please update this form and click Save at the bottom.  Your home and emergency contact information will remain private -- only senior staff will have access to it.';
 

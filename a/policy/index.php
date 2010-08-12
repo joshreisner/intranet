@@ -45,7 +45,7 @@ echo drawNavigationRow($options, "areas", true);
 		<td width="16"><?=draw_img(DIRECTORY_WRITE . $d["icon"], $link)?></td>
 		<td><a href="<?=$link?>"><?=$d["name"]?></a></td>
 		<td class="r"><?=format_date($d["updated_date"])?></td>
-		<?=drawDeleteColumn("Delete document?", $d["id"]);?>
+		<?=drawdrawColumnDelete("Delete document?", $d["id"]);?>
 	</tr>
 		<? }
 	} else {

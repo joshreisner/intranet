@@ -56,7 +56,7 @@ echo drawNavigation();
 		<td><?=$r["title"]?></td>
 		<td><?=$r["office"]?></td>
 		<td align="right"><nobr><?=format_phone($r["phone"])?></nobr></td>
-		<?=drawDeleteColumn("Delete this staff member?", $r["user_id"])?>
+		<?=drawdrawColumnDelete("Delete this staff member?", $r["user_id"])?>
 	</tr>
 	<? }?>
 </table>

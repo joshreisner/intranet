@@ -1,6 +1,8 @@
 <?php
 include("include.php");
 
+url_query_require();
+
 if ($posting) {
 	$_POST['translations_do'] = true;
 	langTranslatePost('description');

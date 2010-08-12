@@ -53,7 +53,7 @@ if ($posting) {
 	url_change('account_confirm.php');
 }
 
-echo drawTopSimple(getString('login_account_request'));
+echo drawSimpleTop(getString('login_account_request'));
 
 echo drawMessage(getString('login_account_request_msg'));
 $f = new form('users_requests', false, getString('login_account_request'));
@@ -74,5 +74,5 @@ if (getOption('legal')) {
 $f->set_field(array('type'=>'textarea', 'name'=>'bio', 'label'=>getString('bio'), 'class'=>'tinymce'));
 
 echo $f->draw();
-echo drawBottomSimple();
+echo drawSimpleBottom();
 ?>

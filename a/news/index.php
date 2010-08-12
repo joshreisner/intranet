@@ -110,7 +110,7 @@ if (url_action("delete")) {
 			<td><?=$r["outlet"]?></td>
 			<td><?=$r["organization"]?></td>
 			<td class="r"><?=format_date($r["pubdate"], "n/a", "M d, Y", false)?></td>
-			<?=drawDeleteColumn("Delete news clip?", $r["id"])?>
+			<?=drawdrawColumnDelete("Delete news clip?", $r["id"])?>
 		</tr>
 		<? }
 	} else {

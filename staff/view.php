@@ -3,20 +3,20 @@ include("include.php");
 
 //delete user handled by include
 if (url_action("undelete")) { //undelete user
-	db_query("UPDATE users SET is_active = 1, deleted_user = NULL, deleted_date = NULL, endDate = NULL, updated_user = {$_SESSION["user_id"]}, updated_date = GETDATE() WHERE id = " . $_GET["id"]);
+	db_query("UPDATE users SET is_active = 1, deleted_user = NULL, deleted_date = NULL, endDate = NULL, updated_user = {$_SESSION['user_id']}, updated_date = GETDATE() WHERE id = " . $_GET['id']);
 	url_query_drop("action");
 } elseif (url_action("passwd")) {
-	db_query("UPDATE users SET password = NULL WHERE id = " . $_GET["id"]);
-	if ($_GET["id"] == $_SESSION["user_id"]) {
+	db_query("UPDATE users SET password = NULL WHERE id = " . $_GET['id']);
+	if ($_GET['id'] == $_SESSION['user_id']) {
 		//if is user, make em reset pw now
-		$_SESSION["password"] = true;
+		$_SESSION['password'] = true;
 	} else {
 		//otherwise send email
 		emailPassword($_GET['id']);
 	}
 	url_query_drop("action");
 } elseif (url_action("invite")) {
-	emailInvite($_GET["id"]);
+	emailInvite($_GET['id']);
 	url_query_drop("action");
 }
 
@@ -72,15 +72,15 @@ $r = db_grab('SELECT
 	LEFT JOIN departments		d ON d.departmentID	= u.departmentID 				
 	LEFT JOIN offices    		f ON f.id			= u.officeID 				
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
-	WHERE u.id = ' . $_GET["id"]);
+	WHERE u.id = ' . $_GET['id']);
 	
-$r["nickname"] = trim($r["nickname"]);
+$r['nickname'] = trim($r['nickname']);
 
-$r["organization"] = (empty($r["organization"])) ? '<a href="organizations.php?id=0">' . getString('shared') . '</a>' : '<a href="organizations.php?id=' . $r["organization_id"] . '">' . $r["organization"] . '</a>';
+$r['organization'] = (empty($r['organization'])) ? '<a href="organizations.php?id=0">' . getString('shared') . '</a>' : '<a href="organizations.php?id=' . $r['organization_id'] . '">' . $r['organization'] . '</a>';
 
 
 
-if (!isset($r["is_active"])) url_change("./");
+if (!isset($r['is_active'])) url_change("./");
 
 echo drawTop();
 
@@ -88,26 +88,26 @@ if (!$img = draw_img(file_dynamic('users', 'image_large', $_GET['id'], 'jpg', $r
 file_dynamic('users', 'image_medium', $_GET['id'], 'jpg', $r['updated']);
 file_dynamic('users', 'image_small', $_GET['id'], 'jpg', $r['updated']);
 
-echo drawJumpToStaff($_GET["id"]);
+echo drawJumpToStaff($_GET['id']);
 
-if (!$r["is_active"]) {
+if (!$r['is_active']) {
 	$msg = "This is a former staff member.  ";
-	if ($r["endDate"]) {
-		$msg .= ($r["nickname"]) ? $r["nickname"] : $r["firstname"];
-		$msg .= "'s last day was " . format_date($r["endDate"]) . ".";
+	if ($r['endDate']) {
+		$msg .= ($r['nickname']) ? $r['nickname'] : $r['firstname'];
+		$msg .= "'s last day was " . format_date($r['endDate']) . ".";
 	}
 	echo drawMessage($msg, "center");
 }
 ?>
 <table class="left" cellspacing="1">
 	<? if ($page['is_admin']) {
-		if ($r["is_active"]) {
-			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], getString('delete'), drawDeleteLink("Deactivate this staff member?"));
+		if ($r['is_active']) {
+			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET['id'], getString('delete'), drawDeleteLink("Deactivate this staff member?"));
 		} else {
-			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
+			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET['id'], "re-activate", drawDeleteLink("Re-activate this staff member?", false, "undelete"));
 		}
-	} elseif ($_GET["id"] == $_SESSION["user_id"]) {
-		echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET["id"]);
+	} elseif ($_GET['id'] == $_SESSION['user_id']) {
+		echo drawHeaderRow($page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET['id']);
 	} else {
 		echo drawHeaderRow($page['title'], 3);
 	}
@@ -118,52 +118,52 @@ if (!$r["is_active"]) {
 	?>
 	<tr>
 		<td class="left"><?=getString('name')?></td>
-		<td class="title"><?=$r["firstname"]?> <? if (!empty($r["nickname"])) {?>(<?=$r["nickname"]?>) <? }?><?=$r["lastname"]?></td>
+		<td class="title"><?=$r['firstname']?> <? if (!empty($r['nickname'])) {?>(<?=$r['nickname']?>) <? }?><?=$r['lastname']?></td>
 		<td rowspan="<?=$rowspan?>" style="width:240px; text-align:center; vertical-align:middle; padding:0px;"><?=$img?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('organization')?></td>
-		<td><?=$r["organization"]?></td>
+		<td><?=$r['organization']?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('staff_title')?></td>
-		<td><?=$r["title"]?></td>
+		<td><?=$r['title']?></td>
 	</tr>
-	<? if (getOption("staff_showoffice")) {?>
+	<? if (getOption("staff_showdept")) {?>
 	<tr>
 		<td class="left"><?=getString('department')?></td>
-		<td><?=$r["departmentName"]?></td>
+		<td><?=$r['departmentName']?></td>
 	</tr>
 	<? }
 	if (getOption("staff_showoffice")) {?>
 	<tr>
-		<td class="left"><?=getString('office')?></td>
-		<td><?=$r["office"]?></td>
+		<td class="left"><?=getString('location')?></td>
+		<td><?=$r['office']?></td>
 	</tr>
 	<? }
 	if (getOption("languages")) {?>
 	<tr>
 		<td class="left"><?=getString('language')?></td>
-		<td><?=$r["language"]?></td>
+		<td><?=$r['language']?></td>
 	</tr>
 	<? }?>
 	<tr>
 		<td class="left"><?=getString('telephone')?></td>
-		<td><?=format_phone($r["phone"])?></td>
+		<td><?=format_phone($r['phone'])?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('email')?></td>
-		<td><a href="mailto:<?=$r["email"]?>"><?=$r["email"]?></a></td>
+		<td><a href="mailto:<?=$r['email']?>"><?=$r['email']?></a></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('last_login')?></td>
-		<td><?=format_date_time($r["lastlogin"], " ")?></td>
+		<td><?=format_date_time($r['lastlogin'], " ")?></td>
 	</tr>
 	<tr>
 		<td class="left"><?=getString('bio')?></td>
-		<td colspan="2" height="167" class="text"><?=nl2br($r["bio"])?></td>
+		<td colspan="2" height="167" class="text"><?=nl2br($r['bio'])?></td>
 	</tr>
-	<? if ($page['is_admin'] || ($_GET["id"] == $_SESSION["user_id"])) {?>
+	<? if ($page['is_admin'] || ($_GET['id'] == $_SESSION['user_id'])) {?>
 	<tr class="group">
 		<td colspan="3"><?=getString('administrative_info')?></td>
 	</tr>
@@ -171,41 +171,41 @@ if (!$r["is_active"]) {
 	if (getOption("channels")) {?>
 	<tr>
 		<td class="left"><?=getString('network')?></td>
-		<td colspan="2" class="bigger"><?=$r["channel"]?></td>
+		<td colspan="2" class="bigger"><?=$r['channel']?></td>
 	</tr>
 	<? }
-	if ($r["longDistanceCode"]) {?>
+	if ($r['longDistanceCode']) {?>
 	<tr>
 		<td class="left">Telephone Code</td>
-		<td colspan="2" class="bigger"><?=$r["longDistanceCode"]?></td>
+		<td colspan="2" class="bigger"><?=$r['longDistanceCode']?></td>
 	</tr>
 	<? }
-	if ($r["startDate"]) {?>
+	if ($r['startDate']) {?>
 	<tr>
 		<td class="left"><?=getString('start_date')?></td>
-		<td colspan="2"><?=format_date($r["startDate"])?></td>
+		<td colspan="2"><?=format_date($r['startDate'])?></td>
 	</tr>
 	<? }
-	if ($r["endDate"]) {?>
+	if ($r['endDate']) {?>
 	<tr>
 		<td class="left">End Date</td>
-		<td colspan="2"><?=format_date($r["endDate"])?></td>
+		<td colspan="2"><?=format_date($r['endDate'])?></td>
 	</tr>
 	<? }
-	if ($_GET["id"] == $_SESSION["user_id"]) {
+	if ($_GET['id'] == $_SESSION['user_id']) {
 		?>
 		<tr>
 			<td class="left"><?=getString('password')?></td>
-			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET["id"], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a></td>
+			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET['id'], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a></td>
 		</tr>
 		<? } elseif ($page['is_admin']) {?>
 		<tr>
 			<td class="left"><?=getString('password')?></td>
 			<td colspan="2">
-				<? if ($r["password"]){?>
+				<? if ($r['password']){?>
 					<i><?=getString('password_is_reset')?></i>
 				<? } else {?>
-					<a href="<?=drawDeleteLink(getString('are_you_sure'), $_GET["id"], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a>
+					<a href="<?=drawDeleteLink(getString('are_you_sure'), $_GET['id'], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a>
 				<? }?>
 			</td>
 		</tr>
@@ -213,23 +213,23 @@ if (!$r["is_active"]) {
 	<? if ($page['is_admin']) {?>
 		<tr>
 			<td class="left"><?=getString('invite')?></td>
-			<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET["id"], "invite")?>" class="button" style="line-height:13px;"><?=getString('invite_again')?></a></td>
+			<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET['id'], "invite")?>" class="button" style="line-height:13px;"><?=getString('invite_again')?></a></td>
 		</tr>
 		<? if (getOption("staff_showrank")) {?>
 			<tr>
 				<td class="left">Rank</td>
-				<td colspan="2"><?=$r["rank"]?></td>
+				<td colspan="2"><?=$r['rank']?></td>
 			</tr>
 		<? } ?>
 		<tr>
 			<td class="left"><?=getString('permissions')?></td>
 			<td colspan="2">
 			<?
-			if ($r["is_admin"]) {
+			if ($r['is_admin']) {
 				echo "Site Administrator";
 			} else {
 				$hasPermission = false;
-				if ($permissions = db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET["id"] . ' ORDER BY m.title')) {
+				if ($permissions = db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET['id'] . ' ORDER BY m.title')) {
 					echo draw_list($permissions);
 				} else {
 					echo getString('none');
@@ -246,22 +246,22 @@ if (!$r["is_active"]) {
 	</tr>
 	<tr>
 		<td class="left">Home Address</nobr></td>
-		<td colspan="2"><?=$r["homeAddress1"]?><br>
-			<? if ($r["homeAddress2"]) {?><?=$r["homeAddress2"]?><br><? }?>
-			<?=$r["homeCity"]?>, <?=$r["stateAbbrev"]?> <?=$r["homeZIP"]?>
+		<td colspan="2"><?=$r['homeAddress1']?><br>
+			<? if ($r['homeAddress2']) {?><?=$r['homeAddress2']?><br><? }?>
+			<?=$r['homeCity']?>, <?=$r['stateAbbrev']?> <?=$r['homeZIP']?>
 		</td>
 	</tr>
 	<tr>
 		<td class="left">Home Phone</nobr></td>
-		<td colspan="2"><?=format_phone($r["homePhone"])?></td>
+		<td colspan="2"><?=format_phone($r['homePhone'])?></td>
 	</tr>
 	<tr>
 		<td class="left">Cell Phone</td>
-		<td colspan="2"><?=format_phone($r["homeCell"])?></td>
+		<td colspan="2"><?=format_phone($r['homeCell'])?></td>
 	</tr>
 	<tr>
 		<td class="left">Personal Email</td>
-		<td colspan="2"><a href="mailto:<?=$r["homeEmail"]?>"><?=$r["homeEmail"]?></a></td>
+		<td colspan="2"><a href="mailto:<?=$r['homeEmail']?>"><?=$r['homeEmail']?></a></td>
 	</tr>
 	<? }
 	if (getOption("staff_showemergency")) {?>
@@ -269,21 +269,21 @@ if (!$r["is_active"]) {
 		<td colspan="3">Emergency Contact Information [private]</td>
 	</tr>
 	<tr>
-		<td class="left"><?=$r["emerCont1Relationship"]?></td>
+		<td class="left"><?=$r['emerCont1Relationship']?></td>
 		<td colspan="2">
-			<b><?=$r["emerCont1Name"]?></b><br>
-			<? if($r["emerCont1Phone"]) {?><?=format_phone($r["emerCont1Phone"])?><br><? }?>
-			<? if($r["emerCont1Cell"]) {?><?=format_phone($r["emerCont1Cell"])?><br><? }?>
-			<?=$r["emerCont1Email"]?>
+			<b><?=$r['emerCont1Name']?></b><br>
+			<? if($r['emerCont1Phone']) {?><?=format_phone($r['emerCont1Phone'])?><br><? }?>
+			<? if($r['emerCont1Cell']) {?><?=format_phone($r['emerCont1Cell'])?><br><? }?>
+			<?=$r['emerCont1Email']?>
 		</td>
 	</tr>
 	<tr>
-		<td class="left"><?=$r["emerCont2Relationship"]?></td>
+		<td class="left"><?=$r['emerCont2Relationship']?></td>
 		<td colspan="2">
-			<b><?=$r["emerCont2Name"]?></b><br>
-			<? if($r["emerCont2Phone"]) {?><?=format_phone($r["emerCont2Phone"])?><br><? }?>
-			<? if($r["emerCont2Cell"]) {?><?=format_phone($r["emerCont2Cell"])?><br><? }?>
-			<?=$r["emerCont2Email"]?>
+			<b><?=$r['emerCont2Name']?></b><br>
+			<? if($r['emerCont2Phone']) {?><?=format_phone($r['emerCont2Phone'])?><br><? }?>
+			<? if($r['emerCont2Cell']) {?><?=format_phone($r['emerCont2Cell'])?><br><? }?>
+			<?=$r['emerCont2Email']?>
 		</td>
 	</tr>
 	<? }

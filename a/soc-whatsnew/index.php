@@ -20,7 +20,7 @@ foreach ($result as &$r) {
 	$r['draggy']	= draw_img('/images/icons/move.png');
 	$r['title']		= draw_link('edit.php?id=' . $r['id'], format_string($r['title'], 70));
 	$r['updated']	= format_date($r['updated']);
-	$r['delete']	= deleteColumn($r['id']);
+	$r['delete']	= drawColumnDelete($r['id']);
 }
 
 echo $t->draw($result);
