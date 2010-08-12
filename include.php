@@ -420,7 +420,7 @@ function drawTop($headcontent=false) {
 			draw_javascript_src() .
 			draw_javascript_src('/javascript.js') .
 			draw_css('
-				#left table.left td.head { background-color:#' . $page['color'] . '; }
+				#left table.left td.head, #left div.display div.title { background-color:#' . $page['color'] . '; }
 				#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
 				#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
 			') . 
@@ -604,6 +604,7 @@ function getOption($key) {
 	$defaults['bb_notifyfollowup']		= false;
 	$defaults['bb_notifypost']			= false;
 	$defaults['bb_types']				= false;
+	$defaults['bb_threaded']			= false;
 	
 	$defaults['cal_showholidays']		= true;
 
@@ -768,4 +769,39 @@ function joshlib() {
 	foreach ($possibilities as $p) if (@include($p)) return $_josh;
 	die('Help me locate my library. ' . $_SERVER['DOCUMENT_ROOT']);
 }
+
+class display {
+	var $title		= false;
+	var $rows		= array();
+	var $controls	= array();
+	var $class		= false;
+	
+	function __construct($title=false, $rows=false, $controls=false, $class=false) {
+		if ($title)		$this->title = $title;
+		if ($rows)		$this->rows = $rows;
+		if ($controls)	$this->controls = $controls;
+		if ($class)		$this->class = $class;
+	}
+	
+	function row($label, $content) {
+		$this->rows[$label] = $content;
+	}
+	
+	function draw($bottom=false) {
+		$count = count($this->rows);
+		if ($this->title) $return = draw_div_class('title', $this->title);
+		$counter = 1;
+		foreach ($this->rows as $label=>$content) {
+			$class = 'row';
+			if ($counter == 1) $class .= ' first';
+			if ($counter == $count) $class .= ' last';
+			$return .= draw_div_class($class, draw_div_class('label', $label) . draw_div_class('content', $content));
+			$counter++;
+		}
+		if ($bottom) $return .= draw_div_class('bottom', $bottom);
+		if (!empty($this->class)) $this->class = ' ' . $this->class;
+		return draw_div_class('display' . $this->class, $return);
+	}
+}
+
 ?>

@@ -36,56 +36,6 @@ function bbDrawTable($limit=false, $where=false, $title=false) {
 	return $t->draw($result, getString('topics_empty'));
 }
 
-
-function bbDrawTopic($topic_id) {
-	//get topic 
-	$r = db_grab('SELECT 
-			t.title' . langExt() . ',
-			t.description' . langExt() . ',
-			u.id,
-			ISNULL(u.nickname, u.firstname) firstname,
-			u.lastname,
-			t.type_id,
-			y.title' . langExt() . ' type,
-			t.created_date
-		FROM bb_topics t
-		JOIN users u ON t.created_user = u.id
-		LEFT JOIN bb_topics_types y ON t.type_id = y.id
-		WHERE t.id = ' . $topic_id);
-	
-	//draw top
-	$caption = '';
-	if (getOption('bb_types') && $r['type']) {
-		$caption .= getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']) . '<br>';
-	}
-	if (getOption('channels')) {
-		$channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $topic_id . ' ORDER BY title' . langExt());
-		if ($channels) $caption .= 'Networks: ' . implode(', ', $channels);
-	}
-	if ($caption) $r['description' . langExt()] .= '<span class="light caption">' . $caption . '</span>';
-	
-	$return = drawThreadTop($r['title' . langExt()], $r['description' . langExt()], $r['id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date']);
-
-	//append followups
-	$followups = db_query('SELECT
-				f.id,
-				f.description' . langExt() . ' description,
-				u.id,
-				ISNULL(u.nickname, u.firstname) firstname,
-				u.lastname,
-				f.created_date as postedDate,
-				f.created_user as user_id
-			FROM bb_followups f
-			JOIN users u ON u.id = f.created_user
-			WHERE f.is_active = 1 AND f.topic_id = ' . $topic_id . '
-			ORDER BY f.created_date');
-	while ($f = db_fetch($followups)) { 
-		$return .= drawThreadComment($f['description'], $f['user_id'], $f['firstname'] . ' ' . $f['lastname'], $f['postedDate']);
-	}
-	
-	return $return;
-}
-
 function drawTopicForm() {
 	global $_GET, $page;
 	$f = new form('bb_topics', @$_GET['id'], getString('topic_new'));

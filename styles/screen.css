@@ -3,7 +3,7 @@ body { background-color:#fff; margin:0px; text-align:center; }
 /* type styles */
 body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; }
 table.left td.title, a.title, span.title, h1, #left table.table td.empty { font-size:18px; }
-#left form fieldset legend, input, select, textarea, div.message, div.panel, #left table.table th.title  { font-size:13px; }
+#left form fieldset legend, div.display div.title, input, select, textarea, div.message, div.panel, #left table.table th.title  { font-size:13px; }
 #right table td.head, h3, #right #tools input { font-size:12px; }
 #right, #right table, th, #left form fieldset div.checkboxes ul { font-size:11px; }
 #footer, #help #help_buttons a, a.button, a.button-light, a.right { font-size:9px; }
@@ -44,7 +44,7 @@ input.button:hover { background-color:#ccc; }
 
 input.checkbox	{ border:none; padding:0px; margin:0px; background-color:transparent; }
 input.file		{ border:none; }
-textarea.thread { border-width:0px; width:432px; }
+textarea.thread { border-width:0px; width:99%; }
 
 th.c, td.c { text-align:center; white-space:nowrap; }
 th.r, td.r { text-align:right; white-space:nowrap; }
@@ -75,16 +75,14 @@ a.button-light:hover { color:#555; background-color:#fee; text-decoration:none; 
 .block:hover { color:#fff; padding:1px 3px 1px 3px; text-decoration:none; }
 	
 div.message { 
-	width:560px; 
 	border:1px solid #ccc;
-	background-color:#fffce0;
+	background-color:#ffffee;
 	padding:16px;
 	line-height:18px;
 	margin:0px 0px 14px 0px;
 }
 
 div.panel {
-	width:572px; 
 	border:1px solid #ccc;
 	line-height:18px;
 	margin:0px 0px 14px 0px;
@@ -121,9 +119,10 @@ th { font-weight:normal; background-color:#eee; color:#999; text-align:left; }
 #left table.table td.draggy:hover { cursor:move; }
 
 #left table.table tr.thread td { height:36px; vertical-align:middle; cursor:pointer; }
-#left table.table tr.admin, #left table.table tr.thread.admin:hover { background-color:#fffce0; }
+#left table.table tr.admin { background-color:#ffffee; }
+#left table.table tr.thread.admin:hover { background-color:#ffffdd; }
 #left table.table tr.thread:hover { background-color:#f4f4f4; }
-#left table.table tr.thread:hover a { text-decoration:underline; color:#d8282d; }
+#left table.table tr.thread:hover td a { text-decoration:underline; color:#d8282d; }
 #left table.table tr.total { background-color:#eee; color:#999; }
 #left table.table tr.dragclass td { border-width:1px 0px 1px 0px; border-style:solid; border-color:#555; margin:-1px 0px -1px 0px; 
 	opacity: .5;
@@ -193,7 +192,7 @@ textarea.press_export { width:594px; height:120px; }
 }
 
 #right table tr { background-color:#fff; }
-#right table tr.admin { background-color:#fffce0; }
+#right table tr.admin { background-color:#ffffee; }
 #right table td { padding:4px 3px 4px 3px; }
 #right table td.head { line-height:18px; background-image:url(/images/gradient.png);  }
 #right table td.head a.left { color:#fff; float:left; }
@@ -211,10 +210,20 @@ textarea.press_export { width:594px; height:120px; }
 #right ul { list-style-type:none; margin:0px; padding:0px; }
 #right ul li { float:left; width:139px; padding:5px 0px 3px 1px; }
 
-/* deprecated / thread */
 
+/* new thread */
+div.display { border:1px solid #ccc; margin-bottom:15px; }
+div.display div.title { border-bottom:1px solid #ccc; padding-left:4px; line-height:24px; color:#fff; background-image:url(/images/gradient.png); }
+div.display div.title a { color:#fff; }
+div.display div.row { background-color:#eee; overflow:auto; border-bottom:1px solid #e6e6e6; }
+div.display div.row.last { background-color:#eee; overflow:auto; border-bottom:0; }
+div.display div.label { padding:5px; float:left; width:135px;}
+div.display div.content { background-color:#fff; float:right; width:420px; padding:10px; }
+div.display.thread div.content { min-height:100px; }
+
+/* deprecated / thread */
 table.left { 
-	width:594px; 
+	width:590px; 
 	overflow-x:hidden;
 	background-color:#eee;
 	border-width:0px; 
@@ -225,15 +234,15 @@ table.left tr { background-color:#fff; vertical-align:top; }
 table.left td { padding:4px 3px 4px 3px; }
 table.left td.head	{ padding:1px 2px 1px 4px; height:24px; color:#fff; vertical-align:middle; }
 table.left td.left	{ background-color:#eee; width:130px; }
-table.left td.right	{ width:414px; overflow-y:hidden; }
+table.left td.right	{ overflow-y:hidden; }
 table.left td.bottom { text-align:center; background-color:#eee; }
 table.left tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
 table.left td.empty { background-color:#eee; vertical-align:middle; height:120px; text-align:center; line-height:20px; color:#999; }
 
 table.left th { font-weight:normal; color:#999; background-color:#eee; height:16px; padding:5px 2px 3px 2px; }
 
-table.left td.text { width:500px; padding:10px; line-height:20px; height:140px; }
-table.left td.text div.text { width:420px; position:relative; min-height:160px; height:auto; }
+table.left td.text { padding:10px; line-height:20px; height:140px; }
+table.left td.text div.text { position:relative; min-height:160px; height:auto; }
 table.left td.text div.top { padding-bottom:60px; }
 table.left td.text span.caption { position:absolute; margin-top:20px; bottom:0px; left:0px; display:block; line-height:17px; }
 table.left tr.total { background-color:#eee; text-align:right; }
