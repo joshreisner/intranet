@@ -55,12 +55,11 @@ if ($posting) {
 echo drawTop(drawSyndicateLink('bb'));
 
 if (getOption('bb_threaded')) {
-	echo 'threading thing goes here<br/><br/>';
+	echo draw_div('bb_topics', bbDrawThreads(15));
 } else {
 	echo draw_div('bb_topics', bbDrawTable(15));
+	echo draw_javascript('function_attach(setInterval(refreshBB, 60000));');
 }
-
-echo draw_javascript('function_attach(setInterval(refreshBB, 60000));');
 
 //add new topic
 echo '<a name="bottom"></a>';

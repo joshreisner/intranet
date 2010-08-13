@@ -11,18 +11,7 @@ function bbDrawTable($limit=false, $where=false, $title=false) {
 	$t->set_column('replies', 'c', getString('replies'), 30);
 	$t->set_column('last_post', 'r', getString('last_post'), 100);
 	
-	$result = db_table('SELECT 
-			t.id,
-			t.title' . langExt() . ' topic,
-			t.is_admin,
-			t.thread_date last_post,
-			(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
-			ISNULL(u.nickname, u.firstname) firstname,
-			u.lastname
-		FROM bb_topics t
-		JOIN users u ON u.id = t.created_user' . 
-		getChannelsWhere('bb_topics', 't', 'topic_id') . $where .
-		' ORDER BY t.thread_date DESC', $limit);
+	$result = bbGetTopics($where, $limit);
 	
 	foreach ($result as &$r) {
 		$r['class'] = 'thread';
@@ -34,6 +23,11 @@ function bbDrawTable($limit=false, $where=false, $title=false) {
 	}
 	
 	return $t->draw($result, getString('topics_empty'));
+}
+
+function bbDrawThreads($limit=false, $where=false) {
+	$result = bbGetTopics($where, $limit);
+	return 'Thread thing goes here' . BR . BR;
 }
 
 function drawTopicForm() {
@@ -95,6 +89,21 @@ function bbDrawRss() {
 	}
 
 	file_rss('Bulletin Board: Last 15 Topics', url_base() . '/bb/', $items, 'bb.xml');
+}
+
+function bbGetTopics($where=false, $limit=false) {
+	return db_table('SELECT 
+			t.id,
+			t.title' . langExt() . ' topic,
+			t.is_admin,
+			t.thread_date last_post,
+			(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
+			ISNULL(u.nickname, u.firstname) firstname,
+			u.lastname
+		FROM bb_topics t
+		JOIN users u ON u.id = t.created_user' . 
+		getChannelsWhere('bb_topics', 't', 'topic_id') . $where .
+		' ORDER BY t.thread_date DESC', $limit);
 }
 
 ?>

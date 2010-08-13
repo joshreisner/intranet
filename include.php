@@ -765,10 +765,12 @@ function joshlib() {
 }
 
 class display {
-	var $title		= false;
-	var $rows		= array();
-	var $controls	= array();
+	//draw a left/right table thing like a bulletin board topic thread or the staff view page
+	
 	var $class		= false;
+	var $controls	= array();
+	var $rows		= array();
+	var $title		= false;
 	
 	function __construct($title=false, $rows=false, $controls=false, $class=false) {
 		if ($title)		$this->title = $title;
@@ -783,7 +785,7 @@ class display {
 	
 	function draw($bottom=false) {
 		$count = count($this->rows);
-		if ($this->title) $return = draw_div_class('title', $this->title);
+		if ($this->title) $return = draw_div_class('title', $this->title . draw_nav($this->controls));
 		$counter = 1;
 		foreach ($this->rows as $label=>$content) {
 			$class = 'row';
