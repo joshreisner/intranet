@@ -201,13 +201,7 @@ function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br
 	$base = url_base();
 	$date = ($date) ? format_date_time($date, '', $separator) : false;
 	$img  = draw_img(DIRECTORY_WRITE . '/dynamic/users-image_small-' . $user_id . '.jpg', $base . '/staff/view.php?id=' . $user_id);		
-	return '
-	<table cellpadding="0" cellspacing="0" border="0" width="144">
-		<tr valign="top" style="background-color:transparent;">
-			<td width="46" height="37" align="center">' . $img . '</td>
-			<td><a href="' . $base . '/staff/view.php?id=' . $user_id . '">' . format_string($name, 20) . '</a><br>' . $date . '</td>
-		</tr>
-	</table>';
+	return draw_div_class('name', $img . draw_link($base . '/staff/view.php?id=' . $user_id, format_string($name, 20)) . BR . $date);
 }
 
 function drawNavigation($pages=false, $match='path') {
@@ -218,10 +212,10 @@ function drawNavigation($pages=false, $match='path') {
 		$pages		= array();
 		$admin		= ($page['is_admin']) ? ' ' : ' AND is_admin = 0 ';
 		$modulette	= (empty($page['modulette_id'])) ? ' AND p.modulette_id IS NULL ' : ' AND p.modulette_id = ' . $page['modulette_id'];
-		$result	= db_query('SELECT p.id, p.title' . langExt() . ' title, p.url, m.folder FROM pages p JOIN modules m ON p.module_id = m.id WHERE m.id = ' . $page['module_id'] . $modulette . $admin . ' AND p.is_hidden = 0 ORDER BY p.precedence');
+		$result	= db_query('SELECT p.id, p.title' . langExt() . ' title, p.url, m.folder, m2.folder modulette FROM pages p JOIN modules m ON p.module_id = m.id LEFT JOIN modulettes m2 ON p.modulette_id = m2.id WHERE m.id = ' . $page['module_id'] . $modulette . $admin . ' AND p.is_hidden = 0 ORDER BY p.precedence');
 		while ($r = db_fetch($result)) {
 			//don't do navigation for helpdesk.  it needs to do it, since a message could go above -- todo fix this
-			if ($r['url'] != '/helpdesk/') $pages['/' . $r['folder'] . '/' . $r['url']] = $r['title'];
+			if ($r['url'] != '/helpdesk/') $pages['/' . $r['folder'] . '/' . (empty($r['modulette']) ? '' : $r['modulette'] . '/') . $r['url']] = $r['title'];
 		}
 	}
 

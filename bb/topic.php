@@ -69,14 +69,14 @@ if ($posting) {
 	
 	bbDrawRss();
 	url_change();
-} elseif (isset($_GET["delete"])) {
-	db_delete("bb_topics");
+} elseif (isset($_GET['delete'])) {
+	db_delete('bb_topics');
 	bbDrawRss();
-	url_change("/bb/");
-} elseif (isset($_GET["deleteFollowupID"])) {
-	db_delete("bb_followups", $_GET["deleteFollowupID"]);
+	url_change('/bb/');
+} elseif (isset($_GET['deleteFollowupID'])) {
+	db_delete('bb_followups', $_GET['deleteFollowupID']);
 	bbDrawRss();
-	url_query_drop("deleteFollowupID");
+	url_query_drop('deleteFollowupID');
 }
 
 //get topic data
@@ -98,7 +98,7 @@ if (!$r = db_grab('SELECT
 echo drawTop();
 echo drawSyndicateLink("bb");
 
-$isPoster = ($r["user_id"] == $_SESSION["user_id"]) ? true : false;
+$isPoster = ($r["user_id"] == user()) ? true : false;
 
 if ($r["is_admin"] == 1) echo drawMessage(getString("topic_admin"));
 
@@ -118,34 +118,26 @@ echo draw_javascript('
 $d = new display($page['breadcrumbs'] . format_string($r['title'], 40), false, array('edit.php?id=' . $_GET['id']=>getString('edit'), 'javascript:checkDelete();'=>getString('delete')), 'thread');
 	
 //draw top
-$caption = '';
 if (getOption('bb_types') && $r['type']) {
-	$caption .= getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']) . '<br>';
+	$r['description'] .= draw_div_class('light', getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']));
 }
-if (getOption('channels')) {
-	$channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $topic_id . ' ORDER BY title' . langExt());
-	if ($channels) $caption .= 'Networks: ' . implode(', ', $channels);
+if (getOption('channels') && ($channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $_GET['id'] . ' ORDER BY title' . langExt()))) {
+	$r['description'] .= draw_div_class('light', 'Networks: ' . implode(', ', $channels));
 }
-if (!empty($caption)) $r['description'] .= '<span class="light caption">' . $caption . '</span>';
 $d->row(drawName($r['user_id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true), '<h1>' . $r['title'] . '</h1>' . $r['description']);
-
 
 //append followups
 $followups = db_query('SELECT
-			f.id,
 			f.description' . langExt() . ' description,
-			u.id,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
 			f.created_date,
-			f.created_user as user_id
+			f.created_user
 		FROM bb_followups f
 		JOIN users u ON u.id = f.created_user
 		WHERE f.is_active = 1 AND f.topic_id = ' . $_GET['id'] . '
 		ORDER BY f.created_date');
-while ($f = db_fetch($followups)) { 
-	$d->row(drawName($f['user_id'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true), $f['description']);
-}
+while ($f = db_fetch($followups)) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true), $f['description']);
 
 echo $d->draw();
 

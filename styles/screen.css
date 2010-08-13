@@ -5,7 +5,7 @@ body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#4
 table.left td.title, a.title, span.title, h1, #left table.table td.empty { font-size:18px; }
 #left form fieldset legend, div.display div.title, input, select, textarea, div.message, div.panel, #left table.table th.title  { font-size:13px; }
 #right table td.head, h3, #right #tools input { font-size:12px; }
-#right, #right table, th, #left form fieldset div.checkboxes ul { font-size:11px; }
+#right, #right table, th, #left form fieldset div.checkboxes ul, div.name { font-size:11px; }
 #footer, #help #help_buttons a, a.button, a.button-light, a.right { font-size:9px; }
 
 /*layout*/
@@ -97,6 +97,8 @@ table.navigation { list-style:none; margin:0px 0px 15px 0px; width:100%; border:
 table.navigation td { padding:3px; }
 table.navigation td.selected { font-weight:bold; background-color:#fff; }
 
+div.name { padding-left:55px; position:relative; width:84px; }
+div.name img { position:absolute; left:0px; top:3px; }
 
 /* table */
 #left table.table { border:1px solid #eee; border-bottom:0px; margin:0px 0px 14px 0px; width:100%; }
