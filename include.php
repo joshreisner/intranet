@@ -19,19 +19,19 @@ if (getOption('languages')) {
 	
 	//language overwrites eg dates
 	if ($_SESSION['language'] == 'es') {
-		setlocale(LC_TIME, 'es_ES');
+		setlocale(LC_TIME, 'es_ES.utf8');
 		$_josh['date']['strings'] = array('Ayer', 'Hoy', 'Mañana');
 		$_josh['days']		= array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
 		$_josh['months']	= array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
 		$_josh['mos']		= array('ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jun', 'ago', 'sep', 'oct', 'nov', 'dic');
 	} elseif ($_SESSION['language'] == 'fr') {
-		setlocale(LC_TIME, 'fr_FR');
+		setlocale(LC_TIME, 'fr_FR.utf8');
 		$_josh['date']['strings'] = array('Hier', 'Aujourd\'hui', 'Demain');
 		$_josh['days']		= array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
 		$_josh['months']	= array('Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
 		$_josh['mos']		= array('jan', 'fév', 'mar', 'avr', 'mai', 'jui', 'jul', 'aoû', 'sep', 'oct', 'nov', 'déc');
 	} elseif ($_SESSION['language'] == 'ru') {
-		setlocale(LC_TIME, 'ru_RU.UTF8');
+		setlocale(LC_TIME, 'ru_RU.utf8');
 		$_josh['date']['strings'] = array('Вчера', 'Сегодня', 'Завтра');
 		$_josh['days']		= array('Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота');
 		$_josh['months']	= array('Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь');

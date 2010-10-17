@@ -117,7 +117,7 @@ th { font-weight:normal; background-color:#eee; color:#999; text-align:left; }
 #left table.table ul.header { margin:0px; padding:0px; font-size:10px; line-height:18px; list-style-type:none; text-transform:uppercase; float:right; }
 #left table.table ul.header li { float:left; margin:0px 5px 0px 5px; }
 */
-#left table.table td.group { vertical-align:bottom; font-weight:bold; height:50px; }
+#left table.table tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
 #left table.table td.draggy:hover { cursor:move; }
 
 #left table.table tr.thread td { height:36px; vertical-align:middle; cursor:pointer; }
@@ -177,8 +177,8 @@ textarea.press_export { width:594px; height:120px; }
 #tools { border:1px solid #ccc; background-color:#eee; padding:9px 8px 0px 8px; }
 #tools input { background-color:#fff; width:264px; height:20px; margin:7px 0px 5px 0px; border:1px solid #ccc; color:#999; padding:3px; }
 #tools select { margin:7px 0px 12px 0px; }
-#tools select.channels { float:left; }
-#tools select.languages { float:right; }
+#tools select.channels { float:left; width:160px;}
+#tools select.languages { float:right; width:100px; }
 #tools #links { border-top:1px solid #ccc; background-color:#fff; overflow:auto; margin:3px -8px 0px -8px; padding:7px;  }
 #tools #links h3 { font-weight:normal; float:left; margin:1px; color:#999; }
 #tools #links ul { clear:left; overflow:auto; }

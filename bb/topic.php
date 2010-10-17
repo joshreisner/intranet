@@ -138,7 +138,7 @@ echo $d->draw();
 //add a followup form
 $f = new form('bb_followups', false, getString('topic_new'));
 langUnsetFields($f, 'description');
-echo $f->draw();
+echo $f->draw(false, false);
 
 echo drawBottom();
 ?>

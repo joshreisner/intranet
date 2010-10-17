@@ -52,9 +52,9 @@ $strings['category']['fr']			= 'Catégorie';
 $strings['category']['ru']			= 'Категории';
 
 $strings['category_new']['en']			= 'Add Category';
-//$strings['category_new']['es']			= '';
-//$strings['category_new']['fr']			= '';
-//$strings['category_new']['ru']			= '';
+$strings['category_new']['es']			= 'Añadir categoría';
+$strings['category_new']['fr']			= 'Ajouter une catégorie';
+$strings['category_new']['ru']			= 'Добавить категорию';
 
 $strings['categories']['en']			= 'Categories';
 $strings['categories']['es']			= 'Categorías';
@@ -187,6 +187,9 @@ $strings['hello']['fr']		= 'Bonjour';
 $strings['hello']['ru']		= 'Привет';
 
 $strings['help_empty']['en']	= '<p>No help is defined for this page.</p>';
+$strings['help_empty']['es']	= '<p>No hay ayuda se define de esta página.</p>';
+$strings['help_empty']['fr']	= '<p>Aucune aide n\'est définie pour cette page.</p>';
+$strings['help_empty']['ru']	= '<p>Нет помощи определены для этой страницы.</p>';
 
 $strings['help_hide']['en']	= 'Hide Help';
 $strings['help_hide']['es']	= 'Ocultar Ayuada';
