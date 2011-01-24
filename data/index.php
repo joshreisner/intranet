@@ -2,7 +2,7 @@
 $pageIsPublic = true;
 include('../include.php');
 
-echo draw_h2('Converting Character Sets');
+echo draw_h3('Converting Character Sets');
 
 $charset = 'utf8';
 $collation = 'utf8_general_ci';
@@ -33,7 +33,8 @@ if (db_found($result)) {
 	echo 'nothing needs to be changed!';
 }
 
-echo draw_h2('Creating Missing Tables');
+//add missing tables
+echo draw_h3('Add Missing Tables');
 
 echo '<ul>';
 
@@ -49,8 +50,13 @@ foreach ($tables as $t) {
 		echo draw_li($t['base'] . ' already present');
 	}
 }
+echo '</ul>';
 
-//columns to be added
+//add missing columns
+echo draw_h3('Add Missing Columns');
+
+echo '<ul>';
+
 $columns = array(
 	array('table'=>'docs', 'column'=>'language_id', 'type'=>'int'),
 	array('table'=>'modules', 'column'=>'folder', 'type'=>'text'),
@@ -72,6 +78,14 @@ foreach ($columns as $c) {
 	}
 }
 
+echo '</ul>';
+
+//rename old columns
+echo draw_h3('Rename Old Columns');
+
+echo '<ul>';
+
+
 //columns to be renamed
 $columns = array(
 	array('table'=>'channels', 'before'=>'title_en', 'after'=>'title'),
@@ -92,7 +106,12 @@ foreach ($columns as $c) {
 }
 
 
+echo '</ul>';
+
 //fix table data
+echo draw_h3('Fix Table Data');
+
+echo '<ul>';
 
 //pages url should only be page name
 $pages = db_table('SELECT id, url FROM pages WHERE url LIKE "%/%"');

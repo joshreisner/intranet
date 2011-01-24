@@ -758,6 +758,7 @@ function joshlib() {
 	global $_josh;
 	$possibilities = array(
 		'D:\Sites\joshlib\index.php', //seedco-web-srv
+		'/home/seedco/www/joshlib/index.php', //seedco
 		'/home/livingcities/www/joshlib/index.php', //living cities
 		'/home/hcfacc/www/joshlib/index.php', //hcfa-cc
 		'/home/sites/www/joshlib/index.php', //soc
