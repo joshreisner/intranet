@@ -3,7 +3,7 @@ body { background-color:#fff; margin:0px; text-align:center; }
 /* type styles */
 body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; }
 table.left td.title, a.title, span.title, h1, #left table.table td.empty { font-size:18px; }
-#left form fieldset legend, div.display div.title, input, select, textarea, div.message, div.panel, #left table.table th.title  { font-size:13px; }
+#left form fieldset legend, div.display div.title, input, select, textarea, div.message, div.panel, #left table.table th.table_title  { font-size:13px; }
 #right table td.head, h3, #right #tools input { font-size:12px; }
 #right, #right table, th, #left form fieldset div.checkboxes ul, div.name { font-size:11px; }
 #footer, #help #help_buttons a, a.button, a.button-light, a.right, div.display div.title ul { font-size:9px; }
@@ -102,9 +102,9 @@ div.name img { position:absolute; left:0px; top:3px; }
 
 /* table */
 #left table.table { border:1px solid #eee; border-bottom:0px; margin:0px 0px 14px 0px; width:100%; }
-#left table.table th.title { height:19px; color:#fff; line-height:19px; padding-left:4px; background-image:url(/images/gradient.png); background-repeat:repeat-x; }
-#left table.table th.title a { color:#fff; }
-#left table.table th.title span { float:left; }
+#left table.table th.table_title { height:19px; color:#fff; line-height:19px; padding-left:4px; background-image:url(/images/gradient.png); background-repeat:repeat-x; }
+#left table.table th.table_title a { color:#fff; }
+#left table.table th.table_title span { float:left; }
 #left table.table td, #left table.table th { padding:3px; border-bottom:1px solid #ddd; }
 
 th { font-weight:normal; background-color:#eee; color:#999; text-align:left; }

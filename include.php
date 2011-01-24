@@ -8,6 +8,8 @@ if (!isset($_SESSION['language_id']))	$_SESSION['language_id']	= 1;
 //joshlib
 extract(joshlib());
 
+//debug();
+
 //include options file if it exists
 include_once(DIRECTORY_ROOT . '/strings.php');
 @include_once(DIRECTORY_ROOT . DIRECTORY_WRITE . '/strings.php');
@@ -158,6 +160,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	}		
 
 	//handle side menu pref updates
+	error_debug('handle side menu pref updates', __file__, __line__);
 	if (isset($_GET['module'])) {
 		//todo ajax
 		if (db_grab('SELECT COUNT(*) FROM users_to_modules_closed WHERE module_id = ' . $_GET['module'] . ' AND user_id = ' . $_SESSION['user_id'])) {
@@ -172,12 +175,13 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 	}
 }
 
+//obsolete functions
+error_debug('include obsolete.php', __file__, __line__);
+include(DIRECTORY_ROOT . '/obsolete.php');
+
 //done!
 error_debug('done processing include!', __file__, __line__);
 	
-//obsolete functions
-include(DIRECTORY_ROOT . '/obsolete.php');
-
 //draw functions
 function drawColumnDelete($id) {
 	return draw_img('/images/icons/delete.png', 'javascript:confirmDelete(' . $id . ');');
@@ -415,7 +419,7 @@ function drawTop($headcontent=false) {
 			draw_javascript_src('/javascript.js') .
 			draw_css('
 				#left table.left td.head, #left div.display div.title { background-color:#' . $page['color'] . '; }
-				#left table.table th.title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
+				#left table.table th.table_title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
 				#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
 			') . 
 			draw_javascript('
@@ -484,7 +488,7 @@ function drawBottom() {
 	$return .= draw_div('links', draw_container('h3', getString('links')) . (admin() ? draw_link('/a/admin/links.php', getString('edit'), false, array('class'=>'right button')) : false) . draw_list($links));
 	
 	$return .= '</div>';
-
+	
 	foreach ($modules as $m) {
 		$return .= '
 		<table class="right ' . $m['folder'] . '" cellspacing="1">
