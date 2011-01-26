@@ -14,8 +14,8 @@ function bbDrawTable($limit=false, $where=false, $title=false) {
 	$result = bbGetTopics($where, $limit);
 	
 	foreach ($result as &$r) {
-		$r['class'] = 'thread';
-		if ($r['is_admin']) $r['class'] = 'admin thread';
+		array_argument($r, 'thread');
+		if ($r['is_admin']) array_argument($r, 'admin');
 		$r['link'] = 'topic.php?id=' . $r['id'];
 		$r['topic'] = draw_link($r['link'], $r['topic']);
 		$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];
@@ -63,7 +63,7 @@ function bbDrawRss() {
 			t.description,
 			t.is_admin,
 			t.thread_date,
-			(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
+			t.replies,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
 			u.email
@@ -97,7 +97,7 @@ function bbGetTopics($where=false, $limit=false) {
 			t.title' . langExt() . ' topic,
 			t.is_admin,
 			t.thread_date last_post,
-			(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
+			t.replies,
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname
 		FROM bb_topics t

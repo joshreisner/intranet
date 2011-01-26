@@ -58,6 +58,7 @@ echo draw_h3('Add Missing Columns');
 echo '<ul>';
 
 $columns = array(
+	array('table'=>'bb_topics', 'column'=>'replies', 'type'=>'int'),
 	array('table'=>'docs', 'column'=>'language_id', 'type'=>'int'),
 	array('table'=>'modules', 'column'=>'folder', 'type'=>'text'),
 	array('table'=>'modules', 'column'=>'color', 'type'=>'text'),
@@ -105,6 +106,36 @@ foreach ($columns as $c) {
 	}
 }
 
+echo '</ul>';
+
+//fix column types
+echo draw_h3('Fix Column Types');
+echo '<ul>';
+$tables = db_tables();
+foreach ($tables as $t) {
+	$columns = db_columns($t);
+	//die(draw_array($columns));
+	if (!stristr($t, '_to_') && !stristr($t, '_2_')
+		&& ($t != 'it_system_status')
+		&& ($t != 'docs_views')
+		&& ($t != 'ldcodes')
+		&& ($t != 'queries_executions')
+		&& ($t != 'web_income_tables_values')
+		
+		&& ($columns[0]['type'] == 'int') && (!$columns[0]['auto'])) {
+		//set first column to PRIMARY KEY AUTO_INCREMENT
+		db_column_key($t, $columns[0]['name']);
+		echo draw_li('set ' . $t . '.' . $columns[0]['name'] . ' to primary key auto_increment');
+	}
+	
+	$replacements = array('bit'=>'tinyint', 'longtext'=>'text');
+	foreach ($columns as $c) {
+		if (isset($replacements[$c['type']])) {
+			db_column_type_set($t, $c['name'], $replacements[$c['type']]);
+			echo draw_li('set ' . $t . '.' . $c['name'] . ' from ' . $c['type'] . ' to ' . $replacements[$c['type']]);
+		}
+	}
+}
 
 echo '</ul>';
 
@@ -126,6 +157,8 @@ if ($pages) {
 	echo draw_li('pages are all correct');
 }
 
-echo '</ul>';
+db_query('UPDATE bb_topics t SET t.replies = (SELECT COUNT(*) FROM bb_followups f WHERE f.topic_id = t.id AND f.is_active = 1)');
+echo draw_li('bb_topics.replies column populated');
 
+echo '</ul>';
 ?>

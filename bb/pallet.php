@@ -4,7 +4,7 @@ $result = db_query('SELECT
 		t.title' . langExt() . ' title,
 		t.is_admin,
 		t.thread_date,
-		(SELECT COUNT(*) FROM bb_followups f WHERE t.id = f.topic_id AND f.is_active = 1) replies,
+		t.replies,
 		ISNULL(u.nickname, u.firstname) + " " + u.lastname name
 	FROM bb_topics t
 	JOIN users u ON u.id = t.created_user
