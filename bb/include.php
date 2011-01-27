@@ -31,7 +31,7 @@ function bbDrawThreads($limit=false, $where=false) {
 }
 
 function drawTopicForm() {
-	global $_GET, $page;
+	global $page;
 	$f = new form('bb_topics', @$_GET['id'], getString('topic_new'));
 	if ($page['is_admin']) {
 		$f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>getString('posted_by')));
@@ -46,7 +46,7 @@ function drawTopicForm() {
 	formAddChannels($f, 'bb_topics', 'topic_id');
 	$f->set_field(array('name'=>'description' . langExt(), 'type'=>'textarea', 'label'=>getString('description'), 'class'=>'tinymce'));
 	$f->set_order('created_user,is_admin,title' . langExt() . ',type_id,channels,description' . langExt());
-	$f->unset_fields('thread_date');
+	$f->unset_fields('thread_date,type_id,replies');
 	langUnsetFields($f, 'title,description');
 	langTranslateCheckbox($f, url_id());
 	return $f->draw(false, false);

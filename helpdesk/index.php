@@ -29,8 +29,8 @@ if ($posting) {
     
     //$r = db_grab("SELECT MAX(id) id FROM helpdesk_tickets");
 	//todo - email mohammed for critical
-	emailITTicket($id, "new"); //special for carla
-	url_change("ticket.php?id=" . $id);
+	//emailITTicket($id, "new"); //special for carla
+	url_change('ticket.php?id=' . $id);
 }
 
 echo drawTop();

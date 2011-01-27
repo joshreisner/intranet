@@ -8,7 +8,7 @@ if ($posting) {
 	langTranslatePost('description');
 	$_POST["topic_id"] = $_GET["id"];
 	$id = db_save("bb_followups", false);
-	db_query("UPDATE bb_topics SET thread_date = GETDATE() WHERE id = " . $_POST["topic_id"]);
+	db_query('UPDATE bb_topics SET thread_date = GETDATE(), replies = (SELECT COUNT(*) FROM bb_followups WHERE topic_id = ' . $_POST['topic_id'] . ') WHERE id = ' . $_POST['topic_id']);
 	
 	//send followup email to all topic contributors
 	if (getOption("bb_notifyfollowup")) {
@@ -136,7 +136,8 @@ while ($f = db_fetch($followups)) $d->row(drawName($f['created_user'], $f['first
 echo $d->draw();
 
 //add a followup form
-$f = new form('bb_followups', false, getString('topic_new'));
+$f = new form('bb_followups', false, getString('add_followup'));
+$f->unset_fields('topic_id');
 langUnsetFields($f, 'description');
 echo $f->draw(false, false);
 

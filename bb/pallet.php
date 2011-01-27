@@ -1,15 +1,12 @@
 <?
 $result = db_query('SELECT
-		t.id,
-		t.title' . langExt() . ' title,
-		t.is_admin,
-		t.thread_date,
-		t.replies,
-		ISNULL(u.nickname, u.firstname) + " " + u.lastname name
+		id,
+		title' . langExt() . ' title,
+		is_admin,
+		replies
 	FROM bb_topics t
-	JOIN users u ON u.id = t.created_user
 	' . getChannelsWhere('bb_topics', 't', 'topic_id') . '
-	ORDER BY t.thread_date DESC', 4);
+	ORDER BY thread_date DESC', 4);
 if (db_found($result)) {
 	while ($r = db_fetch($result)) {
 		$return .= draw_container('tr', 

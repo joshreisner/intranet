@@ -3,7 +3,7 @@ body { background-color:#fff; margin:0px; text-align:center; }
 /* type styles */
 body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; }
 table.left td.title, a.title, span.title, h1, #left table.table td.empty { font-size:18px; }
-#left form fieldset legend, div.display div.title, input, select, textarea, div.message, div.panel, #left table.table th.table_title  { font-size:13px; }
+#left form fieldset legend, div.display div.title, input, textarea, div.message, div.panel, #left table.table th.table_title  { font-size:13px; }
 #right table td.head, h3, #right #tools input { font-size:12px; }
 #right, #right table, th, #left form fieldset div.checkboxes ul, div.name { font-size:11px; }
 #footer, #help #help_buttons a, a.button, a.button-light, a.right, div.display div.title ul { font-size:9px; }
@@ -26,6 +26,7 @@ p				{ margin:4px 0px 14px 0px; }
 /* general form elements */
 form					{ margin:0px; padding:0px; }
 input, select, textarea { margin:0px; background-color:#fff; border:1px solid #ccc; padding:2px; }
+select { padding: 1px; }
 /* input.text				{ width:500px; height:20px; vertical-align:middle; } */
 	
 input.button   {

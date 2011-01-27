@@ -7,7 +7,7 @@ echo draw_h3('Converting Character Sets');
 $charset = 'utf8';
 $collation = 'utf8_general_ci';
 
-//get incorrect tables
+//fix charset and collation globally
 $result = db_query('SELECT
 	c.table_name, 
 	c.column_name, 
@@ -38,6 +38,8 @@ echo draw_h3('Add Missing Tables');
 
 echo '<ul>';
 
+db_table_drop('modules, cal_events_types');
+
 $tables = file_folder('tables/', '.sql');
 foreach ($tables as $t) {
 	if (!db_table_exists($t['base'])) {
@@ -58,13 +60,45 @@ echo draw_h3('Add Missing Columns');
 echo '<ul>';
 
 $columns = array(
+	array('table'=>'bb_followups', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'bb_followups', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'bb_followups', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'bb_followups', 'column'=>'precedence', 'type'=>'int'),
+	
+	array('table'=>'bb_topics', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'bb_topics', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'bb_topics', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'bb_topics', 'column'=>'precedence', 'type'=>'int'),
+	
+	array('table'=>'cal_events', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'cal_events', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'cal_events', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'cal_events', 'column'=>'precedence', 'type'=>'int'),
+	
+	array('table'=>'docs', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'docs', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'docs', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'docs', 'column'=>'precedence', 'type'=>'int'),
+	
+	array('table'=>'pages', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'pages', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'pages', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'pages', 'column'=>'precedence', 'type'=>'int'),
+
+	array('table'=>'users', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'users', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'users', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'users', 'column'=>'precedence', 'type'=>'int'),
+
 	array('table'=>'bb_topics', 'column'=>'replies', 'type'=>'int'),
 	array('table'=>'docs', 'column'=>'language_id', 'type'=>'int'),
 	array('table'=>'modules', 'column'=>'folder', 'type'=>'text'),
 	array('table'=>'modules', 'column'=>'color', 'type'=>'text'),
 	array('table'=>'modules', 'column'=>'hilite', 'type'=>'text'),
+	array('table'=>'organizations', 'column'=>'precedence', 'type'=>'int'),
 	array('table'=>'pages', 'column'=>'modulette_id', 'type'=>'int'),
 	array('table'=>'users', 'column'=>'image_small', 'type'=>'image'),
+	array('table'=>'users', 'column'=>'image_medium', 'type'=>'image'),
 	array('table'=>'users', 'column'=>'language_id', 'type'=>'int'),
 	array('table'=>'users_requests', 'column'=>'is_active', 'type'=>'checkbox')
 );
@@ -93,7 +127,8 @@ $columns = array(
 	array('table'=>'links', 'before'=>'text', 'after'=>'title'),
 	array('table'=>'pages', 'before'=>'isInstancePage', 'after'=>'is_hidden'),
 	array('table'=>'pages', 'before'=>'name', 'after'=>'title'),
-	array('table'=>'pages', 'before'=>'helpText', 'after'=>'description')
+	array('table'=>'pages', 'before'=>'helpText', 'after'=>'description'),
+	array('table'=>'users', 'before'=>'image', 'after'=>'image_large')
 );
 
 foreach ($columns as $c) {
@@ -143,6 +178,8 @@ echo '</ul>';
 echo draw_h3('Fix Table Data');
 
 echo '<ul>';
+
+//prepend # to colors 
 
 //pages url should only be page name
 $pages = db_table('SELECT id, url FROM pages WHERE url LIKE "%/%"');

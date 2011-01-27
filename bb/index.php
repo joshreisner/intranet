@@ -6,7 +6,7 @@ if ($posting) {
 	format_post_bits('is_admin');
 	langTranslatePost('title,description');
 	$id = db_save('bb_topics');
-	db_query('UPDATE bb_topics SET thread_date = GETDATE() WHERE id = ' . $id);
+	db_query('UPDATE bb_topics SET thread_date = GETDATE(), replies = (SELECT COUNT(*) FROM bb_followups WHERE topic_id = ' . $id . ') WHERE id = ' . $id);
 	if (getOption('channels')) db_checkboxes('channels', 'bb_topics_to_channels', 'topic_id', 'channel_id', $id);
 	
 	//notification

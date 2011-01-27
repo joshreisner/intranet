@@ -189,16 +189,16 @@ class intranet_form {
 				$rows .= '<td>' . draw_form_checkbox($name, $value) . '</td>';
 			} elseif ($type == "itext") {
 				$rows .= '<td>' . draw_form_text($name, $value, false, $maxlength) . '</td>';
-				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . $_josh["newline"];
+				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . NEWLINE;
 			} elseif ($type == "phone") {
 				$rows .= '<td>' . draw_form_text($name, $value, 14, $maxlength) . '</td>';
-				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . $_josh["newline"];
+				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . NEWLINE;
 			} elseif ($type == "extension") {
 				$rows .= '<td>' . draw_form_text($name, $value, 4, $maxlength) . '</td>';
-				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . $_josh["newline"];
+				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . NEWLINE;
 			} elseif ($type == "password") {
 				$rows .= '<td>' . draw_form_password($name, $value, $textlength, $maxlength) . '</td>';
-				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . $_josh["newline"];
+				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . NEWLINE;
 			} elseif ($type == "select") {
 				$rows .= '<td>';
 				$rows .= draw_form_select($name, $value, $default, $required, false, $onchange);
@@ -243,11 +243,11 @@ class intranet_form {
 				$rows .= '<td>' . drawName($name, $value, $default, true, " ") . '</td>';
 			} elseif ($type == "textarea") {
 				$rows .= '<td>' . draw_form_textarea($name, $value, "mceEditor") . '</td>';
-				$js .= " tinyMCE.triggerSave();" .  $_josh["newline"];
-				if ($required) $js .= "if (!form." . $name . ".value.length || (form." . $name . ".value == '<p>&nbsp;</p>')) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . $_josh["newline"];
+				$js .= " tinyMCE.triggerSave();" .  NEWLINE;
+				if ($required) $js .= "if (!form." . $name . ".value.length || (form." . $name . ".value == '<p>&nbsp;</p>')) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . NEWLINE;
 			} elseif ($type == "textarea-plain") {
 				$rows .= '<td>' . draw_form_textarea($name, $value, "noMceEditor") . '</td>';
-				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . $_josh["newline"];
+				if ($required) $js .= "if (!form." . $name . ".value.length) errors[errors.length] = 'the \'" . $title . "\' field is empty';" . NEWLINE;
 			} elseif ($type == "hidden") {
 				$rows .= draw_form_hidden($name, $value);
 			} elseif ($type == "submit") {
@@ -257,7 +257,7 @@ class intranet_form {
 			} elseif ($type == "file") {
 				$rows .= '<td>' . draw_form_file($name, "file", $onchange) . '</td>';
 			}
-			$rows .= '</tr>' . $_josh["newline"];
+			$rows .= '</tr>' . NEWLINE;
 		}
 	}	
 	

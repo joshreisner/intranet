@@ -119,9 +119,7 @@ function drawNavigationHelpdesk() {
 function drawTicketFilter() {
 	global $total, $default, $pageName, $_GET;
 	$target = (isset($_GET["id"])) ? $pageName . "?id=" . $_GET["id"] : $pageName . "?";
-	$return = '
-	<script language="javascript">
-		<!--
+	return draw_javascript('
 		function goToMonth(str) {
 			if (str == "") {
 				location.href=\'' . $target . '\';
@@ -131,18 +129,7 @@ function drawTicketFilter() {
 			}
 			return true;
 		}
-		//-->
-	</script>
-	
-	<table class="message">
-		<tr>
-			<td class="gray">
-			<table cellpadding="0" cellspacing="0" border="0" align="center">
-				<tr style="background-color:transparent;vertical-align:middle;color:#333333;font-size:12px;"><td>
-				Filter by month:&nbsp;</td><td>' . draw_form_select_month("month", $total["month"] . "/" . $total["year"], $default, false, "sleek", "goToMonth(this.value)", true) . '</td>
-			</td></tr></table>
-		</tr>
-	</table>';
+	') .  draw_div_class('message', 'Filter by month:&nbsp;' . draw_form_select_month("month", $total["month"] . "/" . $total["year"], $default, false, "sleek", "goToMonth(this.value)", true));
 	return $return;
 }
 
@@ -180,7 +167,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 }
 
 function emailITticket($id, $scenario, $admin=false) {
-	global $_SESSION, $_josh, $page['is_admin'];
+	global $_josh, $page;
 	$message  = drawEmailHeader();
 	
 	$ticket = db_grab("SELECT
