@@ -1,6 +1,6 @@
 <?php
 if (!empty($helpdeskStatus)) {
-	$return .= '<tr class="admin" style="background-color:#fffce0; font-weight:bold;" align="center"><td style="padding:8px;" colspan="2">' . $helpdeskStatus . '</td></tr>';
+	$return .= '<tr style="background-color:#fffce0;text-align:center;"><td style="padding:8px 4px 0px 4px;" colspan="2">' . $helpdeskStatus . '</td></tr>';
 }
 if (!empty($helpdeskOptions)) {
 	$items = array();

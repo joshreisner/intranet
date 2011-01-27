@@ -22,6 +22,8 @@ if (url_action("undelete")) { //undelete user
 
 url_query_require();
 
+echo drawTop();
+
 $r = db_grab('SELECT 
 		u.firstname,
 		u.lastname,
@@ -73,16 +75,13 @@ $r = db_grab('SELECT
 	LEFT JOIN offices    		f ON f.id			= u.officeID 				
 	LEFT JOIN intranet_us_states		s ON u.homeStateID	= s.stateID
 	WHERE u.id = ' . $_GET['id']);
-	
+
 $r['nickname'] = trim($r['nickname']);
 
 $r['organization'] = (empty($r['organization'])) ? '<a href="organizations.php?id=0">' . getString('shared') . '</a>' : '<a href="organizations.php?id=' . $r['organization_id'] . '">' . $r['organization'] . '</a>';
 
 
-
-if (!isset($r['is_active'])) url_change("./");
-
-echo drawTop();
+//if (!isset($r['is_active'])) url_change("./");
 
 if (!$img = draw_img(file_dynamic('users', 'image_large', $_GET['id'], 'jpg', $r['updated']))) $img = draw_img(DIRECTORY_WRITE . "/images/to-be-taken.png");
 file_dynamic('users', 'image_medium', $_GET['id'], 'jpg', $r['updated']);

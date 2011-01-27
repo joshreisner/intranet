@@ -4,12 +4,12 @@
  Source Server         : z local
  Source Server Version : 50147
  Source Host           : localhost
- Source Database       : livingcities_intranet
+ Source Database       : seedco_intranet
 
  Target Server Version : 50147
  File Encoding         : utf-8
 
- Date: 01/24/2011 11:19:26 AM
+ Date: 01/27/2011 12:22:53 PM
 */
 
 SET NAMES utf8;
@@ -39,4 +39,12 @@ CREATE TABLE `modulettes` (
   `is_published` tinyint(4) NOT NULL,
   `precedence` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+--  Records of `modulettes`
+-- ----------------------------
+BEGIN;
+INSERT INTO `modulettes` VALUES ('17', 'Admin', null, null, null, 'admin', '0', '2011-01-26 13:52:53', '1', null, null, null, null, '1', null, null, '0', null), ('18', 'Funders', null, null, null, 'funders', '1', '2011-01-26 13:53:51', '1', null, null, null, null, '1', null, null, '0', null), ('20', 'Long Distance Codes', null, null, null, 'ldcodes', null, '2011-01-26 13:55:08', '1', null, null, null, null, '1', null, null, '0', null);
+COMMIT;
+

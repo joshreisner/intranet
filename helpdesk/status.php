@@ -2,34 +2,22 @@
 include("include.php");
 
 if ($posting) {
-	format_post_html('message');
 	db_query('DELETE FROM it_system_status');
-	db_query('INSERT INTO it_system_status ( message, updated_date, updated_user ) VALUES (
-		' . $_POST['message'] . ',
-		GETDATE(),
-		' . $_SESSION['user_id'] . '
-	)');
+	db_query('INSERT INTO it_system_status ( message, updated_date, updated_user ) VALUES ("' . format_html($_POST['helpdesk_status']) . '", GETDATE(),' . user() . ')');
 	url_change('./');
 }
 
 echo drawTop();
 echo lib_get('tinymce');
 
-echo draw_javascript('
-	function validate(form) {
-		tinyMCE.triggerSave();
-		//if (form.message.value.length) return true;
-		//alert("please enter a status message");
-		//return false;
-	}
-	form_tinymce_init("/styles/helpdesk-status.css", true);
-');
+echo draw_javascript_src('/_intranet.seedco.site/lib/tinymce/tinymce_3_3_8/tiny_mce.js');
+echo draw_javascript('form_tinymce_init("/styles/helpdesk-status.css", true);');
 ?>
 <table class="left" cellspacing="1">
-	<form action="<?=$request["path_query"]?>" method="post" onsubmit="javascript:return validate(this);">
+	<form action="<?=$request["path_query"]?>" method="post">
 	<?=drawHeaderRow("Update Status Message");?>
 	<tr>
-		<td><?=draw_form_textarea("message", $helpdeskStatus, "tinymce", false);?></td>
+		<td><?=draw_form_textarea("helpdesk_status", $helpdeskStatus, "tinymce", false);?></td>
 	</tr>
 	<tr>
 		<td class="bottom"><?=draw_form_submit("update message");?></td>

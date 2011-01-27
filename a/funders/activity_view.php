@@ -19,7 +19,8 @@ $r = db_grab("SELECT
 				a.activityText, 
 				a.activityDate, 
 				a.activityAssignedTo,
-				ISNULL(u2.nickname, u2.firstname) + ' ' + u2.lastname assignedTo,
+				ISNULL(u2.nickname, u2.firstname) firstname,
+				u2.lastname,
 				a.isActionItem, 
 				a.isComplete, 
 				a.isReport, 
@@ -29,7 +30,7 @@ $r = db_grab("SELECT
 				f.name,
 				w.awardTitle,
 				a.activityPostedBy,
-				ISNULL(u.nickname, u.firstname) + ' ' + u.lastname postedBy
+				CONCAT(ISNULL(u.nickname, u.firstname), ' ', u.lastname) postedBy
 			FROM funders_activity a
 			INNER JOIN users     u  ON a.activityPostedBy = u.id
 			INNER JOIN users     u2 ON a.activityAssignedTo = u2.id
@@ -56,7 +57,7 @@ $r = db_grab("SELECT
 	</tr>
 	<tr>
 		<td class="gray">Staff Responsible</td>
-		<td><a href="/staff/view.php?id=<?=$r["activityAssignedTo"]?>"><?=$r["assignedTo"]?></a></td>
+		<td><a href="/staff/view.php?id=<?=$r["activityAssignedTo"]?>"><?=$r["firstname"]?> <?=$r["lastname"]?></a></td>
 	</tr>
 	<tr>
 		<td class="gray">Posted</td>

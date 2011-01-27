@@ -38,6 +38,6 @@ function drawEventForm() {
 	formAddChannels($f, 'cal_events', 'event_id');
 	$f->set_order('created_user,title, start_date, end_date, type_id, description, channels');
 	langTranslateCheckbox($f, url_id());
-	return $f->draw();
+	return $f->draw(false, false);
 }
 ?>

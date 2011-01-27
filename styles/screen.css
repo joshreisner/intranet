@@ -46,6 +46,7 @@ input.button:hover { background-color:#ccc; }
 input.checkbox	{ border:none; padding:0px; margin:0px; background-color:transparent; }
 input.file		{ border:none; }
 textarea.thread { border-width:0px; width:99%; }
+textarea#helpdesk_status { width:577px; height:320px; }
 
 th.c, td.c { text-align:center; white-space:nowrap; }
 th.r, td.r { text-align:right; white-space:nowrap; }
@@ -74,11 +75,13 @@ a.button-light:hover { color:#555; background-color:#fee; text-decoration:none; 
 
 .block { color:#fff; padding:1px 3px 1px 3px; text-decoration:none; }
 .block:hover { color:#fff; padding:1px 3px 1px 3px; text-decoration:none; }
+
+body.helpdesk div.message { text-align: center; }
 	
 div.message { 
 	border:1px solid #ccc;
 	background-color:#ffffee;
-	padding:16px;
+	padding:16px 16px 8px 16px;
 	line-height:18px;
 	margin:0px 0px 14px 0px;
 }
@@ -201,13 +204,6 @@ textarea.press_export { width:594px; height:120px; }
 #right table td.head a.left { color:#fff; float:left; }
 #right table td.head img { position:absolute; top:1px; right:6px; }
 #right table td.empty { text-align:center; background-color:#eee; height:50px; color:#999; }
-#right table td.helpdesk-status {
-	height:68px;
-	text-align:center;
-	background-color:#eee;
-	color:#999;
-}
-#right table td.helpdesk-status:hover { cursor:pointer; }
 #right table select { width:282px; }
 
 #right ul { list-style-type:none; margin:0px; padding:0px; }
@@ -225,6 +221,7 @@ div.display div.row.last { background-color:#eee; overflow:auto; border-bottom:0
 div.display div.label { padding:5px; float:left; width:135px;}
 div.display div.content { background-color:#fff; float:right; width:420px; padding:10px; border-left:1px solid #e6e6e6; }
 div.display.thread div.content { min-height:100px; }
+
 
 /* deprecated / thread */
 table.left { 

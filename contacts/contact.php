@@ -169,12 +169,12 @@ if (!$i["id"]) {
 			<th width="22%" align="right">When</th>
 		</tr>
 		<?
-		$instances = db_query("SELECT
+		$instances = db_query('SELECT
 					i.id,
 					o.instanceFirstID,
 					o.instanceCurrentID,
 					i.created_user,
-					ISNULL(u.nickname, u.firstname) + ' ' + u.lastname createdName,
+					CONCAT(ISNULL(u.nickname, u.firstname), ' ', u.lastname) createdName,
 					i.created_date,
 					i.varchar_01 firstname,
 					i.varchar_02 lastname,
@@ -192,8 +192,8 @@ if (!$i["id"]) {
 				FROM contacts_instances i
 				JOIN contacts   o ON i.objectID = o.id
 				JOIN users     u ON i.created_user = u.id
-				WHERE o.id = {$_GET["id"]}
-				ORDER BY i.created_date ASC");
+				WHERE o.id = ' . $_GET["id"] . '
+				ORDER BY i.created_date ASC');
 		while ($j = db_fetch($instances)) {
 			if ($j["id"] == $j["instanceFirstID"]) {
 				$description = "contact created";

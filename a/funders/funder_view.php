@@ -23,7 +23,7 @@ $r = db_grab("SELECT
 			f.name,
 			ft.funderTypeDesc, 
 			fs.FunderStatusDesc,
-			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname staffname
+			CONCAT(ISNULL(u.nickname, u.firstname), ' ', u.lastname) staffname
 		FROM funders f
 		INNER JOIN funders_types    ft ON ft.funderTypeID = f.funderTypeID
 		INNER JOIN funders_statuses fs ON fs.FunderStatusID = f.FunderStatusID
@@ -137,7 +137,7 @@ while ($rsa = db_fetch($result_award_statuses)) {
 			at.awardTypeDesc,
 			a.awardTitle,
 			p.programDesc,
-			(SELECT TOP 1 c.activityDate FROM funders_activity c WHERE c.awardID = a.awardID AND c.isReport = 1 AND c.isComplete = 0 ORDER BY c.activityDate ASC) reportDate
+			(SELECT c.activityDate FROM funders_activity c WHERE c.awardID = a.awardID AND c.isReport = 1 AND c.isComplete = 0 ORDER BY c.activityDate ASC LIMIT 1) reportDate
 		FROM funders_awards a
 		INNER JOIN funders_awards_types at ON a.awardTypeID = at.awardTypeID
 		INNER JOIN funders_programs p on a.awardProgramID = p.programID

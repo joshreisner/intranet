@@ -179,9 +179,26 @@ echo draw_h3('Fix Table Data');
 
 echo '<ul>';
 
-//prepend # to colors 
+
+//null passwords
+db_query('UPDATE users SET language_id = 1, password = NULL');
+db_query('UPDATE users SET email = "josh@joshreisner.com" WHERE id = 1');
+echo draw_li('passwords have been nulled');
+
+
+//fix images
+$users = db_table('SELECT id, image_large FROM users WHERE image_large IS NOT NULL');
+foreach ($users as $u) {
+	db_query('UPDATE users SET 
+			image_medium = ' . format_binary(format_image_resize($u['image_large'], 135)) . ',
+			image_small = ' . format_binary(format_image_resize($u['image_large'], 50)) . '	
+		WHERE id = ' . $u['id']);
+}
+echo draw_li('images have been fixed');
+
 
 //pages url should only be page name
+db_query('UPDATE pages SET is_active = 1');
 $pages = db_table('SELECT id, url FROM pages WHERE url LIKE "%/%"');
 if ($pages) {
 	foreach ($pages as $p) {

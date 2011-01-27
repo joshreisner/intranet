@@ -1,11 +1,11 @@
 <?
 $return .= '
 <tr height="20">
-	<td width="50%"><a href="' . $m['folder'] . '">Search</a></td>
-	<td width="50%"><a href="' . $m['folder'] . 'tags.php">Tags</a></td>
+	<td width="50%">' . draw_link('/'. $m['folder'] . '/', 'Search') . '</td>
+	<td width="50%">' . draw_link('/'. $m['folder'] . '/tags.php', 'Tags') . '</td>
 </tr>
 <tr height="20">
-	<td width="50%"><a href="' . $m['folder'] . 'contacts.php">Alphabetical List</a></td>
-	<td width="50%"><a href="' . $m['folder'] . 'activity.php">Activity</a></td>
+	<td width="50%">' . draw_link('/'. $m['folder'] . '/contacts.php', 'Alphabetical List') . '</td>
+	<td width="50%">' . draw_link('/'. $m['folder'] . '/activity.php', 'Activity') . '</td>
 </tr>';
 ?>

@@ -7,17 +7,17 @@ if (!empty($_POST)) {
 	$isReport     = (isset($_POST["chkReport"]))     ? 1 : 0;
 	$isInternal   = ($_POST["isInternal"] == "true") ? 1 : 0;
 
-	db_query("UPDATE funders_activity SET 
-		activityTitle      = '" . $_POST["activityTitle"] . "',
-		activityDate       = '" . format_date_sql($_POST["activityDateMonth"], $_POST["activityDateDay"], $_POST["activityDateYear"]) . "',
-		activityAssignedTo = '" . $_POST["activityAssignedTo"] . "',
-		isComplete         = '" . $_POST["isComplete"] . "',
-		isActionItem       = $isActionItem,
-		isReport           = $isReport,
-		isInternalDeadline = $isInternal,			
-		activityText       = '" . $_POST["activityText"] . "'
-		WHERE activityID   =  " . $_GET["id"]);
-	url_change("activity_view.php?id=" . $_GET["id"]);
+	db_query('UPDATE funders_activity SET 
+		activityTitle      = "' . $_POST["activityTitle"] . '",
+		activityDate       = ' . format_date_sql($_POST["activityDateMonth"], $_POST["activityDateDay"], $_POST["activityDateYear"]) . ',
+		activityAssignedTo = ' . $_POST["activityAssignedTo"] . ',
+		isComplete         = "' . $_POST["isComplete"] . '",
+		isActionItem       = ' . $isActionItem . ',
+		isReport           = ' . $isReport . ',
+		isInternalDeadline = ' . $isInternal . ',
+		activityText       = "' . $_POST["activityText"] . '"
+		WHERE activityID   = ' . $_GET["id"]);
+	url_change('activity_view.php?id=' . $_GET['id']);
 }
 
 echo drawTop();
@@ -81,7 +81,7 @@ $r = db_grab("SELECT
 	</tr>
 	<tr class="helptext" bgcolor="#FFFFFF">
 		<td bgcolor="#F6F6F6"><nobr>Activity Date:</nobr></td>
-		<td colspan="2" width="99%"><?=drawFormDate("activityDate", $r["activityDate"])?></td>
+		<td colspan="2" width="99%"><?=draw_form_date("activityDate", $r["activityDate"])?></td>
 	</tr>
 	<tr class="helptext" bgcolor="#FFFFFF">
 		<td bgcolor="#F6F6F6"><nobr>Staff Responsible:</nobr></td>

@@ -66,6 +66,11 @@ $strings['channels_label']['es']			= 'Canales';
 $strings['channels_label']['fr']			= 'Chaînes';
 $strings['channels_label']['ru']			= 'Каналы';
 
+$strings['city']['en']			= 'City';
+//$strings['city']['es']			= 'Canales';
+//$strings['city']['fr']			= 'Chaînes';
+//$strings['city']['ru']			= 'Каналы';
+
 $strings['clips']['en']			= 'Clips';
 $strings['clips']['es']			= 'Clips';
 $strings['clips']['fr']			= 'Clips';
@@ -171,6 +176,16 @@ $strings['email_prefs_label']['es']	= 'Recibir actualizaciones para Tablero';
 $strings['email_prefs_label']['fr']	= 'Recevoir mises à jour Bulletin du Conseil de';
 $strings['email_prefs_label']['ru']	= 'Получить Доска объявлений обновления';
 
+$strings['emergency_contact_1']['en']	= 'Emergency Contact 1 [Private]';
+//$strings['emergency_contact_1']['es']	= 'Recibir actualizaciones para Tablero';
+//$strings['emergency_contact_1']['fr']	= 'Recevoir mises à jour Bulletin du Conseil de';
+//$strings['emergency_contact_1']['ru']	= 'Получить Доска объявлений обновления';
+
+$strings['emergency_contact_2']['en']	= 'Emergency Contact 2 [Private]';
+//$strings['emergency_contact_2']['es']	= 'Recibir actualizaciones para Tablero';
+//$strings['emergency_contact_2']['fr']	= 'Recevoir mises à jour Bulletin du Conseil de';
+//$strings['emergency_contact_2']['ru']	= 'Получить Доска объявлений обновления';
+
 $strings['events_empty']['en']		= 'No upcoming events';
 $strings['events_empty']['es']		= 'No hay próximos eventos';
 $strings['events_empty']['fr']		= 'Aucun événement à venir';
@@ -205,6 +220,16 @@ $strings['home']['en']	= 'Home';
 $strings['home']['es']	= 'Inicio';
 $strings['home']['fr']	= 'Accueil';
 $strings['home']['ru']	= 'Дом';
+
+$strings['homeAddress1']['en']	= 'Home Address';
+//$strings['homeAddress1']['es']	= 'Inicio';
+//$strings['homeAddress1']['fr']	= 'Accueil';
+//$strings['homeAddress1']['ru']	= 'Дом';
+
+$strings['homeAddress2']['en']	= 'Home Address Continued';
+//$strings['homeAddress2']['es']	= 'Inicio';
+//$strings['homeAddress2']['fr']	= 'Accueil';
+//$strings['homeAddress2']['ru']	= 'Дом';
 
 $strings['image']['en']			= 'Image';
 $strings['image']['es']			= 'Imagen';
@@ -245,6 +270,11 @@ $strings['last_post']['en']			= 'Last Post';
 $strings['last_post']['es']			= 'Último';
 $strings['last_post']['fr']			= 'Dernier';
 $strings['last_post']['ru']			= 'Последнее сообщение';
+
+$strings['ldcode']['en']			= 'Long Distance Code';
+//$strings['ldcode']['es']			= 'Último';
+//$strings['ldcode']['fr']			= 'Dernier';
+//$strings['ldcode']['ru']			= 'Последнее сообщение';
 
 $strings['link']['en']		= 'Link';
 $strings['link']['es']		= 'Vínculo';
@@ -320,6 +350,11 @@ $strings['login_password_reset_msg_email_not_found']['en'] = 'That email address
 $strings['login_password_reset_msg_email_not_found']['es'] = 'Esa dirección de correo electrónico no se encontró en el sistema. Si la dirección a continuación es correcta y que nunca has iniciado sesión, puede que tenga que <a href="account_request.php">solicitar una cuenta</a>.';
 $strings['login_password_reset_msg_email_not_found']['fr'] = 'Cette adresse e-mail n\'a pas été trouvé dans le système. Si l\'adresse ci-dessous est correcte et que vous ne l\'avez jamais connecté, vous mai nécessité de <a href="account_request.php">demander un compte</a>.';
 $strings['login_password_reset_msg_email_not_found']['ru'] = 'Этот электронный адрес не был найден в системе. Если по указанному ниже адресу правильно и вы никогда не вошли в систему, вам может понадобиться <a href="account_request.php">запросить счет</a>.';
+
+$strings['mobile_phone']['en']			= 'Mobile Phone';
+//$strings['mobile_phone']['es']			= 'Módulo de permisos';
+//$strings['mobile_phone']['fr']			= 'Module autorisations';
+//$strings['mobile_phone']['ru']			= 'Разрешение модуля';
 
 $strings['module_permissions']['en']			= 'Module Permissions';
 $strings['module_permissions']['es']			= 'Módulo de permisos';
@@ -436,10 +471,20 @@ $strings['publication']['es']			= 'Publicación';
 $strings['publication']['fr']			= 'Publication';
 $strings['publication']['ru']			= 'Публикации';
 
+$strings['rank']['en']			= 'Rank';
+//$strings['rank']['es']			= 'Respuestas';
+//$strings['rank']['fr']			= 'Réponses';
+//$strings['rank']['ru']			= 'Ответы';
+
 $strings['replies']['en']			= 'Replies';
 $strings['replies']['es']			= 'Respuestas';
 $strings['replies']['fr']			= 'Réponses';
 $strings['replies']['ru']			= 'Ответы';
+
+$strings['relationship']['en']			= 'Replies';
+//$strings['relationship']['es']			= 'Respuestas';
+//$strings['relationship']['fr']			= 'Réponses';
+//$strings['relationship']['ru']			= 'Ответы';
 
 $strings['results_empty']['en']		= 'No results';
 
@@ -447,6 +492,11 @@ $strings['shared']['en'] = 'Shared';
 $strings['shared']['es'] = 'Compartidas';
 $strings['shared']['fr'] = 'Partagée';
 $strings['shared']['ru'] = 'Общие';
+
+$strings['staff_home_info']['en'] = 'Home Information [Private]';
+//$strings['staff_home_info']['es'] = 'No hay clips recientes.';
+//$strings['staff_home_info']['fr'] = 'Il n\'y a pas de clips récents.';
+//$strings['staff_home_info']['ru'] = 'Есть не последних клипов.';
 
 $strings['staff_firsttime']['en']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
 //$strings['staff_firsttime']['es']	= 'Welcome to the Intranet!  Since this is your first time logging in, please make certain that your information here is correct, then click \'save changes\' at the bottom.';
@@ -514,6 +564,11 @@ $strings['staff_title']['en']			= 'Job Title';
 $strings['staff_title']['es']			= 'Puesto';
 $strings['staff_title']['fr']			= 'Titre de l\'emploi';
 $strings['staff_title']['ru']			= 'Должность';
+
+$strings['state']['en']			= 'State';
+//$strings['state']['es']			= 'Canales';
+//$strings['state']['fr']			= 'Chaînes';
+//$strings['state']['ru']			= 'Каналы';
 
 $strings['submit']['en']			= 'Submit';
 $strings['submit']['es']			= 'Enviar';
@@ -584,5 +639,11 @@ $strings['upload_max']['en']			= 'The maximum size is ';
 $strings['upload_max']['es']			= 'El tamaño máximo es ';
 $strings['upload_max']['fr']			= 'La taille maximale est ';
 $strings['upload_max']['ru']			= 'Максимальный размер ';
+
+$strings['zip']['en']			= 'ZIP';
+//$strings['zip']['es']			= 'El tamaño máximo es ';
+//$strings['zip']['fr']			= 'La taille maximale est ';
+//$strings['zip']['ru']			= 'Максимальный размер ';
+
 
 ?>

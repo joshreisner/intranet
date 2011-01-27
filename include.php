@@ -435,8 +435,7 @@ function drawTop($headcontent=false) {
 			') . 
 			$headcontent
 		);
-	$return .= '
-	<body>
+	$return .= draw_body_open() . '
 		<div id="container">
 			' . draw_div('banner', draw_img(DIRECTORY_WRITE . '/banner' . langExt() . '.png', $_SESSION['homepage'])) . '
 			<div id="left">
@@ -623,6 +622,7 @@ function getOption($key) {
 	$defaults['staff_showrank']			= true;
 	$defaults['staff_showhome']			= true;
 	$defaults['staff_showemergency']	= true;
+	$defaults['staff_ldcode']			= true;
 	
 	//don't run through this again for this key
 	$options[$key] = $defaults[$key];

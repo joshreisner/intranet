@@ -9,13 +9,13 @@ if (isset($_GET["delActivity"])) { //delete activity note
 
 if (!empty($_POST)) {
 	//add activity
-	$date         = "'" . format_date_sql($_POST["cboDateMonth"], $_POST["cboDateDay"], $_POST["cboDateYear"]) . "'";
+	$date         = format_date_sql($_POST["cboDateMonth"], $_POST["cboDateDay"], $_POST["cboDateYear"]);
 	$isActionItem = (isset($_POST["chkActionItem"])) ? 1 : 0;
 	$isReport     = (isset($_POST["chkReport"]))     ? 1 : 0;
 	$isInternal   = ($_POST["isInternal"] == "true") ? 1 : 0;
 	$isComplete   = (!$isActionItem)                 ? 1 : 0;
 		
-	db_query("INSERT INTO funders_activity (
+	db_query('INSERT INTO funders_activity (
 		awardID,
 		activityTitle,
 		activityText,
@@ -28,17 +28,17 @@ if (!empty($_POST)) {
 		activityPostedOn,
 		activityPostedBy
 	) VALUES (
-		" . $_GET["id"] . ",
-		'" . $_POST["txtTitle"] . "',
-		'" . $_POST["tarDescription"] . "',
-		$date,
-		" . $_POST["cboStaff"] . ",
+		' . $_GET["id"] . ',
+		"' . $_POST["txtTitle"] . '",
+		"' . $_POST["tarDescription"] . '",
+		' . $date . ',
+		' . $_POST["cboStaff"] . ',
 		$isActionItem,
 		$isComplete,
 		$isReport,
 		$isInternal,
 		GETDATE(),
-		" . $_SESSION["user_id"] . ")");
+		' . $_SESSION["user_id"] . ')');
 	url_change();
 }
 
@@ -57,7 +57,7 @@ $r = db_grab("SELECT
 		p.programDesc,
 		p2.programDesc as programDesc2,
 		ras.awardStatusDesc,
-		ISNULL(u.nickname, u.firstname) + ' ' + u.lastname staffname
+		CONCAT(ISNULL(u.nickname, u.firstname), ' ', u.lastname) staffname
 	FROM funders_awards a
 	INNER JOIN funders f ON a.funderID = f.funderID
 	INNER JOIN funders_awards_statuses ras ON a.awardStatusID = ras.awardStatusID
@@ -167,7 +167,7 @@ $r = db_grab("SELECT
 			a.activityID,
 			a.activityTitle,
 			a.activityDate,
-			ISNULL(u.nickname, u.firstname) + ' ' + u.lastname staffname,
+			CONCAT(ISNULL(u.nickname, u.firstname), ' ', u.lastname) staffname,
 			a.activityText,
 			a.isComplete,
 			a.isReport,
@@ -218,7 +218,7 @@ $r = db_grab("SELECT
 				<tr>
 					<td width="50%" height="50">
 						ACTIVITY TITLE<br>
-						<?=draw_form_text("txtTitle", "", 35);?>
+						<?=draw_form_text("txtTitle", "", false, 35);?>
 					</td>
 					<td width="50%">
 						<table width="100%" cellpadding="0" cellspacing="0" border="0" class="small">
