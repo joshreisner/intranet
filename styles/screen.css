@@ -58,6 +58,7 @@ a:hover, a.over	{ color:#d8282d;  text-decoration:underline; cursor:pointer; }
 
 /* help */
 #help { border:1px solid #ccc; background-color:#eee; min-height:23px; margin-bottom:14px; padding:10px 10px 0px 10px; }
+#help #help_buttons { width:auto; overflow: auto; }
 #help #help_buttons a { color:#fff; background-color:#999; text-transform:uppercase; line-height:8px; padding:2px 4px 3px 4px; }
 #help #help_buttons a:hover { color:#fff; background-color:#ccc; text-decoration:none; }
 #help #help_text { margin:0px; line-height:18px; clear:both; }

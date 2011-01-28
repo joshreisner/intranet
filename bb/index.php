@@ -14,6 +14,7 @@ if ($posting) {
 		//get addresses of everyone & send with message
 		//todo redo bbdrawtopic with an email template or something
 		//emailUser(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id));
+		emailUser(array('josh@joshreisner.com', 'kyee@seedco.org'), $_POST['title'], bbDrawTopic($id));
 	} elseif (getOption('bb_notifypost') && getOption('channels') && getOption('languages')) {
 		//get addresses of everyone with indicated interests and send
 		$channels = array_post_checkboxes('channels');

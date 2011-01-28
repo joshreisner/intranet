@@ -215,9 +215,10 @@ function emailITticket($id, $scenario, $admin=false) {
 	} elseif ($scenario == "critical") {
 		$subject = "Critical " . $ticket["department"] . " Ticket Still Open";
 		$message .= drawMessage("A ticket flagged \"Critical\" is open on the Helpdesk.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
-	} elseif ($scenario == "languishing") {
+	/* } elseif ($scenario == "languishing") {
 		$subject = $ticket["department"] . " Ticket Languishing on the Helpdesk";
 		$message .= drawMessage("This ticket has been open on the Helpdesk for at least five days now.  You can <a href='http://" . $_josh["request"]["host"] . "/helpdesk/ticket.php?id=" . $id . "'>view the ticket</a> in the intranet ticketing system.");
+	*/
 	}
 
 	$message .= '<table class="center">' . drawHeaderRow("Email", 2);
@@ -271,13 +272,13 @@ function emailITticket($id, $scenario, $admin=false) {
 
 	$message		.= '</table>' . drawEmailFooter();
 	$admin_message	.= '</table>' . drawEmailFooter();
-	
+		
 	$admins = array_unique($admins);
-	$admins = array_remove($_SESSION["email"], $admins);
+	//$admins = array_remove($_SESSION["email"], $admins);
 	
 	$users = array_unique($users);
-	$users = array_remove($_SESSION["email"], $users);
-		
+	//$users = array_remove($_SESSION["email"], $users);
+	
 	//special codes for email
 	//todo: put this in db, possibly by adding something to the users table or something
 	if (($scenario == "new")			&& ($ticket["departmentID"] == 3)) $admins = array("czanoni@seedco.org","cpena@seedco.org");
@@ -286,14 +287,15 @@ function emailITticket($id, $scenario, $admin=false) {
 	if (($scenario == "critical")		&& ($ticket["departmentID"] == 8)) $admins = array("mkhan@seedco.org");
 
 	if (count($admins)) {
-		$admins = join(", ", $admins);
+		//$admins = join(", ", $admins);
 		email($admins, $admin_message, $subject);
+		error_debug('admin message emailed to ' . implode(', ', $admins) . ' admins', __file__, __line__);
 	}
 	
 	if (count($users) && ($scenario != "followupadmin") && !$admin) {
-		$users = join(", ", $users);
+		//$users = join(", ", $users);
 		email($users, $message, $subject);
+		error_debug('user message emailed to ' . implode(', ', $users) . ' users', __file__, __line__);
 	}
-	//exit;
 }
 ?>

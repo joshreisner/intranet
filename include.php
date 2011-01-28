@@ -433,6 +433,7 @@ function drawTop($headcontent=false) {
 				location.href="' . $_josh['request']['path_query'] . '&newDeptID=" + id + "&contactID=" + user_id;
 			}
 			') . 
+			draw_firebug() .
 			$headcontent
 		);
 	$return .= draw_body_open() . '
