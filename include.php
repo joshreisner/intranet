@@ -200,11 +200,11 @@ function drawMessage($str) {
 	return draw_div_class('message', $str);
 }
 
-function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br/>') {
+function drawName($user_id, $name, $date=false, $withtime=false, $separator='<br/>', $updated=false) {
 	global $_josh;
 	$base = url_base();
 	$date = ($date) ? format_date_time($date, '', $separator) : false;
-	$img  = draw_img(DIRECTORY_WRITE . '/dynamic/users-image_small-' . $user_id . '.jpg', $base . '/staff/view.php?id=' . $user_id);		
+	$img  = draw_img(file_dynamic('users', 'image_small', $user_id, 'jpg', $updated), $base . '/staff/view.php?id=' . $user_id);		
 	return draw_div_class('name', $img . draw_link($base . '/staff/view.php?id=' . $user_id, format_string($name, 20)) . BR . $date);
 }
 
@@ -343,9 +343,9 @@ function drawTableStart() {
 	return '<table cellspacing="1" class="left">';
 }
 
-function drawThreadComment($content, $user_id, $fullname, $date, $admin=false) {
+function drawThreadComment($content, $user_id, $fullname, $date, $admin=false, $updated=false) {
 	$return  = '<tr><td class="left">';
-	$return .= drawName($user_id, $fullname, $date, true) . '</td>';
+	$return .= drawName($user_id, $fullname, $date, true, $updated) . '</td>';
 	$return .= '<td class="right text ';
 	if ($admin) $return .= ' hilite';
 	$return .= '" height="80"><div class="text">' . $content . '</div></td></tr>';
@@ -359,7 +359,7 @@ function drawThreadCommentForm($showAdmin=false) {
 	$return = '<a name="bottom"></a><form ';
 	if ($_josh['db']['language'] == 'mysql') $return .= 'accept-charset="utf-8" ';
 	$return .= 'method="post" action="' . $_josh['request']['path_query'] . '" onsubmit="javascript:return validate(this);"><tr valign="top">
-			<td class="left">' . drawName($_SESSION['user_id'], $_SESSION['full_name'], false, true) . '</td>
+			<td class="left">' . drawName($_SESSION['user_id'], $_SESSION['full_name'], false, true, false) . '</td>
 			<td>' . draw_form_textarea($name . langExt(), '', 'mceEditor thread');
 	if ($showAdmin && $page['is_admin']) {
 		$return .= '
@@ -384,7 +384,7 @@ function drawThreadTop($title, $content, $user_id, $fullname, $date, $editurl=fa
 	global $_josh;
 	$return  = '<tr>
 			<td height="150" class="left">' . 
-			drawName($user_id, $fullname, $date, true) . 
+			drawName($user_id, $fullname, $date, true, false) . 
 			'</td>
 			<td class="text"><div class="text top"><h1>' . $title . '</h1>';
 	if ($editurl) {

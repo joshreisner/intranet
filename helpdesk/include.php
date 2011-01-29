@@ -149,7 +149,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 	global $priorityOptions, $statusOptions, $ownerOptions, $typeOptions, $_josh;
 	$return  = '
 	<tr>
-		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["created_date"], true) . '</td>
+		<td rowspan="2">' . drawName($r["created_user"], $r["first"] . ' ' . $r["last"], $r["created_date"], true, $r['updated']) . '</td>
 		<td colspan="3"><a href="ticket.php?id=' . $r["id"] . '"><b>' . $r["title"] . '</b></a></td>
 		<td rowspan="2">' . draw_img("/images/icons/delete.png", drawDeleteLink("Delete this ticket?", $r["id"], "delete", "ticketID")) . '</td>
 	</tr>

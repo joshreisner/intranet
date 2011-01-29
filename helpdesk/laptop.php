@@ -96,20 +96,21 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 		<th align="left">Notes</th>
 	</tr>
 	<?
-	$result = db_query("SELECT
+	$result = db_query('SELECT
 							ISNULL(u.nickname, u.firstname) first,
 							u.lastname last,
 							u.id,
 							c.checkoutStart, 
 							c.checkoutEnd,
-							c.checkoutNotes
+							c.checkoutNotes,
+							' . db_updated('u') . '
 						FROM IT_Laptops_Checkouts c
 						INNER JOIN users u ON c.checkoutUser = u.id
 						WHERE checkoutLaptopID = " . $_GET["id"] . "
-						ORDER BY checkoutStart DESC");
+						ORDER BY checkoutStart DESC');
 	while ($r = db_fetch($result)) {?>
 	<tr>
-		<td><?=drawName($r["id"],$r["first"] . " " . $r["last"])?></td>
+		<td><?=drawName($r["id"],$r["first"] . " " . $r["last"], false, true, $r['updated'])?></td>
 		<td><?=format_date($r["checkoutStart"]);?></td>
 		<td><?=format_date($r["checkoutEnd"]);?></td>
 		<td><?=nl2br($r["checkoutNotes"])?></td>

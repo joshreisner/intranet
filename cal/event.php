@@ -12,7 +12,8 @@ $e = db_grab('SELECT
 		t.color,
 		t.description' . langExt() . ' type,
 		MONTH(e.start_date) month, 
-		YEAR(e.start_date) year
+		YEAR(e.start_date) year,
+		' . db_updated('u') . '
 	FROM cal_events e
 	JOIN users u ON e.created_user = u.id
 	JOIN cal_events_types t ON e.type_id = t.id
@@ -68,7 +69,7 @@ echo drawNavigationCal($e["month"], $e["year"], true)
 	<? }?>
 	<tr valign="top">
 		<td class="left"><?=getString('posted_by')?></td>
-		<td><?=drawName($e["created_user"], $e["first"] . " " . $e["last"], $e["created_date"], true);?></td>
+		<td><?=drawName($e["created_user"], $e["first"] . " " . $e["last"], $e["created_date"], true, $e['updated']);?></td>
 	</tr>
 </table>
 <?=drawBottom();?>

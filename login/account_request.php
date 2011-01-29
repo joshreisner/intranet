@@ -34,11 +34,11 @@ if ($posting) {
 		while (list($key, $value) = each($_POST)) {
 			if ($key == 'email') {
 				$value = draw_link('mailto:' . $value);
-			} elseif ($key == 'departmentID') {
+			} elseif (($key == 'departmentID') && $value) {
 				$value = db_grab('SELECT departmentName FROM departments WHERE departmentID = ' . $value);
-			} elseif ($key == 'officeID') {
+			} elseif (($key == 'officeID') && $value) {
 				$value = db_grab('SELECT name FROM offices WHERE id = ' . $value);
-			} elseif ($key == 'organization_id') {
+			} elseif (($key == 'organization_id') && $value) {
 				$value = db_grab('SELECT title from organizations WHERE id = ' . $value);
 			} elseif ($key == 'Additional Info') {
 				$value = nl2br($value);
@@ -64,6 +64,16 @@ $f->set_field(array('type'=>'text', 'name'=>'lastname', 'label'=>getString('name
 $f->set_field(array('type'=>'text', 'name'=>'title', 'label'=>getString('staff_title')));
 $f->set_field(array('type'=>'text', 'name'=>'phone', 'label'=>getString('telephone')));
 $f->set_field(array('type'=>'text', 'name'=>'email', 'label'=>getString('email')));
+if (getOption('staff_showoffice')) {
+	$f->set_field(array('type'=>'select', 'name'=>'officeID', 'label'=>getString('location'), 'sql'=>'SELECT id, name FROM offices ORDER BY precedence', 'required'=>true));
+} else {
+	$f->unset_fields('officeID');
+}
+if (getOption('staff_showdept')) {
+	$f->set_field(array('type'=>'select', 'name'=>'departmentID', 'label'=>getString('department'), 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence'));
+} else {
+	$f->unset_fields('departmentID');
+}
 if (getOption('channels') && (url_id() == user())) {
 	$f->set_group(getString('email_prefs'));
 	$f->set_field(array('name'=>'email_prefs', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('email_prefs_label'), 'options_table'=>'channels', 'linking_table'=>'users_to_channels_prefs', 'object_id'=>'user_id', 'option_id'=>'channel_id', 'default'=>'all'));

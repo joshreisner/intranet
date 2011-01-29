@@ -89,7 +89,8 @@ if (!$r = db_grab('SELECT
 		y.title' . langExt() . ' type,
 		u.id user_id,
 		ISNULL(u.nickname, u.firstname) firstname,
-		u.lastname
+		u.lastname,
+		' . db_updated('u') . '
 	FROM bb_topics t
 	JOIN users u ON t.created_user = u.id
 	LEFT JOIN bb_topics_types y ON t.type_id = y.id
@@ -119,7 +120,7 @@ if (getOption('bb_types') && $r['type']) {
 if (getOption('channels') && ($channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $_GET['id'] . ' ORDER BY title' . langExt()))) {
 	$r['description'] .= draw_div_class('light', 'Networks: ' . implode(', ', $channels));
 }
-$d->row(drawName($r['user_id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true), '<h1>' . $r['title'] . '</h1>' . $r['description']);
+$d->row(drawName($r['user_id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true, $r['updated']), '<h1>' . $r['title'] . '</h1>' . $r['description']);
 
 //append followups
 $followups = db_query('SELECT
@@ -127,12 +128,13 @@ $followups = db_query('SELECT
 			ISNULL(u.nickname, u.firstname) firstname,
 			u.lastname,
 			f.created_date,
-			f.created_user
+			f.created_user,
+			' . db_updated('u') . '
 		FROM bb_followups f
 		JOIN users u ON u.id = f.created_user
 		WHERE f.is_active = 1 AND f.topic_id = ' . $_GET['id'] . '
 		ORDER BY f.created_date');
-while ($f = db_fetch($followups)) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true), $f['description']);
+while ($f = db_fetch($followups)) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, $f['updated']), $f['description']);
 echo $d->draw();
 
 //add a followup form

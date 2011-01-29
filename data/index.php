@@ -90,6 +90,11 @@ $columns = array(
 	array('table'=>'users', 'column'=>'is_published', 'type'=>'checkbox'),
 	array('table'=>'users', 'column'=>'precedence', 'type'=>'int'),
 
+	array('table'=>'users_requests', 'column'=>'publish_date', 'type'=>'datetime'),
+	array('table'=>'users_requests', 'column'=>'publish_user', 'type'=>'int'),
+	array('table'=>'users_requests', 'column'=>'is_published', 'type'=>'checkbox'),
+	array('table'=>'users_requests', 'column'=>'precedence', 'type'=>'int'),
+
 	array('table'=>'bb_topics', 'column'=>'replies', 'type'=>'int'),
 	array('table'=>'docs', 'column'=>'language_id', 'type'=>'int'),
 	array('table'=>'modules', 'column'=>'folder', 'type'=>'text'),
@@ -100,6 +105,9 @@ $columns = array(
 	array('table'=>'users', 'column'=>'image_small', 'type'=>'image'),
 	array('table'=>'users', 'column'=>'image_medium', 'type'=>'image'),
 	array('table'=>'users', 'column'=>'language_id', 'type'=>'int'),
+	array('table'=>'users_requests', 'column'=>'created_user', 'type'=>'int'),
+	array('table'=>'users_requests', 'column'=>'updated_user', 'type'=>'int'),
+	array('table'=>'users_requests', 'column'=>'updated_date', 'type'=>'datetime'),
 	array('table'=>'users_requests', 'column'=>'is_active', 'type'=>'checkbox')
 );
 

@@ -75,8 +75,16 @@ if (getOption('languages')) {
 } else {
 	$f->set_hidden('language_id', 1);
 }
-if (getOption('staff_showdept')) $f->set_field(array('type'=>'select', 'name'=>'departmentID', 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
-if (getOption('staff_showoffice')) $f->set_field(array('type'=>'select', 'name'=>'officeID', 'label'=>getString('location'), 'sql'=>'SELECT id, name FROM offices ORDER BY precedence', 'required'=>true, 'position'=>increment()));
+if (getOption('staff_showdept')) {
+	$f->set_field(array('type'=>'select', 'name'=>'departmentID', 'label'=>getString('department'), 'sql'=>'SELECT departmentID, departmentName FROM departments WHERE is_active = 1 ORDER BY precedence', 'position'=>increment()));
+} else {
+	$f->unset_fields('departmentID');
+}
+if (getOption('staff_showoffice')) {
+	$f->set_field(array('type'=>'select', 'name'=>'officeID', 'label'=>getString('location'), 'sql'=>'SELECT id, name FROM offices ORDER BY precedence', 'required'=>true, 'position'=>increment()));
+} else {
+	$f->unset_fields('officeID');
+}
 $f->set_field(array('name'=>'bio' . langExt(), 'label'=>getString('bio'), 'type'=>'textarea', 'class'=>'tinymce', 'position'=>increment()));
 $f->set_field(array('name'=>'phone', 'label'=>getString('telephone'), 'type'=>'text', 'position'=>increment()));
 $f->set_field(array('name'=>'extension', 'label'=>getString('telephone_extension'), 'type'=>'text', 'class'=>'short', 'position'=>increment()));

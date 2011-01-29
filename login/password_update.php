@@ -10,7 +10,7 @@ if ($posting) {
 
 echo drawSimpleTop(getString('password_update'));
 
-$f = new form('password_update', false, getString('submit'));
+$f = new form('password_update', false, getString('password_reset'));
 $f->set_field(array('type'=>'password', 'name'=>'password1', 'label'=>getString('password')));
 $f->set_field(array('type'=>'password', 'name'=>'password2', 'label'=>getString('confirm')));
 echo $f->draw();
