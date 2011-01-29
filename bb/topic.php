@@ -80,62 +80,12 @@ if ($posting) {
 }
 
 //get topic data
-if (!$r = db_grab('SELECT 
-		t.title' . langExt() . ' title,
-		t.description' . langExt() . ' description,
-		t.created_date,
-		t.is_admin,
-		t.type_id,
-		y.title' . langExt() . ' type,
-		u.id user_id,
-		ISNULL(u.nickname, u.firstname) firstname,
-		u.lastname,
-		' . db_updated('u') . '
-	FROM bb_topics t
-	JOIN users u ON t.created_user = u.id
-	LEFT JOIN bb_topics_types y ON t.type_id = y.id
-	WHERE t.id = ' . $_GET['id'])) url_change('/bb/');
+if (!$r = bbDrawTopic($_GET['id'])) url_change('/bb/');
 
 echo drawTop();
-echo drawSyndicateLink("bb");
 
-$isPoster = ($r["user_id"] == user()) ? true : false;
+echo $r;
 
-if ($r["is_admin"] == 1) echo drawMessage(getString("topic_admin"));
-
-echo draw_javascript('
-	function checkDelete() {
-		if (confirm("Are you sure you want to delete this topic?")) location.href="' . $_josh["request"]["path_query"] . '&delete=true";
-	}
-	function checkDeleteFollowup(id) {
-		if (confirm("Are you sure you want to delete this followup?")) location.href="' . $_josh["request"]["path_query"] . '&deleteFollowupID=" + id;
-	}
-');
-
-//display topic thread
-$d = new display($page['breadcrumbs'] . format_string($r['title'], 40), false, array('edit.php?id=' . $_GET['id']=>getString('edit'), 'javascript:checkDelete();'=>getString('delete')), 'thread');
-if (getOption('bb_types') && $r['type']) {
-	$r['description'] .= draw_div_class('light', getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']));
-}
-if (getOption('channels') && ($channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $_GET['id'] . ' ORDER BY title' . langExt()))) {
-	$r['description'] .= draw_div_class('light', 'Networks: ' . implode(', ', $channels));
-}
-$d->row(drawName($r['user_id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true, $r['updated']), '<h1>' . $r['title'] . '</h1>' . $r['description']);
-
-//append followups
-$followups = db_query('SELECT
-			f.description' . langExt() . ' description,
-			ISNULL(u.nickname, u.firstname) firstname,
-			u.lastname,
-			f.created_date,
-			f.created_user,
-			' . db_updated('u') . '
-		FROM bb_followups f
-		JOIN users u ON u.id = f.created_user
-		WHERE f.is_active = 1 AND f.topic_id = ' . $_GET['id'] . '
-		ORDER BY f.created_date');
-while ($f = db_fetch($followups)) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, $f['updated']), $f['description']);
-echo $d->draw();
 
 //add a followup form
 $f = new form('bb_followups', false, getString('add_followup'));

@@ -1,6 +1,9 @@
-<?	include("include.php");
+<?php
+include("include.php");
 
-$r = db_grab("SELECT
+url_query_require();
+
+if (!$r = db_grab('SELECT
 		u.id,
 		t.title,
 		t.created_user,
@@ -31,10 +34,7 @@ $r = db_grab("SELECT
 	JOIN offices				o ON u.officeID		= o.id
 	LEFT JOIN users			s ON t.ownerID		= s.id
 	LEFT JOIN helpdesk_tickets_types	y ON t.type_id		= y.id
-	WHERE t.id = " . $_GET["id"]);
-
-//maybe ticketID is bad?
-if (empty($r)) url_change("/helpdesk/");
+	WHERE t.id = ' . $_GET['id'])) url_change('./');
 
 if ($r["statusID"] != 9) { //open
 	$typeRequired = false;
@@ -55,27 +55,27 @@ if ($uploading) {
 } elseif ($posting) {
 	//add a comment
 	//auto-assign ticket if unassigned and followup poster is an IT admin
-	$followupAdmin = (isset($_POST["is_admin"])) ? 1 : 0;
+	$followupAdmin = (!empty($_POST['is_admin'])) ? 1 : 0;
 	if ($page['is_admin'] && !$followupAdmin && empty($r["ownerID"])) {
 		//set to it staff assigned if no status
 		if ($r["statusID"] == 1) $r["statusID"] = 2;
-		db_query("UPDATE helpdesk_tickets SET ownerID = {$_SESSION["user_id"]}, statusID = {$r["statusID"]}, updated_date = GETDATE() WHERE id = " . $_GET["id"]);
+		db_query('UPDATE helpdesk_tickets SET ownerID = ' . user() . ', statusID = ' . $r["statusID"] . ', updated_date = GETDATE() WHERE id = ' . $_GET['id']);
 	}
 	
 	//insert followup
-	db_query("INSERT INTO helpdesk_tickets_followups (
+	db_query('INSERT INTO helpdesk_tickets_followups (
 				ticketID, 
 				created_user, 
 				created_date, 
 				message,
 				is_admin
 			) VALUES (
-				{$_GET["id"]},
-				{$_SESSION["user_id"]},
+				' . $_GET["id"] . ',
+				' . $_SESSION["user_id"] . ',
 				GETDATE(),
-				'{$_POST["message"]}',
-				$followupAdmin
-			)");
+				"' . $_POST["message"] . '",
+				' . $followupAdmin . '
+			)');
 	
 	//email and exit
 	if ($followupAdmin) {
@@ -322,6 +322,7 @@ $result = db_query("SELECT
 				WHERE f.ticketID = " . $_GET['id'] . "
 				ORDER BY f.created_date");
 while ($r = db_fetch($result)) {
+	if ($r['is_admin'] && !$page['admin']) continue;
 	echo drawThreadComment($r["message"], $r["id"], $r["first"] . " " . $r["last"], $r["created_date"], $r["is_admin"]);
 }
 

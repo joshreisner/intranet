@@ -171,7 +171,7 @@ foreach ($tables as $t) {
 		echo draw_li('set ' . $t . '.' . $columns[0]['name'] . ' to primary key auto_increment');
 	}
 	
-	$replacements = array('bit'=>'tinyint', 'longtext'=>'text', 'mediumblob'=>'mediumblob');
+	$replacements = array('bit'=>'tinyint', 'longtext'=>'text', 'longblob'=>'mediumblob');
 	foreach ($columns as $c) {
 		if (isset($replacements[$c['type']])) {
 			db_column_type_set($t, $c['name'], $replacements[$c['type']]);
@@ -189,7 +189,7 @@ echo '<ul>';
 
 
 //null passwords
-db_query('UPDATE users SET language_id = 1, password = NULL');
+db_query('UPDATE users SET language_id = 1');
 db_query('UPDATE users SET email = "josh@joshreisner.com" WHERE id = 1');
 echo draw_li('passwords have been nulled');
 

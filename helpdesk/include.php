@@ -246,7 +246,7 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 	$followups = db_query("SELECT
 			u.id,
 			f.message,
-			(SELECT COUNT(*) FROM users_to_modules a WHERE a.user_id = u.id AND a.module_id = 3) isUserAdmin,
+			(SELECT COUNT(*) FROM users_to_modules u2m WHERE u2m.user_id = u.id AND u2m.module_id = 3 AND u2m.is_admin = 1) isUserAdmin,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
 			u.email,
@@ -257,7 +257,7 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 		WHERE f.ticketID = {$id} ORDER BY f.created_date");
 	while ($f = db_fetch($followups)) {
 		$admin_message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
-		if (!$f["is_admin"]) $message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
+		if (!$f['is_admin']) $message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
 		if ($f["isUserAdmin"]) {
 			$admins[] = $f["email"];
 		} else {

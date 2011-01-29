@@ -421,7 +421,7 @@ function drawTop($headcontent=false) {
 			draw_css('
 				#left table.left td.head, #left div.display div.title { background-color:#' . $page['color'] . '; }
 				#left table.table th.table_title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
-				#left table.navigation tr, #left form fieldset div.admin { background-color:#' . $page['hilite'] . '; }
+				#left table.navigation tr, #left form fieldset div.admin, #left table td.hilite { background-color:#' . $page['hilite'] . '; }
 			') . 
 			draw_javascript('
 			function confirmDelete(id) {
@@ -435,6 +435,7 @@ function drawTop($headcontent=false) {
 			}
 			') . 
 			draw_firebug() .
+			drawSyndicateLink('bb') . 
 			$headcontent
 		);
 	$return .= draw_body_open() . '
@@ -523,7 +524,7 @@ function drawBottom() {
 function drawEmail($message) {
 	//parse out a regular screen and make it look good in email
 	
-	$color = '#' . db_grab('SELECT color FROM modules WHERE folder = "' . url_folder() . '"');
+	$module = db_grab('SELECT color, hilite FROM modules WHERE folder = "' . url_folder() . '"');
 	
 	$message = str_replace('<div class="message">', '<div style="
 		border:1px solid #ccc;
@@ -546,7 +547,7 @@ function drawEmail($message) {
 	$message = str_replace('<td class="head"', '<td style="
 		color:#fff;
 		padding:3px;
-		background-color:' . $color . ';
+		background-color:#' . $module['color'] . ';
 		line-height:18px;
 		background-image:url(' . url_base() . '/images/gradient.png); background-repeat:repeat-x;
 		"', $message);
@@ -581,6 +582,14 @@ function drawEmail($message) {
 		vertical-align:top;
 		height:80px;
 		background-color:#fff;
+		"', $message);
+
+	$message = str_replace('<td class="right text  hilite"', '<td style="
+		padding:10px;
+		line-height:20px;
+		vertical-align:top;
+		height:80px;
+		background-color:#' . $module['hilite'] . ';
 		"', $message);
 
 	$message = str_replace('<h1>', '<h1 style="

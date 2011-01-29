@@ -12,9 +12,10 @@ if ($posting) {
 	//notification
 	if ($_POST['is_admin'] == '1') {
 		//get addresses of everyone & send with message
-		//todo redo bbdrawtopic with an email template or something
 		//emailUser(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], bbDrawTopic($id));
-		emailUser(array('josh@joshreisner.com', 'kyee@seedco.org'), $_POST['title'], bbDrawTopic($id));
+		die(drawEmail(bbDrawTopic($id, true)));
+		emailUser(array('josh@joshreisner.com'), $_POST['title'], drawEmail(bbDrawTopic($id, true)));
+		die('emailed to josh');	
 	} elseif (getOption('bb_notifypost') && getOption('channels') && getOption('languages')) {
 		//get addresses of everyone with indicated interests and send
 		$channels = array_post_checkboxes('channels');
@@ -55,12 +56,8 @@ if ($posting) {
 
 echo drawTop(drawSyndicateLink('bb'));
 
-/*if (getOption('bb_threaded')) {
-	echo draw_div('bb_topics', bbDrawThreads(15));
-} else {*/
-	echo draw_div('bb_topics', bbDrawTable(15));
-	echo draw_javascript('function_attach(setInterval(refreshBB, 60000));');
-//}
+echo draw_div('bb_topics', bbDrawTable(15));
+echo draw_javascript('function_attach(setInterval(refreshBB, 60000));');
 
 //add new topic
 echo '<a name="bottom"></a>';
