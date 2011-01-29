@@ -1,4 +1,5 @@
-<?php include("include.php");
+<?php
+include("include.php");
 
 if (url_action("deletereq")) {
 	db_query("DELETE FROM users_requests WHERE id = " . $_GET["id"]);

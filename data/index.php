@@ -171,7 +171,7 @@ foreach ($tables as $t) {
 		echo draw_li('set ' . $t . '.' . $columns[0]['name'] . ' to primary key auto_increment');
 	}
 	
-	$replacements = array('bit'=>'tinyint', 'longtext'=>'text');
+	$replacements = array('bit'=>'tinyint', 'longtext'=>'text', 'mediumblob'=>'mediumblob');
 	foreach ($columns as $c) {
 		if (isset($replacements[$c['type']])) {
 			db_column_type_set($t, $c['name'], $replacements[$c['type']]);

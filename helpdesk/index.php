@@ -63,8 +63,9 @@ echo drawMessage($helpdeskStatus, "center");
 	//-->
 </script>
 
-<table class="left" cellspacing="1">
+
 	<?php
+echo drawTableStart();
 	if (url_id("dept")) {
 		$department = " AND t.departmentID = " . $_GET["dept"];
 		$deptName = db_grab("SELECT shortName FROM departments WHERE departmentID = " . $_GET["dept"]);

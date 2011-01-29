@@ -11,7 +11,7 @@ echo drawTop();
 echo lib_get('tinymce');
 
 echo draw_javascript_src('/_intranet.seedco.site/lib/tinymce/tinymce_3_3_8/tiny_mce.js');
-echo draw_javascript('form_tinymce_init("/styles/helpdesk-status.css", true);');
+echo draw_javascript('form_tinymce_init("/styles/tinymce-helpdesk-status.css", true);');
 ?>
 <table class="left" cellspacing="1">
 	<form action="<?=$request["path_query"]?>" method="post">

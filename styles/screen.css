@@ -82,7 +82,7 @@ body.helpdesk div.message { text-align: center; }
 div.message { 
 	border:1px solid #ccc;
 	background-color:#ffffee;
-	padding:16px 16px 8px 16px;
+	padding:16px;
 	line-height:18px;
 	margin:0px 0px 14px 0px;
 }

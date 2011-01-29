@@ -2,8 +2,11 @@
 include('../include.php');
 
 if ($posting) {
+
+	//debug();
+	
 	//check to make sure email not already assigned to an active user
-	if (!$editing && db_grab('SELECT id FROM users WHERE is_active = 1 AND email = "' . $_POST['email'] . '"')) {
+	if (!$editing && ($id = db_grab('SELECT id FROM users WHERE is_active = 1 AND email = "' . $_POST['email'] . '"'))) {
 		url_change('view.php?id=' . $id);
 	}
 	
@@ -18,6 +21,7 @@ if ($posting) {
 	}
 	
 	$id = db_save('users');
+	
 	if (getOption('channels')) {
 		db_checkboxes('channels', 'users_to_channels', 'user_id', 'channel_id', $id);
 		if ((admin() || url_id() == user())) db_checkboxes('email_prefs', 'users_to_channels_prefs', 'user_id', 'channel_id', $id);
@@ -46,7 +50,10 @@ if ($posting) {
 	}
 	
 	//clean up users requests
-	if (url_id('requestID')) db_delete('users_requests', $_GET['requestID']);
+	if (url_id('requestID')) {
+		db_delete('users_requests', $_GET['requestID']);
+		error_debug('deleted user request', __file__, __line__);
+	}
 	
 	url_change('view.php?id=' . $id);
 } elseif (url_id('requestID')) {
