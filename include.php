@@ -868,8 +868,10 @@ class display {
 	}
 	
 	function draw($bottom=false) {
+		global $page;
 		$count = count($this->rows);
-		if ($this->title) $return = draw_div_class('title', format_string($this->title, 40) . draw_nav($this->controls));
+		if (!$this->title) $this->title = $page['breadcrumbs'] . $page['title'];
+		$return = draw_div_class('title', format_string($this->title, 40) . draw_nav($this->controls));
 		$counter = 1;
 		foreach ($this->rows as $label=>$content) {
 			$class = 'row';

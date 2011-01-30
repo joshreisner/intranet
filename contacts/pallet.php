@@ -1,11 +1,5 @@
-<?
-$return .= '
-<tr height="20">
-	<td width="50%">' . draw_link('/'. $m['folder'] . '/', 'Search') . '</td>
-	<td width="50%">' . draw_link('/'. $m['folder'] . '/tags.php', 'Tags') . '</td>
-</tr>
-<tr height="20">
-	<td width="50%">' . draw_link('/'. $m['folder'] . '/contacts.php', 'Alphabetical List') . '</td>
-	<td width="50%">' . draw_link('/'. $m['folder'] . '/activity.php', 'Activity') . '</td>
-</tr>';
+<?php
+$pages = db_table('SELECT url, title' . langExt() . ' title FROM pages WHERE module_id = ' . $m['id'] . ' AND is_active = 1 AND is_hidden <> 1 AND is_admin <> 1 ORDER by precedence');
+foreach ($pages as &$p) $p = draw_link('/staff/' . $p['url'], $p['title']);
+$return .= draw_table_rows($pages);
 ?>
