@@ -48,9 +48,10 @@ if ($r["statusID"] != 9) { //open
 
 if ($uploading) {
 	//upload an attachment
-	list($_POST["content"], $_POST["typeID"]) = file_get_uploaded("userfile", "docs_types");
+	$_POST['content'] = file_get_uploaded('userfile');
+	$_POST['extension'] = file_ext($_FILES['userfile']['name']);
 	$_POST["ticketID"] = $_GET["id"];
-	$id = db_save("helpdesk_tickets_attachments", false);
+	$id = db_save('helpdesk_tickets_attachments', false);
 	url_change();
 } elseif ($posting) {
 	//add a comment
@@ -283,21 +284,19 @@ while ($t = db_fetch($types)) {
 	
 	if ($r["attachments"]) {?>
 	<tr height="30">
-		<td class="left">Attachment<? if ($r["attachments"] > 1) {?>s<? }?></td>
+		<td class="left"><?=format_quantitize($r['attachments'], 'Attachment')?></td>
 		<td>
 			<table class="nospacing">
 			<?
-				$attachments = db_query("SELECT
-				a.id,
-				a.title,
-				t.icon,
-				t.description type
-			FROM helpdesk_tickets_attachments a
-			JOIN docs_types t ON a.type_id = t.id
-			WHERE a.ticketID = " . $_GET["id"]);
-		while ($a = db_fetch($attachments)) {?>
+				$attachments = db_table('SELECT
+				id,
+				title,
+				extension
+			FROM helpdesk_tickets_attachments
+			WHERE ticketID = ' . $_GET["id"]);
+		foreach ($attachments as $a) {?>
 			<tr height="21">
-				<td width="18"><a href="download.php?id=<?=$a["id"]?>"><img src="<?=DIRECTORY_WRITE?><?=$a["icon"]?>" width="16" height="16" border="0"></a></td>
+				<td width="18"><?=file_icon($a['extension'], 'download.php?id=' . $a["id"])?></td>
 				<td><a href="download.php?id=<?=$a["id"]?>"><?=$a["title"]?></a></td>
 			</tr>
 		<? } ?>
