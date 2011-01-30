@@ -322,7 +322,7 @@ $result = db_query("SELECT
 				WHERE f.ticketID = " . $_GET['id'] . "
 				ORDER BY f.created_date");
 while ($r = db_fetch($result)) {
-	if ($r['is_admin'] && !$page['admin']) continue;
+	if ($r['is_admin'] && !$page['is_admin']) continue;
 	echo drawThreadComment($r["message"], $r["id"], $r["first"] . " " . $r["last"], $r["created_date"], $r["is_admin"]);
 }
 

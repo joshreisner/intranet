@@ -35,7 +35,7 @@ function bbDrawTopic($id, $email=false) {
 		t.is_admin,
 		t.type_id,
 		y.title' . langExt() . ' type,
-		u.id user_id,
+		u.id created_user,
 		ISNULL(u.nickname, u.firstname) firstname,
 		u.lastname,
 		' . db_updated('u') . '
@@ -46,34 +46,27 @@ function bbDrawTopic($id, $email=false) {
 
 	$return = '';
 	
-	if ($r['is_admin'] == 1) $return .= drawMessage(getString("topic_admin"));
+	if ($r['is_admin'] == 1) $return .= drawMessage(getString('topic_admin'));
 	
-	if (!$email) echo draw_javascript('
-		function checkDelete() {
-			if (confirm("Are you sure you want to delete this topic?")) location.href="' . $_josh["request"]["path_query"] . '&delete=true";
-		}
-		function checkDeleteFollowup(id) {
-			if (confirm("Are you sure you want to delete this followup?")) location.href="' . $_josh["request"]["path_query"] . '&deleteFollowupID=" + id;
-		}
-	');
-	
-	$isPoster = ($r['user_id'] == user()) ? true : false;
-	
-	$options = array('edit.php?id=' . $id=>getString('edit'), 'javascript:checkDelete();'=>getString('delete'));
-	if ($email) $options = false;
+	$options = (($page['is_admin'] || (user() == $r['created_user'])) && !$email) ? array('edit.php?id=' . $id=>getString('edit'), 'javascript:checkDelete();'=>getString('delete')) : false;
 	
 	//display topic thread
-	$d = new display($page['breadcrumbs'] . format_string($r['title'], 40), false, $options, 'thread');
+	$d = new display($page['breadcrumbs'] . $r['title'], false, $options, 'thread');
+	
+	//if categories
 	if (getOption('bb_types') && $r['type']) {
 		$r['description'] .= draw_div_class('light', getString('category') . ': ' . draw_link('category.php?id=' . $r['type_id'], $r['type']));
 	}
+	
+	//channels
 	if (getOption('channels') && ($channels = db_array('SELECT c.title' . langExt() . ' title FROM channels c JOIN bb_topics_to_channels t2c ON c.id = t2c.channel_id WHERE t2c.topic_id = ' . $id . ' ORDER BY title' . langExt()))) {
 		$r['description'] .= draw_div_class('light', 'Networks: ' . implode(', ', $channels));
 	}
-	$d->row(drawName($r['user_id'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true, $r['updated']), '<h1>' . $r['title'] . '</h1>' . $r['description']);
+	
+	$d->row(drawName($r['created_user'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true, BR, $r['updated']), '<h1>' . $r['title'] . '</h1>' . $r['description']);
 	
 	//append followups
-	$followups = db_query('SELECT
+	$followups = db_table('SELECT
 				f.description' . langExt() . ' description,
 				ISNULL(u.nickname, u.firstname) firstname,
 				u.lastname,
@@ -84,7 +77,7 @@ function bbDrawTopic($id, $email=false) {
 			JOIN users u ON u.id = f.created_user
 			WHERE f.is_active = 1 AND f.topic_id = ' . $id . '
 			ORDER BY f.created_date');
-	while ($f = db_fetch($followups)) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, $f['updated']), $f['description']);
+	foreach ($followups as $f) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, BR, $f['updated']), $f['description']);
 	$return .= $d->draw();
 
 	return $return;
@@ -94,7 +87,7 @@ function drawTopicForm() {
 	global $page;
 	$f = new form('bb_topics', @$_GET['id'], getString('topic_new'));
 	if ($page['is_admin']) {
-		$f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>$_SESSION['user_id'], 'required'=>true, 'label'=>getString('posted_by')));
+		$f->set_field(array('name'=>'created_user', 'class'=>'admin', 'type'=>'select', 'sql'=>'SELECT id, CONCAT_WS(", ", lastname, firstname) FROM users WHERE is_active = 1 ORDER BY lastname, firstname', 'default'=>user(), 'required'=>true, 'label'=>getString('posted_by')));
 	}
 	if ($page['is_admin'] && !getOption('bb_notifypost')) {
 		$f->set_field(array('name'=>'is_admin', 'class'=>'admin', 'type'=>'checkbox', 'label'=>getString('is_admin')));

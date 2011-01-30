@@ -1,3 +1,11 @@
+function checkDelete() {
+	if (confirm("Are you sure you want to delete this topic?")) url_query_set("delete", "true");
+}
+
+function checkDeleteFollowup(id) {
+	if (confirm("Are you sure you want to delete this followup?")) url_query_set("deleteFollowupID", id);
+}
+
 function validate_users_requests(form) {
 	var errors = new Array();
 	if (form_text_empty(form.firstname)) errors[errors.length] = 'The first name field is empty';

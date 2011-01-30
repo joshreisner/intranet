@@ -219,8 +219,8 @@ div.display div.title ul li { float:left; margin:0px 0px 0px 10px; padding:0px; 
 div.display div.title a { color:#fff; }
 div.display div.row { background-color:#eee; overflow:auto; border-bottom:1px solid #e6e6e6; }
 div.display div.row.last { background-color:#eee; overflow:auto; border-bottom:0; }
-div.display div.label { padding:5px; float:left; width:135px;}
-div.display div.content { background-color:#fff; float:right; width:420px; padding:10px; border-left:1px solid #e6e6e6; }
+div.display div.label { padding:5px; float:left; width:135px; }
+div.display div.content { background-color:#fff; float:right; width:420px; padding:10px; border-left:1px solid #e6e6e6; min-height:90px; }
 div.display.thread div.content { min-height:100px; }
 
 

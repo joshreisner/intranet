@@ -169,7 +169,7 @@ function drawTicketRow($r, $mode="status") { //mode can be status or type
 function emailITticket($id, $scenario, $admin=false, $debug=false) {
 	global $_josh, $page;
 	
-	$ticket = db_grab("SELECT
+	$ticket = db_grab('SELECT
 			u.id,
 			(SELECT COUNT(*) FROM users_to_modules a WHERE a.user_id = u.id AND a.module_id = 3) isUserAdmin,
 			t.title,
@@ -179,6 +179,7 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last,
 			u.email,
+			' . db_updated('u') . ',
 			t.created_date,
 			t.priorityID,
 			t.statusID,
@@ -189,11 +190,11 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 			t.ownerID,
 			ISNULL(u2.nickname, u2.firstname) as ownerName
 		FROM helpdesk_tickets t
-		LEFT  JOIN helpdesk_tickets_types y	ON t.type_id		= y.id
-		JOIN users  u	ON t.created_user	= u.id
+		LEFT JOIN helpdesk_tickets_types y	ON t.type_id = y.id
+		JOIN users u ON t.created_user = u.id
 		JOIN departments d ON t.departmentID = d.departmentID
-		LEFT  JOIN users  u2	ON t.ownerID = u2.id
-		WHERE t.id = " . $id);
+		LEFT JOIN users u2 ON t.ownerID = u2.id
+		WHERE t.id = ' . $id);
 		
 	//yellow box
 	if ($scenario == "followup") {
@@ -216,7 +217,7 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 		$message = drawMessage('A ticket flagged "Critical" is open on the Helpdesk.  You can ' . draw_link('/helpdesk/ticket.php?id=' . $id, 'view the ticket') . ' in the intranet ticketing system.');
 	}
 
-	$message .= drawtableStart() . drawHeaderRow(false, 2);
+	//$message .= drawtableStart() . drawHeaderRow(false, 2);
 	
 	//recipients arrays
 	$users = array();
@@ -237,41 +238,40 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 	//add owner if ticket is assigned
 	if ($ticket["ownerEmail"]) $admins[] = $ticket["ownerEmail"]; //owner logically has to be admin
 
-	$message .= drawThreadTop($ticket["title"], $ticket["description"], $ticket["id"], $ticket["first"] . " " . $ticket["last"], $ticket["created_date"]);
-	
-	//second message for the admins -- this seems overly complicated!
-	$admin_message = $message;
+	$d_user	= new display($page['breadcrumbs'] . $ticket['title'], false, false, 'thread');
+	$d_admin = new display($page['breadcrumbs'] . $ticket['title'], false, false, 'thread');
+	$d_user->row(drawName($ticket['created_user'], $ticket['first'] . ' ' . $ticket['last'], $ticket['created_date'], true, BR, $ticket['updated']), draw_h1($ticket['title']) . $ticket['description']);
+	$d_admin->row(drawName($ticket['created_user'], $ticket['first'] . ' ' . $ticket['last'], $ticket['created_date'], true, BR, $ticket['updated']), draw_h1($ticket['title']) . $ticket['description']);
 	
 	//get followups
-	$followups = db_query("SELECT
+	$followups = db_query('SELECT
 			u.id,
 			f.message,
 			(SELECT COUNT(*) FROM users_to_modules u2m WHERE u2m.user_id = u.id AND u2m.module_id = 3 AND u2m.is_admin = 1) isUserAdmin,
-			ISNULL(u.nickname, u.firstname) first,
-			u.lastname last,
+			ISNULL(u.nickname, u.firstname) firstname,
+			u.lastname,
 			u.email,
 			f.created_date,
-			f.is_admin
+			f.is_admin,
+			f.created_user,
+			' . db_updated('u') . '
 		FROM helpdesk_tickets_followups f
 		INNER JOIN users  u  ON f.created_user	= u.id
-		WHERE f.ticketID = {$id} ORDER BY f.created_date");
+		WHERE f.ticketID = ' . $id . ' ORDER BY f.created_date');
 	while ($f = db_fetch($followups)) {
-		$admin_message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
-		if (!$f['is_admin']) $message .= drawThreadComment($f["message"], $f["id"], $f["first"] . " " . $f["last"], $f["created_date"], $f["is_admin"]);
-		if ($f["isUserAdmin"]) {
-			$admins[] = $f["email"];
+		$d_admin->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, BR, $f['updated']), $f['message']);
+		if (!$f['is_admin']) $d_user->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, BR, $f['updated']), $f['message']);
+		if ($f['isUserAdmin']) {
+			$admins[] = $f['email'];
 		} else {
-			$users[] = $f["email"];
+			$users[] = $f['email'];
 		}
 	}
 
-	$message		= drawEmail($message . '</table>');
-	$admin_message	= drawEmail($admin_message . '</table>');
-	
 	$admins	= array_remove($_SESSION['email'], array_unique($admins));
 	$users	= array_remove($_SESSION['email'], array_unique($users));
 	
-	if ($debug) die($admin_message);
+	if ($debug) die(drawEmail($message . $d_admin->draw()));
 			
 	//special codes for email
 	//todo: put this in db, possibly by adding something to the users table or something
@@ -282,13 +282,13 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 
 	if (count($admins)) {
 		//$admins = join(", ", $admins);
-		email($admins, $admin_message, $subject);
+		email($admins, drawEmail($message . $d_admin->draw()), $subject);
 		error_debug('admin message emailed to ' . implode(', ', $admins) . ' admins', __file__, __line__);
 	}
 	
 	if (count($users) && ($scenario != "followupadmin") && !$admin) {
 		//$users = join(", ", $users);
-		email($users, $message, $subject);
+		email($users, drawEmail($message . $d_user->draw()), $subject);
 		error_debug('user message emailed to ' . implode(', ', $users) . ' users', __file__, __line__);
 	}
 }
