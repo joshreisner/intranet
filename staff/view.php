@@ -228,7 +228,7 @@ if (!$r['is_active']) {
 				echo "Site Administrator";
 			} else {
 				$hasPermission = false;
-				if ($permissions = db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET['id'] . ' ORDER BY m.title')) {
+				if ($permissions = db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET['id'] . ' AND a.is_admin = 1 ORDER BY m.title')) {
 					echo draw_list($permissions);
 				} else {
 					echo getString('none');

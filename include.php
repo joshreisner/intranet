@@ -77,7 +77,7 @@ if (!isset($pageIsPublic) || !$pageIsPublic) {
 			m.color,
 			m.hilite,
 			(SELECT COUNT(*) FROM users_to_modules_closed u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_closed,
-			(SELECT COUNT(*) FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.module_id = m.id) is_admin
+			(SELECT COUNT(*) FROM users_to_modules u WHERE u.user_id = ' . $_SESSION['user_id'] . ' AND u.is_admin = 1 AND u.module_id = m.id) is_admin
 		FROM modules m
 		WHERE m.is_active = 1
 		ORDER BY m.precedence');
