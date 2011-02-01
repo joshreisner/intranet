@@ -74,7 +74,7 @@ if ($uploading) {
 				' . $_GET["id"] . ',
 				' . $_SESSION["user_id"] . ',
 				GETDATE(),
-				"' . $_POST["message"] . '",
+				\'' . $_POST["message"] . '\',
 				' . $followupAdmin . '
 			)');
 	

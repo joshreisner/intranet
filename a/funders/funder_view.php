@@ -85,7 +85,7 @@ $r = db_grab("SELECT
 			$result_geographic_areas = db_query("SELECT 
 				geographicAreaDesc 
 				FROM funders_geographic_areas g
-				INNER JOIN funders_Geographic_Interests gp on g.geographicAreaID = gp.geographicAreaID
+				INNER JOIN funders_geographic_interests gp on g.geographicAreaID = gp.geographicAreaID
 				WHERE gp.funderID = " . $_GET["id"]);
 			while ($rg = db_fetch($result_geographic_areas)) {?>
 			&#183; <?=$rg["geographicAreaDesc"]?><br>
