@@ -275,10 +275,10 @@ function emailITticket($id, $scenario, $admin=false, $debug=false) {
 			
 	//special codes for email
 	//todo: put this in db, possibly by adding something to the users table or something
-	if (($scenario == "new")			&& ($ticket["departmentID"] == 3)) $admins = array('linungu@seedco.org');
-	if (($scenario == "new")			&& ($ticket["departmentID"] == 13)) $admins = array("mdavidson@seedco.org","mtorinese@seedco.org");
-	if (($scenario == "new")			&& ($ticket["departmentID"] == 2)) $admins = array("smalach@seedco.org");
-	if (($scenario == "critical")		&& ($ticket["departmentID"] == 8)) $admins = array("mkhan@seedco.org");
+	if (($scenario == "new")			&& ($ticket["departmentID"] == 3)) $admins = array('linungu@seedco.org', 'lmiura@seedco.org', 'sshah@seedco.org');
+	if (($scenario == "new")			&& ($ticket["departmentID"] == 13)) $admins = array('mdavidson@seedco.org', 'mtorinese@seedco.org');
+	if (($scenario == "new")			&& ($ticket["departmentID"] == 2)) $admins = array('smalach@seedco.org');
+	if (($scenario == "critical")		&& ($ticket["departmentID"] == 8)) $admins = array('mkhan@seedco.org');
 
 	if (count($admins)) {
 		//$admins = join(", ", $admins);
