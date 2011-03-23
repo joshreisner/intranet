@@ -511,7 +511,7 @@ function drawTop($headcontent=false) {
 				location.href="' . $_josh['request']['path_query'] . '&newDeptID=" + id + "&contactID=" + user_id;
 			}
 			') . 
-			draw_firebug() .
+			//draw_firebug() .
 			drawSyndicateLink('bb') . 
 			$headcontent
 		);

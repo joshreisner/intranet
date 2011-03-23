@@ -1,16 +1,20 @@
-<? include("../../include.php");
+<?php
+include('../../include.php');
+echo drawtop();
 
-echo drawtop();?>
-
-<table class="left">
-	<?=drawHeaderRow("Long Distance Codes", 2)?>
-	<?
-	$staff = db_query("SELECT id, firstname, lastname, longDistanceCode FROM users WHERE is_active = 1 and officeID = 1 ORDER BY lastname, firstname");
-	while ($s = db_fetch($staff)) {?>
-	<tr>
-		<td><a href="/staff/view.php?id=<?=$s["id"]?>"><?=$s["lastname"]?>, <?=$s["firstname"]?></a></td>
-		<td><?=sprintf("%04s", $s["longDistanceCode"]);?></td>
-	</tr>
-	<?}?>
-</table>
-<?=drawBottom();?>
+$t = new table('ldcodes', drawHeader(false, 'Long Distance Codes'));
+$t->set_column('code', 'c', 'Code');
+$t->set_column('user', 'l', 'User');
+$result = db_table('SELECT l.code, (SELECT CONCAT_WS(",", u.lastname, u.firstname, u.id) FROM users u WHERE u.longDistanceCode = l.code AND u.is_active = 1) user FROM ldcodes l ORDER BY user');
+foreach ($result as &$r) {
+	if ($r['user']) {
+		$r['group'] = 'Assigned';
+		list($lastname, $firstname, $id) = explode(',', $r['user']);
+		$r['user'] = draw_link('/staff/view.php?id=' . $id, $lastname . ', ' . $firstname);
+	} else {
+		$r['group'] = 'Unassigned Codes';
+	}
+}
+echo $t->draw($result, 'There are no long distance codes');
+echo drawBottom();
+?>

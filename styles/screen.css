@@ -201,9 +201,9 @@ textarea.press_export { width:594px; height:120px; }
 #right table tr { background-color:#fff; }
 #right table tr.admin { background-color:#ffffee; }
 #right table td { padding:4px 3px 4px 3px; }
-#right table td.head { line-height:18px; background-image:url(/images/gradient.png); background-repeat:repeat-x; }
+#right table td.head { line-height:18px; background-image:url(/images/gradient.png); background-repeat:repeat-x; position: relative; }
 #right table td.head a.left { color:#fff; float:left; }
-#right table td.head img { position:absolute; top:1px; right:6px; }
+#right table td.head a.image { position: absolute; top:1px; right:6px; }
 #right table td.empty { text-align:center; background-color:#eee; height:50px; color:#999; }
 #right table select { width:282px; }
 

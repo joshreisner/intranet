@@ -35,6 +35,7 @@ $r = db_grab('SELECT
 		u.lastlogin, 
 		u.title' . langExt() . ' title,
 		f.name office, 
+		u.officeID,
 		d.departmentName,
 		u.organization_id,
 		o.title' . langExt() . ' organization,
@@ -173,7 +174,7 @@ if (!$r['is_active']) {
 		<td colspan="2" class="bigger"><?=$r['channel']?></td>
 	</tr>
 	<? }
-	if ($r['longDistanceCode']) {?>
+	if (getOption('staff_ldcode') && ($r['officeID'] == 1)) {?>
 	<tr>
 		<td class="left">Telephone Code</td>
 		<td colspan="2" class="bigger"><?=$r['longDistanceCode']?></td>
@@ -227,8 +228,12 @@ if (!$r['is_active']) {
 			if ($r['is_admin']) {
 				echo "Site Administrator";
 			} else {
-				$hasPermission = false;
-				if ($permissions = db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET['id'] . ' AND a.is_admin = 1 ORDER BY m.title')) {
+				$permissions = array_merge(
+					db_array('SELECT m.title' . langExt() . ' title FROM modules m JOIN users_to_modules a ON m.id = a.module_id WHERE a.user_id = ' . $_GET['id'] . ' AND a.is_admin = 1 ORDER BY m.title'),
+					db_array('SELECT m.title' . langExt() . ' title FROM modulettes m JOIN users_to_modulettes a ON m.id = a.modulette_id WHERE a.user_id = ' . $_GET['id'] . ' ORDER BY m.title')
+				);
+				if (count($permissions)) {
+					sort($permissions);
 					echo draw_list($permissions);
 				} else {
 					echo getString('none');

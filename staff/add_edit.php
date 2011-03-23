@@ -20,6 +20,20 @@ if ($posting) {
 		$_POST['image_small'] = format_image_resize($_POST['image_large'], 50);
 	}
 	
+	//check for long distance codes
+	if (getOption('staff_ldcode')) {
+		if ($_POST['officeID'] == 1) {
+			if (!url_id() || !db_grab('SELECT longDistanceCode FROM users WHERE id = ' . url_id())) {
+				//user doesn't have a long distance code but needs one
+				if (!$code = db_grab('SELECT l.code FROM ldcodes l WHERE (SELECT COUNT(*) FROM users u WHERE u.longDistanceCode = l.code AND u.is_active = 1) = 0')) {
+					error_hande('out of codes', 'the intranet is out of long distance codes to assign to new users, such as for ' . $_POST['firstname'] . ' ' . $_POST['lastname']);
+				} else {
+					$_POST['longDistanceCode'] = $code;
+				}
+			}
+		}
+	}
+	
 	$id = db_save('users');
 	
 	if (getOption('channels')) {
@@ -28,15 +42,28 @@ if ($posting) {
 	}
 
 	if ($_SESSION['is_admin']) {
-		if (isset($_POST['is_admin'])) {
+		if (!empty($_POST['is_admin'])) {
 			//is admin, so delete permissions
 			db_query('DELETE FROM users_to_modules WHERE user_id = ' . $id);
 			db_query('DELETE FROM users_to_modulettes WHERE user_id = ' . $id);
 		} else {
 			//handle permissions updates
-			db_query('UPDATE users SET is_admin = 0 WHERE id = ' . $id);
-			db_checkboxes('modules', 'users_to_modules', 'user_id', 'module_id', $id);
-			db_checkboxes('modulettes', 'users_to_modulettes', 'user_id', 'modulette_id', $id);
+			$modules = array_checkboxes('modules');
+			foreach ($modules as $m) {
+				if (db_grab('SELECT COUNT(*) FROM users_to_modules WHERE user_id = ' . $id . ' AND module_id = ' . $m)) {
+					db_grab('UPDATE users_to_modules SET is_admin = 1 WHERE user_id = ' . $id . ' AND module_id = ' . $m);
+				} else {
+					db_query('INSERT INTO users_to_modules ( user_id, module_id, is_admin ) VALUES ( ' . $id . ', ' . $m . ', 1 )');
+				}
+			}
+
+			$modulettes = array_checkboxes('modulettes');
+			foreach ($modulettes as $m) {
+				if (!db_grab('SELECT COUNT(*) FROM users_to_modulettes WHERE user_id = ' . $id . ' AND modulette_id = ' . $m)) {
+					db_query('INSERT INTO users_to_modulettes ( user_id, modulette_id ) VALUES ( ' . $id . ', ' . $m . ' )');
+				}
+			}
+
 		}
 	}
 	
@@ -165,11 +192,11 @@ if ($page['is_admin']) {
 		$f->unset_fields('rankID');
 	}
 	
-	if (getOption('staff_ldcode')) {
-		$f->set_field(array('name'=>'longDistanceCode', 'label'=>getString('ldcode'), 'type'=>'text', 'position'=>increment()));
-	} else {
+	//if (getOption('staff_ldcode')) {
+		//$f->set_field(array('name'=>'longDistanceCode', 'label'=>getString('ldcode'), 'type'=>'text', 'position'=>increment()));
+	//} else {
 		$f->unset_fields('longDistanceCode');
-	}
+	//}
 } else {
 	$f->unset_fields('startDate,endDate');
 }
