@@ -61,6 +61,11 @@ $strings['categories']['es']			= 'Categorías';
 $strings['categories']['fr']			= 'Catégories';
 $strings['categories']['ru']			= 'Категории';
 
+$strings['categories_empty']['en']			= 'No categories have been added yet.';
+//$strings['categories']['es']			= 'Categorías';
+//$strings['categories']['fr']			= 'Catégories';
+//$strings['categories']['ru']			= 'Категории';
+
 $strings['channels_label']['en']			= 'Channels';
 $strings['channels_label']['es']			= 'Canales';
 $strings['channels_label']['fr']			= 'Chaînes';

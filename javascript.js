@@ -1,3 +1,10 @@
+$(function(){
+	//jquery stuff
+	$('a.confirm').click(function(e){
+		if (!confirm('Are you sure?')) e.preventDefault();
+	});
+});
+
 function checkDelete() {
 	if (confirm("Are you sure you want to delete this topic?")) url_query_set("delete", "true");
 }

@@ -1,7 +1,7 @@
 <?php
-include("../include.php");
+include('../include.php');
 
-if (url_action("delete")) {
+if (url_action('delete')) {
 	db_delete('docs');
 	url_drop();
 }
