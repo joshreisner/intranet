@@ -15,7 +15,7 @@ $r = db_grab("SELECT
 			l.laptopIsWireless,
 			l.laptopMACAddress,
 			(SELECT count(*) FROM it_laptops_2_accessories l2a WHERE l2a.laptopID = l.laptopID) accessories
-		FROM IT_Laptops l
+		FROM it_laptops l
 		JOIN it_laptops_homes h ON l.laptopHomeID = h.id
 		WHERE laptopID = " . $_GET["id"]);
 
@@ -104,7 +104,7 @@ $openEnded = (empty($r["laptopEnd"])) ? true : false;
 							c.checkoutEnd,
 							c.checkoutNotes,
 							' . db_updated('u') . '
-						FROM IT_Laptops_Checkouts c
+						FROM it_laptops_Checkouts c
 						INNER JOIN users u ON c.checkoutUser = u.id
 						WHERE checkoutLaptopID = " . $_GET["id"] . "
 						ORDER BY checkoutStart DESC');

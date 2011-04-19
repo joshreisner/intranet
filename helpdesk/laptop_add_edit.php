@@ -4,7 +4,7 @@ if ($posting) {
 	$laptopIsWireless = (isset($_POST["laptopIsWireless"])) ? 1 : 0;
 	
 	if (isset($_GET["id"])) {
-		db_query("UPDATE IT_Laptops SET
+		db_query("UPDATE it_laptops SET
 			laptopName      = '" . $_POST["laptopName"] . "',
 			laptopModel      = '" . $_POST["laptopModel"] . "',
 			laptopHomeID      = " . $_POST["laptopHomeID"] . ",
@@ -19,7 +19,7 @@ if ($posting) {
 			WHERE laptopID = " . $_GET["id"]);
 		db_query("DELETE FROM it_laptops_2_accessories WHERE laptopID = " . $_GET["id"]);
 	} else { 
-		$_GET["id"] = db_query("INSERT INTO IT_Laptops (
+		$_GET["id"] = db_query("INSERT INTO it_laptops (
 			laptopName,
 			laptopModel,
 			laptopHomeID,
@@ -81,7 +81,7 @@ if (isset($_GET["id"])) {
 						l.laptopOffice,
 						l.laptopIsWireless,
 						l.laptopMACAddress
-					FROM IT_Laptops l
+					FROM it_laptops l
 					WHERE laptopID = " . $_GET["id"]);
 
 	$openEnded = (empty($r["laptopEnd"])) ? true : false;

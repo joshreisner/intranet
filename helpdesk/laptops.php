@@ -24,12 +24,13 @@ if ($_SESSION["departmentID"] != 8) {
 <table class="left" cellspacing="1">
 	<?
 	echo drawHeaderRow("Laptop Requests", 5);
-	$result = db_query("select
+	$result = db_query('SELECT
 						t.title,
 						t.statusID,
 						(SELECT count(*) FROM helpdesk_tickets_followups f WHERE f.ticketID = t.id) ticketfollowups,
 						t.created_user,
 						t.updated_date,
+						' . db_updated('t') . ',
 						t.id,
 						t.ownerID,
 						t.priorityID,
@@ -40,7 +41,7 @@ if ($_SESSION["departmentID"] != 8) {
 					FROM helpdesk_tickets t
 					JOIN users u ON u.id    = t.created_user
 					WHERE t.statusID <> 9 AND t.type_id = 1
-					ORDER BY t.created_date DESC");
+					ORDER BY t.created_date DESC');
 if (db_found($result)) {?>
 	<tr>
 		<th>User</th>
@@ -98,9 +99,9 @@ if (db_found($result)) {?>
 			lc.checkoutEnd,
 			ISNULL(u.nickname, u.firstname) first,
 			u.lastname last
-		FROM IT_Laptops l
-		INNER JOIN IT_Laptops_Statuses s ON s.laptopStatusID = l.laptopStatusID
-		LEFT JOIN IT_Laptops_Checkouts lc ON l.checkoutID = lc.checkoutID
+		FROM it_laptops l
+		INNER JOIN it_laptops_statuses s ON s.laptopStatusID = l.laptopStatusID
+		LEFT JOIN it_laptops_checkouts lc ON l.checkoutID = lc.checkoutID
 		LEFT JOIN users u ON u.id = lc.checkoutUser
 		WHERE l.laptopHomeID = {$h["id"]} AND l.is_active = 1
 		ORDER BY laptopName");

@@ -17,7 +17,7 @@ if ($posting) {
 			$checkoutEnd,
 			'{$_POST["checkoutNotes"]}',
 			{$_GET["id"]})");
-	db_query("UPDATE IT_Laptops SET checkoutID = {$id}, laptopStatusID = 1 WHERE laptopID = " . $_GET["id"]);
+	db_query("UPDATE it_laptops SET checkoutID = {$id}, laptopStatusID = 1 WHERE laptopID = " . $_GET["id"]);
 	url_change("laptops.php");
 }
 		
@@ -28,7 +28,7 @@ echo drawTop();
 	<form method="post" action="<?=$request["path_query"]?>">
 	<tr>
 		<td class="left">Laptop</td>
-		<td><b><a href="laptop.php?id=<?=$_GET["id"]?>"><?=db_grab("SELECT laptopName FROM IT_Laptops WHERE laptopID = " . $_GET["id"])?></a></b></td>
+		<td><b><a href="laptop.php?id=<?=$_GET["id"]?>"><?=db_grab("SELECT laptopName FROM it_laptops WHERE laptopID = " . $_GET["id"])?></a></b></td>
 	</tr>
 	<tr>
 		<td class="left">User</td>
