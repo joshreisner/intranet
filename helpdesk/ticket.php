@@ -30,7 +30,7 @@ if (!$r = db_grab('SELECT
 		YEAR(t.created_date) createdYear
 	FROM helpdesk_tickets t
 	JOIN users					u ON t.created_user	= u.id
-	JOIN helpdesk_tickets_priorities	p ON t.priorityID	= p.id
+	LEFT JOIN helpdesk_tickets_priorities	p ON t.priorityID	= p.id
 	JOIN offices				o ON u.officeID		= o.id
 	LEFT JOIN users			s ON t.ownerID		= s.id
 	LEFT JOIN helpdesk_tickets_types	y ON t.type_id		= y.id
