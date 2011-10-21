@@ -554,7 +554,7 @@ function drawBottom() {
 					' . getString('hello') . ' <a href="/staff/view.php?id=' . $_SESSION['user_id'] . '"><b>' . $_SESSION['full_name'] . '</b></a>';
 	//search
 	$return .= '<form name="search" accept-charset="utf-8" method="get" action="/staff/search.php" onsubmit="javascript:return doSearch(this);">
-			<input type="text" name="q" value="' . getString('staff_search') . '" onfocus="javascript:form_field_default(this, true, \'' . getString('staff_search') . '\');" onblur="javascript:form_field_default(this, false, \'' . getString('staff_search') . '\');"/>
+			<input type="text" name="q" placeholder="' . getString('staff_search') . '"/>
 		</form>';
 
 	//channel or language selectors

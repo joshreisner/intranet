@@ -180,7 +180,7 @@ textarea.press_export { width:594px; height:120px; }
 
 /* tools */
 #tools { border:1px solid #ccc; background-color:#eee; padding:9px 8px 0px 8px; }
-#tools input { background-color:#fff; width:264px; height:20px; margin:7px 0px 5px 0px; border:1px solid #ccc; color:#999; padding:3px; }
+#tools input { background-color:#fff; width:264px; height:20px; margin:7px 0px 5px 0px; border:1px solid #ccc; color:#999; padding:3px; cursor: text; }
 #tools select { margin:7px 0px 12px 0px; }
 #tools select.channels { float:left; width:160px;}
 #tools select.languages { float:right; width:100px; }
