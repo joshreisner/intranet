@@ -47,12 +47,12 @@ url_header_utf8();
 			a { color:#6666cc; text-decoration:none; }
 			a:hover { color:#9999ff; text-decoration:underline; }
 			
-			form.login { position:absolute; top:138px; left:0px; display:block; width:230px; }
-			form.login fieldset { border:none; }
-			form.login fieldset legend { display:none; }
-			form.login div.field { position:relative; height:30px; }
-			form.login div.field label { width:170px; display:block; position:absolute; left:0px; text-align:right; overflow-x:visible; white-space:nowrap; }
-			form.login input { position:absolute; left:180px; }
+			form#login { position:absolute; top:138px; left:0px; display:block; width:230px; }
+			form#login fieldset { border:none; }
+			form#login fieldset legend { display:none; }
+			form#login div.field { position:relative; height:30px; }
+			form#login div.field label { width:170px; display:block; position:absolute; left:0px; text-align:right; overflow-x:visible; white-space:nowrap; }
+			form#login input { position:absolute; left:180px; }
 			input { background-color:#eee; border:1px solid #ccc; font-family:verdana; font-size:11px; padding:2px; color:#444; margin:0px; }
 			input.text { width:150px; }
 			
