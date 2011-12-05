@@ -17,6 +17,7 @@ function bbDrawTable($limit=false, $where=false, $title=false) {
 		array_argument($r, 'thread');
 		if ($r['is_admin']) array_argument($r, 'admin');
 		$r['link'] = 'topic.php?id=' . $r['id'];
+		if (empty($r['topic'])) $r['topic'] = '<i>no topic entered</i>';
 		$r['topic'] = draw_link($r['link'], $r['topic']);
 		$r['starter'] = $r['firstname'] . ' ' . $r['lastname'];
 		$r['last_post'] = format_date($r['last_post']);
@@ -66,19 +67,31 @@ function bbDrawTopic($id, $email=false) {
 	$d->row(drawName($r['created_user'], $r['firstname'] . ' ' . $r['lastname'], $r['created_date'], true, BR, $r['updated']), '<h1>' . $r['title'] . '</h1>' . $r['description']);
 	
 	//append followups
-	$followups = db_table('SELECT
-				f.description' . langExt() . ' description,
-				ISNULL(u.nickname, u.firstname) firstname,
-				u.lastname,
-				f.created_date,
-				f.created_user,
-				' . db_updated('u') . '
-			FROM bb_followups f
-			JOIN users u ON u.id = f.created_user
-			WHERE f.is_active = 1 AND f.topic_id = ' . $id . '
-			ORDER BY f.created_date');
-	foreach ($followups as $f) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, BR, $f['updated']), $f['description']);
-	$return .= $d->draw();
+	if ($r['is_admin']) {
+		$return .= $d->draw();
+	} else {
+		$followups = db_table('SELECT
+					f.description' . langExt() . ' description,
+					ISNULL(u.nickname, u.firstname) firstname,
+					u.lastname,
+					f.created_date,
+					f.created_user,
+					' . db_updated('u') . '
+				FROM bb_followups f
+				JOIN users u ON u.id = f.created_user
+				WHERE f.is_active = 1 AND f.topic_id = ' . $id . '
+				ORDER BY f.created_date');
+		foreach ($followups as $f) $d->row(drawName($f['created_user'], $f['firstname'] . ' ' . $f['lastname'], $f['created_date'], true, BR, $f['updated']), $f['description']);
+		$return .= $d->draw();
+	
+		if (!$email) {
+			//add a followup form
+			$f = new form('bb_followups', false, getString('add_followup'));
+			$f->unset_fields('topic_id');
+			langUnsetFields($f, 'description');
+			$return .= $f->draw(false, false);
+		}
+	}
 
 	return $return;
 }

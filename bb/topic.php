@@ -86,12 +86,4 @@ echo drawTop();
 
 echo $r;
 
-
-//add a followup form
-$f = new form('bb_followups', false, getString('add_followup'));
-$f->unset_fields('topic_id');
-langUnsetFields($f, 'description');
-echo $f->draw(false, false);
-
 echo drawBottom();
-?>

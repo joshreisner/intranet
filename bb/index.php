@@ -12,7 +12,6 @@ if ($posting) {
 	//notification
 	if ($_POST['is_admin'] == '1') {
 		//get addresses of everyone & send with message
-		//emailUser(array('josh@joshreisner.com', 'test@joshreisner.com'), $_POST['title'], drawEmail(bbDrawTopic($id, true)));
 		emailUser(db_array('SELECT email FROM users WHERE is_active = 1'), $_POST['title'], drawEmail(bbDrawTopic($id, true)));
 	} elseif (getOption('bb_notifypost') && getOption('channels') && getOption('languages')) {
 		//get addresses of everyone with indicated interests and send
