@@ -834,18 +834,11 @@ function updateInstanceWords($id, $text) {
 
 //it's convention to always put this at the bottom
 function joshlib() {
+	//look for joshlib at joshlib/index.php, ../joshlib/index.php, all the way down
 	global $_josh;
-	$possibilities = array(
-		'D:\Sites\joshlib\index.php', //seedco-web-srv
-		'/home/seedco/www/joshlib/index.php', //seedco
-		'/home/livingcities/www/joshlib/index.php', //living cities
-		'/home/hcfacc/www/joshlib/index.php', //hcfa-cc
-		'/home/sites/www/joshlib/index.php', //soc
-		'/home/joshreisner/www/joshlib/joshlib/index.php', //josh demo
-		'/Users/joshreisner/Sites/joshlib/index.php' //josh dev
-	);
-	foreach ($possibilities as $p) if (@include($p)) return $_josh;
-	die('Help me locate my library. ' . $_SERVER['DOCUMENT_ROOT']);
+	$count = substr_count($_SERVER['DOCUMENT_ROOT'] . $_SERVER['SCRIPT_NAME'], '/');
+	for ($i = 0; $i < $count; $i++) if (@include(str_repeat('../', $i) . 'joshlib/index.php')) return $_josh;
+	die('Could not find Joshlib.');
 }
 
 class display {
