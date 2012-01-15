@@ -2,8 +2,8 @@ body { background-color:#fff; margin:0px; text-align:center; }
 
 /* type styles */
 body, table, input, textarea, select { font-family:Verdana, sans-serif; color:#444; font-size:12px; margin:0px; }
-table.left td.title, a.title, span.title, h1, #left table.table td.empty { font-size:18px; }
-#left form fieldset legend, div.display div.title, input, textarea, div.message, div.panel, #left table.table th.table_title  { font-size:13px; }
+table.left td.title, a.title, span.title, h1, #left table td.empty { font-size:18px; }
+#left form fieldset legend, div.display div.title, input, textarea, div.message, div.panel, #left table th.table_title  { font-size:13px; }
 #right table td.head, h3, #right #tools input { font-size:12px; }
 #right, #right table, th, #left form fieldset div.checkboxes ul, div.name { font-size:11px; }
 #footer, #help #help_buttons a, a.button, a.button-light, a.right, div.display div.title ul { font-size:9px; }
@@ -99,7 +99,7 @@ div.panel {
 
 /* navigation */
 table.navigation { list-style:none; margin:0px 0px 15px 0px; width:100%; border:none; height:22px; text-align:center; }
-table.navigation td { padding:3px; }
+table.navigation td { padding:3px; height: 14px; }
 table.navigation td.selected { font-weight:bold; background-color:#fff; }
 
 div.name { padding-left:55px; position:relative; width:84px; }
@@ -107,20 +107,20 @@ div.name img { position:absolute; left:0px; top:3px; }
 
 /* table */
 #left table.table { border:1px solid #eee; border-bottom:0px; margin:0px 0px 14px 0px; width:100%; }
-#left table.table th.table_title { height:19px; color:#fff; line-height:19px; padding-left:4px; background-image:url(/images/gradient.png); background-repeat:repeat-x; }
-#left table.table th.table_title a { color:#fff; }
-#left table.table th.table_title span { float:left; }
+#left table th.table_title, #left table td.head { height:19px; color:#fff; line-height:19px; padding-left:4px; background-image:url(/images/gradient.png); background-repeat:repeat-x; }
+#left table th.table_title a { color:#fff; }
+#left table th.table_title span { float:left; }
 #left table.table td, #left table.table th { padding:3px; border-bottom:1px solid #ddd; }
 
 th { font-weight:normal; background-color:#eee; color:#999; text-align:left; }
 #left table a.right { margin:0px; padding:0px 3px; text-transform:uppercase; color:#fff; }
 #left table div.left { float:left; }
 #left table div.left a { color:#fff; }
-#left table.table td { height:20px; }
+#left table.table td, #left table td.head { height:20px; }
 #left table.table td.empty { background-color:#eee; vertical-align:middle; height:160px; text-align:center; }
 /* exists?
-#left table.table ul.header { margin:0px; padding:0px; font-size:10px; line-height:18px; list-style-type:none; text-transform:uppercase; float:right; }
-#left table.table ul.header li { float:left; margin:0px 5px 0px 5px; }
+#left table ul.header { margin:0px; padding:0px; font-size:10px; line-height:18px; list-style-type:none; text-transform:uppercase; float:right; }
+#left table ul.header li { float:left; margin:0px 5px 0px 5px; }
 */
 #left table.table tr.group td { vertical-align:bottom; font-weight:bold; height:50px; }
 #left table.table td.draggy:hover { cursor:move; }

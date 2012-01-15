@@ -80,6 +80,7 @@ if (getOption('languages')) {
 } else {
 	$f->unset_fields('language_id');
 }
+$f->unset_fields('type_id');
 formAddChannels($f, 'docs', 'doc_id');
 $f->set_field(array('name'=>'categories', 'label'=>getString('categories'), 'type'=>'checkboxes', 'options_table'=>'docs_categories', 'option_title'=>'title' . langExt(), 'linking_table'=>'docs_to_categories', 'object_id'=>'documentID', 'option_id'=>'categoryID'));
 langUnsetFields($f, 'title,description');
@@ -87,4 +88,3 @@ langTranslateCheckbox($f, url_id());
 echo $f->draw(); 
 
 echo drawBottom();
-?>

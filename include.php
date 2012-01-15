@@ -488,13 +488,13 @@ function drawTop($headcontent=false) {
 			(($_josh['db']['language'] == 'mysql') ? draw_meta_utf8() : '') .
 			draw_container('title', $page['title']) .
 			draw_favicon(DIRECTORY_WRITE . '/favicon.png') .
-			draw_css_src('/styles/screen.css',	'screen') .
-			draw_css_src('/styles/print.css',	'print') .
-			draw_css_src('/styles/ie.css',		'ie') .
+			draw_css_src('/css/global.css',	'screen') .
+			draw_css_src('/css/print.css',	'print') .
+			draw_css_src('/css/ie.css',		'ie') .
 			draw_css_src(DIRECTORY_WRITE . '/screen.css', 'screen') .
 			lib_get('jquery') .
 			draw_javascript_src() .
-			draw_javascript_src('/javascript.js') .
+			draw_javascript_src('/js/global.js') .
 			draw_css('
 				#left table.left td.head, #left div.display div.title { background-color:#' . $page['color'] . '; }
 				#left table.table th.table_title, #left form fieldset legend span, #left table.navigation { background-color:#' . $page['color'] . '; }
