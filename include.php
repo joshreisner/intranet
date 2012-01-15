@@ -8,6 +8,8 @@ if (!isset($_SESSION['language_id']))	$_SESSION['language_id']	= 1;
 //joshlib
 extract(joshlib());
 
+$_josh['tinymce_mode'] = 'simple';
+
 //debug();
 
 //include options file if it exists
