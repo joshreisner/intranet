@@ -1,4 +1,4 @@
-<?
+<?php
 include("include.php");
 
 //delete user handled by include
@@ -100,7 +100,8 @@ if (!$r['is_active']) {
 }
 ?>
 <table class="left" cellspacing="1">
-	<? if ($page['is_admin']) {
+	<?php
+	if ($page['is_admin']) {
 		if ($r['is_active']) {
 			echo drawHeaderRow($page['breadcrumbs'] . $page['title'], 3, getString('edit'), "add_edit.php?id=" . $_GET['id'], getString('delete'), drawDeleteLink("Deactivate this staff member?"));
 		} else {
@@ -117,114 +118,114 @@ if (!$r['is_active']) {
 	if (getOption("languages")) $rowspan++;
 	?>
 	<tr>
-		<td class="left"><?=getString('name')?></td>
-		<td class="title"><?=$r['firstname']?> <? if (!empty($r['nickname'])) {?>(<?=$r['nickname']?>) <? }?><?=$r['lastname']?></td>
-		<td rowspan="<?=$rowspan?>" style="width:240px; text-align:center; vertical-align:middle; padding:0px;"><?=$img?></td>
+		<td class="left"><?php echo getString('name')?></td>
+		<td class="title"><?php echo $r['firstname']?> <?php if (!empty($r['nickname'])) {?>(<?php echo $r['nickname']?>) <?php }?><?php echo $r['lastname']?></td>
+		<td rowspan="<?php echo $rowspan?>" style="width:240px; text-align:center; vertical-align:middle; padding:0px;"><?php echo $img?></td>
 	</tr>
 	<tr>
-		<td class="left"><?=getString('organization')?></td>
-		<td><?=$r['organization']?></td>
+		<td class="left"><?php echo getString('organization')?></td>
+		<td><?php echo $r['organization']?></td>
 	</tr>
 	<tr>
-		<td class="left"><?=getString('staff_title')?></td>
-		<td><?=$r['title']?></td>
+		<td class="left"><?php echo getString('staff_title')?></td>
+		<td><?php echo $r['title']?></td>
 	</tr>
-	<? if (getOption("staff_showdept")) {?>
+	<?php if (getOption("staff_showdept")) {?>
 	<tr>
-		<td class="left"><?=getString('department')?></td>
-		<td><?=$r['departmentName']?></td>
+		<td class="left"><?php echo getString('department')?></td>
+		<td><?php echo $r['departmentName']?></td>
 	</tr>
-	<? }
+	<?php }
 	if (getOption("staff_showoffice")) {?>
 	<tr>
-		<td class="left"><?=getString('location')?></td>
-		<td><?=$r['office']?></td>
+		<td class="left"><?php echo getString('location')?></td>
+		<td><?php echo $r['office']?></td>
 	</tr>
-	<? }
+	<?php }
 	if (getOption("languages")) {?>
 	<tr>
-		<td class="left"><?=getString('language')?></td>
-		<td><?=$r['language']?></td>
+		<td class="left"><?php echo getString('language')?></td>
+		<td><?php echo $r['language']?></td>
 	</tr>
-	<? }?>
+	<?php }?>
 	<tr>
-		<td class="left"><?=getString('telephone')?></td>
-		<td><?=format_phone($r['phone'])?></td>
-	</tr>
-	<tr>
-		<td class="left"><?=getString('email')?></td>
-		<td><a href="mailto:<?=$r['email']?>"><?=$r['email']?></a></td>
+		<td class="left"><?php echo getString('telephone')?></td>
+		<td><?php echo format_phone($r['phone'])?></td>
 	</tr>
 	<tr>
-		<td class="left"><?=getString('last_login')?></td>
-		<td><?=format_date_time($r['lastlogin'], " ")?></td>
+		<td class="left"><?php echo getString('email')?></td>
+		<td><a href="mailto:<?php echo $r['email']?>"><?php echo $r['email']?></a></td>
 	</tr>
 	<tr>
-		<td class="left"><?=getString('bio')?></td>
-		<td colspan="2" height="167" class="text"><?=nl2br($r['bio'])?></td>
+		<td class="left"><?php echo getString('last_login')?></td>
+		<td><?php echo format_date_time($r['lastlogin'], " ")?></td>
 	</tr>
-	<? if ($page['is_admin'] || ($_GET['id'] == $_SESSION['user_id'])) {?>
+	<tr>
+		<td class="left"><?php echo getString('bio')?></td>
+		<td colspan="2" height="167" class="text"><?php echo nl2br($r['bio'])?></td>
+	</tr>
+	<?php if ($page['is_admin'] || ($_GET['id'] == $_SESSION['user_id'])) {?>
 	<tr class="group">
-		<td colspan="3"><?=getString('administrative_info')?></td>
+		<td colspan="3"><?php echo getString('administrative_info')?></td>
 	</tr>
-	<?
+	<?php
 	if (getOption("channels")) {?>
 	<tr>
-		<td class="left"><?=getString('network')?></td>
-		<td colspan="2" class="bigger"><?=$r['channel']?></td>
+		<td class="left"><?php echo getString('network')?></td>
+		<td colspan="2" class="bigger"><?php echo $r['channel']?></td>
 	</tr>
-	<? }
+	<?php }
 	if (getOption('staff_ldcode') && ($r['officeID'] == 1)) {?>
 	<tr>
 		<td class="left">Telephone Code</td>
-		<td colspan="2" class="bigger"><?=$r['longDistanceCode']?></td>
+		<td colspan="2" class="bigger"><?php echo $r['longDistanceCode']?></td>
 	</tr>
-	<? }
+	<?php }
 	if ($r['startDate']) {?>
 	<tr>
-		<td class="left"><?=getString('start_date')?></td>
-		<td colspan="2"><?=format_date($r['startDate'])?></td>
+		<td class="left"><?php echo getString('start_date')?></td>
+		<td colspan="2"><?php echo format_date($r['startDate'])?></td>
 	</tr>
-	<? }
+	<?php }
 	if ($r['endDate']) {?>
 	<tr>
 		<td class="left">End Date</td>
-		<td colspan="2"><?=format_date($r['endDate'])?></td>
+		<td colspan="2"><?php echo format_date($r['endDate'])?></td>
 	</tr>
-	<? }
+	<?php }
 	if ($_GET['id'] == $_SESSION['user_id']) {
 		?>
 		<tr>
-			<td class="left"><?=getString('password')?></td>
-			<td colspan="2"><a href="<?=drawDeleteLink("Reset password?", $_GET['id'], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a></td>
+			<td class="left"><?php echo getString('password')?></td>
+			<td colspan="2"><a href="<?php echo drawDeleteLink("Reset password?", $_GET['id'], "passwd")?>" class="button" style="line-height:13px;"><?php echo getString('password_reset')?></a></td>
 		</tr>
-		<? } elseif ($page['is_admin']) {?>
+		<?php } elseif ($page['is_admin']) {?>
 		<tr>
-			<td class="left"><?=getString('password')?></td>
+			<td class="left"><?php echo getString('password')?></td>
 			<td colspan="2">
-				<? if ($r['password']){?>
-					<i><?=getString('password_is_reset')?></i>
-				<? } else {?>
-					<a href="<?=drawDeleteLink(getString('are_you_sure'), $_GET['id'], "passwd")?>" class="button" style="line-height:13px;"><?=getString('password_reset')?></a>
-				<? }?>
+				<?php if ($r['password']){?>
+					<i><?php echo getString('password_is_reset')?></i>
+				<?php } else {?>
+					<a href="<?php echo drawDeleteLink(getString('are_you_sure'), $_GET['id'], "passwd")?>" class="button" style="line-height:13px;"><?php echo getString('password_reset')?></a>
+				<?php }?>
 			</td>
 		</tr>
-	<? }?>
-	<? if ($page['is_admin']) {?>
+	<?php }?>
+	<?php if ($page['is_admin']) {?>
 		<tr>
-			<td class="left"><?=getString('invite')?></td>
-			<td colspan="2"><a href="<?=drawDeleteLink("Send email invite?", $_GET['id'], "invite")?>" class="button" style="line-height:13px;"><?=getString('invite_again')?></a></td>
+			<td class="left"><?php echo getString('invite')?></td>
+			<td colspan="2"><a href="<?php echo drawDeleteLink("Send email invite?", $_GET['id'], "invite")?>" class="button" style="line-height:13px;"><?php echo getString('invite_again')?></a></td>
 		</tr>
-		<? if (getOption("staff_showrank")) {?>
+		<?php if (getOption("staff_showrank")) {?>
 			<tr>
 				<td class="left">Rank</td>
-				<td colspan="2"><?=$r['rank']?></td>
+				<td colspan="2"><?php echo $r['rank']?></td>
 			</tr>
-		<? } ?>
+		<?php } ?>
 		<tr>
-			<td class="left"><?=getString('permissions')?></td>
+			<td class="left"><?php echo getString('permissions')?></td>
 			<td colspan="2">
-			<?
+			<?php
 			if ($r['is_admin']) {
 				echo "Site Administrator";
 			} else {
@@ -242,7 +243,7 @@ if (!$r['is_active']) {
 			?>
 			</td>
 		</tr>
-	<? }
+	<?php }
 	
 	if (getOption("staff_showhome")) {?>
 	<tr class="group">
@@ -250,47 +251,47 @@ if (!$r['is_active']) {
 	</tr>
 	<tr>
 		<td class="left">Home Address</nobr></td>
-		<td colspan="2"><?=$r['homeAddress1']?><br>
-			<? if ($r['homeAddress2']) {?><?=$r['homeAddress2']?><br><? }?>
-			<?=$r['homeCity']?>, <?=$r['stateAbbrev']?> <?=$r['homeZIP']?>
+		<td colspan="2"><?php echo $r['homeAddress1']?><br>
+			<?php if ($r['homeAddress2']) {?><?php echo $r['homeAddress2']?><br><?php }?>
+			<?php echo $r['homeCity']?>, <?php echo $r['stateAbbrev']?> <?php echo $r['homeZIP']?>
 		</td>
 	</tr>
 	<tr>
 		<td class="left">Home Phone</nobr></td>
-		<td colspan="2"><?=format_phone($r['homePhone'])?></td>
+		<td colspan="2"><?php echo format_phone($r['homePhone'])?></td>
 	</tr>
 	<tr>
 		<td class="left">Cell Phone</td>
-		<td colspan="2"><?=format_phone($r['homeCell'])?></td>
+		<td colspan="2"><?php echo format_phone($r['homeCell'])?></td>
 	</tr>
 	<tr>
 		<td class="left">Personal Email</td>
-		<td colspan="2"><a href="mailto:<?=$r['homeEmail']?>"><?=$r['homeEmail']?></a></td>
+		<td colspan="2"><a href="mailto:<?php echo $r['homeEmail']?>"><?php echo $r['homeEmail']?></a></td>
 	</tr>
-	<? }
+	<?php }
 	if (getOption("staff_showemergency")) {?>
 	<tr class="group">
 		<td colspan="3">Emergency Contact Information [private]</td>
 	</tr>
 	<tr>
-		<td class="left"><?=$r['emerCont1Relationship']?></td>
+		<td class="left"><?php echo $r['emerCont1Relationship']?></td>
 		<td colspan="2">
-			<b><?=$r['emerCont1Name']?></b><br>
-			<? if($r['emerCont1Phone']) {?><?=format_phone($r['emerCont1Phone'])?><br><? }?>
-			<? if($r['emerCont1Cell']) {?><?=format_phone($r['emerCont1Cell'])?><br><? }?>
-			<?=$r['emerCont1Email']?>
+			<b><?php echo $r['emerCont1Name']?></b><br>
+			<?php if($r['emerCont1Phone']) {?><?php echo format_phone($r['emerCont1Phone'])?><br><?php }?>
+			<?php if($r['emerCont1Cell']) {?><?php echo format_phone($r['emerCont1Cell'])?><br><?php }?>
+			<?php echo $r['emerCont1Email']?>
 		</td>
 	</tr>
 	<tr>
-		<td class="left"><?=$r['emerCont2Relationship']?></td>
+		<td class="left"><?php echo $r['emerCont2Relationship']?></td>
 		<td colspan="2">
-			<b><?=$r['emerCont2Name']?></b><br>
-			<? if($r['emerCont2Phone']) {?><?=format_phone($r['emerCont2Phone'])?><br><? }?>
-			<? if($r['emerCont2Cell']) {?><?=format_phone($r['emerCont2Cell'])?><br><? }?>
-			<?=$r['emerCont2Email']?>
+			<b><?php echo $r['emerCont2Name']?></b><br>
+			<?php if($r['emerCont2Phone']) {?><?php echo format_phone($r['emerCont2Phone'])?><br><?php }?>
+			<?php if($r['emerCont2Cell']) {?><?php echo format_phone($r['emerCont2Cell'])?><br><?php }?>
+			<?php echo $r['emerCont2Email']?>
 		</td>
 	</tr>
-	<? }
+	<?php }
 	}?>
 </table>
-<?=drawBottom();?>
+<?php echo drawBottom();?>

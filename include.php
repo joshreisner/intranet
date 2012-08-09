@@ -566,7 +566,7 @@ function drawBottom() {
 	//links
 	$links = db_table('SELECT title' . langExt() . ' title, url FROM links WHERE is_active = 1 ORDER BY precedence');
 	foreach ($links as &$l) $l = draw_link($l['url'], $l['title'], true);
-	$return .= draw_div('links', draw_container('h3', getString('links')) . (admin() ? draw_link('/a/admin/links.php', getString('edit'), false, array('class'=>'right button')) : false) . draw_list($links));
+	$return .= draw_div('#links', draw_container('h3', getString('links')) . (admin() ? draw_link('/a/admin/links.php', getString('edit'), false, array('class'=>'right button')) : false) . draw_list($links));
 	
 	$return .= '</div>';
 	

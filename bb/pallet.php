@@ -1,4 +1,4 @@
-<?
+<?php
 $result = db_query('SELECT
 		id,
 		title' . langExt() . ' title,

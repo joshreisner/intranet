@@ -48,6 +48,7 @@ if ($posting) {
 			db_query('DELETE FROM users_to_modulettes WHERE user_id = ' . $id);
 		} else {
 			//handle permissions updates
+			db_query('UPDATE users_to_modules SET is_admin = 0 WHERE user_id = ' . $id);
 			$modules = array_checkboxes('modules');
 			foreach ($modules as $m) {
 				if (db_grab('SELECT COUNT(*) FROM users_to_modules WHERE user_id = ' . $id . ' AND module_id = ' . $m)) {
@@ -57,11 +58,12 @@ if ($posting) {
 				}
 			}
 
+			db_query('DELETE FROM users_to_modulettes WHERE user_id = ' . $id);
 			$modulettes = array_checkboxes('modulettes');
 			foreach ($modulettes as $m) {
-				if (!db_grab('SELECT COUNT(*) FROM users_to_modulettes WHERE user_id = ' . $id . ' AND modulette_id = ' . $m)) {
+				//if (!db_grab('SELECT COUNT(*) FROM users_to_modulettes WHERE user_id = ' . $id . ' AND modulette_id = ' . $m)) {
 					db_query('INSERT INTO users_to_modulettes ( user_id, modulette_id ) VALUES ( ' . $id . ', ' . $m . ' )');
-				}
+				//}
 			}
 
 		}
@@ -173,7 +175,19 @@ if (admin()) {
 	$f->set_group(getString('permissions'), increment());
 	//new rule: only admins can edit permissions
 	$f->set_field(array('type'=>'checkbox', 'name'=>'is_admin', 'label'=>getString('is_admin'), 'position'=>increment()));
-	$f->set_field(array('type'=>'checkboxes', 'name'=>'modules', 'label'=>getString('module_permissions'), 'options_table'=>'modules', 'linking_table'=>'users_to_modules', 'option_title'=>'title' . langExt(), 'option_id'=>'module_id', 'object_id'=>'user_id', 'position'=>increment()));
+
+	if (!empty($_GET['id'])) {
+		$sql = 'SELECT 
+					m.id, 
+					m.title' . langExt() . ', 
+					(SELECT COUNT(*) FROM users_to_modules u2m WHERE u2m.is_admin = 1 AND u2m.module_id = m.id AND u2m.user_id = ' . $_GET['id'] . ') checked
+				FROM modules m
+				WHERE m.is_active = 1';
+	} else {
+		$sql = 'SELECT id, title' . langExt() . ' FROM modules WHERE is_active = 1';		
+	}
+
+	$f->set_field(array('type'=>'checkboxes', 'name'=>'modules', 'label'=>getString('module_permissions'), 'sql'=>$sql, 'position'=>increment()));
 	$f->set_field(array('type'=>'checkboxes', 'name'=>'modulettes', 'label'=>getString('modulette_permissions'), 'options_table'=>'modulettes', 'linking_table'=>'users_to_modulettes', 'option_title'=>'title' . langExt(), 'option_id'=>'modulette_id', 'object_id'=>'user_id', 'position'=>increment()));
 } else {
 	$f->unset_fields('is_admin');
@@ -209,4 +223,3 @@ langTranslateCheckbox($f, url_id());
 echo $f->draw($values);
 
 echo drawBottom();
-?>

@@ -1,4 +1,4 @@
-<?
+<?php
 $events = db_query('SELECT
 			e.id, 
 			e.title' . langExt() . ' title, 
@@ -19,4 +19,3 @@ if (db_found($events)) {
 } else {
 	$return .= '<tr><td colspan="2" class="empty">' . getString('events_empty') . '</td></tr>';
 }
-?>

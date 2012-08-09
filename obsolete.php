@@ -284,8 +284,6 @@ class intranet_form {
 			?>
 			</form>
 		</table>
-		<?
+		<?php
 	}
 }
-
-?>
