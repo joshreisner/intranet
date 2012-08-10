@@ -547,7 +547,7 @@ function drawTop($headcontent=false) {
 
 //it's convention to put this right below drawTop()
 function drawBottom() {
-	global $_SESSION, $_GET, $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes, $page;
+	global $_josh, $modules, $helpdeskOptions, $helpdeskStatus, $modulettes, $page;
 	$return = '
 			</div>
 			<div id="right">
@@ -560,7 +560,10 @@ function drawBottom() {
 		</form>';
 
 	//channel or language selectors
-	if (getOption('channels')) $return .= draw_form_select('channel_id', 'SELECT id, title' . langExt() . ' title FROM channels WHERE is_active = 1 ORDER BY precedence', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
+	if (getOption('channels')) {
+		//$return .= draw_form_select('channel_id', 'SELECT id, title' . langExt() . ' title FROM channels WHERE is_active = 1 AND is_private = 0 ORDER BY precedence', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
+		$return .= draw_form_select('channel_id', 'SELECT c.id, c.title' . langExt() . ' title FROM channels c WHERE c.is_active = 1 AND (c.is_private = 0 OR (SELECT COUNT(*) FROM users_to_channels u2c WHERE u2c.channel_id = c.id AND u2c.user_id = ' . user() . ') > 0) ORDER BY precedence', $_SESSION['channel_id'], false, 'channels', 'url_query_set(\'channel_id\', this.value)', getString('networks_view_all'));
+	}
 	if (getOption('languages')) $return .= draw_form_select('language_id', 'SELECT id, title FROM languages ORDER BY title', $_SESSION['language_id'], true, 'languages', 'url_query_set(\'language_id\', this.value)');
 
 	//links
@@ -659,11 +662,23 @@ function emailUser($to, $subject, $message) {
 }
 
 function formAddChannels($form, $table, $column) {
-	if (getOption('channels')) $form->set_field(array('name'=>'channels', 'option_title'=>'title' . langExt(), 'type'=>'checkboxes', 'label'=>getString('channels_label'), 'options_table'=>'channels', 'linking_table'=>$table . '_to_channels', 'object_id'=>$column, 'option_id'=>'channel_id', 'default'=>'all'));
+	if (getOption('channels')) {
+		if (admin()) {
+			$form->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('channels_label'), 'option_title'=>'title' . langExt(), 'options_table'=>'channels', 'linking_table'=>$table . '_to_channels', 'object_id'=>$column, 'option_id'=>'channel_id', 'default'=>'all'));
+		} else {
+			$form->set_field(array('name'=>'channels', 'type'=>'checkboxes', 'label'=>getString('channels_label'), 'sql'=>'SELECT id, title' . langExt() . ' FROM channels WHERE is_active = 1 AND is_private = 0 ORDER BY title', 'default'=>'all'));
+		}
+	}
 }
 
 function getChannelsWhere($table, $short, $column) {
-	if (getOption('channels') && $_SESSION['channel_id']) return ' JOIN ' . $table . '_to_channels t2c ON ' . $short . '.id = t2c.' . $column . ' WHERE ' . $short . '.is_active = 1 AND t2c.channel_id = ' . $_SESSION['channel_id'] . ' ';
+	if (getOption('channels')) {
+		if ($_SESSION['channel_id']) {
+			return ' JOIN ' . $table . '_to_channels t2c ON ' . $short . '.id = t2c.' . $column . ' WHERE ' . $short . '.is_active = 1 AND t2c.channel_id = ' . $_SESSION['channel_id'] . ' ';
+		} else {
+			return ' WHERE (SELECT COUNT(*) FROM ' . $table . '_to_channels t2c JOIN channels c ON t2c.channel_id = c.id WHERE t2c.' . $column . ' = ' . $short . '.id AND c.is_private = 1) <> (SELECT COUNT(*) FROM ' . $table . '_to_channels t2c WHERE t2c.' . $column . ' = ' . $short . '.id) AND ' . $short . '.is_active = 1 ';
+		}
+	} 
 	return ' WHERE ' . $short . '.is_active = 1 ';
 }
 

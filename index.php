@@ -25,9 +25,9 @@ url_header_utf8();
 ?>
 <html>
 	<head>
-		<?=draw_meta_utf8()?>
-		<title><?=getString("app_name")?></title>
-		<?=draw_favicon(DIRECTORY_WRITE . '/favicon.png')?>
+		<?php echo draw_meta_utf8()?>
+		<title><?php echo getString("app_name")?></title>
+		<?php echo draw_favicon(DIRECTORY_WRITE . '/favicon.png')?>
 		<style type="text/css">
 			<!--
 			body { background-color:#d3d3d3; margin:0px; padding:0px; width:100%; height:100%; font-family:verdana; font-size:11px; color:#444; line-height:19px; }
@@ -70,7 +70,7 @@ url_header_utf8();
 			.bottom-right { right:-1px; }
 		</style>
 		<![endif]--> 
-		<?=draw_javascript_src();?>
+		<?php echo draw_javascript_src();?>
 		<script language="javascript">
 			<!--
 	    	function validate(form) {
