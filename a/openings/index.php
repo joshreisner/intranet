@@ -16,21 +16,21 @@ if (url_id()) {
 		WHERE p.id = ' . $_GET['id']);
 	?>
 	<table class="left" cellspacing="1">
-		<?=drawHeaderRow("View Position", 2)?>
+		<?php echo drawHeaderRow("View Position", 2)?>
 		<tr>
 			<td class="left">Location</td>
-			<td><?=$r['location']?></td>
+			<td><?php echo $r['location']?></td>
 		</tr>
 		<tr>
 			<td class="left">Position</td>
 			<td class="text">
-				<h1><?=$r['title']?></h1><br/>
-				<?=nl2br($r['description'])?>
+				<h1><?php echo $r['title']?></h1><br/>
+				<?php echo nl2br($r['description'])?>
 			</td>
 		</tr>
 		<tr>
 			<td class="left">Updated</td>
-			<td><?=format_date($r['updated_date'])?></td>
+			<td><?php echo format_date($r['updated_date'])?></td>
 		</tr>
 	</table>
 	<?php
@@ -38,7 +38,7 @@ if (url_id()) {
 	//jobs list
 ?>
 	<table class="left" cellspacing="1">
-		<?=drawHeaderRow('Open Positions', 2)?>
+		<?php echo drawHeaderRow('Open Positions', 2)?>
 		<tr>
 			<th width="80%">Title</th>
 			<th class="r" width="20%"><nobr>Last Update</nobr></th>
@@ -62,10 +62,10 @@ if (url_id()) {
 			echo '<tr class="group"><td colspan="2">' . $lastLocation . '</td></tr>';
 			}?>
 			<tr>
-				<td><a href="./?id=<?=$r['id']?>"><?=$r['title']?></a></td>
-				<td class="r"><?=format_date($r['updated_date'])?></td>
+				<td><a href="./?id=<?php echo $r['id']?>"><?php echo $r['title']?></a></td>
+				<td class="r"><?php echo format_date($r['updated_date'])?></td>
 			</tr>
-			<? }?>
+			<?php }?>
 	</table>
 <?php
 }

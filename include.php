@@ -340,7 +340,7 @@ function drawSimpleTop($title=false) {
 		<head>' . 
 			draw_meta_utf8() . 
 			draw_favicon(DIRECTORY_WRITE . '/favicon.png') .
-			draw_css(file_get('/styles/simple.css'));
+			draw_css(file_get('/css/simple.css'));
 	if ($title) {
 		$return .= draw_container('title', $title);
 		$return .= draw_javascript_src();
@@ -356,6 +356,7 @@ function drawSimpleBottom($email=false) {
 	$return = '';
 	if ($email) $return .= draw_div_class('email_footer', getString('email_footer') . draw_link(url_base(), getString('app_name')));
 	$return .= '</body></html>';
+	return $return;
 }
 
 function drawStaffList($where, $errmsg=false, $options=false, $listtitle=false, $searchterms=false) {
