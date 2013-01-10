@@ -52,7 +52,7 @@ if ($posting) {
 			$modules = array_checkboxes('modules');
 			foreach ($modules as $m) {
 				if (db_grab('SELECT COUNT(*) FROM users_to_modules WHERE user_id = ' . $id . ' AND module_id = ' . $m)) {
-					db_grab('UPDATE users_to_modules SET is_admin = 1 WHERE user_id = ' . $id . ' AND module_id = ' . $m);
+					db_query('UPDATE users_to_modules SET is_admin = 1 WHERE user_id = ' . $id . ' AND module_id = ' . $m);
 				} else {
 					db_query('INSERT INTO users_to_modules ( user_id, module_id, is_admin ) VALUES ( ' . $id . ', ' . $m . ', 1 )');
 				}
