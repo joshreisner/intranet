@@ -11,7 +11,7 @@ if (url_id()) {
 			p.post_status "status",
 			p.post_content "description",
 			p.post_modified "updated_date",
-			(SELECT m.meta_value FROM wp_postmeta m WHERE m.post_id = p.id AND m.meta_key = "job-location") "location"
+			(SELECT m.meta_value FROM wp_postmeta m WHERE m.post_id = p.id AND m.meta_key = "job-location" LIMIT 1) "location"
 		FROM wp_posts p
 		WHERE p.id = ' . $_GET['id']);
 	?>
@@ -50,7 +50,7 @@ if (url_id()) {
 			p.post_status "status",
 			p.post_content "content",
 			p.post_modified "updated_date",
-			(SELECT m.meta_value FROM wp_postmeta m WHERE m.post_id = p.id AND m.meta_key = "job-location") "location"
+			(SELECT m.meta_value FROM wp_postmeta m WHERE m.post_id = p.id AND m.meta_key = "job-location" LIMIT 1) "location"
 		FROM wp_posts p
 		WHERE post_type = "careers" AND (post_status = "publish" or post_status = "draft")
 		ORDER BY 6');
