@@ -25,7 +25,7 @@ if (url_id()) {
 			<td class="left">Position</td>
 			<td class="text">
 				<h1><?php echo $r['title']?></h1><br/>
-				<?php echo nl2br($r['description'])?>
+				<?php echo $r['description']?>
 			</td>
 		</tr>
 		<tr>
